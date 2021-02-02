@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ifindex version="1.0" xmlns="http://babel.ifarchive.org/protocol/iFiction/">
+    <story>
+        <identification>
+            <ifid>8AD605CF-A890-4D31-A319-5E5D246F9D5F</ifid>
+            <format>glulx</format>
+        </identification>
+        <bibliographic>
+            <title>Bear Creek</title>
+            <author>Wes Modes</author>
+            <headline>an interactive fiction</headline>
+            <genre>Fiction</genre>
+            <firstpublished>2020</firstpublished>
+            <description>Bear Creek, August 1975.<br/>Looking back, it was that summer, or maybe just that one day that changed everything. KC and the Sunshine Band was on the radio and you were eight years old. A curious daydreamer, on the verge of learning what lay beyond the boundaries of your own little world, and nothing was certain about whether you'd survive the journey.</description>
+            <language>en</language>
+            <group>Inform</group>
+        </bibliographic>
+        <cover>
+            <format>jpg</format>
+            <height>1024</height>
+            <width>1024</width>
+            <description>The cover art.</description>
+        </cover>
+        <releases>
+            <attached>
+                <release>
+                    <releasedate>2021-02-01</releasedate>
+                    <version>2</version>
+                    <compiler>Inform 7</compiler>
+                    <compilerversion>6M62</compilerversion>
+                </release>
+            </attached>
+        </releases>
+        <colophon>
+            <generator>Inform 7</generator>
+            <generatorversion>6M62</generatorversion>
+            <originated>2021-02-01</originated>
+        </colophon>
+        <glulx>
+            <serial>210201</serial>
+            <release>2</release>
+            <compiler>Inform 7 build 6M62</compiler>
+            <coverpicture>1</coverpicture>
+        </glulx>
+    </story>
+</ifindex>
