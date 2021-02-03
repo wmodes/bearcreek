@@ -377,8 +377,14 @@ Chapter - Swimming
 [We want swimming to be a deliberate act, so when the player asks to swim at the swimming hole, we will give her a warning and hint at her trying again, then we will do it the second time she asks.]
 
 Understand the command "swim/wade/dive" as something new.
-Understand "swim", "wade", "dive", "swim in/into", "wade in", "dive in", "jump in", "swim in/into creek/river/water/stream/pool/hole", "wade in/into creek/river/water/stream/pool/hole", "dive in/into creek/river/water/stream/pool/hole", "jump in/into creek/river/water/stream/pool/hole", "go in/into creek/river/water/stream/pool/hole", "swim in/into deep/swimming pool/hole", "wade in/into deep/swimming pool/hole", "dive in/into deep/swimming pool/hole", "jump in/into deep/swimming pool/hole", "go in/into deep/swimming pool/hole" as doing_some_swimming.
-doing_some_swimming is an action applying to nothing.
+	doing_some_swimming is an action applying to nothing.
+	Understand "swim", "wade", "dive",
+	"swim in/into deep/swimming/-- creek/river/water/stream/pool/hole/--",
+	"wade in/into deep/swimming/-- creek/river/water/stream/pool/hole/--",
+	"dive in/into deep/swimming/-- creek/river/water/stream/pool/hole/--",
+	"jump in/into deep/swimming/-- creek/river/water/stream/pool/hole/--",
+	"go in/into deep/swimming/-- creek/river/water/stream/pool/hole/--"
+	as doing_some_swimming.
 
 Instead of doing_some_swimming when player is not in Region_River_Area:
 	say "Good idea. You might want to go down to the creek.";
@@ -2034,7 +2040,7 @@ Section - Berries in the pail
 
 [that is, the berries in the pail (or the big_bucket) ]
 
-A berries_in_pail is a undescribed, sinking, edible thing.
+A berries_in_pail is a undescribed sinking edible thing.
 	The printed name is "bunch of ripe berries".
 	A berries_in_pail are in pail.
 	The description of berries_in_pail is "You've picked a big bunch of blackberries. [looking_closely_at_berries].".
@@ -2043,6 +2049,10 @@ A berries_in_pail is a undescribed, sinking, edible thing.
 
 To say looking_closely_at_berries:
 	say "Looking at them, you notice that the color goes from deep red to deepest black. [one of]The sweetest ones are the ones that aren't shiny. You know that from experience[or]Your hands are stained red all the way to your wrist[or] You notice a tiny weeny white spider crawling on one of the berries[or] One of these berries is still green[or] A couple of these berries are kind of too ripe and look like little raisins[at random]".
+
+Rule for printing the name of the pail:
+  say "[printed name of pail]";
+	    omit contents in listing.
 
 Instead of eating berries_in_pail:
 	eat_berries_from_pail;
@@ -2381,9 +2391,6 @@ Chapter - The Radio
 Every turn when location of player is in Region_Blackberry_Area or player is in Room_Stone_Bridge:
 	if time_for_a_new_song,
 		report_new_song_begins;
-
-Instead of listening when location of player is in Region_Blackberry_Area,
-	say "[what_song_is_playing][if Grandpa is in Room_Grassy_Clearing]. And Honey and Grandpa are talking nearby.[end if]"
 
 When play begins:
 	Sort Table of Pop Songs in random order.
@@ -2769,7 +2776,7 @@ Part - Region_Blackberry_Area
 Section - Description
 
 Region_Blackberry_Area is a region.
-Room_Lost_in_the_Brambles, Room_Grassy_Clearing, Room_Blackberry_Tangle, Room_WIllow_Trail, Room_Lost_Trail, Room_Dappled_Forest_Path, and Room_Stone_Bridge are in Region_Blackberry_Area.
+Room_Lost_in_the_Brambles, Room_Grassy_Clearing, Room_Blackberry_Tangle, Room_WIllow_Trail, Room_Lost_Trail, Room_Dappled_Forest_Path are in Region_Blackberry_Area.
 The scent of Region_Blackberry_Area is "sunshine and dust and the tang of ripe blackberries".
 
 Section - Navigation
@@ -2783,9 +2790,9 @@ The downpath_dest of Region_Blackberry_Area is Room_Stone_Bridge.
 
 Section - Backdrops
 
-A backdrop_blackberry_brambles is backdrop in Region_Blackberry_Area.
+Some backdrop_blackberry_brambles is backdrop in Region_Blackberry_Area.
 	The printed name is "berry brambles".
-	The description is "[if player is in Room_Willow_Trail]The blackberry brambles are thinner here, forming prickly walls on either side of the trail[otherwise]The brambles are as high as you are, higher actually[end if]. They are heavy with berries, the very ripest ones always seem to be just out of reach."
+	The description is "[if player is in Room_Willow_Trail]The blackberry brambles are thinner here, forming prickly walls on either side of the trail[otherwise]The brambles are as high as you are, higher actually[end if]. They are heavy with berries, the very ripest ones always just out of reach."
 	Understand "brambles/bramble/bushes/bush/thicket/vines/plant" as backdrop_blackberry_brambles.
 
 Some backdrop_berries are backdrop in Region_Blackberry_Area.
@@ -2800,10 +2807,18 @@ Some backdrop_paths are backdrop in Region_Blackberry_Area.
 	Understand "path/paths/trail/trails" as backdrop_paths.
 
 Some backdrop_sunlight is backdrop in Region_Blackberry_Area.
-	The description is "The [sunlight] comes slanting through the trees in the [if current_time_period is morning]morning light. The air is still crisp here in the shade with the early promise of a hot midsummer day[otherwise]afternoon light. Under the trees, the air is cooler[end if]."
-	Understand "light/sun/sunlight/sunshine/sky/clouds", "sun shine/light", "shade/shady/cool/crisp", "shady tree/trees/vines/bush/brambles" as backdrop_sunlight.
+	The printed name is "sunlight".
+	The description is "The sunlight comes slanting through the trees in the [if current_time_period is morning]morning light. The air is still crisp here in the shade with the early promise of a hot midsummer day[otherwise]afternoon light. Under the trees, the air is cooler[end if]."
+	Understand "light/sun/sunlight/sunshine/sky/clouds", "sun shine/light", "shade" as backdrop_sunlight.
+
+Backdrop_creek is backdrop in Region_Blackberry_Area.
+	The description is "You can't see the creek through the tall brambles, but you can hear it.".
+	Understand "Bear/-- river/creek/crick/water/stream" as backdrop_creek.
 
 Section - Rules and Actions
+
+Instead of listening when location of player is in Region_Blackberry_Area,
+say "[what_song_is_playing]. You can hear the creek burbling nearby.[if Grandpa is in Room_Grassy_Clearing] And Honey and Grandpa are talking nearby.[end if]";
 
 
 Chapter - Room_Lost_in_the_Brambles
@@ -2886,9 +2901,6 @@ grandpas_cigarettes are scenery in Room_Grassy_Clearing.
 
 Section - Backdrops and Scenery
 
-The creek is scenery in Room_Grassy_Clearing.
-	The description is "You can't see the creek through the tall brambles, but you can hear it.".
-
 A sycamore tree is [climbable] scenery in Room_Grassy_Clearing.
 	The description is "You know this is a sycamore tree from YWCA Nature Camp. White flaky bark, big broad furry leaves.".
 
@@ -2952,8 +2964,10 @@ Section - Objects
 
 Section - Backdrops and Scenery
 
-Willows are scenery. It is in  Room_Willow_Trail. "Weeping willows dangle over the trail. These are smaller trees than the ones that line the banks of Bear Creek.".
-Understand "tree/trees/willow/lush/green", "willow trees" as willows.
+Willows are scenery in Room_Willow_Trail.
+	The initial appearance is "[description of willows]".
+	The description is "Weeping willows dangle over the trail. These are smaller trees than the ones that line the banks of Bear Creek.".
+	Understand "tree/trees/willow/lush/green", "willow trees" as willows.
 
 Section - Rules and Actions
 
@@ -2995,6 +3009,39 @@ The available_exits of Room_Dappled_Forest_Path are "You can make your way back 
 Section - Objects
 
 Section - Backdrops & Scenery
+
+
+Part - Region_River_Area
+
+Section - Description
+
+Region_River_Area is a region.
+Room_Stone_Bridge, Room_Swimming_Hole, Room_Crossing, and Room_Other_Shore are in Region_River_Area.
+
+Section - Navigation
+
+The return_dest of Region_River_Area is Room_Grassy_Clearing.
+The forward_dest of Region_River_Area is Room_Grandpas_Trailer.
+The upstream_dest of Region_River_Area is Room_Swimming_Hole.
+The downstream_dest of Region_River_Area is Room_Crossing.
+The uppath_dest of Region_River_Area is Room_Long_Stretch.
+The downpath_dest of Region_River_Area is Room_Crossing.
+
+Section - Objects
+
+Section - Backdrops
+
+Some backdrop_thick_trees are backdrop in Region_River_Area.
+	The printed name is "thick trees".
+	The description of backdrop_thick_trees is "The thick trees overhead make deep shade below, a welcome relief from the summer heat. The [if current_time_period is morning]morning light[otherwise]afternoon light[end if] filters through the leaves."
+	Understand "trees", "tree", "branches", "leaves", "overhead" as backdrop_thick_trees.
+
+Some backdrop_sunlight is backdrop in Region_River_Area.
+
+Section - Rules and Actions
+
+Instead of examining backdrop_sunlight when player is in Region_River_Area:
+	try examining backdrop_thick_trees.
 
 Chapter - Room_Stone_Bridge
 
@@ -3057,38 +3104,7 @@ Instead of doing_some_swimming in Room_Stone_Bridge:
 	make tennis_shoes wet	;
 	now dry_time of tennis_shoes is 10;
 
-
-Part - Region_River_Area
-
-Section - Description
-
-Region_River_Area is a region.
-Room_Swimming_Hole, Room_Crossing, and Room_Other_Shore are in Region_River_Area.
-
-Section - Navigation
-
-The return_dest of Region_River_Area is Room_Grassy_Clearing.
-The forward_dest of Region_River_Area is Room_Grandpas_Trailer.
-The upstream_dest of Region_River_Area is Room_Swimming_Hole.
-The downstream_dest of Region_River_Area is Room_Crossing.
-The uppath_dest of Region_River_Area is Room_Long_Stretch.
-The downpath_dest of Region_River_Area is Room_Crossing.
-
-Section - Objects
-
-Section - Backdrops
-
-Some backdrop_thick_trees are backdrop in Region_River_Area.
-The description of backdrop_thick_trees is "The thick trees overhead make deep shade below, a welcome relief from the summer heat. The [if current_time_period is morning]morning light[otherwise]afternoon light[end if] filters through the leaves."
-Understand "trees", "tree", "branches", "leaves", "overhead" as backdrop_thick_trees.
-
-Some backdrop_sunlight is backdrop in Region_River_Area.
-
-Section - Rules and Actions
-
-[Instead of examining sunlight when in Region_River_Area, try examining thick trees.
-Instead of examining shade when in Region_River_Area, try examining thick trees.]
-
+Test bridge with "d.d.d.get berries.again.again.again.d.d.d.";
 
 Chapter - Room_Swimming_Hole
 
@@ -3112,14 +3128,14 @@ Section - Objects
 A pool_log is a thing in Room_Swimming_Hole.
 The printed name is "floating length of log".
 The description is "There is a floating length of log here, bobbing around at the edges of the swimming hole."
-Understand "floating length of log" and "log/wood/driftwood/floating/length" as pool_log.
+Understand "floating/-- length of log", "floating/-- log/wood/driftwood" as pool_log.
 
 Section - Backdrops and Scenery
 
 The deep pool is scenery in Room_Swimming_Hole.
 It is a enterable unopenable open container.
 The description is "The creek tumbles down some big granite rocks here and forms a deep pool. You can't see the bottom. And that makes you [nervous]."
-Understand "river/creek/Bear/crick/water/stream/bed/swimming/hole" as deep pool.
+Understand "deep pool", "swimming hole", "Bear/-- river/creek/crick/water/stream" as deep pool.
 
 Some smooth granite rocks are [lie-able] undescribed supporters in Room_Swimming_Hole.
 
@@ -3184,7 +3200,7 @@ The available_exits of Room_Crossing are "The shoreline ends at a steep bank fur
 Section - Objects
 
 A bridge_log1 is a fixed in place enterable supporter in Limbo.
-	"A log has floated down the creek and is wedged in the boulders in the middle of the creek."
+	The initial appearance is "A log has floated down the creek and is wedged in the boulders in the middle of the creek.".
 	The printed name is "a floating length of log".
 	The description is "A log has floated downstream in the swift current. It is wedged between two boulders forming a kind of bridge."
 	Understand "bridge", "wood", "driftwood", "drift wood", "driftlog", "drift log", "scary" as bridge_log1.
@@ -3252,7 +3268,7 @@ The available_exits of Room_Other_Shore are "[if Scene_Day_Two has not happened]
 Section - Objects
 
 A bridge_log2 is a fixed in place enterable supporter in Room_Other_Shore.
-	"A log has floated down the creek and is wedged in the boulders in the middle of the creek."
+	The initial appearance is "A log has floated down the creek and is wedged in the boulders in the middle of the creek.".
 	The printed name is "a floating length of log".
 	The description is "A log has floated downstream in the swift current. It is wedged between two boulders forming a kind of bridge."
 	Understand "bridge", "wood", "driftwood", "drift wood", "driftlog", "drift log", "scary" as bridge_log2.
@@ -3277,7 +3293,7 @@ Room_Dirt_Road, Room_Long_Stretch, Room_Railroad_Tracks, Room_Grassy_Field are i
 
 Section - Backdrops & Scenery
 
-Some sunlight is backdrop in Region_Long_Road.
+Some backdrop_sunlight is backdrop in Region_Long_Road.
 
 The rutted_road is backdrop in Region_Long_Road.
 	The description is "The old creekside road is seldom used now and in poor condition with deep ruts and sandy areas. Nowadays it is only used by people walking down to Bear Creek from the highway, fishermen and berry pickers mostly. There is tall grass growing right down the middle of the road.".
@@ -3390,7 +3406,7 @@ Some train tracks are an undescribed fixed in place enterable supporter in Room_
 	Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as train tracks.
 
 A penny is in Room_Railroad_Tracks.
-	"Hey, there's the penny you lost when you came here with Grandpa to make train pennies!"
+	The initial appearance is "Hey, there's the penny you lost when you came here with Grandpa to make train pennies!".
 	The description of penny is "Ah, this is a wheat penny. Its tiny numbers say 1956.".
 
 A flattened coin is a described thing in Limbo.
@@ -3496,7 +3512,7 @@ Room_Halfway_Up, Room_Top_of_the_Pine_Tree are in Region_Up_In_Tall_Fir.
 
 Section - Backdrops & Scenery
 
-Some sunlight is backdrop in Region_Up_In_Tall_Fir.
+Some backdrop_sunlight is backdrop in Region_Up_In_Tall_Fir.
 
 Section - Navigation
 
@@ -3692,7 +3708,7 @@ Room_Sharons_Trailer, Room_Lees_Trailer, Room_Grandpas_Trailer are in Region_Tra
 
 Section - Backdrops & Scenery
 
-Some sunlight is backdrop in Region_Trailer_Outdoors.
+Some backdrop_sunlight is backdrop in Region_Trailer_Outdoors.
 
 Some sun through the windows is backdrop in Region_Trailer_Indoors. The description of sun through the windows is "[if current_time_period is not evening]The [current_time_period] sun streams through the windows dappled by the trees outside[otherwise]It is growing darker outside[end if]."
 Understand "sunlight", "sunshine", "light", "sky", "curtains", "window" as sun through the windows.
@@ -3752,7 +3768,7 @@ The back fence is backdrop in Room_Picnic_Area.
 	The description is "This is the back fence of the trailer park."
 
 An ant hill is a fixed in place thing in Room_Picnic_Area.
-	"There is an impressive red ant hill near the picnic table[first time]. Red ants are your sworn enemies. They're the ones who started the war, not you. A bunch of them ganged up and bit you, and all you were doing was trying to put them in a bottle for your ant colony[only]. [ant stuff].".
+	The initial appearance is "There is an impressive red ant hill near the picnic table[first time]. Red ants are your sworn enemies. They're the ones who started the war, not you. A bunch of them ganged up and bit you, and all you were doing was trying to put them in a bottle for your ant colony[only]. [ant stuff].".
 	The description is "This ant hill rises up higher than the top of your sneakers. [ant stuff].".
 	Understand "anthill/anthole", "ant hill/colony/mound/burrow/hole", "hill/colony/mound/burrow/hole", "red ant/ants" as ant hill
 
@@ -4217,13 +4233,9 @@ Room_Wooded_Trail, Room_Dark_Woods_South, Room_Dark_Woods_North, Room_Forest_Mea
 
 Section - Backdrops and Scenery
 
-Thick trees are backdrop in Region_Woods_Area.
-Some sunlight is backdrop in Region_Woods_Area.
-Some shade is backdrop in Region_Woods_Area.
-Instead of examining sunlight when player is in Region_Woods_Area,
-	try examining thick trees.
-Instead of examining shade when player is in Region_Woods_Area,
-	try examining thick trees.
+Some backdrop_thick_trees are backdrop in Region_Woods_Area.
+
+Some backdrop_sunlight is backdrop in Region_Woods_Area.
 
 Section - Navigation
 
@@ -4235,6 +4247,9 @@ The uppath_dest of Region_Woods_Area is Limbo.
 The downpath_dest of Region_Woods_Area is Limbo.
 
 Section - Rules and Actions
+
+Instead of examining backdrop_sunlight when player is in Region_Woods_Area,
+	try examining backdrop_thick_trees.
 
 
 Chapter - Room_Wooded_Trail
@@ -4253,7 +4268,7 @@ Section - Navigation
 North of Room_Wooded_Trail is Room_Dark_Woods_South.
 West of Room_Wooded_Trail is Room_Other_Shore.
 
-The available_exits of Room_Wooded_Trail are "[if Scene_Day_Two has not happened]Best to keep going to the wIllow trail. It should connect up here in a bit. You look back the way you came. You could always go back to the shore and cross the creek. But then there's the dog.[else]You could go back into the dark wood and try another route or you can follow this trail and see if it goes to the crossing.[end if]"
+The available_exits of Room_Wooded_Trail are "[if Scene_Day_Two has not happened]Best to keep going to the willow trail. It should connect up here in a bit. You look back the way you came. You could always go back to the shore and cross the creek. But then there's the dog.[else]You could go back into the dark wood and try another route or you can follow this trail and see if it goes to the crossing.[end if]"
 
 Section - Objects
 
@@ -4401,7 +4416,7 @@ Section - Objects
 
 Some fallen_leaves are in Room_Protected_Hollow.
 	The printed name is "fallen leaves".
-	"There is a thick carpet of fallen leaves, dried now in the summer heat. They crunch beneath your feet."
+	The initial appearance is "There is a thick carpet of fallen leaves, dried now in the summer heat. They crunch beneath your feet.".
 	The description is "These are probably the leaves from last autumn that have blown beneath the fallen trees. They are crispy and dry and might make a soft bed and even a warm covering."
 	Understand "dried/fallen leaves" as fallen_leaves.
 
@@ -4531,15 +4546,16 @@ The available_exits of Room_Drive_In are "You can get back in the car or head to
 Section - Objects
 
 Virtual_camaro is fixed in place climbable enterable container in Room_Drive_In.
-"Mom's Camaro is here parked among the other cars."
-The printed name is "Mom's Camaro".
-The description is "Mom's car is green and sleek with a black vinyl top."
-Understand "Camaro/car" as virtual_camaro.
+	The printed name is "Mom's Camaro".
+	The initial appearance is "Mom's Camaro is here parked among the other cars.".
+	The printed name is "Mom's Camaro".
+	The description is "Mom's car is green and sleek with a black vinyl top."
+	Understand "Camaro/car" as virtual_camaro.
 
 Virtual_snack_bar is undescribed fixed in place enterable container in Room_Drive_In.
-The printed name is "the snack bar".
-The description is "The snack bar sign says 'Snack Shack.."
-Understand "snack bar/shack" as Virtual_snack_bar.
+	The printed name is "the snack bar".
+	The description is "The snack bar sign says 'Snack Shack.."
+	Understand "snack bar/shack" as Virtual_snack_bar.
 
 Section - Backdrops and Scenery
 
@@ -5675,13 +5691,12 @@ This is the seq_grandparents_bounce_interrupt_test rule:
 
 Part - Grandpa
 
-Grandpa is an undescribed _male man.
-"Your Grandpa is here[if Grandpa holds big_bucket and big_bucket is full] with the big bucket full of berries[else if Grandpa holds big_bucket and big_bucket is empty] with the empty bucket[end if]."
-The description of Grandpa is "Grandpa is, well, Grandpa. He's not tall. He's not fat. He has a bald spot right on top of his head like a little hat. He's like a bull, kind of, but skinnier and wears a warm plaid shirt. Today he's in a t-shirt, but usually. He smells good, like cigarettes and that stuff he puts on his face when he shaves.[if a random chance of 1 in 3 succeeds]
-[paragraph break]While you are looking, he sees you and smiles.[end if]".
-Understand "grampa/granpa/grandfather/gramp/pa/gramps/John" as grandpa.
-The scent is "familiar, like cigarettes and the stuff he uses when he shaves".
-Grandpa is in Room_Grassy_Clearing.
+Grandpa is an undescribed _male man in Room_Grassy_Clearing.
+	The initial appearance is "Your Grandpa is here[if Grandpa holds big_bucket and big_bucket is full] with the big bucket full of berries[else if Grandpa holds big_bucket and big_bucket is empty] with the empty bucket[end if].".
+	The description of Grandpa is "Grandpa is, well, Grandpa. He's not tall. He's not fat. He has a bald spot right on top of his head like a little hat. He's like a bull, kind of, but skinnier and wears a warm plaid shirt. Today he's in a t-shirt, but usually. He smells good, like cigarettes and that stuff he puts on his face when he shaves.[if a random chance of 1 in 3 succeeds]
+	[paragraph break]While you are looking, he sees you and smiles.[end if]".
+	Understand "grampa/granpa/grandfather/gramp/pa/gramps/John" as grandpa.
+	The scent is "familiar, like cigarettes and the stuff he uses when he shaves".
 
 Chapter - Properties
 
@@ -6438,10 +6453,10 @@ To refill the teacups:
 Part - Lee
 
 Lee is a _male man in Room_C_Loop.
-"Lee is [if Lee is in Room_C_Loop]sitting on a lawn chair in his empty carport, chain smoking[else if Lee is in Room_Lees_Trailer and Lee's TV is switched on]watching TV[else]here[end if]. [first time][description of lee][only]".
-The description is  "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long dirty blond hair pulled back in an untidy ponytail. He's wearing a tanktop and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name."
-Understand "lee/veteran/vet" as Lee.
-The scent is "cigarettes and alcohol".
+	The initial appearance is "Lee is [if Lee is in Room_C_Loop]sitting on a lawn chair in his empty carport, chain smoking[else if Lee is in Room_Lees_Trailer and Lee's TV is switched on]watching TV[else]here[end if]. [first time][description of lee][only]".
+	The description is  "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long dirty blond hair pulled back in an untidy ponytail. He's wearing a tanktop and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name."
+	Understand "lee/veteran/vet" as Lee.
+	The scent is "cigarettes and alcohol".
 
 Chapter - Properties
 
@@ -6734,10 +6749,10 @@ This is the seq_lee_hangout_interrupt_test rule:
 
 Part - Aunt Mary
 
-Aunt Mary is a _female woman. Aunt Mary is in Room_Grandpas_Trailer.
-"Your Aunt Mary is looming over the stove in the kitchen, stirring a huge vat of blackberry jam.".
-The description is "This is your Aunt Mary, or actually your Great Aunt Mary since she is your Grandma Honey's sister. She is a huge woman and wears an old lady dress with flowers and a checked apron. She is stirring the pot_of_blackberry_jam continuously and staring into space.".
-Understand "great-aunt", "great-aunt", "aunty" as Aunt Mary.
+Aunt Mary is a _female woman in Room_Grandpas_Trailer.
+	The initial appearance is "Your Aunt Mary is looming over the stove in the kitchen, stirring a huge vat of blackberry jam.".
+	The description is "This is your Aunt Mary, or actually your Great Aunt Mary since she is your Grandma Honey's sister. She is a huge woman and wears an old lady dress with flowers and a checked apron. She is stirring the pot_of_blackberry_jam continuously and staring into space.".
+	Understand "great-aunt", "great-aunt", "aunty" as Aunt Mary.
 
 Chapter - Properties
 
@@ -6891,14 +6906,20 @@ This is the seq_mary_suggestion_interrupt_test rule:
 	trigger: the scene Mary Sandwich starts
 ]
 
-Some sandwich makin's are a fixed in place thing. "Aunt Mary has gotten out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread for making tuna sandwiches." The description is "Several cans of Chicken of the Sea, Miracle Whip, and Wonder Bread are out for making tuna sandwiches."
-Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonnaise/whip/can/cans/bags", "sandwich bags" as sandwich makin's.
+Some sandwich_ingredients are a fixed in place thing.
+	The printed name is "sandwich makin's".
+	The initial appearance is "Aunt Mary has gotten out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread for making tuna sandwiches.". The description is "Several cans of Chicken of the Sea, Miracle Whip, and Wonder Bread are out for making tuna sandwiches."
+	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonnaise/whip/can/cans/bags", "sandwich bags" as sandwich_ingredients.
 
 A brown paper bag is a unopenable open container. The description is "A plain brown paper bag".
 
-A tuna sandwich is a kind of thing. A tuna sandwiches is edible. [It is singular-named "tuna sandwich".] The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
-Three tuna sandwiches are in brown paper bag.
-Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spead/mayonaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna sandwiches.
+[TODO: Simplify this model. It is unlikely we need to deal with the sandwiches separately.]
+A tuna sandwich is a kind of thing.
+	A tuna sandwiches is edible.
+	[It is singular-named "tuna sandwich".]
+	Three tuna sandwiches are in brown paper bag.
+	The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
+	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spead/mayonaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna sandwiches.
 
 seq_mary_sandwich is a sequence.
 	The action_handler is the seq_mary_sandwich_handler rule.
@@ -6915,16 +6936,16 @@ This is the seq_mary_sandwich_handler rule:
 	if index is 1:
 		if mary is visible:
 			queue_report "Your Aunt Mary recruits you to help make lunch, getting out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread." at priority 1;
-			now sandwich makin's are in Room_Grandpas_Trailer;
+			now sandwich_ingredients are in Room_Grandpas_Trailer;
 	else if index is 2:
 		if mary is visible:
 			queue_report "Your Aunt Mary has you on the assembly line constructing tuna fish sandwiches and putting them in sandwich bags." at priority 1;
 	else if index is 3:
 		if mary is visible:
-			queue_report "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makin's. 'Okay, you take those sandwiches down to your grandparents. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles." at priority 1;
+			queue_report "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich_ingredients. 'Okay, you take those sandwiches down to your grandparents. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles." at priority 1;
 		now all tuna sandwiches are in brown paper bag;
 		now brown paper bag is held by player;
-		now sandwich makin's are off-stage;
+		now sandwich_ingredients are off-stage;
 
 This is the seq_mary_sandwich_interrupt_test rule:
 	if we are speaking to Mary, rule succeeds;
@@ -7071,7 +7092,7 @@ Part - Mom
 
 Mom is a _female woman.
 Mom is in Room_Car_With_Mom.
-The initial appearance is "Your mom is watching the movie. Sensing you looking, she looks back at you smiling."
+The initial appearance is "Your mom is watching the movie. Sensing you looking, she looks back at you smiling.".
 The description is "Mom is, well mom. She's silly and smart and plays with you. Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you until your tears stopped."
 Understand "mommy/ma/mother/rachel/rach" as Mom.
 
@@ -7090,7 +7111,7 @@ Part - Step-Dad
 
 Step-dad is a _male man.
 Step-dad is in Room_Camaro_With_Stepdad.
-The initial appearance is "Your stepdad is driving. He focuses on the road and you can sense an edge of anger just beneath the surface."
+The initial appearance is "Your stepdad is driving. He focuses on the road and you can sense an edge of anger just beneath the surface.".
 The description is "Your stepdad's name is Mark. You call him 'dad' because your mom asked if you wanted to call him dad when she first got re-married. You shrugged, 'Okay.' So you did. Who knows what the rules are here? You have an inkling that your mom married him because she thought you needed a father. But if you are honest, you're scared of him. You never know whether he will be nice or angry. He's nicer when he drinks beer, but if he has too much, your mom and stepdad get in arguments. One night there was yelling and someone broke the glass clock that used to sit on the endtable in the living room. You know this though, if he ever hurt your mom, you don't know how, but you would kill him."
 Understand "dad/step-dad/step-father/stepdad/stepfather/mark", "step dad/father" as Step-dad.
 
@@ -7111,7 +7132,7 @@ Book - Animals
 Part - Dog
 
 The dog is a _critter animal in Room_Dirt_Road.
-	"[if not loose]There's a dog behind the fence, alternately digging and barking[otherwise]The dog is wandering in the road[end if].".
+	The initial appearance is "[if not loose]There's a dog behind the fence, alternately digging and barking[otherwise]The dog is wandering in the road[end if].".
 	The description of the dog is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. [one of][sub_pronoun_cap of dog] reminds you of Uncle Buddy's dog that mom was taking care of and how when you tried to feed it and get the spoon, it bit you.
 	[paragraph break][sub_pronoun_cap of dog] makes you [nervous]. But there's something about this dog.[or]
 	[paragraph break]Looking more carefully, you notice that it has prominent teats. So it's a girl dog. Maybe she's pregnant or was. You are pleased with yourself for noticing. You know about this stuff because of Mika who had kittens.[or]The dog makes you [nervous]. [if dog is not loose]Can [sub_pronoun of dog] get out of there[else]What do you do now that [sub_pronoun of dog][']s loose[end if]?[stopping]".
@@ -7236,7 +7257,7 @@ Part - Dream Dog
 
 The dream_dog is a _critter animal in Room_Dream_Dirt_Road.
 	The printed name is "dog".
-	The initial appearance is "Oh no. The dog is wandering in the road. The dog perks up [pos_pronoun of dog] ears as you approach."
+	The initial appearance is "Oh no. The dog is wandering in the road. The dog perks up [pos_pronoun of dog] ears as you approach.".
 	The description is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. Do you [italic type]still[roman type] have to get past this dog?".
 	Understand "dogs/bitch/mutt/canine/yellow/medium/pointy", "doberman/shepher/cujo/kujo/puppy", "german shepherd", "guard dog" as the dream_dog.
 	The indefinite article of dream_dog is "the".
@@ -7477,7 +7498,7 @@ Understand "tabby/yellow/tiger cat/cats/kitty/kitten/kitties" as yellow tabby.
 
 Housecats are animals in Room_Sharons_Trailer.
 	The printed name of housecats is "[if yellow tabby is not visible]a huge pack of cats[otherwise]her other near-feral cats".
-	The initial appearance is "There are cats everywhere. The trailer is filled with cats of every size, color, and condition, many still pretty wild. Cats recline, stroll, and argue on every chair, couch, and table in her house."
+	The initial appearance is "There are cats everywhere. The trailer is filled with cats of every size, color, and condition, many still pretty wild. Cats recline, stroll, and argue on every chair, couch, and table in her house.".
 	The description is "There are cats everywhere. The trailer is filled with cats of every size, color, and condition, many still pretty wild. Cats recline, stroll, and argue on every chair, couch, and table in her house."
 	Understand "black/skinny/white/gray/fluffy/tortoise-shell/calico/tomcat/chunky/patchy/yellow/dirty/bony/-- cat/cats/kitty/kitten/kitties", "sam/oliver" as housecats.
 
@@ -7505,7 +7526,7 @@ Every turn when yellow tabby is visible and (a random chance of 1 in 4 succeeds)
 Part - Racoons
 
 Racoons are animals in Limbo.
-	The initial appearance is "You can see eyes glowing in the dark. More than two. You count at least four pair."
+	The initial appearance is "You can see eyes glowing in the dark. More than two. You count at least four pair.".
 	The description is "".
 	Understand "bandits/invaders/critters" as racoons.
 

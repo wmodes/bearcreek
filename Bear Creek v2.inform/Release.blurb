@@ -1,20 +1,20 @@
 ! Blurb file created by Inform build 6M62
 
-status "/Applications/Inform.app/Contents/Resources/Internal/Miscellany/CblorbModel.html" "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.inform/Build/StatusCblorb.html"
+status "/Applications/Inform.app/Contents/Resources/Internal/Miscellany/CblorbModel.html" "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.inform/Build/StatusCblorb.html"
 
 
 ! Identification
 
-project folder "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.inform"
-release to "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.materials/Release"
+project folder "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.inform"
+release to "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.materials/Release"
 
 ! Blorb instructions
 
 storyfile leafname "Bear Creek.gblorb"
-storyfile "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.inform/Build/output.ulx" include
-ifiction "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.inform/Metadata.iFiction" include
-cover "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.materials/Cover.jpg"
-picture 1 "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.materials/Cover.jpg"
+storyfile "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.inform/Build/output.ulx" include
+ifiction "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.inform/Metadata.iFiction" include
+cover "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.materials/Cover.jpg"
+picture 1 "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.materials/Cover.jpg"
 
 ! Placeholder variables
 
@@ -32,16 +32,16 @@ ifiction
 ! Website instructions
 
 placeholder [ENCODEDSTORYFILE] = "Bear Creek.gblorb.js"
-template path "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.materials/Templates"
+template path "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.materials/Templates"
 template path "/Users/wmodes/Library/Inform/Templates"
 template path "/Applications/Inform.app/Contents/Resources/Internal/Templates"
 placeholder [INTERPRETERSCRIPTS] = " "
 interpreter "Quixe" "g"
-base64 "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.inform/Build/output.ulx" to "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.materials/Release/interpreter/Bear Creek.gblorb.js"
+base64 "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.inform/Build/output.ulx" to "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.materials/Release/interpreter/Bear Creek.gblorb.js"
 
 ! Website instructions
 
-template path "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek Source v2/Bear Creek v2.materials/Templates"
+template path "/Users/wmodes/Google Drive/dev/bearcreek/Bear Creek v2/Bear Creek v2.materials/Templates"
 template path "/Users/wmodes/Library/Inform/Templates"
 template path "/Applications/Inform.app/Contents/Resources/Internal/Templates"
 css
