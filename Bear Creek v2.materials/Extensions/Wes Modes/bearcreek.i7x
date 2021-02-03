@@ -372,22 +372,49 @@ pouring_in is an action applying to two visible things.
 Carry out pouring_in:
 	try inserting the noun into the second noun.
 
+	Chapter - Surface_going
+
+Surface_going is an action applying to one thing.
+Understand "go on/to [visible surface]", "walk on/to [visible surface]", "climb on/to [visible surface]" as surface_going.
+
+Carry out surface_going:
+	if destination of noun is Limbo:
+		Try entering noun;
+	else:
+		Try room_navigating destination of noun.
+
+Chapter - Water_going
+
+Water_going is an action applying to one thing.
+Understand "go to/in/into [visible waterbody]" as water_going.
+
+Carry out water_going:
+	Try doing_some_swimming;
+
 Chapter - Swimming
 
 [We want swimming to be a deliberate act, so when the player asks to swim at the swimming hole, we will give her a warning and hint at her trying again, then we will do it the second time she asks.]
 
 Understand the command "swim/wade/dive" as something new.
-	doing_some_swimming is an action applying to nothing.
-	Understand "swim", "wade", "dive",
-	"swim in/into deep/swimming/-- creek/river/water/stream/pool/hole/--",
-	"wade in/into deep/swimming/-- creek/river/water/stream/pool/hole/--",
-	"dive in/into deep/swimming/-- creek/river/water/stream/pool/hole/--",
-	"jump in/into deep/swimming/-- creek/river/water/stream/pool/hole/--",
-	"go in/into deep/swimming/-- creek/river/water/stream/pool/hole/--"
+
+Doing_some_swimming is an action applying to nothing.
+Understand "swim", "wade", "dive"
 	as doing_some_swimming.
 
-Instead of doing_some_swimming when player is not in Region_River_Area:
+Instead of doing_some_swimming when waterbody is not visible:
 	say "Good idea. You might want to go down to the creek.";
+
+Doing_some_swimming_in is an action applying to one thing.
+	Understand
+	"swim in/into [waterbody]",
+	"wade in/into [waterbody]",
+	"dive in/into [waterbody]",
+	"jump in/into [waterbody]",
+	"go in/into [waterbody]"
+	as doing_some_swimming_in.
+
+Instead of Doing_some_swimming_in:
+	try doing_some_swimming;
 
 Chapter - Sitting/Lying
 
@@ -466,7 +493,7 @@ Does the player mean climbing over an unclimbable thing: it is unlikely.
 Does the player mean climbing under an unclimbable thing: it is unlikely.
 
 understand the command "climb" as something new.
-Understand "go over", "hop", "vault", "scale", "jump", and "cross" as climbing.
+Understand "climb", "hop", "vault", "scale", "jump", and "cross" as climbing.
 
 climbing-up-nada is an action applying to nothing.
 Understand "climb up" as climbing-up-nada.
@@ -814,6 +841,10 @@ Check going northwest when player is discouraged_from_compass_navigating:
 
 Part - Room-Navigation
 
+[TODO:
+>go to shore
+Which do you mean, The Crossing or Other Shore]
+
 [Basically, if the player and the room are in Region_Dreams OR the player and the room are both not in Region_Dreams, than the room is reachable.]
 Definition: A room is reachable
 	if it is reachable_in_dreams or
@@ -903,7 +934,7 @@ Carry out going_downstream:
 		try room_navigating destination.
 
 Going_uppath is an action applying to nothing.
-Understand "go up the/-- road/path/trail" as going_uppath.
+Understand "go up the/-- road/path/trail/hill", "go uphill" as going_uppath.
 Carry out going_uppath:
 	Let destination be uppath_dest of the map region of the location of the player;
 	if destination is the location of the player:
@@ -913,8 +944,9 @@ Carry out going_uppath:
 	else:
 		try room_navigating destination.
 
+[TODO: "follow path/road" should take you in the same direction you were going toward the end, so we may need another verb for follow]
 Going_downpath is an action applying to nothing.
-Understand "go down the/-- path/trail/road", "follow the/-- path/trail/road" as going_downpath.
+Understand "go down the/-- path/trail/road/hill", "go downhill", "follow the/-- path/trail/road" as going_downpath.
 Carry out going_downpath:
 	Let destination be downpath_dest of the map region of the location of the player;
 	if destination is the location of the player:
@@ -1189,7 +1221,7 @@ Chapter - Scene_Walk_With_Grandpa
 
 There is a scene called Scene_Walk_With_Grandpa.
 [Scene_Walk_With_Grandpa begins when player has been in Region_Trailer_Indoors and player is in Region_Blackberry_Area.]
-Scene_Walk_With_Grandpa begins when player has been in Region_Long_Road for four turns.
+Scene_Walk_With_Grandpa begins when player has been in Region_Dirt_Road for four turns.
 Scene_Walk_With_Grandpa ends when Grandpa has been in Room_Grandpas_Trailer and Grandpa is not in Room_Grandpas_Trailer.
 
 When Scene_Walk_With_Grandpa begins:
@@ -1941,6 +1973,15 @@ Definition: a supporter is empty if the number of things on it is zero.
 [Definition: a thing is empty if the number of things encased by it is zero.]
 Definition: a thing is non-empty if it is not empty.
 
+Chapter - Surfaces
+
+A surface is a kind of fixed in place undescribed enterable supporter.
+A surface has a room called destination. Destination is Limbo.
+
+Chapter - Waterbodies
+
+A waterbody is a kind of fixed in place undescribed enterable container.
+
 Chapter - Wet Things
 
 A thing can be wet or dry. Things are usually dry.
@@ -2345,14 +2386,14 @@ Chapter - Tuning
 
 Understand "watch [something]", "play [something]", "turn on [something]" as switching on.
 
-Understand "tune [something]", "tune station/channel/dial on [something]", "adjust [something]", "change station/channel/dial on [something]", "turn station/channel/dial on [something]" as tuning-this.
-Tuning-this is an action applying to one thing.
+Understand "tune [something]", "tune station/channel/dial on [something]", "adjust [something]", "change station/channel/dial on [something]", "turn station/channel/dial on [something]" as tuning_this.
+tuning_this is an action applying to one thing.
 
-Check tuning-this:
+Check tuning_this:
 	if noun is not a device:
 		say "Hm, I don't know how to tune that." instead;
 
-Carry out tuning-this:
+Carry out tuning_this:
 	Try tuning;
 
 [TODO: reverse these two verbs, i.e., make the one with no noun make assumptions and the one with a noun can do the action - this will make the article work properly. ]
@@ -2416,7 +2457,7 @@ To say current_song:
 	Let Current artist be the artist in row Song Number of the Table of Pop Songs;
 	Let Current fave be the fave in row Song Number of the Table of Pop Songs;
 	if current fave is "Y":
-		say "'[current title][one of]' by [current artist],[or],'[at random] [one of]a good one[or]one of your favorites[or]another song you really like[or]one you like to sing to[or]one you remember singing with your mom in the Camero[as decreasingly likely outcomes]";
+		say "'[current title][one of]' by [current artist],[or],'[at random] [one of]a good one[or]one of your favorites[or]another song you really like[or]one you like to sing to[or]one you remember singing with your mom in the Camaro[as decreasingly likely outcomes]";
 	otherwise:
 		say "'[current title]'";
 
@@ -2813,7 +2854,7 @@ Some backdrop_sunlight is backdrop in Region_Blackberry_Area.
 
 Backdrop_creek is backdrop in Region_Blackberry_Area.
 	The description is "You can't see the creek through the tall brambles, but you can hear it.".
-	Understand "Bear/-- river/creek/crick/water/stream" as backdrop_creek.
+	Understand "bear/-- river/creek/crick/water/stream" as backdrop_creek.
 
 Section - Rules and Actions
 
@@ -2905,7 +2946,7 @@ A sycamore tree is [climbable] scenery in Room_Grassy_Clearing.
 	The description is "You know this is a sycamore tree from YWCA Nature Camp. White flaky bark, big broad furry leaves.".
 
 Some stubbly grass is scenery in Room_Grassy_Clearing.
-	It is an enterable [lie-able] supporter.
+	It is a lie-able surface.
 	Understand "pleasant", "weeds", "carpet" as stubbly grass.
 
 Some pine trees are backdrop in Room_Grassy_Clearing.
@@ -3016,7 +3057,7 @@ Part - Region_River_Area
 Section - Description
 
 Region_River_Area is a region.
-Room_Stone_Bridge, Room_Swimming_Hole, Room_Crossing, and Room_Other_Shore are in Region_River_Area.
+Room_Stone_Bridge, Room_Swimming_Hole, Room_Crossing are in Region_River_Area.
 
 Section - Navigation
 
@@ -3027,14 +3068,12 @@ The downstream_dest of Region_River_Area is Room_Crossing.
 The uppath_dest of Region_River_Area is Room_Long_Stretch.
 The downpath_dest of Region_River_Area is Room_Crossing.
 
-Section - Objects
-
-Section - Backdrops
+Section - Backdrops and Scenery
 
 Some backdrop_thick_trees are backdrop in Region_River_Area.
 	The printed name is "thick trees".
 	The description of backdrop_thick_trees is "The thick trees overhead make deep shade below, a welcome relief from the summer heat. The [if current_time_period is morning]morning light[otherwise]afternoon light[end if] filters through the leaves."
-	Understand "trees", "tree", "branches", "leaves", "overhead" as backdrop_thick_trees.
+	Understand "trees", "tree", "branches" as backdrop_thick_trees.
 
 Some backdrop_sunlight is backdrop in Region_River_Area.
 
@@ -3042,6 +3081,7 @@ Section - Rules and Actions
 
 Instead of examining backdrop_sunlight when player is in Region_River_Area:
 	try examining backdrop_thick_trees.
+
 
 Chapter - Room_Stone_Bridge
 
@@ -3052,7 +3092,7 @@ The printed name is "Stone Bridge".
 The description is "[one of]The trail crosses an old stone bridge -- an excellent place to sit on a sunny day -- from which you can look down into Bear Creek[or]The road may have crossed the creek over an old stone bridge at one time but is now just a narrow trail. From here you can peer down into Bear Creek[stopping]. Movement in the sparkling water and the old mossy bridge catch your eye. [stuff_about_the_creek].
 [paragraph break][available_exits]".
 The scent is "cool creek water and mossy stone".
-Understand "old/-- stone/-- bridge", "river/creek" as Room_Stone_Bridge.
+Understand "old/-- stone/-- bridge", "river/creek/stream" as Room_Stone_Bridge.
 
 Section - Navigation
 
@@ -3065,39 +3105,47 @@ Section - Objects
 Section - Backdrops and Scenery
 
 The old stone bridge is scenery in Room_Stone_Bridge.
-It is a enterable supporter.
-The description is "The trail goes over the old bridge that was probably part of some old road. The stones of the old bridge are covered with moss. Horsetails and ferns are growing at the shady base of the bridge.".
-Understand "base/bridge/trail/narrow/under" as old stone bridge.
+	It is a enterable supporter.
+	The description is "The trail goes over the old bridge that was probably part of some old road. The stones of the old bridge are covered with moss. Horsetails and ferns are growing at the shady base of the bridge.".
+	Understand "base/bridge/trail/narrow/under" as old stone bridge.
 
-Bear Creek is scenery in Room_Stone_Bridge.
-It is an unopenable enterable open container.
-The description is "In places, the creek seems like just a trickle, then other places it is as wide as a river. Here, it is broad and shallow as it [if player is in Room_Stone_Bridge]goes under the bridge[otherwise]flows over and around the rocky creek bed[end if]. There are bright stars twinkling on the water with pebbles and tiny minnows below. It smells like wet rocks.
-[paragraph break][stuff_about_the_creek]."
-Understand "river/crick/water/stream/bed" as Bear Creek.
-The scent is "cool creek water. It tingles your nose sort of".
+Bear Creek is a waterbody in Room_Stone_Bridge.
+	The description is "In places, the creek seems like just a trickle, then other places it is as wide as a river. Here, it is broad and shallow as it [if player is in Room_Stone_Bridge]goes under the bridge[otherwise]flows over and around the rocky creek bed[end if]. There are bright stars twinkling on the water with pebbles and tiny minnows below. It smells like wet rocks.
+	[paragraph break][stuff_about_the_creek]."
+	Understand "bear/-- river/crick/water/stream" as Bear Creek.
+	The scent is "cool creek water. It tingles your nose sort of".
 
+[TODO: Make sure all names with an underscore have a printed name. Otherwise, they show up in disabugation]
 Some floating_stuff is scenery in Bear Creek.
-Understand "leaf/leaves/skeeters/shimmering/flash/little/minnow/minnows/branch/branches/stick/sticks/stars/star/reflection/reflections/pebble/pebbles" as floating_stuff.
+	The printed name is "floating stuff".
+	Understand "leaf/leaves/skeeters/shimmering/flash/little/minnow/minnows/branch/branches/stick/sticks/stars/star/reflection/reflections/pebble/pebbles" as floating_stuff.
 
-A boulder is scenery in Room_Stone_Bridge.
-It is a lie-able enterable supporter.
-The printed name is "boulder in the creek".
-The description is "Near the grassy bank, there is a rounded boulder in the creek. It looks like a turtle emerging from the water." Understand "boulders/rounded/turtle/rock/rocks" or "big rock" as boulder.
+A boulder is a lie-able surface in Room_Stone_Bridge.
+	The printed name is "boulder in the creek".
+	The description is "Near the grassy bank, there is a rounded boulder in the creek. It looks like a turtle emerging from the water." Understand "boulders/rounded/turtle/rock/rocks" or "big rock" as boulder.
 
-The grassy bank is scenery in Room_Stone_Bridge.
-It is a lie-able enterable supporter.
-Understand "grass/shore" as grassy bank.
+The grassy bank is a lie-able surface in Room_Stone_Bridge.
+	Understand "grassy/-- shore/bank" as grassy bank.
 
-Some moss is scenery in  Room_Stone_Bridge.
-The description of moss is "Thanks to science camp, you're able to identify plants in the Riparian Zone. That means the area around the banks of a river."
-Understand "horsetail/horsetails/fern/ferns/moss/mosses", "horse tails" as moss.
+Moss is scenery in  Room_Stone_Bridge.
+	The description of moss is "Thanks to science camp, you're able to identify plants in the Riparian Zone. That means the area around the banks of a river."
+	Understand "horsetail/horsetails/fern/ferns/moss/mosses", "horse tails" as moss.
 
 Section - Rules and Actions
 
 To say stuff_about_the_creek:
 	say "[one of]You watch two leaves swirl by on the current[or]You follow water skeeters darting about[or]You catch a glimmering flash in the depths near a boulder[or]Little minnows are swimming about in the shallows[or]A branch floats by, catching for a moment on the bottom, and then continues on[in random order]";
 
-Instead of entering Bear Creek, try doing_some_swimming.
+Instead of taking floating_stuff:
+	say "You reach for them, [one of]but they drift on down the river[or]and they move just out of reach[or]but they sink out of sight below the water[at random]."
+
+Instead of examining floating_stuff,
+	try examining bear creek.
+
+Instead of taking moss, say "Best to leave the native plants for the health of the Riparian Ecosystem. (Thanks, Nature Camp.)"
+
+Instead of entering Bear Creek,
+	try doing_some_swimming.
 
 Instead of doing_some_swimming in Room_Stone_Bridge:
 	say "The water is too shallow to swim, so you roll up your pant legs and wade in, soaking your tennies. Uh oh, will you get in trouble for that? But the water is chill and refreshing.";
@@ -3106,16 +3154,17 @@ Instead of doing_some_swimming in Room_Stone_Bridge:
 
 Test bridge with "d.d.d.get berries.again.again.again.d.d.d.";
 
+
 Chapter - Room_Swimming_Hole
 
 Section - Description
 
 Room_Swimming_Hole is a room.
-The printed name is "Swimming hole".
-The description is "[if player was in Room_Long_Stretch]Down a long wooded trail that zigs down the bank, you emerge from the thick woods, and the trees open up to the sky. [end if]The swimming hole lies before you, a deep pool carved out of and surrounded by smooth granite rocks. It is big enough that you can swim like they taught you at the YWCA from one end to the other, and deep enough to dive off the rocks.
-[paragraph break][available_exits]".
-The scent is "cool creek water and mossy rocks".
-Understand "swimming/-- hole/pool", "hole/pool", "zigzag/steep trail" as Room_Swimming_Hole.
+	The printed name is "Swimming hole".
+	The description is "[if player was in Room_Long_Stretch]Down a long wooded trail that zigs down the bank, you emerge from the thick woods, and the trees open up to the sky. [end if]The swimming hole lies before you, a deep pool carved out of and surrounded by smooth granite rocks. It is big enough that you can swim like they taught you at the YWCA from one end to the other, and deep enough to dive off the rocks.
+	[paragraph break][available_exits]".
+	The scent is "cool creek water and mossy rocks".
+	Understand "swimming/-- hole/pool", "hole/pool", "zigzag/steep trail" as Room_Swimming_Hole.
 
 Section - Navigation
 
@@ -3126,18 +3175,26 @@ The available_exits of Room_Swimming_Hole is "It is possible to walk along the r
 Section - Objects
 
 A pool_log is a thing in Room_Swimming_Hole.
-The printed name is "floating length of log".
-The description is "There is a floating length of log here, bobbing around at the edges of the swimming hole."
-Understand "floating/-- length of log", "floating/-- log/wood/driftwood" as pool_log.
+	The printed name is "floating length of log".
+	The description is "There is a floating length of log here, bobbing around at the edges of the swimming hole."
+	Understand "floating/-- length of log", "floating/-- log/wood/driftwood" as pool_log.
 
 Section - Backdrops and Scenery
 
-The deep pool is scenery in Room_Swimming_Hole.
-It is a enterable unopenable open container.
-The description is "The creek tumbles down some big granite rocks here and forms a deep pool. You can't see the bottom. And that makes you [nervous]."
-Understand "deep pool", "swimming hole", "Bear/-- river/creek/crick/water/stream" as deep pool.
+The deep pool is a waterbody in Room_Swimming_Hole.
+	The description is "The creek tumbles down some big granite rocks here and forms a deep pool. You can't see the bottom. And that makes you [nervous]."
+	Understand "deep pool", "swimming hole", "Bear/-- river/creek/crick/water/stream" as deep pool.
 
-Some smooth granite rocks are [lie-able] undescribed supporters in Room_Swimming_Hole.
+Some smooth granite rocks are a lie-able surface in Room_Swimming_Hole.
+
+The rocky_shore_north is a surface in Room_Swimming_Hole.
+	The printed name is "rocky shore".
+	The description is "You can walk along the creek downstream over a rocky shore.".
+	The destination is Room_Crossing.
+	Understand "rocks", "rocky/-- shore/bank" as rocky_shore_north.
+
+[Instead of entering rocky_shore_north:
+	try room_navigating Room_Crossing;]
 
 Section - Rules and Actions
 
@@ -3188,39 +3245,55 @@ The printed name is "The Crossing".
 The description is "Here the creek broadens out a little and, except for a place in the middle where the current is swift, there are big stones, boulders really, scattered about in the river.
 [paragraph break][available_exits]".
 The scent is "cool creek water and mossy rocks".
-Understand "crossing", "rocky/-- shore" as Room_Crossing.
+Understand "crossing" as Room_Crossing.
 
 Section - Navigation
 
 North of Room_Crossing is Room_Swimming_Hole.
 East of Room_Crossing is Room_Other_Shore.
 
-The available_exits of Room_Crossing are "The shoreline ends at a steep bank further downstream, though it looks like you might be able to cross the creek to the other shore on the boulders in midstream. You can also go back along the rocks to the swimming hole upstream."
+The available_exits of Room_Crossing are "The shoreline ends at a steep bank further downstream, though it looks like you might be able to cross the creek to the other shore on the boulders in midstream. You can also go back along the rock shore to the swimming hole upstream."
+
+[Instead of entering rocky_shore_south:
+	try room_navigating Room_Swimming_Hole;]
+
+[Instead of entering boulders_west:
+	try room_navigating Room_Other_Shore;]
+
+[Instead of entering bridge_log1 when player is in Room_Crossing:
+	try room_navigating Room_Other_Shore;]
 
 Section - Objects
 
-A bridge_log1 is a fixed in place enterable supporter in Limbo.
-	The initial appearance is "A log has floated down the creek and is wedged in the boulders in the middle of the creek.".
+A bridge_log1 is a surface in Limbo.
 	The printed name is "a floating length of log".
+	The initial appearance is "A log has floated down the creek and is wedged in the boulders in the middle of the creek.".
 	The description is "A log has floated downstream in the swift current. It is wedged between two boulders forming a kind of bridge."
+	The destination is Room_Other_Shore.
 	Understand "bridge", "wood", "driftwood", "drift wood", "driftlog", "drift log", "scary" as bridge_log1.
 
 Section - Backdrops and Scenery
 
-Some boulders are scenery in Room_Crossing.
-The description is "There are scattered boulders in the creek bed on which you might be able to cross."
-Understand "boulder", "stones", "stepping", "rocks" as boulders.
+The rocky_shore_south is a surface in Room_Crossing.
+	The printed name is "rocky shore".
+	The description is "You can walk along the creek downstream over a rocky shore.".
+	The destination is Room_Swimming_Hole.
+	Understand "rocks", "rocky/-- shore/bank" as rocky_shore_south.
 
-The swift current is scenery in Room_Crossing.
-It is a enterable unopenable open container.
-The description is "The river here narrows to a swift current, too broad to jump across and too swift to wade or swim -- or in any case, you're not willing to risk drowning here."
-Understand "river/creek/Bear/crick/water/stream/bed/gap/chasm" as swift current.
+Some boulders_west are a surface in Room_Crossing.
+	The printed name is "scattered boulders".
+	The description is "There are scattered boulders in the creek bed on which you might be able to cross."
+	The destination is Room_Other_Shore.
+	Understand "boulder/boulders/stones" as boulders_west.
+
+The swift_current_west is a waterbody in Room_Crossing.
+	The printed name is "swift current".
+	It is a enterable unopenable open container.
+	The description is "The river here narrows to a swift current, too broad to jump across and too swift to wade or swim -- or in any case, you're not willing to risk drowning here."
+	Understand "bear/swift/-- river/creek/crick/water/stream/gap/chasm/current" as swift_current_west.
 
 A steep bank is scenery in Room_Crossing.
-The description of steep bank is "It's pretty steep. And covered in poison oak."
-Instead of climbing steep bank, say "You try to climb the bank, but slide back down. Too steep. Maybe you can cross the creek to the other side."
-
-A steep bank is scenery. It is in Room_Crossing. The description of steep bank is "It's pretty steep. And covered in poison oak."
+	The description of steep bank is "It's pretty steep. And covered in poison oak."
 
 Section - Rules and Actions
 
@@ -3241,72 +3314,41 @@ Instead of jumping when player is in Room_Crossing and bridge_log1 is not visibl
 	say "You consider jumping across the sizeable gap across the creek, but the slippery rocks make you reconsider."
 Understand "jump across" as jumping when player is in Room_Crossing.
 
-Instead of entering swift current, try doing_some_swimming.
+Instead of searching swift_current_west:
+	try examining swift_current_west;
+
+Instead of entering swift_current_west,
+	try doing_some_swimming.
 
 Instead of doing_some_swimming in Room_Crossing:
-	say "The current here is too strong and it scares you. You saw a TV show once with your grandpa about people in rafts and one man who fell off and got caught under a rock and drowned. You think better of the idea.";
+	say current_swim_refusal.
 
-
-Chapter - Room_Other_Shore
-
-Section - Description
-
-Room_Other_Shore is a room.
-The printed name is "Other Shore".
-The description is "[if Scene_Day_Two has not happened]You are on the far side of the creek where trees come right down to the water. [else]You are back at Bear Creek on the other shore from the swimming hole and the road.  Trees come right down to the water. [end if]A wooded trail goes into the forest.
-[paragraph break][available_exits]".
-The scent is "cool creek water and mossy rocks".
-Understand "other/-- shore" as Room_Other_Shore.
-
-Section - Navigation
-
-West of Room_Other_Shore is Room_Crossing.
-East of Room_Other_Shore is Room_Wooded_Trail.
-
-The available_exits of Room_Other_Shore are "[if Scene_Day_Two has not happened]The creek here curves around in a funny way, but you're pretty sure that this trail must connect with the willow trail on this side of the creek. That was this way, right? This trail is darker and more wooded, but it looks like it gets lighter up ahead. Back the way you came, you can get most of the way across the creek by hopping from boulder to boulder.[else]You can get back across the creek by hopping from boulder to boulder and crossing on the log. Or you can go back the way you came on the wooded trail.[end if]"
-
-Section - Objects
-
-A bridge_log2 is a fixed in place enterable supporter in Room_Other_Shore.
-	The initial appearance is "A log has floated down the creek and is wedged in the boulders in the middle of the creek.".
-	The printed name is "a floating length of log".
-	The description is "A log has floated downstream in the swift current. It is wedged between two boulders forming a kind of bridge."
-	Understand "bridge", "wood", "driftwood", "drift wood", "driftlog", "drift log", "scary" as bridge_log2.
-
-Section - Backdrops and Scenery
-
-[TODO: Should the river be scenery?]
-The broad river is scenery. It is in Room_Other_Shore. It is a enterable unopenable open container.
-Understand "river/creek/Bear/crick/water/stream/bed/gap/chasm" as broad river.
-
-[Some stones are undescribed fixed in place enterable supporters in Room_Other_Shore. The printed name is "boulders". The description is "There are scattered boulders in the creek bed on which you might be able to cross."
-Understand "boulders", "boulder", "stones", "stepping", "rocks" as some stones.]
-
-Section - Rules and Actions
+To say current_swim_refusal:
+	say "The current here is too strong and it scares you. You saw a TV show once with your grandpa about people in rafts and one man fell off and got caught under a rock and drowned. You think better of the idea.";
 
 
 
-Part - Region_Long_Road
+Part - Region_Dirt_Road
 
-Region_Long_Road is a region.
-Room_Dirt_Road, Room_Long_Stretch, Room_Railroad_Tracks, Room_Grassy_Field are in Region_Long_Road.
+Region_Dirt_Road is a region.
+Room_Dirt_Road, Room_Long_Stretch, Room_Railroad_Tracks, Room_Grassy_Field are in Region_Dirt_Road.
 
 Section - Backdrops & Scenery
 
-Some backdrop_sunlight is backdrop in Region_Long_Road.
+Some backdrop_sunlight is backdrop in Region_Dirt_Road.
 
-The rutted_road is backdrop in Region_Long_Road.
+The rutted_road is backdrop in Region_Dirt_Road.
 	The description is "The old creekside road is seldom used now and in poor condition with deep ruts and sandy areas. Nowadays it is only used by people walking down to Bear Creek from the highway, fishermen and berry pickers mostly. There is tall grass growing right down the middle of the road.".
 	Understand "road/trail/path/ruts/sand", "deep ruts", "tall grass" as rutted_road.
 
 Section - Navigation
 
-The return_dest of Region_Long_Road is Room_Grassy_Clearing.
-The forward_dest of Region_Long_Road is Room_Grandpas_Trailer.
-The upstream_dest of Region_Long_Road is Room_Stone_Bridge.
-The downstream_dest of Region_Long_Road is Room_Picnic_Area.
-The uppath_dest of Region_Long_Road is Room_B_Loop.
-The downpath_dest of Region_Long_Road is Room_Dirt_Road.
+The return_dest of Region_Dirt_Road is Room_Grassy_Clearing.
+The forward_dest of Region_Dirt_Road is Room_Grandpas_Trailer.
+The upstream_dest of Region_Dirt_Road is Room_Stone_Bridge.
+The downstream_dest of Region_Dirt_Road is Room_Picnic_Area.
+The uppath_dest of Region_Dirt_Road is Room_B_Loop.
+The downpath_dest of Region_Dirt_Road is Room_Dirt_Road.
 
 
 Chapter - Room_Dirt_Road
@@ -3314,15 +3356,15 @@ Chapter - Room_Dirt_Road
 Section - Description
 
 Room_Dirt_Road is a room.
-The printed name is "Dirt Road".
+The printed name is "End of the Dirt Road".
 The description is "[one of]The trail over the stone bridge turns into a dirt road here which slopes gently upward running along the creek.[or]The dirt road slopes down as it runs along the creek before turning into a trail over the stone bridge[stopping]. The old creekside road is seldom used now and in poor condition with deep ruts and sandy areas. Nowadays it is only used by people walking down to Bear Creek from the highway, fishermen and berry pickers mostly. Here, someone's field backs up to the road and is separated by a chain link fence. The field is a mass of tall weeds and old junk cars.
 [paragraph break][available_exits]".
 The scent is "sunshine and dust".
-Understand "dirt/-- road" as Room_Dirt_Road.
+Understand "dirt/-- road", "end", "end of the/-- dirt/-- road" as Room_Dirt_Road.
 
 Section - Navigation
 
-Room_Dirt_Road is west of Room_Stone_Bridge.
+Room_Dirt_Road is up from Room_Stone_Bridge and west of Room_Stone_Bridge.
 
 The available_exits of Room_Dirt_Road are "The old dirt road continues on uphill for a long stretch running parallel to the creek downstream. Back toward the old stone bridge, the road narrows to a ragged trail as it crosses the bridge."
 
@@ -3379,6 +3421,11 @@ Instead of going to Room_Long_Stretch when player is in Room_Swimming_Hole:
 	say "You clamber up the steep trail. As you step out of the shaded trail, the heat is like a physical force that pushes against you.";
 	continue the action.
 
+Instead of going from Room_Long_Stretch:
+	if player has been in Room_Long_Stretch and player has not been in Room_Top_of_the_Pine_Tree:
+		say "Dang, you're pretty sure you've climbed all the way to the top of that tall pine tree before.";
+	continue the action.
+
 Instead of jumping in Room_Long_Stretch, try going up.
 
 
@@ -3396,6 +3443,7 @@ Understand "railroad/train/-- tracks/crossing", "southern pacific tracks" as Roo
 Section - Navigation
 
 Room_Railroad_Tracks is south of Room_Long_Stretch.
+Down from Room_Railroad_Tracks is Room_Long_Stretch.
 
 The available_exits of Room_Railroad_Tracks is "Across the tracks is a grassy field and the trailer park beyond. Back the other way is the long dirt road gently sloping down along the creek. Or you could follow the railroad tracks which disappear into a green tunnel of trees."
 
@@ -3492,10 +3540,10 @@ Instead of climbing back fence, say "Perhaps it is easier to just go around thro
 Instead of doing anything except examining to back gate:
 	say "You better leave that alone. You don't want to get in trouble."
 
-Gate-going is an action applying to nothing.
-Understand "go to/through/in/-- back/-- gate", "enter back/-- gate", "exit back/-- gate" as gate-going.
+gate_going is an action applying to nothing.
+Understand "go to/through/in/-- back/-- gate", "enter back/-- gate", "exit back/-- gate" as gate_going.
 
-Carry out gate-going:
+Carry out gate_going:
 	if player is in Room_Grassy_Field:
 		try room_navigating Room_Picnic_Area;
 	else if player is in Room_Picnic_Area:
@@ -3690,9 +3738,6 @@ Instead of dropping when player is in Room_Top_of_the_Pine_Tree:
 Does the player mean examining distant-tracks:
 	it is possible.]
 
-Does the player mean room_navigating Room_Railroad_Tracks when player is in Room_Grassy_Field or player is in Room_Long_Stretch:
-	it is very likely.
-
 
 Part - Region_Trailer_Park_Area
 
@@ -3829,13 +3874,13 @@ Section - Rules and Actions
 Instead of going inside when player is in Room_B_Loop:
 	try room_navigating Room_Grandpas_Trailer.
 
-Instead of entering grampas_virtual_trailer:
+Instead of entering grandpas_virtual_trailer:
 	try room_navigating Room_Grandpas_Trailer.
 
-[Instead of object_navigating grampas_virtual_trailer when player is in Room_B_Loop:
+[Instead of object_navigating grandpas_virtual_trailer when player is in Room_B_Loop:
 	try room_navigating Room_Grandpas_Trailer.]
 
-Instead of inserting something into grampas_virtual_trailer:
+Instead of inserting something into grandpas_virtual_trailer:
 	say "You might want to just go in there."
 
 
@@ -3867,8 +3912,7 @@ The description is "This tea is barely worthy of the name, a lukewarm watery som
 
 Section - Backdrops & Scenery
 
-Cat Lady's couch is scenery in Room_Sharons_Trailer.
-	Cat Lady's couch is an undescribed fixed in place enterable lie-able supporter.
+Cat Lady's couch is a lie-able surface in Room_Sharons_Trailer.
 	The indefinite article is "".
 	The printed name is "what was formerly a loveseat".
 	The description is "This once was a loveseat. Now it is a pile of cat-shredded upholstery and stuffing, and smells like cat pee.".
@@ -4014,7 +4058,7 @@ Instead of going inside when player is in Room_C_Loop:
 Instead of entering lees_virtual_trailer:
 	try room_navigating Room_Lees_Trailer.
 
-[Instead of object_navigating grampas_virtual_trailer when player is in Room_B_Loop:
+[Instead of object_navigating grandpas_virtual_trailer when player is in Room_B_Loop:
 	try room_navigating Room_Grandpas_Trailer.]
 
 Instead of inserting something into lees_virtual_trailer:
@@ -4111,10 +4155,10 @@ The available_exits are "You can go in to Honey and Grandpa's trailer of course.
 
 Section - Objects
 
-The grampas_virtual_trailer is a fixed in place undescribed enterable container in Room_B_Loop.
+The grandpas_virtual_trailer is a fixed in place undescribed enterable container in Room_B_Loop.
 	The printed name is "Honey and Grandpa's trailer".
 	The description is "Honey and Grandpa's trailer is white with dark brown trim, and has hanging ferns from the porch.".
-	Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas/-- trailer/house/place/home" as grampas_virtual_trailer.
+	Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas/-- trailer/house/place/home" as grandpas_virtual_trailer.
 
 Your bicycle is a fixed in place thing in Room_B_Loop.
 	The description is "This is your trusty red Schwinn with a white banana seat. Unfortunately, the tires are so flat it barely rolls. Poo."
@@ -4131,13 +4175,13 @@ Section - Rules and Actions
 Instead of going inside when player is in Room_B_Loop:
 	try room_navigating Room_Grandpas_Trailer.
 
-Instead of entering grampas_virtual_trailer:
+Instead of entering grandpas_virtual_trailer:
 	try room_navigating Room_Grandpas_Trailer.
 
-[Instead of object_navigating grampas_virtual_trailer when player is in Room_B_Loop:
+[Instead of object_navigating grandpas_virtual_trailer when player is in Room_B_Loop:
 	try room_navigating Room_Grandpas_Trailer.]
 
-Instead of inserting something into grampas_virtual_trailer:
+Instead of inserting something into grandpas_virtual_trailer:
 	say "You might want to just go in there."
 
 Instead of taking bicycle, say "Unfortunately, the tires of your bicycle are so flat it barely rolls.".
@@ -4182,13 +4226,11 @@ Honeys_tv is undescribed fixed in place device in Room_Grandpas_Trailer.
 	The description is "This is Honey's big color TV in its wooden case, pretty much like the one you have at home with mom, but with lighter wood. On weekend nights you lie on the floor with Grandpa and watch Bowling for Dollars, Wild World of Animals, and sometimes, if you and mom aren't going home early, Wonderful World of Disney on Sunday night.".
 	Understand "honeys/honey's/-- big/color/-- television/tv/tele/tely/telly/boob/tube/set" as Honeys_tv.
 
-The floral print couch is scenery in Room_Grandpas_Trailer.
-	The floral print couch is enterable [lie-able] supporter.
+The floral print couch is a lie-able surface in Room_Grandpas_Trailer.
 		The description is "Sometimes you curl up on Honey's floral print couches with a crocheted afghan and a book and spend the afternoon.".
 	Understand "sofa", "couches", "divan", "floral-print" as floral print couch.
 
-The carpet is scenery in Room_Grandpas_Trailer.
-	The carpet is an enterable [lie-able] supporter.
+The carpet is a lie-able surface in Room_Grandpas_Trailer.
 		The description of the carpet is "The carpet is this strange mottled gold-brown that looks a little bit like fallen Autumn leaves gone indistinct after the first winter rain. In any case, it is nice to lie on with grandpa and watch TV.".
 	Understand "rug", "floor" as carpet.
 
@@ -4229,7 +4271,16 @@ Part - Region_Woods_Area
 Section - Description
 
 Region_Woods_Area is a region.
-Room_Wooded_Trail, Room_Dark_Woods_South, Room_Dark_Woods_North, Room_Forest_Meadow, Room_Protected_Hollow, and Room_Sentinel_Tree are in Region_Woods_Area.
+Room_Other_Shore, Room_Wooded_Trail, Room_Dark_Woods_South, Room_Dark_Woods_North, Room_Forest_Meadow, Room_Protected_Hollow, and Room_Sentinel_Tree are in Region_Woods_Area.
+
+Section - Navigation
+
+The return_dest of Region_Woods_Area is Limbo.
+The forward_dest of Region_Woods_Area is Room_Forest_Meadow.
+The upstream_dest of Region_Woods_Area is Room_Forest_Meadow.
+The downstream_dest of Region_Woods_Area is Room_Other_Shore.
+The uppath_dest of Region_Woods_Area is Room_Other_Shore.
+The downpath_dest of Region_Woods_Area is Room_Forest_Meadow.
 
 Section - Backdrops and Scenery
 
@@ -4237,19 +4288,82 @@ Some backdrop_thick_trees are backdrop in Region_Woods_Area.
 
 Some backdrop_sunlight is backdrop in Region_Woods_Area.
 
-Section - Navigation
-
-The return_dest of Region_Woods_Area is Limbo.
-The forward_dest of Region_Woods_Area is Room_Forest_Meadow.
-The upstream_dest of Region_Woods_Area is Limbo.
-The downstream_dest of Region_Woods_Area is Limbo.
-The uppath_dest of Region_Woods_Area is Limbo.
-The downpath_dest of Region_Woods_Area is Limbo.
-
 Section - Rules and Actions
 
 Instead of examining backdrop_sunlight when player is in Region_Woods_Area,
 	try examining backdrop_thick_trees.
+
+
+Chapter - Room_Other_Shore
+
+Section - Description
+
+Room_Other_Shore is a room.
+The printed name is "Other Shore".
+The description is "[if Scene_Day_Two has not happened]You are on the far side of the creek where trees come right down to the water. [else]You are back at Bear Creek on the other shore from the swimming hole and the road.  Trees come right down to the water. [end if]A wooded trail goes into the forest.
+[paragraph break][available_exits]".
+The scent is "cool creek water and mossy rocks".
+Understand "other/-- shore" as Room_Other_Shore.
+
+Section - Navigation
+
+West of Room_Other_Shore is Room_Crossing.
+East of Room_Other_Shore is Room_Wooded_Trail.
+
+The available_exits of Room_Other_Shore are "[if Scene_Day_Two has not happened]The creek here curves around in a funny way, but you're pretty sure that this trail must connect with the willow trail on this side of the creek. That was this way, right? This trail is darker and more wooded, but it looks like it gets lighter up ahead. Back the way you came, you can get most of the way across the creek by hopping from boulder to boulder.[else]You can get back across the creek by hopping from boulder to boulder and crossing on the log. Or you can go back the way you came on the wooded trail.[end if]"
+
+[Instead of entering boulders_east:
+	try room_navigating Room_Crossing;]
+
+[Instead of entering bridge_log2 when player is in Room_Other_shore:
+try room_navigating Room_Crossing;]
+
+Section - Objects
+
+A bridge_log2 is a surface in Room_Other_Shore.
+	The printed name is "a floating length of log".
+	The initial appearance is "A log has floated down the creek and is wedged in the boulders in the middle of the creek.".
+	The description is "A log has floated downstream in the swift current. It is wedged between two boulders forming a kind of bridge."
+	The destination is Room_Crossing.
+	Understand "bridge", "wood", "driftwood", "drift wood", "driftlog", "drift log", "scary" as bridge_log2.
+
+Section - Backdrops and Scenery
+
+Some boulders_east are a surface in Room_Other_Shore.
+	The printed name is "scattered boulders".
+	The description is "There are scattered boulders in the creek bed on which you might be able to cross."
+	Understand "boulder", "stones", "stepping", "rocks" as boulders_east.
+	The destination is Room_Crossing.
+
+The swift_current_east is a waterbody in Room_Other_Shore.
+	The printed name is "swift current".
+	It is a enterable unopenable open container.
+	The description is "The river here narrows to a swift current, too broad to jump across and too swift to wade or swim -- or in any case, you're not willing to risk drowning here."
+	Understand "bear/swift/-- river/creek/crick/water/stream/gap/chasm/current" as swift_current_east.
+
+Section - Rules and Actions
+
+Instead of entering swift_current_west,
+	try doing_some_swimming.
+
+Instead of doing_some_swimming in Room_Other_Shore:
+	say current_swim_refusal.
+
+[TODO:
+>jump on boulders
+I only understood you as far as wanting to jump.
+
+>jump across
+I only understood you as far as wanting to jump.
+
+>jump
+You jump around like a monkey.
+
+>cross river
+You don't see that anywhere around here.
+
+>cross creek
+You don't see that anywhere around here]
 
 
 Chapter - Room_Wooded_Trail
@@ -4811,12 +4925,6 @@ Section - Navigation
 Room_Dream_Grassy_Field is east of Room_Camaro_With_Stepdad.
 
 The available_exits of Room_Dream_Grassy_Field are "The gate to the trailer park seems fuzzy and out of focus. The railroad crossing is a little clearer. The only way from here is to go on";
-
-Does the player mean room_navigating Room_Dream_Railroad_Tracks when player is in Room_Dream_Grassy_Field:
-it is very likely.
-
-Does the player mean room_navigating Room_Railroad_Tracks when player is in Room_Dream_Grassy_Field:
-it is very unlikely.
 
 Section - Objects and People
 
@@ -6052,7 +6160,7 @@ To take action on Grandpa's walk:
 			increase bb_index of Grandpa by one;
 		else if player is in Region_Blackberry_Area:
 			queue_report "[one of]You hear grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
-		else if player is in Region_River_Area or player is in Region_Long_Road:
+		else if player is in Region_River_Area or player is in Region_Dirt_Road:
 			if a random chance of 1 in 2 succeeds:
 				queue_report "[one of]You think you hear your Grandpa calling you[or]Is that grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think grandpa's calling.[at random]" at priority 1;
 	[ MIDDLE: grandpa is walking ]
@@ -6080,7 +6188,7 @@ To take action on Grandpa's walk:
 		[ ADVANCE: one turn after you arrive, grandpa says something to you and goes one step closer to goal ]
 		if time_until_leaving of Grandpa is zero: [time to move]
 			if grandpa is visible:
-				queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]goes through the back gate into the trailer park[else if player is in Region_Long_Road]heads off toward the railroad tracks[else if player is in Region_Long_Road]heads off toward the railroad tracks[else if player is in Room_B_Loop]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 2;
+				queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]goes through the back gate into the trailer park[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Room_B_Loop]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 2;
 			else: [if grandpa is one location back]
 				queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 2;
 			move Grandpa toward trailer;
@@ -7220,7 +7328,7 @@ Every turn when location is Room_Railroad_Tracks
 	and a random chance of 1 in 6 succeeds,
 	queue_report "A dog barking can be heard a ways down the road." with priority 7;
 
-Instead of listening when location of player is in Region_Long_Road,
+Instead of listening when location of player is in Region_Dirt_Road,
 	say "You can still hear the dog barking, of course."
 Instead of listening when location of player is in Region_River_Area,
 	say "You hear the gentle murmuring of the creek, punctuated by the sound of a dog barking."
