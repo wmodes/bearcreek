@@ -350,6 +350,13 @@ The standard report waiting rule response (A) is "You wait for a bit and time pa
 Rule for printing a parser error when the latest parser error is the can't see any such thing error:
 	say "You don't see that anywhere around here." instead;
 
+[ Remove all the messages that clarify the parser's choice of something]
+Include (-
+Replace PrintInferredCommand;
+
+[ PrintInferredCommand; ];
+-) before "Parser.i6t".
+
 Part - New commands
 
 Chapter - Out of world commands
@@ -601,7 +608,7 @@ To put clothes back on:
 		let gettin-stuff be false;
 		let gettin-clothes be false;
 		[say "stuff: [list of everything that has been carried].";]
-		repeat with item running through stuff you brought here:
+		repeat with item running through stuff_you_brought_here:
 			if item is visible and item is not held:
 				move item to player;
 				now gettin-stuff is true;
@@ -615,7 +622,7 @@ To put clothes back on:
 			now grandpas_shirt is worn by player;
 		if gettin-stuff is true or gettin-clothes is true:
 			say "You[one of] slowly[or] leisurely[or][at random] gather your stuff[if gettin-clothes is true] and pull your clothes back on[end if].";
-		change stuff you brought here to have 0 entries;
+		change stuff_you_brought_here to have 0 entries;
 	else:
 		say "You are already dressed!";
 
@@ -890,12 +897,6 @@ Carry out fail_navigating:
 	say cant_find_that;
 
 
-Part - Navpoints
-
-
-Part - Object-Navigating
-
-
 Part - Landmarks and Navpoints
 
 
@@ -968,12 +969,61 @@ To long_range_navigate to (destination - a room):
 Part - Elusive Landmarks
 
 The_distance is a container.
+The_distance is in Limbo.
+
+[TODO: replace object-navigating with landmark_navigating applying ONLY to elusive_landmarks]
 
 An elusive_landmark is a kind of thing.
-[Elusive_landmarks are navigable scenery.]
 
-[Does the player mean object-navigating an elusive_landmark when in Dark Woods:
-it is very likely.]
+landmark_navigating is an action applying to one thing.
+Understand
+	"go to/near/by/-- [elusive_landmark]",
+	"walk to/near/by/-- [elusive_landmark]",
+	"run to/near/by/-- [elusive_landmark]"
+	as landmark_navigating.
+
+Check landmark_navigating:
+	if the noun is visible:
+		say "Well, that's right here." instead;
+	if the noun is white tree:
+		try room_navigating Room_Dark_Woods_North;
+	if the noun is not in the_distance:
+		say cant_find_that instead;
+
+To say cant_find_that:
+	say "You're no longer sure how to get there. [looking_for_available_exits]";
+
+Carry out landmark_navigating:
+	say "You head toward the [noun].[run paragraph on]";
+	move_within_dark_woods.
+
+When play begins:
+	Let this_thing be a random elusive_landmark in Limbo;
+	Now this_thing is in Room_Dark_Woods_South;
+	Let next_thing be a random elusive_landmark in Limbo;
+	Now next_thing is in the_distance;
+
+To move_within_dark_woods:
+	say "[one of]You stumble around in the dark woods[or]You carefully make your way through the forest[or]You follow an uncertain path through the wood[or]You bushwhack your way through the underbrush[at random].";
+	Let old_near_thing be a random elusive_landmark in Room_Dark_Woods_South;
+	Let old_far_thing be a random elusive_landmark in the_distance;
+	Let new_far_thing be a random elusive_landmark in Limbo;
+	Now old_far_thing is in Room_Dark_Woods_South;
+	Now new_far_thing is in the_distance;
+	Now old_near_thing is off-stage;
+	Repeat with item running through stuff_you_brought_here:
+		if item is visible and item is not held:
+			move item to limbo;
+	try looking;
+
+After dropping something (called the item) when in Room_Dark_Woods_South:
+	add item to stuff_you_brought_here;
+	continue the action;
+
+[TODO: Make sure all the stuff_you_brought_here is in Room_Dark_Woods_South and Room_Dark_Woods_North]
+
+Instead of doing anything except examining or navpoint_navigating elusive_landmarks:
+	say "This is no time for that. You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.".
 
 
 Book - Language Tweaks
@@ -1351,7 +1401,7 @@ When Scene_Across_the_Creek begins:
 Part - Scene_Night_In_The_Woods
 
 There is a scene called Scene_Night_In_The_Woods.
-Scene_Night_In_The_Woods begins when player has been in Region_Woods_Area for 6 turns.
+Scene_Night_In_The_Woods begins when player has been in Room_Dark_Woods_South for 6 turns.
 Scene_Night_In_The_Woods ends when Scene_Dreams ends.
 
 When Scene_Night_In_The_Woods begins:
@@ -4397,7 +4447,7 @@ Section - Description
 
 Room_Dark_Woods_South is a room.
 The printed name is "Dark Woods".
-The description is "[if Scene_Day_Two has not happened]You are [one of]no longer sure where you are[or]not completely certain which way to go[or]confused[or]feeling lost[cycling]. The woods look familiar and altogether strange. It's difficult to get your bearings.[else]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night.[end if]
+The description is "[if Scene_Day_Two is happening]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night.[else]You are [one of]no longer sure where you are[or]not completely certain which way to go[or]confused[or]feeling lost[cycling]. The woods look familiar and altogether strange. It's difficult to get your bearings.[paragraph break]Here there is [a list of elusive_landmarks in Room_Dark_Woods_South].[end if]
 [paragraph break][available_exits]".
 The scent is "musty forest smell".
 
@@ -4408,7 +4458,7 @@ South of Room_Dark_Woods_South is nowhere.
 [Later when Scene_Day_Two is happening:
 	South of Room_Dark_Woods is Room_Wooded_Trail.]
 
-The available_exits of Room_Dark_Woods_South are "[if Scene_Day_Two has not happened][one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there[in random order] [a list of elusive_landmarks in the_distance][first time]. You can see trails leading into the woods, but you are no longer sure which one takes you back to either the creek or to the blackberry trail[only].[else]There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail.[end if]"
+The available_exits of Room_Dark_Woods_South are "[if Scene_Day_Two is happening]There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail.[else][one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there[in random order] [a list of elusive_landmarks in the_distance][first time]. You can see trails leading into the woods, but you are no longer sure which one takes you back to either the creek or to the blackberry trail[only].[end if]"
 
 Section - Objects
 
@@ -4426,17 +4476,18 @@ A bright patch in the woods is an elusive_landmark in Limbo.
 	The description is "This is a bright patch in the woods with darker woods all around."
 	Understand "bright/light/patch/woods", "light/bright patch/woods", "light/bright of/in patch/woods" as bright patch in the woods.
 
+[TODO: Review ALL of the understand rules for objects esp adjectives]
 The far off sound of the creek is an elusive_landmark in Limbo.
 	The description is "Well, you can't see it, but you thought you heard the sound of the distant creek. Now you are not so sure."
 	Understand "faraway/far/sound/creek", "faraway/far/sound --/of creek" as far off sound of the  creek.
 
+An enormous tree stump is an elusive_landmark in Limbo.
+	The description is "This is an enormous tree that is as tall as you are, at least twice as wide as your spread arms. It must have been cut down many years ago."
+	Understand "enormous/big/huge/-- tree/-- stump" as enormous tree stump.
+
 A broad trail is an elusive_landmark in Limbo.
 	The description is "This trail is a little bit broader than the others, though now that you are here it seems to peter out in the nearby woods."
 	Understand "broad/trail/path/road/fireroad", "broad trail/path/road" as broad trail.
-
-A white tree is an elusive_landmark in Limbo.
-	The description is "Looking closer you see the tree is a dogwood growing in a place where the woods are thinner."
-	Understand "white/light/tree/trees", "white/light tree/trees" as white tree.
 
 A giant fern is an elusive_landmark in Limbo.
 	The description is "This is a fern growing taller than you, its fronds spraying outward like a green fountain."
@@ -4444,7 +4495,11 @@ A giant fern is an elusive_landmark in Limbo.
 
 Section - Rules and Actions
 
+Instead of listening to the far off sound of the creek:
+	try examining noun;
 
+Instead of landmark_navigating white tree:
+	try room_navigating Room_Dark_Woods_North.
 
 Chapter - Room_Dark_Woods_North
 
@@ -4452,7 +4507,7 @@ Section - Description
 
 Room_Dark_Woods_North is a room.
 The printed name is "Dark Woods".
-The description is "[if Scene_Day_Two has not happened]You are [one of]no longer sure where you are[or]not completely certain which way to go[or]confused[or]feeling lost[cycling]. The woods look familiar and altogether strange. It's difficult to get your bearings.[else]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night.[end if]
+The description is "[if Scene_Day_Two is happening]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night.[else]You are [one of]no longer sure where you are[or]not completely certain which way to go[or]confused[or]feeling lost[cycling]. The woods look familiar and altogether strange. It's difficult to get your bearings.[paragraph break]Here there is a prominent white tree.[end if]
 [paragraph break][available_exits]".
 The scent is "musty forest smell".
 Understand "dark woods" as Room_Dark_Woods_North.
@@ -4465,11 +4520,15 @@ South of Room_Dark_Woods_North is nowhere.
 [Later when Scene_Day_Two is happening:
 	South of Room_Dark_Woods_North is Room_Dark_Woods_South.]
 
-The available_exits of Room_Dark_Woods_North are "[if Scene_Day_Two has not happened][one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[in random order] what looks like a forest meadow[first time]. You can see trails leading into the woods, but you are no longer sure which one takes you back to either the other shore or to the wIllow trail[only].[else]There isn't exactly a path, but it is easier to keep going in a consistent direction. You believe you are steering rougly parallel to the creek and the road you saw from the sentinel tree. You can go back to the forest meadow which you figure is north, or you can continue south in the woods to see if you can reach the crossing.[end if]"
+The available_exits of Room_Dark_Woods_North are "[if Scene_Day_Two is happening]There isn't exactly a path, but it is easier to keep going in a consistent direction. You believe you are steering rougly parallel to the creek and the road you saw from the sentinel tree. You can go back to the forest meadow which you figure is north, or you can continue south in the woods to see if you can reach the wooded trail.[else][one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[in random order] what looks like a forest meadow[first time]. You can see trails leading into the woods, but you are no longer sure which one takes you back to either the other shore or to the willow trail[only].[end if]"
 
 Section - Objects
 
 Section - Backdrops & Scenery
+
+A white tree is an elusive_landmark in Room_Dark_Woods_North.
+	The description is "Looking closer you see the tree is a dogwood growing in a place where the woods are thinner."
+	Understand "white/light tree/trees", "dogwood tree/--" as white tree.
 
 Section - Rules and Actions
 
@@ -5388,14 +5447,15 @@ Instead of dropping pail:
 To drop_all_your_stuff:
 	[say "stuff: [list of every held thing].";]
 	repeat with item running through every held thing:
-		add item to stuff you brought here;
+		add item to stuff_you_brought_here;
 	now everything carried by player is in location;
 	move clothes to location;
 	move tennis_shoes to location;
 	if player holds grandpas_shirt:
 		move grandpas_shirt to location;
 
-Stuff you brought here is a list of objects that varies.
+[we keep a list of things dropped so we can pick them up later]
+stuff_you_brought_here is a list of objects that varies.
 
 Stuff_storage is a container in Limbo.
 
