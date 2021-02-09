@@ -37,7 +37,9 @@ To start_transcript:
 Part - Locations
 
 Teleporting is an action applying to one visible thing.
-Understand "teleport to/-- [any room]" as teleporting.
+Understand
+	"teleport to/-- [any room]"
+	as teleporting.
 
 Carry out teleporting: move the player to the noun.
 
@@ -125,7 +127,7 @@ The new_where_can_I_go rule substitutes for the where can I go rule.
 This is the new_where_can_I_go rule:
 	if input contains "(which|what|where|what) (way|direction|door|exit)s?" or input contains "_can i (go|walk|move|travel|explore|leave)":
 		identify error as the where can I go rule;
-		now reborn command is "look";
+		now reborn command is "which way";
 		reparse the command.
 
 Table of Smarter Parser Messages (continued)
@@ -363,8 +365,12 @@ Chapter - Out of world commands
 
 Chapter - Credits
 
-Understand "credits" as asking for credits.
 Asking for credits is an action out of world.
+Understand
+	"credits",
+	"about"
+	as asking for credits.
+
 Carry out asking for credits:
 	say "[story title] was created by [story author]. Inform 7, in which it was written, is the work of Graham Nelson. The IF authors Emily Short, Eric Eve, and Aaron Reed provided helpful extensions to Inform. The author is grateful for the testing feedback offered by many good folks since the first version in 2012. The cover are was generously provided by Darrin Barry."
 
@@ -373,8 +379,11 @@ Chapter - Instructions
 Chapter - Pouring
 
 Understand the command "dump/pour" as something new.
-Understand "dump [something] into/in [something]", "pour [something] into/in [something]" as pouring_in.
+
 pouring_in is an action applying to two visible things.
+Understand
+	"dump [something] into/in [something]", "pour [something] into/in [something]"
+	as pouring_in.
 
 Carry out pouring_in:
 	try inserting the noun into the second noun.
@@ -382,21 +391,17 @@ Carry out pouring_in:
 	Chapter - Surface_going
 
 Surface_going is an action applying to one thing.
-Understand "go on/to [visible surface]", "walk on/to [visible surface]", "climb on/to [visible surface]" as surface_going.
+Understand
+	"go on/to [visible surface]",
+	"walk on/to [visible surface]",
+	"climb on/to [visible surface]"
+	as surface_going.
 
 Carry out surface_going:
 	if destination of noun is Limbo:
 		Try entering noun;
 	else:
 		Try room_navigating destination of noun.
-
-Chapter - Water_going
-
-Water_going is an action applying to one thing.
-Understand "go to/in/into [visible waterbody]" as water_going.
-
-Carry out water_going:
-	Try doing_some_swimming;
 
 Chapter - Swimming
 
@@ -412,12 +417,12 @@ Instead of doing_some_swimming when waterbody is not visible:
 	say "Good idea. You might want to go down to the creek.";
 
 Doing_some_swimming_in is an action applying to one thing.
-	Understand
-	"swim in/into [waterbody]",
-	"wade in/into [waterbody]",
-	"dive in/into [waterbody]",
-	"jump in/into [waterbody]",
-	"go in/into [waterbody]"
+Understand
+	"go to/in/into [visible waterbody]",
+	"swim in/into [visible waterbody]",
+	"wade in/into [visible waterbody]",
+	"dive in/into [visible waterbody]",
+	"jump in/into [visible waterbody]"
 	as doing_some_swimming_in.
 
 Instead of Doing_some_swimming_in:
@@ -426,8 +431,12 @@ Instead of Doing_some_swimming_in:
 Chapter - Sitting/Lying
 
 Understand the command "lie", "sit" as something new.
-Understand "lie on/in [something]", "sit on/in/at [something]", "lie down on/in [something]", "sit down on/in/at [something]" as lying_down.
+
 lying_down is an action applying to one thing.
+Understand
+	"lie down/-- on/in [something]",
+	"sit down/-- on/in/at [something]"
+	as lying_down.
 
 Carry out lying_down:
 	if noun is a lie-able supporter:
@@ -443,8 +452,11 @@ Carry out lying_down:
 	otherwise:
 		try entering the noun;
 
-Understand "lie", "lie down", "sit", "sit down" as lying_default.
 lying_default is an action applying to nothing.
+
+Understand
+	"lie", "lie down", "sit", "sit down"
+	as lying_default.
 
 Carry out lying_default:
 	let list_of_lieables be a list of things;
@@ -459,12 +471,16 @@ Carry out lying_default:
 
 Does the player mean entering a lie-able supporter:
 	it is likely.
+
 Does the player mean entering something that is not a supporter:
 	it is very unlikely.
 
 Understand the command "stand" as something new.
-Understand "stand", "stand up", "get up", "get off" as standing_up.
+
 standing_up is an action applying to nothing.
+Understand
+	"stand", "stand up", "get up", "get off"
+	as standing_up.
 
 Carry out standing_up:
 	if player is on a lie-able supporter (called the loungy_thing):
@@ -490,51 +506,15 @@ Chapter - Climbing
 
 [TODO: This could be done MUCH more elegantly, e.g., climb [preposition] could all be treated as one ]
 
-Does the player mean climbing an unclimbable thing: it is unlikely.
-Does the player mean climbing up an unclimbable thing: it is unlikely.
-Does the player mean climbing down an unclimbable thing: it is unlikely.
-Does the player mean climbing in an unclimbable thing: it is unlikely.
-Does the player mean climbing on an unclimbable thing: it is unlikely.
-Does the player mean climbing out an unclimbable thing: it is unlikely.
-Does the player mean climbing over an unclimbable thing: it is unlikely.
-Does the player mean climbing under an unclimbable thing: it is unlikely.
+[
+	climbing
+]
 
-understand the command "climb" as something new.
-Understand "climb", "hop", "vault", "scale", "jump", and "cross" as climbing.
+Understand the command "climb" as something new.
 
-climbing-up-nada is an action applying to nothing.
-Understand "climb up" as climbing-up-nada.
-Carry out climbing-up-nada:
-	try going up.
-
-climbing-down-nada is an action applying to nothing.
-Understand "climb down" as climbing-down-nada.
-Carry out climbing-down-nada:
-	try going down.
-
-climbing in is an action applying to one thing.
-climbing on is an action applying to one thing.
-climbing out is an action applying to one thing.
-climbing up is an action applying to one thing.
-climbing down is an action applying to one thing.
-climbing over is an action applying to one thing.
-climbing through is an action applying to one thing.
-climbing under is an action applying to one thing.
-
-understand "climb [something]" as climbing.
-understand "climb up [something]" as climbing.
-understand "climb down [something]" as climbing down.
-understand "climb in/into [something]" as climbing in.
-
-understand "climb on/onto [something]" as climbing on.
-understand "climb through [something]" as climbing through.
-understand "climb thru [something]" as climbing through.
-understand "climb out [something]" as climbing out.
-understand "climb out of [something]" as climbing out.
-understand "get out of [something]" as climbing out.
-
-understand "climb over [something]" as climbing over.
-understand "climb under [something]" as climbing under.
+Understand
+	"climb", "hop", "scale", "jump", "cross"
+	as climbing.
 
 report climbing
 (this is the climbing rule):
@@ -543,8 +523,69 @@ report climbing
 	else:
 		say "You can't climb [the noun]." instead.
 
+Does the player mean climbing an unclimbable thing:
+	it is unlikely.
+
+[
+	climbing up nada
+]
+
+climbing-up-nada is an action applying to nothing.
+Understand
+	"climb up"
+	as climbing-up-nada.
+
+Carry out climbing-up-nada:
+	try going up.
+
+Does the player mean climbing up an unclimbable thing:
+	it is unlikely.
+
+[
+	climbing up
+]
+
+climbing up is an action applying to one thing.
+understand
+	"climb [something]",
+	"climb up [something]"
+	as climbing.
+
+[
+	climbing down nada
+]
+
+climbing-down-nada is an action applying to nothing.
+Understand
+	"climb down"
+	as climbing-down-nada.
+
+Carry out climbing-down-nada:
+	try going down.
+
+Does the player mean climbing down an unclimbable thing:
+	it is unlikely.
+
+[
+	climbing down
+]
+
+climbing down is an action applying to one thing.
+understand
+	"climb down [something]"
+	as climbing down.
+
 instead of climbing down:
 	try going down.
+
+[
+	climbing in
+]
+
+climbing in is an action applying to one thing.
+Understand
+	"climb in/into [something]"
+	as climbing in.
 
 report climbing in
 (this is the climbing in rule):
@@ -556,6 +597,18 @@ report climbing in
 	else:
 		say "You can't climb in [the noun]." instead.
 
+Does the player mean climbing in an unclimbable thing:
+	it is unlikely.
+
+[
+climbing on
+]
+
+climbing on is an action applying to one thing.
+understand
+	"climb on/onto [something]"
+	as climbing on.
+
 report climbing on
 (this is the climbing on rule):
 	if the noun is climbable:
@@ -566,8 +619,17 @@ report climbing on
 	else:
 		say "You can't climb onto [the noun]." instead.
 
-report climbing through:
-say "You can't climb through [the noun].".
+Does the player mean climbing on an unclimbable thing:
+	it is unlikely.
+
+[
+climbing out
+]
+
+climbing out is an action applying to one thing.
+Understand
+	"climb out of/-- [something]"
+	as climbing out.
 
 report climbing out
 (this is the climbing out rule):
@@ -583,6 +645,16 @@ report climbing out
 	else:
 		say "You can't climb out of [the noun]." instead.
 
+Does the player mean climbing out an unclimbable thing:
+	it is unlikely.
+
+[
+climbing over
+]
+
+climbing over is an action applying to one thing.
+understand "climb over [something]" as climbing over.
+
 report climbing over
 (this is the climbing over rule):
 	if the noun is climbable:
@@ -590,9 +662,35 @@ report climbing over
 	else:
 		say "You can't climb over [the noun]." instead.
 
+Does the player mean climbing over an unclimbable thing:
+	it is unlikely.
+
+[
+climbing through
+]
+
+climbing through is an action applying to one thing.
+understand "climb through/thru [something]" as climbing through.
+
+report climbing through:
+say "You can't climb through [the noun].".
+
+[
+climbing under
+]
+
+climbing under is an action applying to one thing.
+Understand
+	"climb under [something]"
+	as climbing under.
+
 report climbing under
 (this is the climbing under rule):
 	say "You can't climb under [the noun]." instead.
+
+Does the player mean climbing under an unclimbable thing:
+	it is unlikely.
+
 
 Chapter - Dressing
 
@@ -626,10 +724,13 @@ To put clothes back on:
 	else:
 		say "You are already dressed!";
 
+
 Chapter - Laughing
 
-Understand "laugh", "lol", "laugh out loud", "giggle", "smirk", "chuckle" as laughing.
 Laughing is an action applying to nothing.
+Understand
+	"laugh", "lol", "laugh out loud", "giggle", "smirk", "chuckle"
+	as laughing.
 
 Carry out laughing:
 	say "You [one of]laugh out loud[or]chuckle heartily[or]giggle loudly[at random][run paragraph on]";
@@ -638,8 +739,8 @@ Carry out laughing:
 		say " and [Reactor] [one of]looks at[or]glances over at[or]smiles at[at random] you";
 	say ".[line break]";
 
-Understand "laugh at [something]" as laughing at.
 Laughing at is an action applying to one thing.
+Understand "laugh at [something]" as laughing at.
 
 Carry out laughing at:
 	if the noun is not a person:
@@ -651,8 +752,10 @@ Carry out laughing at:
 
 Chapter - Yelling
 
-Understand "yell", "holler", "scream", "shriek", "monkey yell", "yell like a monkey" as yelling.
 Yelling is an action applying to nothing.
+Understand
+	"yell", "holler", "scream", "shriek", "monkey yell", "yell like a monkey"
+	as yelling.
 
 Carry out yelling:
 	say "Your [one of]scream echoes off the surrounding hills[or]yell is heard far and wide[or]shriek causes a nearby flock of birds to take flight[at random][run paragraph on]";
@@ -670,7 +773,12 @@ Carry out yelling:
 
 Chapter - Petting
 
-Understand "pet [something]", "pat [something]", "hug [something]", "kiss [something]" as touching.
+Understand
+	"pet [something]",
+	"pat [something]",
+	"hug [something]",
+	"kiss [something]"
+	as touching.
 
 Instead of kissing someone:
 	Try touching the noun.
@@ -688,17 +796,22 @@ Instead of attacking someone (called the subject):
 Chapter - Sing
 
 Understand the command "sing", "hum" as something new.
-Understand "sing", "hum" as singing.
 Singing is an action applying to nothing.
+Understand
+	"sing", "hum"
+	as singing.
 
-Understand "sing [text]" or "hum [text]" as a mistake ("[sing-action][run paragraph on]").
+Understand
+	"sing [text]" or "hum [text]"
+	as a mistake
+	("[sing_action][run paragraph on]").
 
 Instead of singing:
-	say "[sing-action]".
+	say "[sing_action]".
 
-To say sing-action:
+To say sing_action:
 	if a random chance of 1 in 3 succeeds:
-		say "You make up a song about [one of]killer red ants that eat everyone[or]picking blackberries until your fingers are bloody[or]riding the train out of town and living like a hobo[at random] [one of][or]to the tune of  'When You Need a Friend'[or]to the tune of 'Baby I'm a Want You'[or]to the tune of 'American Pie'[at random].[run paragraph on]";
+		say "You make up a song about [one of]killer red ants that eat everyone[or]picking blackberries until your fingers are bloody[or]riding the train out of town and living like a hobo[at random] [one of][or]to the tune of 'When You Need a Friend'[or]to the tune of 'Baby I'm a Want You'[or]to the tune of 'American Pie'[at random].[run paragraph on]";
 	else if player is in Region_Blackberry_Area:
 		say "You sing along to [current_song], but you [one of]only know the chorus[or]only know some of the words[or]have to make up most of it[or]don't know most of the words, but you don't really care[at random].[run paragraph on]";
 	else:
@@ -739,12 +852,18 @@ Instead of smelling a room:
 
 Chapter - Supporters
 
-Understand "go on [supporter]", "walk on [supporter]", "balance on [supporter]" as entering
+Understand
+	"go on [supporter]",
+	"walk on [supporter]",
+	"balance on [supporter]"
+	as entering
 
 Chapter - Tracks
 
 Follow_tracks is an action applying to nothing.
-Understand "follow train/green/-- tracks/tunnel" as follow_tracks.
+Understand
+	"follow train/green/-- tracks/tunnel" as follow_tracks.
+
 Carry out follow_tracks:
 	if player is in Room_Railroad_Tracks:
 		say "[one of]The trees crowd in on either side, so there's nowhere to walk but on the tracks. You follow them for a little while but then get scared that a train will come and you will have nowhere to go.
@@ -758,8 +877,7 @@ Chapter - A New Inventory Command
 
 The print standard inventory rule is not listed in the carry out taking inventory rules.
 
-Carry out taking inventory (this is the print non-standard inventory
-rule):
+Carry out taking inventory (this is the print non-standard inventory rule):
 	[carried items]
 	say "You are carrying ";
 	now everything carried by the player is marked for listing;
@@ -802,7 +920,15 @@ To say looking_for_available_exits:
 Part - Navigation Hints
 
 [TODO: Check to see if we can hook this up with similar features of Aaron Reed's Better Parser]
-Understand "which way", "go to where", "where do I go" as exit_listing. exit_listing is an action applying to nothing.
+
+exit_listing is an action applying to nothing.
+Understand
+	"which way",
+	"where do I go",
+	"exits",
+	"exit"
+	as exit_listing.
+
 Carry out exit_listing:
 	if available_exits of location is empty:
 		say "Sorry, you're on your own here.";
@@ -810,7 +936,7 @@ Carry out exit_listing:
 		say looking_for_available_exits;
 
 To hint_at_navigation:
-	say "[one of ]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Which direction is that? You might want to use landmarks to navigate[or]Try using landmarks. For example: GO TO CLEARING[line break]Or even try: GO BACK or GO ON[line break]If you need a reminder, try: WHICH WAY[stopping].";
+	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Which direction is that? You might want to use landmarks to navigate[or]Try using landmarks. For example: GO TO CLEARING[line break]Or even try: GO BACK or GO ON[line break]If you need a reminder, try: WHICH WAY[stopping].";
 
 Part - Compass Navigation
 
@@ -846,7 +972,7 @@ Check going west when player is discouraged_from_compass_navigating:
 Check going northwest when player is discouraged_from_compass_navigating:
 	hint_at_navigation instead.
 
-Part - Room-Navigation
+Part - Room Navigation
 
 [TODO:
 >go to shore
@@ -868,7 +994,11 @@ Definition: A room is reachable_IRL
 		the map region of the location is not Region_Dreams.
 
 Room_navigating is an action applying to one thing.
-Understand "go back/- to/around/near/by [any reachable room]", "go [any reachable room]", "return to [any reachable room]", "walk --/to [any reachable room]", "run --/to [any reachable room]" as room_navigating.
+Understand
+	"go back/- to/around/near/by/-- [any reachable room]",
+	"return to [any reachable room]",
+	"walk to/-- [any reachable room]",
+	"run to/-- [any reachable room]" as room_navigating.
 
 Check room_navigating:
 	[say "(go from [location of player] to [the noun])[line break]";]
@@ -891,7 +1021,12 @@ To say cant_find_that:
 	say "You're not sure exactly how to get there. [looking_for_available_exits]";
 
 Fail_navigating is an action applying to one thing.
-Understand "go back/- to/around/near/by [any not reachable room]", "go [any not reachable room]", "return to [any not reachable room]", "walk --/to [any not reachable room]", "run --/to [any not reachable room]" as fail_navigating.
+Understand
+	"go back/- to/-- [any not reachable room]",
+	"return to [any not reachable room]",
+	"walk to/-- [any not reachable room]",
+	"run to/-- [any not reachable room]"
+	as fail_navigating.
 
 Carry out fail_navigating:
 	say cant_find_that;
@@ -903,17 +1038,32 @@ Part - Landmarks and Navpoints
 Part - Specific Actions (GO ON and GO BACK)
 
 Going_back is an action applying to nothing.
-Understand "go back", "return" as going_back.
+Understand
+	"go back",
+	"return"
+	as going_back.
+
 Carry out going_back:
 	long_range_navigate to return_dest of the map region of the location of the player.
 
 Going_on is an action applying to nothing.
-Understand "go on/forward", "walk on/forward/--", "keep going/walking/on", "continue going/walking/forward/on", "continue", "forward", "walk", "get going" as going_on.
+Understand
+	"go on/forward",
+	"walk on/forward/--",
+	"keep going/walking/on",
+	"continue going/walking/forward/on/--", "forward", "walk", "get going"
+	as going_on.
+
 Carry out going_on:
 	long_range_navigate to forward_dest of the map region of the location of the player.
 
 Going_upstream is an action applying to nothing.
-Understand "go up the/-- creek/river/stream", "go upriver/upstream", "follow the/-- creek/river/stream up/upstream" as going_upstream.
+Understand
+	"go up the/-- creek/river/stream",
+	"go upstream/upriver",
+	"follow the/-- creek/river/stream up/upstream"
+	as going_upstream.
+
 Carry out going_upstream:
 	Let destination be upstream_dest of the map region of the location of the player;
 	if destination is the location of the player:
@@ -924,7 +1074,12 @@ Carry out going_upstream:
 		try room_navigating destination.
 
 Going_downstream is an action applying to nothing.
-Understand "go down the/-- creek/river/stream", "go downstream/downriver", "follow the/-- creek/river/stream" as going_downstream.
+Understand
+	"go down the/-- creek/river/stream",
+	"go downstream/downriver",
+	"follow the/-- creek/river/stream"
+	as going_downstream.
+
 Carry out going_downstream:
 	Let destination be downstream_dest of the map region of the location of the player;
 	if destination is the location of the player:
@@ -935,7 +1090,11 @@ Carry out going_downstream:
 		try room_navigating destination.
 
 Going_uppath is an action applying to nothing.
-Understand "go up the/-- road/path/trail/hill", "go uphill" as going_uppath.
+Understand
+	"go up the/-- road/path/trail/hill",
+	"go uphill"
+	as going_uppath.
+
 Carry out going_uppath:
 	Let destination be uppath_dest of the map region of the location of the player;
 	if destination is the location of the player:
@@ -946,8 +1105,14 @@ Carry out going_uppath:
 		try room_navigating destination.
 
 [TODO: "follow path/road" should take you in the same direction you were going toward the end, so we may need another verb for follow]
+
 Going_downpath is an action applying to nothing.
-Understand "go down the/-- path/trail/road/hill", "go downhill", "follow the/-- path/trail/road" as going_downpath.
+Understand
+	"go down the/-- path/trail/road/hill",
+	"go downhill",
+	"follow the/-- path/trail/road"
+	as going_downpath.
+
 Carry out going_downpath:
 	Let destination be downpath_dest of the map region of the location of the player;
 	if destination is the location of the player:
@@ -971,31 +1136,36 @@ Part - Elusive Landmarks
 The_distance is a container.
 The_distance is in Limbo.
 
-[TODO: replace object-navigating with landmark_navigating applying ONLY to elusive_landmarks]
-
 An elusive_landmark is a kind of thing.
+An elusive_landmark is scenery.
 
 landmark_navigating is an action applying to one thing.
 Understand
-	"go to/near/by/-- [elusive_landmark]",
-	"walk to/near/by/-- [elusive_landmark]",
-	"run to/near/by/-- [elusive_landmark]"
+	"go to/near/by/-- [any elusive_landmark]",
+	"walk to/near/by/-- [any elusive_landmark]",
+	"run to/near/by/-- [any elusive_landmark]"
 	as landmark_navigating.
 
 Check landmark_navigating:
 	if the noun is visible:
 		say "Well, that's right here." instead;
-	if the noun is white tree:
-		try room_navigating Room_Dark_Woods_North;
 	if the noun is not in the_distance:
 		say cant_find_that instead;
 
 To say cant_find_that:
 	say "You're no longer sure how to get there. [looking_for_available_exits]";
 
+landmark_nav_counter is a number that varies. landmark_nav_counter is 0.
+
 Carry out landmark_navigating:
-	say "You head toward the [noun].[run paragraph on]";
+	increment landmark_nav_counter;
+	say "You head toward the [noun].[run paragraph on] ";
 	move_within_dark_woods.
+
+[Procedural rules are deprecated]
+[A procedural rule while landmark_navigating:
+	ignore the can't reach inside rooms rule.]
+The can't reach inside rooms rule does nothing if  landmark_navigating.
 
 When play begins:
 	Let this_thing be a random elusive_landmark in Limbo;
@@ -1003,11 +1173,14 @@ When play begins:
 	Let next_thing be a random elusive_landmark in Limbo;
 	Now next_thing is in the_distance;
 
+To say movement_in_woods:
+	say "[one of]You stumble around in the dark woods[or]You carefully make your way through the forest[or]You follow an uncertain path through the wood[or]You bushwhack your way through the underbrush[at random].".
+
 To move_within_dark_woods:
-	say "[one of]You stumble around in the dark woods[or]You carefully make your way through the forest[or]You follow an uncertain path through the wood[or]You bushwhack your way through the underbrush[at random].";
+	say movement_in_woods;
 	Let old_near_thing be a random elusive_landmark in Room_Dark_Woods_South;
 	Let old_far_thing be a random elusive_landmark in the_distance;
-	Let new_far_thing be a random elusive_landmark in Limbo;
+	Let new_far_thing be random elusive_landmark in Limbo;
 	Now old_far_thing is in Room_Dark_Woods_South;
 	Now new_far_thing is in the_distance;
 	Now old_near_thing is off-stage;
@@ -1016,14 +1189,14 @@ To move_within_dark_woods:
 			move item to limbo;
 	try looking;
 
-After dropping something (called the item) when in Room_Dark_Woods_South:
+After dropping something (called the item) when player is in Room_Dark_Woods_South:
 	add item to stuff_you_brought_here;
 	continue the action;
 
 [TODO: Make sure all the stuff_you_brought_here is in Room_Dark_Woods_South and Room_Dark_Woods_North]
 
-Instead of doing anything except examining or navpoint_navigating elusive_landmarks:
-	say "This is no time for that. You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.".
+Instead of doing anything except examining or landmark_navigating to elusive_landmarks:
+	say "This is no time for that. [if Scene_Day_Two is not happening]You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.[end if]".
 
 
 Book - Language Tweaks
@@ -1401,14 +1574,20 @@ When Scene_Across_the_Creek begins:
 Part - Scene_Night_In_The_Woods
 
 There is a scene called Scene_Night_In_The_Woods.
-Scene_Night_In_The_Woods begins when player has been in Room_Dark_Woods_South for 6 turns.
+Scene_Night_In_The_Woods begins when landmark_nav_counter is 3.
 Scene_Night_In_The_Woods ends when Scene_Dreams ends.
 
 When Scene_Night_In_The_Woods begins:
+	now landmark_nav_counter is 0;
 	say "[lost_in_the_woods_payoff]";
 	pause the game;
 	say Title_Card_Part_2;
 	Now the right hand status line is "Evening";
+	Let this_thing be random elusive_landmark in Room_Dark_Woods_South;
+	Now this_thing is in  Room_Dark_Woods_North;
+	Now player is in Room_Dark_Woods_North;
+
+[The print final score rule does nothing if the score is 0.]
 
 Chapter - Scene_STOP
 
@@ -1798,11 +1977,9 @@ To say treetop_payoff:
 	[paragraph break]The railroad tracks which wind gently from one direction pass almost beneath you and disappear in gentle S-curves in the other direction. You can see the trailer park and that might be Honey and Grandpa's trailer. Everything looks so small, like looking at an ant hill. A giddy feeling pushes up out of you, and you can't stop laughing.";
 
 To say lost_in_the_woods_payoff:
-	say "The afternoon shadows are lengthening and it is slowly getting on toward evening. You should be home by now. Honey and Grandpa will be worried. You fight back a brief wave of misery and trudge on.
-	[paragraph break]But it's no use. Part of the time you are pretty sure you are going in circles. The rest of the time you are scared you are getting lost deeper in the forest.
+	say "The afternoon shadows are lengthening and it is slowly getting on toward evening. You should be home by now. Honey and Grandpa will be worried. You fight back a brief wave of misery and trudge on. But it's no use. Part of the time you are pretty sure you are going in circles. The rest of the time you are scared you are getting lost deeper in the forest.
 	[paragraph break]For a while there, you felt you were close to finding your way back, but now everything looks completely unfamiliar -- and to be honest, a bit sinister. Like the forest is trying to [italic type]keep[roman type] you here, to lead you astray, lead you deeper into the woods. The trees lean in toward you. The underbrush grabs as your clothing.
-	[paragraph break]But no, that's stupid. You fight back panic. It's nobody's fault but your own. You should have been more careful, more observant. A good explorer scout would never get lost like this. Stupid stupid stupid, you berate yourself.
-	[paragraph break]Again, you think about your Honey and Grandpa at home. The smell of blackberry jam cooking. Watching TV on the floor with your grandpa. And your mom.  It's all too much.
+	[paragraph break]But no, that's stupid. You fight back panic. It's nobody's fault but your own. You should have been more careful, more observant. A good explorer scout would never get lost like this. Stupid stupid stupid, you berate yourself. Again, you think about your Honey and Grandpa at home. The smell of blackberry jam cooking. Watching TV on the floor with your grandpa. And your mom.  It's all too much.
 	[paragraph break]You have to admit it: You are hopelessly lost.
 	[paragraph break]You sit down right where you are and sob miserably.";
 
@@ -2867,7 +3044,7 @@ Part - Region_Blackberry_Area
 Section - Description
 
 Region_Blackberry_Area is a region.
-Room_Lost_in_the_Brambles, Room_Grassy_Clearing, Room_Blackberry_Tangle, Room_WIllow_Trail, Room_Lost_Trail, Room_Dappled_Forest_Path are in Region_Blackberry_Area.
+Room_Lost_in_the_Brambles, Room_Grassy_Clearing, Room_Blackberry_Tangle, Room_Willow_Trail, Room_Lost_Trail, Room_Dappled_Forest_Path are in Region_Blackberry_Area.
 The scent of Region_Blackberry_Area is "sunshine and dust and the tang of ripe blackberries".
 
 Section - Navigation
@@ -3043,7 +3220,7 @@ Room_Willow_Trail is a room.
 The printed name is "Willow Trail".
 The description is "This is a trail running roughly parallel the creek with tall blackberry brambles on either side. In one place, there are [willows] hanging down over the trail that tickle the back of your neck as you duck under them.
 [paragraph break][available_exits]".
-Understand "willow/willows trail/--" as Room_Willow_Trail.
+Understand "blackberry/willow/willows trail/--" as Room_Willow_Trail.
 
 Section - Navigation
 
@@ -3075,7 +3252,7 @@ Section - Navigation
 
 Room_Lost_Trail is south of Room_Willow_Trail.
 
-The available_exits of Room_Lost_Trail are "Try as you might, looks like you don't have much choice but to head back to the wIllow trail."
+The available_exits of Room_Lost_Trail are "Try as you might, looks like you don't have much choice but to head back to the willow trail."
 
 
 Chapter - Room_Dappled_Forest_Path
@@ -4360,7 +4537,7 @@ Section - Navigation
 West of Room_Other_Shore is Room_Crossing.
 East of Room_Other_Shore is Room_Wooded_Trail.
 
-The available_exits of Room_Other_Shore are "[if Scene_Day_Two has not happened]The creek here curves around in a funny way, but you're pretty sure that this trail must connect with the willow trail on this side of the creek. That was this way, right? This trail is darker and more wooded, but it looks like it gets lighter up ahead. Back the way you came, you can get most of the way across the creek by hopping from boulder to boulder.[else]You can get back across the creek by hopping from boulder to boulder and crossing on the log. Or you can go back the way you came on the wooded trail.[end if]"
+The available_exits of Room_Other_Shore are "[if Scene_Day_Two has not happened]The creek here curves around in a funny way, but you're pretty sure that this trail must connect with the blackberry trail on this side of the creek. That was this way, right? This trail is darker and more wooded, but it looks like it gets lighter up ahead. Back the way you came, you can get most of the way across the creek by hopping from boulder to boulder.[else]You can get back across the creek by hopping from boulder to boulder and crossing on the log. Or you can go back the way you came on the wooded trail.[end if]"
 
 [Instead of entering boulders_east:
 	try room_navigating Room_Crossing;]
@@ -4399,6 +4576,9 @@ Instead of entering swift_current_west,
 Instead of doing_some_swimming in Room_Other_Shore:
 	say current_swim_refusal.
 
+Instead of room_navigating Room_Willow_Trail when player is in Room_Other_Shore:
+	try room_navigating Room_Dark_Woods_North.
+
 [TODO:
 >jump on boulders
 I only understood you as far as wanting to jump.
@@ -4432,7 +4612,7 @@ Section - Navigation
 North of Room_Wooded_Trail is Room_Dark_Woods_South.
 West of Room_Wooded_Trail is Room_Other_Shore.
 
-The available_exits of Room_Wooded_Trail are "[if Scene_Day_Two has not happened]Best to keep going to the willow trail. It should connect up here in a bit. You look back the way you came. You could always go back to the shore and cross the creek. But then there's the dog.[else]You could go back into the dark wood and try another route or you can follow this trail and see if it goes to the crossing.[end if]"
+The available_exits of Room_Wooded_Trail are "[if Scene_Day_Two has not happened]Best to keep going to the blackberry trail. It should connect up here in a bit. You look back the way you came. You could always go back to the shore and cross the creek. But then there's the dog.[else]You could go back into the dark wood and try another route or you can follow this trail and see if it goes to the crossing.[end if]"
 
 Section - Objects
 
@@ -4440,6 +4620,8 @@ Section - Backdrops
 
 Section - Rules and Actions
 
+Instead of room_navigating Room_Willow_Trail when player is in Room_Wooded_Trail:
+	try room_navigating Room_Dark_Woods_North.
 
 Chapter - Room_Dark_Woods_South
 
@@ -4447,9 +4629,14 @@ Section - Description
 
 Room_Dark_Woods_South is a room.
 The printed name is "Dark Woods".
-The description is "[if Scene_Day_Two is happening]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night.[else]You are [one of]no longer sure where you are[or]not completely certain which way to go[or]confused[or]feeling lost[cycling]. The woods look familiar and altogether strange. It's difficult to get your bearings.[paragraph break]Here there is [a list of elusive_landmarks in Room_Dark_Woods_South].[end if]
-[paragraph break][available_exits]".
+The description is "[if Scene_Day_Two is not happening][day1_woods_desc][else][day2_woods_desc][end if].[paragraph break][available_exits]".
 The scent is "musty forest smell".
+
+To say day1_woods_desc:
+	say "You are [one of]no longer sure where you are[or]not completely certain which way to go[or]confused[or]feeling lost[cycling]. The woods look familiar and altogether strange. It's difficult to get your bearings[first time]. You can see what might be rabbit or deer trails leading into the woods, but you are no longer sure which one takes you back to either the creek or to the blackberry trail[only]. Here there is [a list of elusive_landmarks in Room_Dark_Woods_South]";
+
+To say day2_woods_desc:
+	say "These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night";
 
 Section - Navigation
 
@@ -4458,48 +4645,72 @@ South of Room_Dark_Woods_South is nowhere.
 [Later when Scene_Day_Two is happening:
 	South of Room_Dark_Woods is Room_Wooded_Trail.]
 
-The available_exits of Room_Dark_Woods_South are "[if Scene_Day_Two is happening]There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail.[else][one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there[in random order] [a list of elusive_landmarks in the_distance][first time]. You can see trails leading into the woods, but you are no longer sure which one takes you back to either the creek or to the blackberry trail[only].[end if]"
+The available_exits of Room_Dark_Woods_South are "[if Scene_Day_Two is not happening][day1_woods_exits][else][day2_woods_exits][end if].".
+
+To say day1_woods_exits:
+	say "[one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there[in random order] [a list of elusive_landmarks in the_distance][if a random chance of 1 in 2 succeeds]. [one of]This may be the way back to Honey and grandpa. You long to give him a hug and never let go[or]Is that the way back to the blackberry trail? You hope so[in random order][end if]";
+
+To say day2_woods_exits:
+	say "There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail";
+
+test woods with "teleport to other shore. go to willow trail. again."
+
+Instead of room_navigating when player is in Room_Dark_Woods_South and Scene_Night_In_The_Woods is not happening:
+	say cant_find_that;
 
 Section - Objects
 
 Section - Backdrops & Scenery
 
+A white tree is an elusive_landmark in Limbo.
+	The description is "Looking closer you see the tree is a dogwood growing in a place where the woods are thinner."
+	Understand "white/light tree/trees", "dogwood tree/--" as white tree.
+
 A huge madrone tree is an elusive_landmark in Limbo.
 	The description is "This is a particularly huge madrone tree whose branches twist far above your head."
-	Understand "tree/madrone/huge" as huge madrone tree
+	Understand "huge/-- madrone tree" as huge madrone tree
 
 A burned out tree is an elusive_landmark in Limbo.
 	The description is "This tree went through a fire at some point, but still lived."
-	Understand "tree/burned", "burned tree" as burned out tree.
+	Understand "burned out/-- tree" as burned out tree.
 
 A bright patch in the woods is an elusive_landmark in Limbo.
 	The description is "This is a bright patch in the woods with darker woods all around."
-	Understand "bright/light/patch/woods", "light/bright patch/woods", "light/bright of/in patch/woods" as bright patch in the woods.
+	Understand "bright/light/-- patch", "bright/light/-- patch in/of the/-- woods" as bright patch in the woods.
 
 [TODO: Review ALL of the understand rules for objects esp adjectives]
-The far off sound of the creek is an elusive_landmark in Limbo.
+
+The sound_of_the_creek is an elusive_landmark in Limbo.
+	The printed name is "sound of the creek".
 	The description is "Well, you can't see it, but you thought you heard the sound of the distant creek. Now you are not so sure."
-	Understand "faraway/far/sound/creek", "faraway/far/sound --/of creek" as far off sound of the  creek.
+	Understand "sound/creek", "sound of the/-- creek" as sound_of_the_creek.
 
 An enormous tree stump is an elusive_landmark in Limbo.
-	The description is "This is an enormous tree that is as tall as you are, at least twice as wide as your spread arms. It must have been cut down many years ago."
+	The description is "This is an enormous tree stump that is as tall as you are, at least twice as wide as your spread arms. It must have been cut down many years ago."
 	Understand "enormous/big/huge/-- tree/-- stump" as enormous tree stump.
 
 A broad trail is an elusive_landmark in Limbo.
 	The description is "This trail is a little bit broader than the others, though now that you are here it seems to peter out in the nearby woods."
-	Understand "broad/trail/path/road/fireroad", "broad trail/path/road" as broad trail.
+	Understand "broad/-- trail/path" as broad trail.
 
 A giant fern is an elusive_landmark in Limbo.
 	The description is "This is a fern growing taller than you, its fronds spraying outward like a green fountain."
-	Understand "giant/huge/big/fern", "giant/huge/big fern" as giant fern.
+	Understand "giant/huge/big/-- fern" as giant fern.
 
 Section - Rules and Actions
 
-Instead of listening to the far off sound of the creek:
+Instead of listening to the sound_of_the_creek:
 	try examining noun;
 
-Instead of landmark_navigating white tree:
-	try room_navigating Room_Dark_Woods_North.
+Instead of listening when player is in Room_Dark_Woods_South and sound_of_the_creek is visible:
+	try examining sound_of_the_creek;
+
+[Rule for printing the name of a room when location is Room_Dark_Woods_South and Scene_Night_In_The_Woods has been happening for exactly 1 turn:
+		stop.]
+
+[Rule for printing the locale description when location is Room_Dark_Woods_South and Scene_Night_In_The_Woods has been happening for 1 turn:
+		stop.]
+
 
 Chapter - Room_Dark_Woods_North
 
@@ -4507,7 +4718,7 @@ Section - Description
 
 Room_Dark_Woods_North is a room.
 The printed name is "Dark Woods".
-The description is "[if Scene_Day_Two is happening]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night.[else]You are [one of]no longer sure where you are[or]not completely certain which way to go[or]confused[or]feeling lost[cycling]. The woods look familiar and altogether strange. It's difficult to get your bearings.[paragraph break]Here there is a prominent white tree.[end if]
+The description is "[if Scene_Day_Two is happening]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night[else]The woods still look familiar and strange, but no longer sinister. It helped to cry. You are no longer afraid. You dry your eyes and look around. You still see deer trails leading in various directions into the woods, and here is [a list of elusive_landmarks in Room_Dark_Woods_North] that you saw in the distance[end if].
 [paragraph break][available_exits]".
 The scent is "musty forest smell".
 Understand "dark woods" as Room_Dark_Woods_North.
@@ -4520,15 +4731,11 @@ South of Room_Dark_Woods_North is nowhere.
 [Later when Scene_Day_Two is happening:
 	South of Room_Dark_Woods_North is Room_Dark_Woods_South.]
 
-The available_exits of Room_Dark_Woods_North are "[if Scene_Day_Two is happening]There isn't exactly a path, but it is easier to keep going in a consistent direction. You believe you are steering rougly parallel to the creek and the road you saw from the sentinel tree. You can go back to the forest meadow which you figure is north, or you can continue south in the woods to see if you can reach the wooded trail.[else][one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[in random order] what looks like a forest meadow[first time]. You can see trails leading into the woods, but you are no longer sure which one takes you back to either the other shore or to the willow trail[only].[end if]"
+The available_exits of Room_Dark_Woods_North are "[if Scene_Day_Two is happening]There isn't exactly a path, but it is easier to keep going in a consistent direction. You believe you are steering rougly parallel to the creek and the road you saw from the sentinel tree. You can go back to the forest meadow which you figure is north, or you can continue south in the woods to see if you can reach the wooded trail.[else]But finally, through a thinning in the trees, you see the golden grass of what looks like a forest meadow glowing in the last of the sunset light.".
 
 Section - Objects
 
 Section - Backdrops & Scenery
-
-A white tree is an elusive_landmark in Room_Dark_Woods_North.
-	The description is "Looking closer you see the tree is a dogwood growing in a place where the woods are thinner."
-	Understand "white/light tree/trees", "dogwood tree/--" as white tree.
 
 Section - Rules and Actions
 
@@ -4542,7 +4749,7 @@ The printed name is "Forest Meadow".
 The description is "[if Scene_Day_Two has not happened]You have found a dark shaded forest meadow with tall grass up to your waist[first time]. You can't help thinking about ticks. You got a tick once in your neck and Honey had to burn it out with a cigarette[only]. Seeing the twilight sky overhead makes you a little less [nervous]. [else]This is the dark forest meadow you found last night, except in the morning light, it is bright and crispy cold. The meadow still makes you think of ticks, but you try not to as you push through the tall grass. You can see paths in a few different directions. You might be able to get your bearrings from the tall pine at the edge of the meadow.[end if]
 [paragraph break][available_exits]".
 The scent is "musty forest smell".
-Understand "forest meadow" as Room_Forest_Meadow.
+Understand "forest/-- meadow", "golden/-- grass" as Room_Forest_Meadow.
 
 Section - Navigation
 
@@ -4563,7 +4770,8 @@ Section - Objects
 Section - Backdrops & Scenery
 
 A fallen tree is scenery in Room_Forest_Meadow.
-The description is "This is a tree that has fallen over several smaller ones and forms a sort of protected hollow."
+The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
+Understand "protected/-- hollow/cave/nest" as fallen tree.
 
 Section - Rules and Actions
 
@@ -4578,6 +4786,7 @@ The description is "[if Scene_Day_Two has not happened]This is a protected hollo
 [paragraph break][available_exits]".
 The scent is "musty forest smell, like dirt or mushrooms".
 Understand "protected/-- hollow", "fallen tree", "my/-- fort" as Room_Protected_Hollow.
+Understand "protected/-- hollow/cave/nest" as Room_Protected_Hollow.
 
 Section - Navigation
 
@@ -5525,18 +5734,18 @@ Chapter - Responses
 ]
 
 Greeting response for Honey:
-	say "'Hello, [Honey's nickname],' Honey says[Honey stuff].";
+	say "'Hello, [honeys_nickname],' Honey says[Honey stuff].";
 
 Implicit greeting response for Honey:
 	do nothing;
 
 Farewell response for Honey:
-	say "'Bye, [Honey's nickname]. Stay close,' Honey says.";
+	say "'Bye, [honeys_nickname]. Stay close,' Honey says.";
 
 Implicit farewell response for Honey:
 	say "'Oh, [one of]don't let me keep you from your busy schedule[or]don't let me keep you[or]goodbye, I guess[at random],' says Honey who goes back to her berry picking.";
 
-To say Honey's nickname:
+To say honeys_nickname:
 	say "[one of]kiddo[or]hon[or]sweetie[or]buster[as decreasingly likely outcomes]";
 
 To say Honey stuff:
@@ -5549,7 +5758,7 @@ To say Honey stuff:
 
 Default tell response for Honey:
 	if the second noun is not nothing:
-		say "'That's great, [Honey's nickname]. [Honey's berry urging]' Honey goes back to picking.[line break][line break]";
+		say "'That's great, [honeys_nickname]. [Honey's berry urging]' Honey goes back to picking.[line break][line break]";
 	else:
 		say "She looks a little irritated. 'Okay. [Honey's berry urging]'[line break][line break]";
 
@@ -5564,9 +5773,9 @@ Default give-show response for Honey:
 
 Default ask-for response for Honey:
 	if player holds second noun:
-		say "'Looks like you already got it, [Honey's nickname],' Honey says.";
+		say "'Looks like you already got it, [honeys_nickname],' Honey says.";
 	else:
-		say "'That's not going to happen, [Honey's nickname],' Honey says.";
+		say "'That's not going to happen, [honeys_nickname],' Honey says.";
 
 Default yes-no response for Honey:
 	if saying yes:
@@ -5578,7 +5787,7 @@ Default response for Honey:
 	say "'Go talk to your grandpa,' Honey says.";
 
 Instead of touching Honey:
-	say "'Aw, thanks [Honey's nickname],' she says.";
+	say "'Aw, thanks [honeys_nickname],' she says.";
 	Now player is affectionate;
 
 [
@@ -5661,7 +5870,7 @@ Response of Honey when asked about topic_life:
 	say "'That seems like one of those questions for your grandpa. He'll talk your ear off,' Honey says.".
 
 Response of Honey when asked about topic_love:
-	say "'I love you, [Honey's nickname],' Honey says.".
+	say "'I love you, [honeys_nickname],' Honey says.".
 
 Response of Honey when asked about topic_death:
 	say "'Why are you being so morose? I don't like to talk about it,' Honey says curtly.".
@@ -5673,7 +5882,7 @@ Response of Honey when asked about topic_work:
 	say "'I used to manage the Button Box, but when your grandpa retired so did I,' Honey says. 'In the war, I worked in a munitions factory.'".
 
 Response of Honey when asked about topic_family:
-	say "'That's a big subject, [Honey's nickname]. Maybe we can sit down later and look at some of the pictures of our family,' Honey says. 'I'll bet you don't even remember [one of]your Aunt Ethel who we visited in Portland[or]your Great Uncle Charley who has the rock shop[or]your grandpa's brother Marvin out in the desert[in random order].'".
+	say "'That's a big subject, [honeys_nickname]. Maybe we can sit down later and look at some of the pictures of our family,' Honey says. 'I'll bet you don't even remember [one of]your Aunt Ethel who we visited in Portland[or]your Great Uncle Charley who has the rock shop[or]your grandpa's brother Marvin out in the desert[in random order].'".
 
 Chapter - Rants
 
@@ -5700,7 +5909,7 @@ Table of gma_dad_rant
 Quote
 "'Did you get a birthday card from him this year? No? Surprise! I didn't think so,' Honey says angrily. Is she mad at you? Or mad at your dad? But why?"
 "'We haven't heard from him this whole year. I guess no visit with your dad this summer,' Honey says with a grim smile."
-"'I think it takes more than being at the right place at the right time to be a father,' Honey says, and after a moment, 'Sorry, [Honey's nickname], I'm not mad at you. I'm mad about grown up stuff.'"
+"'I think it takes more than being at the right place at the right time to be a father,' Honey says, and after a moment, 'Sorry, [honeys_nickname], I'm not mad at you. I'm mad about grown up stuff.'"
 "'I'm done waiting for him to step up and be your father,' Honey says."
 
 Response of Honey when asked-or-told about Step-Dad:
@@ -5715,6 +5924,8 @@ Quote
 "Honey's eyes spark dangerously, 'I told your mom that if I saw Mark put his hand on you one more time, you were coming to live with us,' she says, and suddenly you feel scared, though you're not sure why."
 "'If I get a call from your mom in the middle of the night one more time, I'm going to drive there myself and your step-dad's gonna have some real problems,' Honey says in a rush[if grandpa is visible]. Grandpa gives her another Look[end if]."
 "Honey clenches her teeth and growls but says no more."
+
+[TODO: Decide whether Grandpa/grandpa should be capitalized, and then make it consistent.]
 
 Chapter - Sequences
 
@@ -5773,24 +5984,9 @@ This is the seq_grandparents_chat_interrupt_test rule:
 	rule fails.
 
 To say grandparent_random:
-	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[or]'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.[or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both!' Honey laughs.[or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[or]'Hey, [Honey's nickname],' Honey calls to you. 'When you go with grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[in random order]".
+	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[or]'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.[or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both!' Honey laughs.[or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[or]'Hey, [honeys_nickname],' Honey calls to you. 'When you go with grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[in random order]".
 
-[TODO in a long list of random utterances, make it so new interlocutor is set
-
-Table of grandparents_random
-Speaker	Dialogue
-Grandpa	'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.
-Grandpa	'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'
-Grandpa	'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.
-Honey	'Have you heard from Nick about this summer? Is he planning a visit or are we just left guessing?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says.
-Honey	'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.
-Honey	'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both!' Honey laughs.
-Honey	'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.
-Grandpa	'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'it's [if bucket is empty]pretty much empty[else if bucket is quarter full]about quarter full[else if bucket is half full]about half full[else if full]just about full[end if].'
-Grandpa	'How you doing over there, [grandpas_nickname]?' Grandpa asks you.
-Honey	Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.
-Honey	'Hey, [Honey's nickname],' Honey calls to you. 'When you go with grandpa to take the bucket to the trailer, can you ask Mary about lunch?'
-Grandpa	Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.]
+[TODO in a long list of random utterances, make it so new interlocutor is set]
 
 [ grandparents_tracks sequence
 summary: Honey and Grandpa at the tracks
@@ -5812,14 +6008,14 @@ This is the seq_grandparents_tracks_handler rule:
 		else if index is 3:
 			queue_report "'Sometimes we worry about you,  [grandpas_nickname],' grandpa says, 'But it'll be okay, I promise.'" at priority 1;
 		else if index is 4:
-			queue_report "Honey leans over and whispers, 'Try as we might, we may not always be able to keep you safe, little one.' She takes a deep breath, 'But I know you can take care of yourself when you need to.'" at priority 1;
+			queue_report "Honey leans over and whispers, 'Try as we might, we may not always be able to keep you safe, [honeys_nickname].' She takes a deep breath, 'But I know you can take care of yourself when you need to.'" at priority 1;
 		else if index is 5:
 			queue_report "'Let's see where this journey takes us', Grandpa says, inviting you with his hand to follow the tracks." at priority 1;
 			now grandparents_track_done is true;
 		else if index is 5:
-			queue_report "Grandpa says, 'Let's get going. I think we're meant to follow these,' he says gesturing at the tracks. [paragraph break]'It's like a metaphor,'Honey says." at priority 1;
+			queue_report "Grandpa says, 'Let's get going. I think we're meant to follow these,' he says gesturing at the tracks. [paragraph break]Honey laughs, 'There's a metaphor there somewhere.'" at priority 1;
 		else if index is 6:
-			queue_report "[one of]'Time to go,' says grandpa.[or]Honey says, 'Let's see what's next,' pointing at the tracks.[or]'Time to become hobos', says grandpa looking at the tracks.[at random]" at priority 1;
+			queue_report "[one of]'Time to go,' says grandpa.[or]Honey says, 'Let's see what's next, [honeys_nickname],' pointing at the tracks.[or]'Time to make like a hobo', says grandpa looking at the tracks.[at random]" at priority 1;
 			[We do the following, because we want this step tp repeat]
 			decrease index of seq_grandparents_tracks by one;
 			[we make sure this ends when Scene_Dream_Tracks ends]
