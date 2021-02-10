@@ -1592,8 +1592,14 @@ When Scene_Night_In_The_Woods begins:
 Chapter - Scene_STOP
 
 There is a scene called Scene_STOP.
-Scene_STOP begins when player has been in Room_Forest_Meadow for 2 turns.
-Scene_STOP ends when Scene_Sleep begins.
+Scene_STOP begins when player is in Room_Forest_Meadow for first time.
+Scene_STOP ends when player is in Room_Protected_Hollow.
+
+When Scene_STOP begins:
+	now seq_jody_stop is in-progress.
+
+When Scene_STOP ends:
+	now seq_jody_stop is not in-progress.
 
 [S.T.O.P.
 S stands for SIT DOWN.
@@ -1601,7 +1607,7 @@ T is for THINK.
 O is for OBSERVE.
 P stands for PLAN.
 
-Survival priorites: In extreme conditions…
+Survival priorities: In extreme conditions…
 
 1. You can live 3 hours without shelter.
 2. You can live 3 days without water.
@@ -1611,12 +1617,8 @@ Survival priorites: In extreme conditions…
 Chapter - Scene_Make_Shelter
 
 There is a scene called Scene_Make_Shelter.
-Scene_Make_Shelter begins when Scene_STOP begins.
+Scene_Make_Shelter begins when Scene_STOP ends.
 [scene ends when player has stacked sticks and moved leaves into fort]
-
-Chapter - Scene_Find_Water
-
-There is a scene called Scene_Find_Water.
 
 Chapter - Scene_Sleep
 
@@ -1784,7 +1786,9 @@ Scene_Orienteering ends when player is in Room_Sentinel_Tree.
 
 When Scene_Orienteering ends:
 	Change south exit of Room_Forest_Meadow to Room_Dark_Woods_North;
-	Change west exit of Room_Forest_Meadow to Room_Dappled_Forest_Path.
+	Change west exit of Room_Forest_Meadow to Room_Dappled_Forest_Path;
+	Change south exit of Room_Dark_Woods_North to Room_Dark_Woods_South;
+	Change northwest exit of Room_Dark_Woods_North to Room_Dappled_Forest_Path;
 
 Chapter - Scene_Foraging_for_Breakfast
 
@@ -1979,7 +1983,7 @@ To say treetop_payoff:
 To say lost_in_the_woods_payoff:
 	say "The afternoon shadows are lengthening and it is slowly getting on toward evening. You should be home by now. Honey and Grandpa will be worried. You fight back a brief wave of misery and trudge on. But it's no use. Part of the time you are pretty sure you are going in circles. The rest of the time you are scared you are getting lost deeper in the forest.
 	[paragraph break]For a while there, you felt you were close to finding your way back, but now everything looks completely unfamiliar -- and to be honest, a bit sinister. Like the forest is trying to [italic type]keep[roman type] you here, to lead you astray, lead you deeper into the woods. The trees lean in toward you. The underbrush grabs as your clothing.
-	[paragraph break]But no, that's stupid. You fight back panic. It's nobody's fault but your own. You should have been more careful, more observant. A good explorer scout would never get lost like this. Stupid stupid stupid, you berate yourself. Again, you think about your Honey and Grandpa at home. The smell of blackberry jam cooking. Watching TV on the floor with your grandpa. And your mom.  It's all too much.
+	[paragraph break]But no, that's stupid. You fight back panic. It's nobody's fault but your own. You should have been more careful, more observant. A good Explorer Scout would never get lost like this. Stupid stupid stupid, you berate yourself. Again, you think about your Honey and Grandpa at home. The smell of blackberry jam cooking. Watching TV on the floor with your grandpa. And your mom.  It's all too much.
 	[paragraph break]You have to admit it: You are hopelessly lost.
 	[paragraph break]You sit down right where you are and sob miserably.";
 
@@ -3299,7 +3303,7 @@ Section - Backdrops and Scenery
 
 Some backdrop_thick_trees are backdrop in Region_River_Area.
 	The printed name is "thick trees".
-	The description of backdrop_thick_trees is "The thick trees overhead make deep shade below, a welcome relief from the summer heat. The [if current_time_period is morning]morning light[otherwise]afternoon light[end if] filters through the leaves."
+	The description of backdrop_thick_trees is "The thick trees overhead make deep shade below[if current_time_period is morning]. The morning light filters through the leaves[else if current_time_period is afternoon], a welcome relief from the summer heat. The afternoon sunlight slants as rays through the leaves[else] under a twilit sky[end if]."
 	Understand "trees", "tree", "branches" as backdrop_thick_trees.
 
 Some backdrop_sunlight is backdrop in Region_River_Area.
@@ -3425,10 +3429,12 @@ The rocky_shore_north is a surface in Room_Swimming_Hole.
 
 Section - Rules and Actions
 
+[Transition text]
 Instead of going to Room_Swimming_Hole when player is in Room_Long_Stretch:
 	say "As you step out of the oppressive heat, the cool shade is a welcome relief. You work your way down the steep trail.";
 	continue the action.
 
+[Transition text]
 Instead of going to Room_Swimming_Hole when player is in Room_Crossing:
 	say "You carefully navigate the rocky bank, making your way upstream.";
 	continue the action.
@@ -3526,6 +3532,7 @@ Section - Rules and Actions
 
 Test crossing with "s.s.s.w.w.s.e.s.".
 
+[Transition text]
 Instead of going to Room_Crossing when player was in Room_Swimming_Hole:
 		say "You carefully navigate the rocky bank, making your way downstream.";
 		Continue the action.
@@ -3644,6 +3651,7 @@ The scent is "delightful piney fragrance".
 
 Section - Rules and Actions
 
+[Transition text]
 Instead of going to Room_Long_Stretch when player is in Room_Swimming_Hole:
 	say "You clamber up the steep trail. As you step out of the shaded trail, the heat is like a physical force that pushes against you.";
 	continue the action.
@@ -3683,12 +3691,13 @@ Some train tracks are an undescribed fixed in place enterable supporter in Room_
 A penny is in Room_Railroad_Tracks.
 	The initial appearance is "Hey, there's the penny you lost when you came here with Grandpa to make train pennies!".
 	The description of penny is "Ah, this is a wheat penny. Its tiny numbers say 1956.".
+	Understand "coin" as penny.
 
 A flattened coin is a described thing in Limbo.
 	The initial appearance is "[if player is not in Room_Dream_Railroad_Tracks]Hey, the train flattened the wheat penny! You made a lucky coin![else]Your lucky penny is here.[end if]".
 	The description is "The train rolled over your penny and turned it into a flattened oval. You can't read it anymore, but you can see a very faint image of Lincoln with a stretched head.".
 	The printed name of the flattened coin is "flattened train penny."
-	Understand "penny/lucky/flattened/flat/coin", "train penny" as flattened coin.
+	Understand "lucky/flattened/flat/train/-- penny/coin" as flattened coin.
 
 A mound_of_rock is a undescribed fixed in place supporter in Room_Railroad_Tracks.
 	The printed name is "mound_of_rock".
@@ -3827,6 +3836,7 @@ A Doug_Fir2 is an climbable backdrop in Room_Halfway_Up.
 
 Section - Rules and Actions
 
+[Ensure retries and transition text]
 Instead of going to Room_Halfway_Up when player is in Room_Long_Stretch:
 	Increase pine tree tries of player by one;
 	if pine tree tries of player is less than 3:
@@ -3852,6 +3862,7 @@ Does the player mean climbing the Doug_Fir2 when player is in Room_Halfway_Up:
 Does the player mean climbing up the Doug_Fir2 when player is in Room_Halfway_Up:
 	It is very likely.
 
+[Encourage retry and transition text]
 Instead of going to Room_Long_Stretch when player is in Room_Halfway_Up:
 	if treetop tries of the player is less than 2:
 		say "You descend the tree, disappointed not to reach the top, and drop the last few feet to the ground.";
@@ -3926,6 +3937,7 @@ Section - Rules and Actions
 
 Test treetop with "s.s.s.w.w.s.u.u.u.u.u.u.".
 
+[Ensure retry and transition text]
 Instead of going to Room_Top_of_the_Pine_Tree when player is in Room_Halfway_Up:
 	Increase treetop tries of player by one;
 	if treetop tries of player is less than 3:
@@ -3944,6 +3956,7 @@ Instead of going to Room_Top_of_the_Pine_Tree when player is in Room_Halfway_Up:
 		say "You slowly climb to the top of the tree, carefully avoiding weak or thin branches.";
 	continue the action.
 
+[Transition text]
 Instead of going to Room_Halfway_Up when player is in Room_Top_of_the_Pine_Tree:
 	say "You carefully work your way down from the top, avoiding the thinner branches.";
 	continue the action.
@@ -4653,7 +4666,7 @@ To say day1_woods_exits:
 To say day2_woods_exits:
 	say "There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail";
 
-test woods with "teleport to other shore. go to willow trail. again."
+test woods with "teleport to Southern Pacific Tracks. get coin.teleport to other shore. go to willow trail. again."
 
 Instead of room_navigating when player is in Room_Dark_Woods_South and Scene_Night_In_The_Woods is not happening:
 	say cant_find_that;
@@ -4684,6 +4697,7 @@ The sound_of_the_creek is an elusive_landmark in Limbo.
 	The printed name is "sound of the creek".
 	The description is "Well, you can't see it, but you thought you heard the sound of the distant creek. Now you are not so sure."
 	Understand "sound/creek", "sound of the/-- creek" as sound_of_the_creek.
+	The indefinite article of sound_of_the_creek is "the".
 
 An enormous tree stump is an elusive_landmark in Limbo.
 	The description is "This is an enormous tree stump that is as tall as you are, at least twice as wide as your spread arms. It must have been cut down many years ago."
@@ -4698,6 +4712,8 @@ A giant fern is an elusive_landmark in Limbo.
 	Understand "giant/huge/big/-- fern" as giant fern.
 
 Section - Rules and Actions
+
+[TODO: Test dropping stuff in dark woods]
 
 Instead of listening to the sound_of_the_creek:
 	try examining noun;
@@ -4718,7 +4734,7 @@ Section - Description
 
 Room_Dark_Woods_North is a room.
 The printed name is "Dark Woods".
-The description is "[if Scene_Day_Two is happening]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night[else]The woods still look familiar and strange, but no longer sinister. It helped to cry. You are no longer afraid. You dry your eyes and look around. You still see deer trails leading in various directions into the woods, and here is [a list of elusive_landmarks in Room_Dark_Woods_North] that you saw in the distance[end if].
+The description is "[if Scene_Day_Two is happening]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night[else]The woods still look familiar and strange, but no longer sinister. It helped to cry. You are no longer afraid. You dry your eyes and look around. You still see deer trails leading in various directions into the woods, and here there is [a list of elusive_landmarks in Room_Dark_Woods_North][end if].
 [paragraph break][available_exits]".
 The scent is "musty forest smell".
 Understand "dark woods" as Room_Dark_Woods_North.
@@ -4726,10 +4742,11 @@ Understand "dark woods" as Room_Dark_Woods_North.
 Section - Navigation
 
 North of Room_Dark_Woods_North is Room_Forest_Meadow.
-Northwest of Room_Dark_Woods_North is Room_Dappled_Forest_Path.
 South of Room_Dark_Woods_North is nowhere.
+
 [Later when Scene_Day_Two is happening:
-	South of Room_Dark_Woods_North is Room_Dark_Woods_South.]
+	South of Room_Dark_Woods_North is Room_Dark_Woods_South.
+	Northwest of Room_Dark_Woods_North is Room_Dappled_Forest_Path.]
 
 The available_exits of Room_Dark_Woods_North are "[if Scene_Day_Two is happening]There isn't exactly a path, but it is easier to keep going in a consistent direction. You believe you are steering rougly parallel to the creek and the road you saw from the sentinel tree. You can go back to the forest meadow which you figure is north, or you can continue south in the woods to see if you can reach the wooded trail.[else]But finally, through a thinning in the trees, you see the golden grass of what looks like a forest meadow glowing in the last of the sunset light.".
 
@@ -4746,10 +4763,12 @@ Section - Description
 
 Room_Forest_Meadow is a room.
 The printed name is "Forest Meadow".
-The description is "[if Scene_Day_Two has not happened]You have found a dark shaded forest meadow with tall grass up to your waist[first time]. You can't help thinking about ticks. You got a tick once in your neck and Honey had to burn it out with a cigarette[only]. Seeing the twilight sky overhead makes you a little less [nervous]. [else]This is the dark forest meadow you found last night, except in the morning light, it is bright and crispy cold. The meadow still makes you think of ticks, but you try not to as you push through the tall grass. You can see paths in a few different directions. You might be able to get your bearrings from the tall pine at the edge of the meadow.[end if]
+The description is "[if Scene_Day_Two has not happened]You have found a dark shaded forest meadow with tall grass up to your waist[first time]. You can't help thinking about ticks. You got a tick once in your neck and Honey had to burn it out with a cigarette[only]. There is a steady symphony of crickets tuning up for the night. Seeing the darkening sky overhead makes you [nervous]. [else]This is the dark forest meadow you found last night, except in the morning light, it is bright and crispy cold. The meadow still makes you think of ticks, but you try not to as you push through the tall grass. You can see paths in a few different directions. You might be able to get your bearrings from the tall pine at the edge of the meadow.[end if]
 [paragraph break][available_exits]".
 The scent is "musty forest smell".
 Understand "forest/-- meadow", "golden/-- grass" as Room_Forest_Meadow.
+
+Room_Forest_Meadow can be observed.
 
 Section - Navigation
 
@@ -4763,17 +4782,44 @@ Up from Room_Forest_Meadow is nowhere.
 	West of Room_Forest_Meadow is Room_Dappled_Forest_Path;
 	South of Room_Forest_Meadow is Room_Dark_Woods_North.]
 
-The available_exits of Room_Forest_Meadow are "[if Scene_Day_Two has not happened]The forest is impenetrably thick in most directions and you aren't excited about re-entering the dark woods anyway. There is a place where a fallen tree has taken out the underbrush.[else if Scene_Orienteering has not ended]Your fort is at the edge of the meadow nestled under a few fallen trees. And there is a tall pine tree with low branches asking to be climbed at the other side of the meadow.[else]You can now make out a dapled forest path going west that must head toward the backberry tangle. Another break in the trees heads south through the dark woods, the direction you came from last night. Your fort is at the edge of the meadow nestled under a few fallen trees. And there is the sentinel tree at the other edge of the meadow.[end if]"
+The available_exits of Room_Forest_Meadow are "[if Scene_Day_Two has not happened][meadow_exit_day1][else if Scene_Orienteering has not ended][meadow_exit_day2_before_orient][else][meadow_exit_day2_after_orient][end if]."
+
+To say meadow_exit_day1:
+	say "The forest is impenetrably thick in most directions and you aren't excited about re-entering the dark woods anyway[if Room_Forest_Meadow is observed]. At the darkened edge of the meadow, you notice there is a place where a fallen tree has taken out the underbrush[end if]";
+
+To say meadow_exit_day2_before_orient:
+	say "Your fort is at the edge of the meadow nestled under a few fallen trees. And there is a tall pine tree with low branches asking to be climbed at the other side of the meadow";
+
+To say meadow_exit_day2_after_orient:
+	say "You can now make out a dappled forest path going west that must head toward the blackberry tangle. Another break in the trees heads south through the dark woods, the direction you came from last night. Your fort is at the edge of the meadow nestled under a few fallen trees. And there is the sentinel tree at the other edge of the meadow";
 
 Section - Objects
 
 Section - Backdrops & Scenery
 
+Some tall grass is scenery in Room_Forest_Meadow.
+	The description is "Here there is tall dry grass up to your waist. You try not to think about ticks."
+	Understand "tall/high/dry/-- grass/weeds" as tall grass.
+
 A fallen tree is scenery in Room_Forest_Meadow.
-The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
-Understand "protected/-- hollow/cave/nest" as fallen tree.
+	The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
+	Understand "protected/-- hollow/cave/nest" as fallen tree.
+
+The sound of crickets is backdrop in Room_Forest_Meadow.
+	The description is "You can hear the clear sound of crickets. Fun fact you remember: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
+
 
 Section - Rules and Actions
+
+[keep player here until they Scene_STOP is over]
+Instead of going to Room_Protected_Hollow when Room_Forest_Meadow is not observed:
+	say "You're not going anywhere until you have a plan.";
+
+Instead of listening when player is in Room_Forest_Meadow and Scene_Night_In_The_Woods is happening:
+ 	say "You can hear the sound of crickets in the dry grass around you."
+
+Instead of listening to crickets:
+	try examining crickets.
 
 
 Chapter - Room_Protected_Hollow
@@ -4798,16 +4844,25 @@ Section - Objects
 
 Some fallen_leaves are in Room_Protected_Hollow.
 	The printed name is "fallen leaves".
-	The initial appearance is "There is a thick carpet of fallen leaves, dried now in the summer heat. They crunch beneath your feet.".
+	The initial appearance is "There is a thick carpet of fallen leaves, dried now in the summer heat. They crunch beneath you.".
 	The description is "These are probably the leaves from last autumn that have blown beneath the fallen trees. They are crispy and dry and might make a soft bed and even a warm covering."
 	Understand "dried/fallen leaves" as fallen_leaves.
 
 Section - Backdrops & Scenery
 
-
+The sound of crickets is backdrop in Room_Protected_Hollow.
 
 Section - Rules and Actions
 
+[Transition text]
+Instead of going to Room_Protected_Hollow when player is in Room_Forest_Meadow:
+	say "You duck down into the low hollow formed by the fallen tree.";
+	continue the action.
+
+Instead of listening when player is in Room_Protected_Hollow and Scene_Night_In_The_Woods is happening:
+say "You can hear the sound of crickets playing their love songs in the meadow."
+
+[TODO: allow climb out and exit actions]
 
 Chapter - Room_Sentinel_Tree
 
@@ -5255,6 +5310,7 @@ Instead of doing anything to dream_sheriff when player is in Room_Dream_Grassy_F
 	else:
 		say "He's busy playing accordion."
 
+[keep player here until they observe the dance]
 Instead of going to Room_Dream_Railroad_Tracks when Scene_Dream_About_the_Tango is happening:
 	if dream_sheriff has been in Room_Dream_Grassy_Field for less than two turn:
 		say "Wait, you want to see what will happen.";
@@ -5364,6 +5420,7 @@ Understand "thick/-- red/-- dust/ground/dirt" as thick red dust.
 
 Section - Rules and Actions
 
+[Transition text]
 Instead of going to Room_Mars when player is in Room_Dream_Railroad_Tracks:
 	say "For some reason, you are not worried about a train coming. You follow the railroad tracks walking silently with Honey and Grandpa, briefly balancing on the rails while you hold Honey's hand. You walk for a while humming a little tune. You look down and realize you've lost the train tracks and see only red dust.";
 	Now honey is in Room_Mars;
@@ -5376,6 +5433,7 @@ Instead of jumping when player is in Room_Mars:
 	else:
 		say "You make a halfhearted little jump, your heart not really into it.";
 
+[keep player here until Honey and grandpa are gone]
 Instead of going to Room_Chryse_Planitia when Scene_Dream_Bouncing is happening:
 	say "You don't want to leave without Honey and Grandpa."
 
@@ -5418,6 +5476,7 @@ The Viking 1 Lander is scenery in Room_Chryse_Planitia.
 
 Section - Rules and Actions
 
+[Transition text]
 Instead of going to Room_Chryse_Planitia when player is in Room_Mars:
 	say "You scan the sky looking for Honey and Grandpa. As you walk-hop in the light gravity along the surface of Mars, your tennis shoes padding in the red dust, you see something in the distance. It gets closer as you walk for what seems like hours.";
 	continue the action;
@@ -5472,10 +5531,12 @@ Some tall grass are backdrop in Room_Dream_Dirt_Road.
 
 Section - Rules and Actions
 
+[Transition text]
 Instead of going to Room_Dream_Dirt_Road when player is in Room_Chryse_Planitia:
 	say "You look at your feet and notice that the dust has changed to a more familiar color.";
 	continue the action.
 
+[keep player here until they finish their convo with dog]
 Instead of going to Room_Dream_Stone_Bridge when dog_free_to_go is not true:
 	say "You're pretty sure, the dog will not let you."
 
@@ -5650,9 +5711,6 @@ Instead of smelling player:
 Instead of dropping pail during Scene_Picking_Berries:
 	say "You're going to need that for berry picking. You hold on to it for now.".
 
-Instead of dropping pail:
-	say "You might need that later. You hold on to it for now."
-
 To drop_all_your_stuff:
 	[say "stuff: [list of every held thing].";]
 	repeat with item running through every held thing:
@@ -5679,9 +5737,46 @@ Instead of taking off clothes, say "Better keep those on for now. If you were go
 Instead of taking off tennis_shoes, say "Better keep those on for now."
 Instead of taking off underwear, say "No way! You're not taking those off!"
 
+[TODO: test whether this is needed]
 [Instead of doing anything except examining clothes, say "Better keep that on for now."
 Instead of doing anything except examining tennis_shoes, say "Better keep those on for now."
 Instead of doing anything except examining underwear, say "Better keep those on."]
+
+Understand "stop" as a mistake ("S.T.O.P., one of the things you learned at Explored Camp.[line break]
+S stands for SIT DOWN.[line break]
+T is for THINK.[line break]
+O is for OBSERVE.[line break]
+P stands for PLAN.")
+
+Chapter - Sequences
+
+[ seq_jody_stop sequence
+summary: Jody has a series of realizations/memories that help them not freak out.
+trigger: Scene_STOP begins, i.e., 2 turns in Room_Forest_Meadow ]
+
+seq_jody_stop is a sequence.
+	The action_handler is the seq_jody_stop_handler rule.
+	The interrupt_test is seq_jody_stop_interrupt_test rule.
+	The length_of_seq is 6.
+
+This is the seq_jody_stop_handler rule:
+	let index be index of seq_jody_stop;
+	if index is 3:
+		queue_report "You think of how worried Honey and grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say outloud to yourself." at priority 1;
+	else if index is 4:
+		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
+	else if index is 5:
+		queue_report "And suddenly a memory: You and other campers yelling 'Stop!' at Explorer Camp.[paragraph break]'What do you do if you're ever lost in the woods?' Debbie asks the group again.[paragraph break]'STOP!' the campers shout.[paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break]Think. You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break]Observe. You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break]Plan. The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
+		Now Room_Forest_Meadow is observed;
+	else if index is 6:
+		queue_report "[one of]You have a plan. Find shelter[or]Hypothermia is a real risk in the chilly forest at night. Time to find a place to shelter[or]You look closer at the edge of the forest[stopping]." at priority 1;
+		[We do the following, because we want this step to repeat]
+		decrease index of seq_jody_stop by one;
+		[we make sure this ends when Scene_STOP ends]
+
+This is the seq_jody_stop_interrupt_test rule:
+	[nothing stops this rule]
+	rule fails.
 
 
 Part - Honey
@@ -5925,8 +6020,6 @@ Quote
 "'If I get a call from your mom in the middle of the night one more time, I'm going to drive there myself and your step-dad's gonna have some real problems,' Honey says in a rush[if grandpa is visible]. Grandpa gives her another Look[end if]."
 "Honey clenches her teeth and growls but says no more."
 
-[TODO: Decide whether Grandpa/grandpa should be capitalized, and then make it consistent.]
-
 Chapter - Sequences
 
 [ seq_grandparents_chat sequence
@@ -6054,6 +6147,8 @@ This is the seq_grandparents_bounce_interrupt_test rule:
 
 
 Part - Grandpa
+
+[TODO: Decide whether Grandpa/grandpa should be capitalized, and then make it consistent.]
 
 Grandpa is an undescribed _male man in Room_Grassy_Clearing.
 	The initial appearance is "Your Grandpa is here[if Grandpa holds big_bucket and big_bucket is full] with the big bucket full of berries[else if Grandpa holds big_bucket and big_bucket is empty] with the empty bucket[end if].".
@@ -7583,6 +7678,8 @@ Every turn when location is Room_Long_Stretch
 Every turn when location is Room_Railroad_Tracks
 	and a random chance of 1 in 6 succeeds,
 	queue_report "A dog barking can be heard a ways down the road." with priority 7;
+
+[TODO: Implement listen like smell]
 
 Instead of listening when location of player is in Region_Dirt_Road,
 	say "You can still hear the dog barking, of course."
