@@ -222,7 +222,7 @@ Chapter - the unnecessary movement rule
 
 Table of Smarter Parser Messages (continued)
 rule name		message
-unnecessary movement rule		"[as the parser]If you can see an object, you can usually just interact with it directly without worrying about your position[if player is enclosed by something] (although since you're in or on something, you may need to type EXIT first)[end if]. Try a command like EXAMINE [get noun example] for a closer look at something[if the number of sp_viable directions is at least 1], LOOK to get a new description of this location, or a direction like [get direction example] to move to a different location.[otherwise], or LOOK to show the description of this location again.[as normal][line break]"
+unnecessary movement rule		"[as the parser]If you can see an object, you can usually just interact with it directly without worrying about your position[if player is enclosed by something] (although since you're in or on something, you may need to type EXIT first)[end if]. Try a command like EXAMINE [get noun example] for a closer look at something[if the number of sp_viable directions is at least 1], LOOK to get a new description of this location, or a direction like [get direction example] to move to a different location.[otherwise], or LOOK to show the description of this location again.[as normal][paragraph break]"
 
 Chapter - the stripping vague words rule
 
@@ -684,6 +684,8 @@ Understand
 	"climb under [something]"
 	as climbing under.
 
+[TODO: allow climbing under fallen tree]
+
 report climbing under
 (this is the climbing under rule):
 	say "You can't climb under [the noun]." instead.
@@ -782,6 +784,23 @@ Understand
 
 Instead of kissing someone:
 	Try touching the noun.
+
+
+Chapter - Piling
+
+Piling is an action applying to one thing.
+Understand
+	"pile [something] over/on/- me/myself/--",
+	"pull [something] over/on/- me/myself/--",
+	"cover myself/me with/-- [something]"
+	as piling.
+
+Carry out piling:
+	if the noun is not fallen_leaves:
+		say "Hmm. Not sure how to do that.";
+	else:
+		say "You pile the leaves under yourself for a cozy bed, and then over yourself in a heaping pile for a cozy banket. You are much warmer.";
+		now Room_Protected_Hollow is made_cozy;
 
 
 Chapter - Attacking
@@ -1165,7 +1184,7 @@ Carry out landmark_navigating:
 [Procedural rules are deprecated]
 [A procedural rule while landmark_navigating:
 	ignore the can't reach inside rooms rule.]
-The can't reach inside rooms rule does nothing if  landmark_navigating.
+The can't reach inside rooms rule does nothing if landmark_navigating.
 
 When play begins:
 	Let this_thing be a random elusive_landmark in Limbo;
@@ -1562,6 +1581,7 @@ At the time when the log_bridge_forms:
 	now bridge_log1 is in Room_Crossing;
 	now pool_log is in Limbo
 
+
 Chapter - Scene_Across_the_Creek
 
 There is a scene called Scene_Across_the_Creek.
@@ -1571,11 +1591,12 @@ Scene_Across_the_Creek ends when Scene_Night_In_The_Woods begins.
 When Scene_Across_the_Creek begins:
 	Now the time of day is 4:10 AM.
 
+
 Part - Scene_Night_In_The_Woods
 
 There is a scene called Scene_Night_In_The_Woods.
 Scene_Night_In_The_Woods begins when landmark_nav_counter is 3.
-Scene_Night_In_The_Woods ends when Scene_Dreams ends.
+Scene_Night_In_The_Woods ends when Scene_Dreams begins.
 
 When Scene_Night_In_The_Woods begins:
 	now landmark_nav_counter is 0;
@@ -1587,7 +1608,6 @@ When Scene_Night_In_The_Woods begins:
 	Now this_thing is in  Room_Dark_Woods_North;
 	Now player is in Room_Dark_Woods_North;
 
-[The print final score rule does nothing if the score is 0.]
 
 Chapter - Scene_STOP
 
@@ -1618,27 +1638,75 @@ Chapter - Scene_Make_Shelter
 
 There is a scene called Scene_Make_Shelter.
 Scene_Make_Shelter begins when Scene_STOP ends.
+Scene_Make_Shelter ends when Room_Protected_Hollow is made_cozy.
 [scene ends when player has stacked sticks and moved leaves into fort]
 
-Chapter - Scene_Sleep
 
-There is a scene called Scene_Sleep.
-Scene_Sleep begins when Scene_Make_Shelter has ended and player is in Room_Protected_Hollow.
+Chapter - Scene_Sleep_One
 
-When Scene_Sleep begins:
+There is a scene called Scene_Sleep_One.
+Scene_Sleep_One begins when
+	Room_Protected_Hollow is made_cozy and
+	Scene_Defend_the_Fort has not happened and
+	Scene_Dreams has not happened.
+Scene_Sleep_One ends when
+	Scene_Defend_the_Fort begins.
+
+When Scene_Sleep_One begins:
 	Now the right hand status line is "Night";
+	say "Warm in your cozy nest, you are pretty sure you could sleep.";
+
+Instead of sleeping during Scene_Sleep_One:
+	if Room_Protected_Hollow is not made_cozy:
+		say "You are too cold to sleep.";
+	else:
+		now player is asleep;
+		now raccoons are in Room_Forest_Meadow;
+		now virtual_raccoons are in Room_Protected_Hollow;
+		say Sleep_Card;
 
 Chapter - Scene_Defend_the_Fort
 
 There is a scene called Scene_Defend_the_Fort.
-Scene_Defend_the_Fort begins when Scene_Sleep begins.
-Scene_Defend_the_Fort ends when racoons are not in Region_Woods_Area.
+Scene_Defend_the_Fort begins when
+	Scene_Sleep_One is happening and
+	player is asleep.
+Scene_Defend_the_Fort ends when raccoons are not in Region_Woods_Area.
+
+When Scene_Defend_the_Fort begins:
+	say "...and are awakened what seems like seconds later. You heard a noise very nearby.";
+	now seq_raccoon_visit is in-progress;
+
+Instead of sleeping during Scene_Defend_the_Fort:
+	say "There is no way you are sleeping while wolves or bears are trying to eat you.";
+
+Chapter - Scene_Sleep_Two
+
+There is a scene called Scene_Sleep_Two.
+Scene_Sleep_Two begins when
+	Room_Protected_Hollow is made_cozy and
+	Scene_Defend_the_Fort has ended and
+	Scene_Dreams has not happened.
+Scene_Sleep_Two ends when
+	Scene_Dreams ends.
+
+When Scene_Sleep_Two begins:
+	Now the right hand status line is "Night";
+
+Instead of sleeping during Scene_Sleep_Two:
+	if Room_Protected_Hollow is not made_cozy:
+		say "Again, you are too cold to sleep.";
+	else:
+		now player is asleep;
+		say Sleep_Card;
+
 
 Chapter - Scene_Dreams
 
 There is a scene called Scene_Dreams.
-Scene_Dreams begins when Scene_Defend_the_Fort ends.
-Scene_Dreams begins when player is in Room_Car_With_Mom.
+Scene_Dreams begins when
+	Scene_Sleep_Two is happening and
+	player is asleep.
 Scene_Dreams ends when player is in Room_Dream_Stone_Bridge.
 
 When Scene_Dreams begins:
@@ -1648,6 +1716,7 @@ When Scene_Dreams begins:
 	Now grandpa is in Room_Dream_Railroad_Tracks;
 	store_all_your_stuff;
 	Now flattened coin is in Room_Dream_Railroad_Tracks;
+	Move the player to Room_Car_With_Mom;
 
 When Scene_Dreams ends:
 	now seq_dog_convo is not in-progress;
@@ -1655,6 +1724,7 @@ When Scene_Dreams ends:
 	now player is in Room_Protected_Hollow.
 
 [During Scene_Dreams player cannot move to next location until the scene for that location is finished]
+
 
 Chapter - Scene_Dream_about_Mom
 
@@ -1891,6 +1961,11 @@ To say Title_Card_Part_3:
 	say roman type;
 	say paragraph break;
 	pause the game;
+
+To say Sleep_Card:
+	say "[one of]You are surprisingly tired. You nod off almost immediately[or]After your long day, you find that you can't keep your eyes open for another moment.[in random order]";
+	pause the game;
+	clear the screen;
 
 To pause the/-- game:
 say "[paragraph break]Please press ANY KEY to continue.";
@@ -2379,9 +2454,15 @@ Instead of eating handful_of_berries:
 	now noun is in Limbo.
 
 Section - The Pail
-[TODO:
+
+[TODO: oops.
 	>put berries in pail
 	You can't put something inside itself
+]
+
+[TODO: oops.
+	>put sandwich in pail
+	You put the tuna sandwich into your pail
 ]
 
 Instead of inserting handful_of_berries into pail:
@@ -3101,7 +3182,7 @@ Room_Lost_in_the_Brambles is a room.
 The printed name is "Lost in the Brambles".
 The description is "[one of]You were sure that this was a better spot than where you've been picking all morning. But here too, the biggest ripest berries seem to be just out of reach. You pick a few ripe berries and drop them in your pail[or]This spot, a little ways from where Honey and Grandpa are picking, has some good berries[stopping]. Under the pine trees, the air smells good.
 [paragraph break]Looking around: [available_exits]
-[paragraph break]The sunlight comes slanting through the trees in the [if current_time_period is morning]morning light. The air is still crisp in the shade with the early promise of a hot midsummer day[otherwise]afternoon light. Under the trees, the air is cooler[end if]."
+[paragraph break][description of backdrop_sunlight]".
 Understand "lost/-- in/-- the/-- brambles" as Room_Lost_in_the_Brambles.
 The scent is "sunshine and that dusty fragrance of pine trees that you remember from hiking with Grandpa in the mountains".
 
@@ -3149,7 +3230,7 @@ The big_bucket is scenery unopenable open container in Room_Grassy_Clearing.
 
 The portable transistor radio is scenery.
 	It is in Room_Grassy_Clearing.
-	It is a [[familiar]] device.
+	It is a familiar device.
 	The printed name is "Honey's portable transistor radio".
 	The description of the radio is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
 	Understand "knob", "cube", "woodgrain", "plastic", "wax", "music", "finish" as the portable transistor radio.
@@ -4666,8 +4747,6 @@ To say day1_woods_exits:
 To say day2_woods_exits:
 	say "There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail";
 
-test woods with "teleport to Southern Pacific Tracks. get coin.teleport to other shore. go to willow trail. again."
-
 Instead of room_navigating when player is in Room_Dark_Woods_South and Scene_Night_In_The_Woods is not happening:
 	say cant_find_that;
 
@@ -4797,17 +4876,16 @@ Section - Objects
 
 Section - Backdrops & Scenery
 
-Some tall grass is scenery in Room_Forest_Meadow.
+Some meadow grass is lie-able surface in Room_Forest_Meadow.
 	The description is "Here there is tall dry grass up to your waist. You try not to think about ticks."
-	Understand "tall/high/dry/-- grass/weeds" as tall grass.
+	Understand "tall/high/dry/meadow/-- grass/weeds", "meadow" as meadow grass.
 
-A fallen tree is scenery in Room_Forest_Meadow.
+A fallen tree is a fixed in place undescribed enterable container in Room_Forest_Meadow.
 	The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
-	Understand "protected/-- hollow/cave/nest" as fallen tree.
+	Understand "protected/-- hollow/cave/nest", "in/under fallen/- tree" as fallen tree.
 
 The sound of crickets is backdrop in Room_Forest_Meadow.
-	The description is "You can hear the clear sound of crickets. Fun fact you remember: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
-
+	The description is "You can hear the clear sound of crickets even if you can't see them. Fun fact: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
 
 Section - Rules and Actions
 
@@ -4815,11 +4893,22 @@ Section - Rules and Actions
 Instead of going to Room_Protected_Hollow when Room_Forest_Meadow is not observed:
 	say "You're not going anywhere until you have a plan.";
 
+Instead of entering fallen tree:
+	try room_navigating Room_Protected_Hollow.
+
+Instead of climbing in fallen tree:
+	try room_navigating Room_Protected_Hollow.
+
 Instead of listening when player is in Room_Forest_Meadow and Scene_Night_In_The_Woods is happening:
- 	say "You can hear the sound of crickets in the dry grass around you."
+	if raccoons are in Room_Forest_Meadow:
+		say "The critters are waiting. It sounds like the world is holding its breath.";
+	else:
+ 		say "You can hear the sound of crickets in the dry grass around you.";
 
 Instead of listening to crickets:
 	try examining crickets.
+
+Test woods with "purloin brown paper bag / teleport to other shore / go to willow trail / again "
 
 
 Chapter - Room_Protected_Hollow
@@ -4828,11 +4917,13 @@ Section - Description
 
 Room_Protected_Hollow is a room.
 The printed name is "Protected Hollow".
-The description is "[if Scene_Day_Two has not happened]This is a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. It is dark and would normally be kind of scary, but the dark woods are scarier[first time]. It helps to have some shelter. The Explorer Scouts taught you that shelter is the first thing you are supposed to find in a survival situation[only].[else]You woke up in a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. [first time]All things considered, it was rather cozy. Your mom wasn't crazy about you going to Explorer Scouts, but your stepdad said you had to. And even though you hated it at first, you learned stuff. [only] Under the protection of the fallen logs, you've made a nest of dried leaves which keeps you insulated from the cold. [end if]
+The description is "[if Scene_Day_Two has not happened]This is a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. It is dark and would normally be kind of scary, but the dark woods are scarier[first time]. It helps to have some shelter. The Explorer Scouts taught you that shelter is the first thing you are supposed to find in a survival situation[only][else]You woke up in a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. [first time]All things considered, it was rather cozy. Your mom wasn't crazy about you going to Explorer Scouts, but your stepdad said you had to. And even though you hated it at first, you learned stuff. [only] Under the protection of the fallen logs, you've made a nest of dried leaves which kept you insulated from the cold[end if].
 [paragraph break][available_exits]".
 The scent is "musty forest smell, like dirt or mushrooms".
 Understand "protected/-- hollow", "fallen tree", "my/-- fort" as Room_Protected_Hollow.
 Understand "protected/-- hollow/cave/nest" as Room_Protected_Hollow.
+
+Room_Protected_Hollow can be made_cozy.
 
 Section - Navigation
 
@@ -4842,11 +4933,11 @@ The available_exits of Room_Protected_Hollow are "You can climb back out and go 
 
 Section - Objects
 
-Some fallen_leaves are in Room_Protected_Hollow.
+Some fallen_leaves are fixed in place in Room_Protected_Hollow.
 	The printed name is "fallen leaves".
-	The initial appearance is "There is a thick carpet of fallen leaves, dried now in the summer heat. They crunch beneath you.".
-	The description is "These are probably the leaves from last autumn that have blown beneath the fallen trees. They are crispy and dry and might make a soft bed and even a warm covering."
-	Understand "dried/fallen leaves" as fallen_leaves.
+	The initial appearance is "[if Room_Protected_Hollow is not made_cozy]There is a thick carpet of fallen leaves, dried now in the summer heat. They crunch beneath you.[else]You are in the middle of a warm, dry pile of leaves. Cozy[end if]".
+	The description is "These are probably the leaves from last autumn that have blown beneath the fallen trees. They are crispy and dry and might make a soft bed and even a warm blanket if you could pile the leaves."
+	Understand "dried/fallen/-- leaves" as fallen_leaves.
 
 Section - Backdrops & Scenery
 
@@ -4856,13 +4947,39 @@ Section - Rules and Actions
 
 [Transition text]
 Instead of going to Room_Protected_Hollow when player is in Room_Forest_Meadow:
-	say "You duck down into the low hollow formed by the fallen tree.";
+	say "You crawl into the low hollow formed by the fallen tree.";
 	continue the action.
 
-Instead of listening when player is in Room_Protected_Hollow and Scene_Night_In_The_Woods is happening:
-say "You can hear the sound of crickets playing their love songs in the meadow."
+[Transition text]
+Instead of going to Room_Forest_Meadow when player is in Room_Protected_Hollow and Room_Protected_Hollow is made_cozy:
+	say "You shake off the pile of leaves and crawl out of your nest.";
+	now Room_Protected_Hollow is not made_cozy;
+	continue the action.
 
-[TODO: allow climb out and exit actions]
+Instead of exiting when player is in Room_Protected_Hollow and player is not on supporter:
+	Try room_navigating Room_Forest_Meadow.
+
+Instead of going outside when player is in Room_Protected_Hollow:
+	try room_navigating Room_Forest_Meadow.
+
+Instead of climbing out when player is in Room_Protected_Hollow,
+	try room_navigating Room_Forest_Meadow.
+
+Instead of listening when player is in Room_Protected_Hollow and Scene_Night_In_The_Woods is happening:
+	if raccoons are in Room_Forest_Meadow:
+		say "You hear a thumping, rustling sound. Is something trying to get at you?";
+	else:
+		say "You hear nothing but the crickets playing their love songs and the stars whirring in their orbits overhead.";
+
+Every turn when Scene_Night_In_The_Woods is happening and
+	player is in Room_Protected_Hollow and
+	Room_Protected_Hollow is not made_cozy:
+	if Scene_Defend_the_Fort is not happening:
+		say "[one of]You are awfully chilly. You wish you had a blanket to keep warm[or]It's good to have shelter, but it's still too cold to sleep[or]Unless you find a way to keep warm, you are still in danger of hypothermia[cycling]."
+
+Instead of taking fallen_leaves:
+	try piling fallen_leaves.
+
 
 Chapter - Room_Sentinel_Tree
 
@@ -4956,8 +5073,10 @@ Section - Rules and Actions
 
 Instead of exiting when player is in Room_Car_With_Mom and player is not on supporter:
 	Try room_navigating Room_Drive_In.
+
 Instead of going outside when player is in Room_Car_With_Mom:
 	try room_navigating Room_Drive_In.
+
 Instead of climbing out when player is in Room_Car_With_Mom,
 	try room_navigating Room_Drive_In.
 
@@ -5582,6 +5701,7 @@ Yourself can be covered_in_leaves.
 Yourself can be arm_aware1.
 Yourself can be arm_aware2.
 The player is not injured, not sappy, not dirty, not clothing_ripped, not covered_in_leaves, not arm_aware1, not arm_aware2.
+Yourself can be asleep.
 
 Yourself can be perceptive.
 Yourself can be courageous.
@@ -5742,7 +5862,7 @@ Instead of taking off underwear, say "No way! You're not taking those off!"
 Instead of doing anything except examining tennis_shoes, say "Better keep those on for now."
 Instead of doing anything except examining underwear, say "Better keep those on."]
 
-Understand "stop" as a mistake ("S.T.O.P., one of the things you learned at Explored Camp.[line break]
+Understand "stop" as a mistake ("S.T.O.P., one of the things you learned at Explorer Camp.[line break]
 S stands for SIT DOWN.[line break]
 T is for THINK.[line break]
 O is for OBSERVE.[line break]
@@ -5757,18 +5877,19 @@ trigger: Scene_STOP begins, i.e., 2 turns in Room_Forest_Meadow ]
 seq_jody_stop is a sequence.
 	The action_handler is the seq_jody_stop_handler rule.
 	The interrupt_test is seq_jody_stop_interrupt_test rule.
-	The length_of_seq is 6.
+	The length_of_seq is 5.
 
 This is the seq_jody_stop_handler rule:
 	let index be index of seq_jody_stop;
-	if index is 3:
+	if index is 2:
 		queue_report "You think of how worried Honey and grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say outloud to yourself." at priority 1;
-	else if index is 4:
+	else if index is 3:
 		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
-	else if index is 5:
-		queue_report "And suddenly a memory: You and other campers yelling 'Stop!' at Explorer Camp.[paragraph break]'What do you do if you're ever lost in the woods?' Debbie asks the group again.[paragraph break]'STOP!' the campers shout.[paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break]Think. You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break]Observe. You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break]Plan. The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
+	else if index is 4:
+		queue_report "And suddenly a memory: [paragraph break][italic type]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[roman type][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break]Think. You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break]Observe. You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break]Plan. The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
+		Move player to the meadow grass, without printing a room description;
 		Now Room_Forest_Meadow is observed;
-	else if index is 6:
+	else if index is 5:
 		queue_report "[one of]You have a plan. Find shelter[or]Hypothermia is a real risk in the chilly forest at night. Time to find a place to shelter[or]You look closer at the edge of the forest[stopping]." at priority 1;
 		[We do the following, because we want this step to repeat]
 		decrease index of seq_jody_stop by one;
@@ -7370,15 +7491,24 @@ Some sandwich_ingredients are a fixed in place thing.
 	The initial appearance is "Aunt Mary has gotten out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread for making tuna sandwiches.". The description is "Several cans of Chicken of the Sea, Miracle Whip, and Wonder Bread are out for making tuna sandwiches."
 	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonnaise/whip/can/cans/bags", "sandwich bags" as sandwich_ingredients.
 
-A brown paper bag is a unopenable open container. The description is "A plain brown paper bag".
+A brown paper bag is a unopenable open container.
+	The printed name is "a [if brown paper bag is torn]torn up [end if]brown paper bag".
+	The description is "A plain brown paper bag[if brown paper bag is torn] now pretty torn up[end if]".
+A brown paper bag can be torn.
 
-[TODO: Simplify this model. It is unlikely we need to deal with the sandwiches separately.]
+[TODO: Simplify this model. It is unlikely we need to deal with the sandwiches separately. On second thought, it might come in handy during Scene_Defend_the_Fort]
 A tuna sandwich is a kind of thing.
 	A tuna sandwiches is edible.
 	[It is singular-named "tuna sandwich".]
 	Three tuna sandwiches are in brown paper bag.
 	The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
 	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spead/mayonaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna sandwiches.
+
+Instead of dropping tuna sandwich during Scene_Day_One:
+	say "No way. That's lunch for Honey and grandpa.";
+
+Instead of eating tuna sandwich during Scene_Day_One:
+	say "Not yet. You want to eat lunch with Honey and grandpa.";
 
 seq_mary_sandwich is a sequence.
 	The action_handler is the seq_mary_sandwich_handler rule.
@@ -7914,10 +8044,11 @@ This is the seq_dog_convo_handler rule:
 			[we make sure this ends when Scene_Dreams ends]
 
 This is the seq_dog_convo_interrupt_test rule:
-	if we are speaking to dream_dog,
+	if we are speaking to dream_dog:
 		rule succeeds;
-	if dream_dog is not visible, rule succeeds;
-		rule fails.
+	if dream_dog is not visible:
+		rule succeeds;
+	rule fails.
 
 Chapter - Dialogue
 
@@ -7984,13 +8115,102 @@ Every turn when player is in Room_D_Loop and (a random chance of 1 in 6 succeeds
 Every turn when yellow tabby is visible and (a random chance of 1 in 4 succeeds):
 	queue_report "[one of]The yellow tabby scratches its ear[or]The yellow tabby carefully licks its paws[or]The tabby grooms itself carefully[or]The tabby rubs up against your legs[or]The yellow tabby looks up at you as if it wants something[as decreasingly likely outcomes]." with priority 5;
 
-Part - Racoons
 
-Racoons are animals in Limbo.
-	The initial appearance is "You can see eyes glowing in the dark. More than two. You count at least four pair.".
-	The description is "".
-	Understand "bandits/invaders/critters" as racoons.
+Part - raccoons
 
+Some raccoons are undescribed animals in Limbo.
+	The description is "You can see eyes shining at the edge of the meadow. More than two. You count at least four pair.".
+	Understand "eyes/bandit/bandits/burgler/burglers/invaders/critters/bear/bears/wolf/wolves/animal/animals" as raccoons.
+
+Some virtual_raccoons are undescribed animals in Limbo.
+	The printed name is "invaders".
+	The description is "You can hear them rustling around, even if you can't see them from inside the fort.".
+	Understand "eyes/bandit/bandits/burgler/burglers/invaders/critters/bear/bears/wolf/wolves/animal/animals/noise/noises" as virtual_raccoons.
+
+Chapter - Properties
+
+Chapter - Rules and Actions
+
+Instead of examining raccoons when player is in Room_Protected_Hollow:
+	say "You can hear them rustling around, even if you can't see them from inside the fort.";
+
+To say racoon_description:
+	say "[one of]In the twilight, you catch sight of the invaders. You can see eyes shining at the edge of the meadow and in the tall grass. More than two. You count at least four pair[or]Your invaders are waiting at the edge of the meadow. You can see their eyes shining. They appear to be waiting. Are they waiting for you to go to sleep so they can eat you? Are they hungry? Your hands are shaking[or]Watching their nervous movements, these animals aren't large. These aren't bears or wolves, but they're definitely not tiny like squirrels or mice. You can see their eyes watching you, reflecting the starlight as they crouch at the edge of the meadow. Masked eyes like bandits[or]Your invaders are waiting at the edge of the meadow. You can see their eyes shining under dark masks. They appear to be waiting[stopping]";
+
+Instead of yelling during Scene_Defend_the_Fort:
+	say "You let out a low terrifying roar from somewhere deep in your belly, and for a moment everything is completely quiet.";
+
+test coons with "teleport to meadow / wait / wait / wait / go to hollow / pile leaves / sleep";
+
+Chapter - Responses
+
+Chapter - Rants
+
+Chapter - Sequences
+
+seq_raccoon_visit is a sequence.
+	The action_handler is the seq_raccoon_visit_handler rule.
+	The interrupt_test is seq_raccoon_visit_interrupt_test rule.
+	The length_of_seq is 2.
+
+This is the seq_raccoon_visit_handler rule:
+	let index be index of seq_raccoon_visit;
+	if index is 1:
+		do_raccoon_things;
+		if raccoons are in Region_Woods_Area:
+			[We do the following, because we want this step to repeat]
+			decrease index of seq_raccoon_visit by one;
+
+This is the seq_raccoon_visit_interrupt_test rule:
+	if we are speaking to raccoons:
+		rule succeeds;
+	if we are yelling:
+		rule succeeds;
+	if the current action is room_navigating and the noun is Room_Protected_Hollow:
+		rule succeeds;
+	rule fails.
+
+To do_raccoon_things:
+	Let limbo_sandwich_list be the list of tuna sandwiches enclosed by Limbo;
+	[This continues until all of the sandwiches are gone.]
+	If the number of entries in limbo_sandwich_list is less than three:
+		If player is in Room_Forest_Meadow:
+			[raccoons will be in Room_Forest_Meadow waiting at the edges]
+			queue_report "[racoon_description]." at priority 2;
+		else if player is in Room_Protected_Hollow:
+			Let meadow_sandwich_list be the list of tuna sandwiches enclosed by Room_Forest_Meadow;
+			Let hollow_sandwich_list be the list of tuna sandwiches enclosed by Room_Protected_Hollow;
+			[if there are sandwiches in Room_Forest_Meadow]
+			If the number of entries in meadow_sandwich_list is greater than zero:
+				[raccoons will be making noise in the meadow eating them.]
+				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]." at priority 2;
+				[It takes one turn for the raccoons to eat one sandwich.]
+				let one_sandwich be a random tuna sandwich enclosed by Room_Forest_Meadow;
+				now one_sandwich is in Limbo;
+				if brown paper bag is in Room_Forest_Meadow:
+					now brown paper bag is torn;
+			[if there are sandwiches in Room_Protected_Hollow]
+			else if the number of entries in hollow_sandwich_list is greater than zero:
+				[raccoons will be making noise sniffing around the fort]
+				queue_report "[one of]Something is trying to get into the fort. There is a rustling thump like a ghost in the attic.[or]You hear a nearby growl that nearly stops your heart.[or]Something is trying to get in. You see a branch shift. Is something on top of the fallen trees?[or]You hear something walking around -- wolves? bears? And are they trying to get you?[or]You hear something outside the fort. What do they want?[cycling]" at priority 2;
+	[If player yells or moves, it takes one turn for the raccoons to make noise again.]
+	else:
+		now raccoons are in Limbo;
+		now virtual_raccoons are in Limbo;
+		now seq_raccoon_visit is not in-progress;
+		if player is in Room_Protected_Hollow:
+			queue_report  "You hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 2;
+		else if player is in Room_Forest_Meadow:
+			queue_report  "The invaders have taken their sandwiches and gone. You protected the fort."  at priority 2;
+
+After taking tuna sandwich when raccoons are visible:
+ 	queue_report "The eyes follow the tuna sandwich." at priority 1;
+
+After dropping tuna sandwich when raccoons are visible:
+ 	queue_report "The glittering eyes watch the tuna sandwich hit the ground." at priority 1;
+
+After dropping brown paper bag when raccoons are visible:
+ 	queue_report "Numerous pairs of eyes watch the paper bag hit the ground." at priority 1;
 
 Volume - Debugging
 
