@@ -8119,7 +8119,7 @@ Every turn when yellow tabby is visible and (a random chance of 1 in 4 succeeds)
 Part - raccoons
 
 Some raccoons are undescribed animals in Limbo.
-	The description is "You can see eyes shining at the edge of the meadow. More than two. You count at least four pair.".
+	The description is "You can see eyes shining at the edge of the meadow. More than two. You count at least four pair[first time]. You've been thinking of them as the invaders, but thinking about it, you guess, you're really the invader on their turf[only].".
 	Understand "eyes/bandit/bandits/burgler/burglers/invaders/critters/bear/bears/wolf/wolves/animal/animals" as raccoons.
 
 Some virtual_raccoons are undescribed animals in Limbo.
@@ -8204,7 +8204,7 @@ To do_raccoon_things:
 			queue_report  "The invaders have taken their sandwiches and gone. You protected the fort."  at priority 2;
 
 After taking tuna sandwich when raccoons are visible:
- 	queue_report "The eyes follow the tuna sandwich." at priority 1;
+ 	queue_report "The eyes of the invaders follow the tuna sandwich." at priority 1;
 
 After dropping tuna sandwich when raccoons are visible:
  	queue_report "The glittering eyes watch the tuna sandwich hit the ground." at priority 1;
