@@ -8183,7 +8183,7 @@ To do_raccoon_things:
 			[if there are sandwiches in Room_Forest_Meadow]
 			If the number of entries in meadow_sandwich_list is greater than zero:
 				[raccoons will be making noise in the meadow eating them.]
-				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]." at priority 2;
+				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]" at priority 2;
 				[It takes one turn for the raccoons to eat one sandwich.]
 				let one_sandwich be a random tuna sandwich enclosed by Room_Forest_Meadow;
 				now one_sandwich is in Limbo;
