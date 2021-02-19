@@ -845,6 +845,35 @@ Chapter - Jump
 Instead of jumping:
 	say "You jump around like a monkey."
 
+Chapter - Cry
+
+Understand "cry", "sob", "wail" as a mistake ("You try to hold back your tears but they leak out.");
+
+Chapter - Breathe
+
+Understand "breathe", "take a breath" as a mistake ("You take a deep breath. It's calming.");
+
+Chapter - Find
+
+Understand "find [text]" as a mistake ("You'll have to be more specific. Perhaps if you stop and observe what's around you.");
+
+Chapter - Stop
+
+Understand "stop" as a mistake ("S.T.O.P. is one of the things you learned at Explorer Camp:[line break]
+S stands for SIT DOWN.[line break]
+T is for THINK.[line break]
+O is for OBSERVE.[line break]
+P stands for PLAN.")
+
+Chapter - Observe
+
+Understand "observe" as looking.
+Understand "observe [thing]" as examining.
+
+Chapter - Plan
+
+Understand "plan" as a mistake ("Good idea. What have you come up with?");
+
 Chapter - Smell
 
 An object has some text called scent. The scent of a thing is usually "nothing".
@@ -1664,6 +1693,8 @@ Instead of sleeping during Scene_Sleep_One:
 		now raccoons are in Room_Forest_Meadow;
 		now virtual_raccoons are in Room_Protected_Hollow;
 		say Sleep_Card;
+		say "...and are awakened what seems like seconds later. You heard a noise very nearby.";
+		try looking;
 
 Chapter - Scene_Defend_the_Fort
 
@@ -1674,7 +1705,6 @@ Scene_Defend_the_Fort begins when
 Scene_Defend_the_Fort ends when raccoons are not in Region_Woods_Area.
 
 When Scene_Defend_the_Fort begins:
-	say "...and are awakened what seems like seconds later. You heard a noise very nearby.";
 	now seq_raccoon_visit is in-progress;
 
 Instead of sleeping during Scene_Defend_the_Fort:
@@ -4763,7 +4793,7 @@ A huge madrone tree is an elusive_landmark in Limbo.
 	Understand "huge/-- madrone tree" as huge madrone tree
 
 A burned out tree is an elusive_landmark in Limbo.
-	The description is "This tree went through a fire at some point, but still lived."
+	The description is "This tree went through a fire at some point, but still lived. The inside is all burnt, but the outside looks like a normal tree."
 	Understand "burned out/-- tree" as burned out tree.
 
 A bright patch in the woods is an elusive_landmark in Limbo.
@@ -4935,9 +4965,15 @@ Section - Objects
 
 Some fallen_leaves are fixed in place in Room_Protected_Hollow.
 	The printed name is "fallen leaves".
-	The initial appearance is "[if Room_Protected_Hollow is not made_cozy]There is a thick carpet of fallen leaves, dried now in the summer heat. They crunch beneath you.[else]You are in the middle of a warm, dry pile of leaves. Cozy[end if]".
+	The initial appearance is "[if Scene_Defend_the_Fort is not happening][fallen_leaves_appearance][end if]".
 	The description is "These are probably the leaves from last autumn that have blown beneath the fallen trees. They are crispy and dry and might make a soft bed and even a warm blanket if you could pile the leaves."
 	Understand "dried/fallen/-- leaves" as fallen_leaves.
+
+To say fallen_leaves_appearance:
+	if Room_Protected_Hollow is not made_cozy:
+		say "There is a thick carpet of fallen leaves, dried now in the summer heat. They crunch beneath you";
+	else:
+		say "You are in the middle of a warm, dry pile of leaves. Cozy"
 
 Section - Backdrops & Scenery
 
@@ -5862,11 +5898,7 @@ Instead of taking off underwear, say "No way! You're not taking those off!"
 Instead of doing anything except examining tennis_shoes, say "Better keep those on for now."
 Instead of doing anything except examining underwear, say "Better keep those on."]
 
-Understand "stop" as a mistake ("S.T.O.P., one of the things you learned at Explorer Camp.[line break]
-S stands for SIT DOWN.[line break]
-T is for THINK.[line break]
-O is for OBSERVE.[line break]
-P stands for PLAN.")
+
 
 Chapter - Sequences
 
@@ -5877,19 +5909,19 @@ trigger: Scene_STOP begins, i.e., 2 turns in Room_Forest_Meadow ]
 seq_jody_stop is a sequence.
 	The action_handler is the seq_jody_stop_handler rule.
 	The interrupt_test is seq_jody_stop_interrupt_test rule.
-	The length_of_seq is 5.
+	The length_of_seq is 6.
 
 This is the seq_jody_stop_handler rule:
 	let index be index of seq_jody_stop;
-	if index is 2:
+	if index is 3:
 		queue_report "You think of how worried Honey and grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say outloud to yourself." at priority 1;
-	else if index is 3:
-		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
 	else if index is 4:
-		queue_report "And suddenly a memory: [paragraph break][italic type]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[roman type][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break]Think. You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break]Observe. You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break]Plan. The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
+		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
+	else if index is 5:
+		queue_report "And suddenly a memory: [paragraph break][italic type]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[roman type][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break][italic type]Think.[roman type] You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break][italic type]Observe.[roman type] You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break][italic type]Plan.[roman type] The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
 		Move player to the meadow grass, without printing a room description;
 		Now Room_Forest_Meadow is observed;
-	else if index is 5:
+	else if index is 6:
 		queue_report "[one of]You have a plan. Find shelter[or]Hypothermia is a real risk in the chilly forest at night. Time to find a place to shelter[or]You look closer at the edge of the forest[stopping]." at priority 1;
 		[We do the following, because we want this step to repeat]
 		decrease index of seq_jody_stop by one;
