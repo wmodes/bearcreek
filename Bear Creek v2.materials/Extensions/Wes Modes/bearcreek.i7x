@@ -372,7 +372,7 @@ Understand
 	as asking for credits.
 
 Carry out asking for credits:
-	say "[story title] was created by [story author]. Inform 7, in which it was written, is the work of Graham Nelson. The IF authors Emily Short, Eric Eve, and Aaron Reed provided helpful extensions to Inform. The author is grateful for the testing feedback offered by many good folks since the first version in 2012. The cover are was generously provided by Darrin Barry."
+	say "[story title] was created by [story author]. Inform 7, in which it was written, is the work of Graham Nelson. The IF authors Emily Short, Eric Eve, and Aaron Reed provided helpful extensions to Inform. The author is grateful for the testing feedback offered by many good folks since the first version in 2012. The cover was generously provided by Darrin Barry."
 
 Chapter - Instructions
 
@@ -847,23 +847,43 @@ Instead of jumping:
 
 Chapter - Cry
 
-Understand "cry", "sob", "wail" as a mistake ("You try to hold back your tears but they leak out.");
+Crying is an action applying to nothing.
+
+Understand "cry", "sob", "wail" as crying.
+
+Carry out crying:
+	say "You try to hold back your tears but they leak out.";
 
 Chapter - Breathe
 
-Understand "breathe", "take a breath" as a mistake ("You take a deep breath. It's calming.");
+Breathing is an action applying to nothing.
+
+Understand "breathe", "take a breath" as breathing.
+
+Carry out breathing:
+	say "You take a deep breath. It's calming.");
 
 Chapter - Find
 
-Understand "find [text]" as a mistake ("You'll have to be more specific. Perhaps if you stop and observe what's around you.");
+Finding is an action applying to one topic.
+
+Understand "find [text]" as finding.
+
+Carry out finding:
+	say "You'll have to be more specific. Perhaps if you stop and observe what's around you.";
 
 Chapter - Stop
 
-Understand "stop" as a mistake ("S.T.O.P. is one of the things you learned at Explorer Camp:[line break]
-S stands for SIT DOWN.[line break]
-T is for THINK.[line break]
-O is for OBSERVE.[line break]
-P stands for PLAN.")
+Stopping is an action applying to nothing.
+
+Understand "stop" as stopping.
+
+Carry out stopping:
+	say "S.T.O.P. is one of the things you learned at Explorer Camp:[line break]
+	S stands for SIT DOWN.[line break]
+	T is for THINK.[line break]
+	O is for OBSERVE.[line break]
+	P stands for PLAN."
 
 Chapter - Observe
 
@@ -872,7 +892,26 @@ Understand "observe [thing]" as examining.
 
 Chapter - Plan
 
-Understand "plan" as a mistake ("Good idea. What have you come up with?");
+Planning is an action applying to nothing.
+
+Understand "plan" as planning.
+
+Carry out planning:
+	say "Good idea. What have you come up with?";
+
+Chapter - Hunt
+
+Hunting is an action applying to one thing.
+
+Understand "hunt [something]", "catch [something]" as hunting.
+
+Carry out hunting:
+	if the noun is crickets and crickets are visible:
+		say "You sit for a minute in the grass watching carefully, but apparently they are in hiding today. You get up a little disappointed.";
+	else if noun is visible:
+		try taking noun;
+	else:
+		say "Yeah, no. That's not likely.";
 
 Chapter - Smell
 
@@ -1690,11 +1729,12 @@ Instead of sleeping during Scene_Sleep_One:
 		say "You are too cold to sleep.";
 	else:
 		now player is asleep;
-		now raccoons are in Room_Forest_Meadow;
-		now virtual_raccoons are in Room_Protected_Hollow;
 		say Sleep_Card;
 		say "...and are awakened what seems like seconds later. You heard a noise very nearby.";
 		try looking;
+
+When cene_Sleep_One ends:
+	now player is not asleep;
 
 Chapter - Scene_Defend_the_Fort
 
@@ -1705,6 +1745,8 @@ Scene_Defend_the_Fort begins when
 Scene_Defend_the_Fort ends when raccoons are not in Region_Woods_Area.
 
 When Scene_Defend_the_Fort begins:
+	now raccoons are in Room_Forest_Meadow;
+	now virtual_raccoons are in Room_Protected_Hollow;
 	now seq_raccoon_visit is in-progress;
 
 Instead of sleeping during Scene_Defend_the_Fort:
@@ -1730,7 +1772,6 @@ Instead of sleeping during Scene_Sleep_Two:
 		now player is asleep;
 		say Sleep_Card;
 
-
 Chapter - Scene_Dreams
 
 There is a scene called Scene_Dreams.
@@ -1751,7 +1792,8 @@ When Scene_Dreams begins:
 When Scene_Dreams ends:
 	now seq_dog_convo is not in-progress;
 	unstore_all_your_stuff;
-	now player is in Room_Protected_Hollow.
+	now player is in Room_Protected_Hollow;
+	now player is not asleep;
 
 [During Scene_Dreams player cannot move to next location until the scene for that location is finished]
 
@@ -1770,7 +1812,7 @@ Scene_Dream_Have_To_Pee ends when player has been in Room_Restroom.
 
 [TODO: Reminder that you have to pee every few turns]
 Every turn during Scene_Dream_Have_To_Pee:
-	if the remainder after dividing the turn count by two is zero:
+	if the remainder after dividing the turn count by three is zero:
 		queue_report "[one of]You suddenly realize that you've been holding it, and you really have to pee[or][one of]You really have to go[or]You do a little dance, your body reminding you that you really have to go[or]Your really really really don't want to wet yourself[cycling][stopping]." with priority 1.
 
 Peeing is an action applying to nothing.
@@ -1995,7 +2037,7 @@ To say Title_Card_Part_3:
 To say Sleep_Card:
 	say "[one of]You are surprisingly tired. You nod off almost immediately[or]After your long day, you find that you can't keep your eyes open for another moment.[in random order]";
 	pause the game;
-	clear the screen;
+	clear only the main screen;
 
 To pause the/-- game:
 say "[paragraph break]Please press ANY KEY to continue.";
@@ -2028,9 +2070,6 @@ When Scene_Bringing_Lunch begins:
 
 At the time when Premonition About Something Wrong:
 	queue_report "[italic type]You get a feeling something is wrong. What if something happened to your grandpa?[roman type]" with priority 1;
-
-A person can be dog_warned.
-	A person is not dog_warned.
 
 After going to Room_Long_Stretch during Scene_Bringing_Lunch:
 	if player is not dog_warned:
@@ -3877,10 +3916,15 @@ A grassy field is backdrop in Room_Grassy_Field.
 
 The back fence is backdrop in Room_Grassy_Field.
 
+Some crickets are backdrop in Room_Grassy_Field.
+
+Some ticks are backdrop in Room_Grassy_Field.
+
 Section - Rules and Actions
 
-Understand "catch crickets/grasshoppers", "hunt crickets/grasshoppers", "get crickets/grasshoppers" as a mistake
-	("You sit for a minute in the grass watching carefully, but apparently they are not home. You get up a little disappointed.").
+[Nix: we replaced this with an action]
+[Understand "catch crickets/grasshoppers", "hunt crickets/grasshoppers", "get crickets/grasshoppers" as a mistake
+	("You sit for a minute in the grass watching carefully, but apparently they are in hiding today. You get up a little disappointed.").]
 
 Instead of climbing back fence, say "Perhaps it is easier to just go around through the gate."
 
@@ -4912,10 +4956,14 @@ Some meadow grass is lie-able surface in Room_Forest_Meadow.
 
 A fallen tree is a fixed in place undescribed enterable container in Room_Forest_Meadow.
 	The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
-	Understand "protected/-- hollow/cave/nest", "in/under fallen/- tree" as fallen tree.
+	Understand "protected/-- hollow/cave/nest/underbrush", "in/under fallen/- tree" as fallen tree.
 
-The sound of crickets is backdrop in Room_Forest_Meadow.
+Some crickets are backdrop in Room_Forest_Meadow.
 	The description is "You can hear the clear sound of crickets even if you can't see them. Fun fact: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
+	Understand "sound/-- of/-- crickets/grasshoppers" as crickets.
+
+Some ticks are backdrop in Room_Forest_Meadow.
+	The description is "God, you hope you don't find any of them. Or better yet, you hope they don't find you."
 
 Section - Rules and Actions
 
@@ -4937,6 +4985,9 @@ Instead of listening when player is in Room_Forest_Meadow and Scene_Night_In_The
 
 Instead of listening to crickets:
 	try examining crickets.
+
+Instead of taking crickets:
+	try hunting crickets.
 
 Test woods with "purloin brown paper bag / teleport to other shore / go to willow trail / again "
 
@@ -4963,6 +5014,7 @@ The available_exits of Room_Protected_Hollow are "You can climb back out and go 
 
 Section - Objects
 
+[TODO: the leaves appear even when defend the fort is happening]
 Some fallen_leaves are fixed in place in Room_Protected_Hollow.
 	The printed name is "fallen leaves".
 	The initial appearance is "[if Scene_Defend_the_Fort is not happening][fallen_leaves_appearance][end if]".
@@ -4977,7 +5029,7 @@ To say fallen_leaves_appearance:
 
 Section - Backdrops & Scenery
 
-The sound of crickets is backdrop in Room_Protected_Hollow.
+Some crickets are backdrop in Room_Protected_Hollow.
 
 Section - Rules and Actions
 
@@ -5737,7 +5789,11 @@ Yourself can be covered_in_leaves.
 Yourself can be arm_aware1.
 Yourself can be arm_aware2.
 The player is not injured, not sappy, not dirty, not clothing_ripped, not covered_in_leaves, not arm_aware1, not arm_aware2.
+
 Yourself can be asleep.
+
+Yourself can be dog_warned.
+	Yourself is not dog_warned.
 
 Yourself can be perceptive.
 Yourself can be courageous.
@@ -6308,7 +6364,7 @@ Grandpa is an undescribed _male man in Room_Grassy_Clearing.
 	The description of Grandpa is "Grandpa is, well, Grandpa. He's not tall. He's not fat. He has a bald spot right on top of his head like a little hat. He's like a bull, kind of, but skinnier and wears a warm plaid shirt. Today he's in a t-shirt, but usually. He smells good, like cigarettes and that stuff he puts on his face when he shaves.[if a random chance of 1 in 3 succeeds]
 	[paragraph break]While you are looking, he sees you and smiles.[end if]".
 	Understand "grampa/granpa/grandfather/gramp/pa/gramps/John" as grandpa.
-	The scent is "familiar, like cigarettes and the stuff he uses when he shaves".
+	The scent is "something familiar, like cigarettes and the stuff he uses when he shaves".
 
 Chapter - Properties
 
@@ -7713,15 +7769,172 @@ Part - Mom
 
 Mom is a _female woman.
 Mom is in Room_Car_With_Mom.
-The initial appearance is "Your mom is watching the movie. Sensing you looking, she looks back at you smiling.".
-The description is "Mom is, well mom. She's silly and smart and plays with you. Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you until your tears stopped."
+The initial appearance is "[if player is in Room_Car_With_Mom]Your mom is watching the movie. Sensing you looking, she looks back at you smiling[else]Your mom is here looking very worried[end if].".
+The description is "Mom is, well mom. She's silly and smart and plays with you. [one of]Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you until your tears stopped.[only] She's strict and good and understanding. All you know is she loves you more than you know how to say.[if a random chance of 1 in 3 succeeds]
+[paragraph break]While you are looking at her, she catches your eye and smiles sweetly.[end if]"
 Understand "mommy/ma/mother/rachel/rach" as Mom.
+The scent is "home".
 
 Chapter - Properties
 
 Chapter - Rules and Actions
 
+Instead of touching mom:
+	say "Mom gives you a huge hug and you're pretty sure she's not ever going to let you go. And then she does.";
+	Now player is affectionate;
+
 Chapter - Responses
+[
+		Preliminaries and greetings
+]
+
+Greeting response for mom:
+	say "[mom's greeting].";
+
+Implicit greeting response for mom:
+	do nothing;
+
+Farewell response for mom:
+	say "'Okay, see you later, [moms_nickname],' mom says.";
+
+Implicit farewell response for mom:
+	do nothing;
+
+To say mom's greeting:
+	say "'[moms_salutation], [moms_nickname],' mom says[if a random chance of 1 in 2 succeeds] and [mom_stuff][end if]";
+
+[Do we want to have Jody name in here, or is it better if the PC is a blank slate for the player to project onto?]
+To say moms_nickname:
+	say "[one of]Jo[or]Pumpkin[or]Sweet-pea[or]Jody[as decreasingly likely outcomes]";
+
+To say moms_serious_name:
+	say "Jody Rose";
+
+To say moms_salutation:
+	say "[one of]Hi[or]Hello[as decreasingly likely outcomes]";
+
+To say mom_stuff:
+		say "[one of]smiles[or]squeezes your shoulder[or]gives you a quick squeeze[at random]";
+
+[
+	Defaults
+]
+
+Default tell response for mom:
+	if the second noun is not nothing:
+		say "'[The second noun]?' mom says.";
+	else:
+		say "'What do you mean?' mom says";
+
+Default ask response for mom:
+	say "'I don't know, [moms_nickname],' mom shrugs.";
+
+Default give-show response for mom:
+	say "'You keep that safe, [moms_nickname],' mom smiles.";
+
+Default ask-for response for mom:
+	if player holds second noun:
+		say "'You already have that' mom says.";
+	else:
+		say "'That's not for you,' mom says.";
+
+Default yes-no response for mom:
+	if saying yes:
+		say "[one of]'Good,' mom says, smiling[or]Mom nods[at random].";
+	else:
+		say "[one of]'No?,'[or]'I'm sorry to hear that,'[cycling] mom says looking at you carefully.";
+
+Default response for mom:
+	say "'Okay, [moms_nickname],' mom says.";
+
+[
+	Responses
+]
+
+Response of mom when asked-or-told about player:
+	say "Mom looks serious. 'You don't need me to tell you anything. You know who you are,' mom says.".
+
+Response of mom when asked-or-told about mom:
+	say "'Me?' mom asks, 'You know wverything about me already.' I should be asking you.".
+
+Response of mom when asked-or-told about Honey:
+	say "'Your Honey?' mom says, 'She really loves you, even if she's strict with you. You know that, don't you?''".
+
+Response of mom when asked-or-told about Aunt Mary:
+	say "'My Aunt Mary seemed like an old lady when I was kid,' mom says, 'She's your Honey's older sister.'".
+
+Response of mom when asked-or-told about Lee:
+	say "'I like Lee,' mom says, 'I know that your Honey doesn't trust him, but I think he's got a big heart.'".
+
+[Response of mom when asked-or-told about Sheriff:
+	say "".]
+
+Response of mom when asked-or-told about Step-Dad:
+	say "'Your step-dad? He's a good guy. He really is. He tries his best even if he doesn't have an easy time showing it. And he's good to us,' mom says, looking concerned, 'Don't you think?'".
+
+Response of mom when asked-or-told about topic_berries:
+[Response of mom when asked about backdrop_berries or told about backdrop_berries:]
+	say "'Were you helping your Honey and grandpa pick berries?' she asks.".
+
+Response of mom when asked-or-told about topic_trailer:
+	say "'Honey and grandpa's house? I love that trailer. Your grandpa has worked so hard to make that place beautiful for us,' mom says.".
+
+Response of mom when asked about train tracks:
+	say "[moms_train_ask_response].";
+
+To say moms_train_ask_response:
+	say "Your grandpa used to work on the railroad and when they bought their house, he was happy that there was a train that passed nearby".
+
+Response of mom when told about train tracks:
+	if player is not train-experienced:
+		say "[moms_train_ask_response].";
+	else:
+		say "[moms_train_tell_response].";
+
+To say moms_train_tell_response:
+	say "'[moms_serious_name], you be careful around that train,' mom says";
+
+Response of mom when asked-or-told about flattened coin or given-or-shown flattened coin:
+	say "[moms_train_tell_response], looking at the flattened coin. 'Your grandpa taught you to do that, huh?'";
+
+Response of mom when asked-or-told about dog:
+	say "'Be careful around that dog, [moms_nickname],' mom says, 'It tried to bite your grampa once.'".
+
+[Response of mom when asked-or-told about forest:
+	say "".]
+
+Response of mom when asked about topic_tree:
+	say moms_big_tree_ask_response;
+
+To say moms_big_tree_ask_response:
+	"'You be careful climbing trees,' mom says, 'I know a boy who broke his arm falling out of a tree.'";
+
+Response of mom when told about topic_tree:
+	say "'[if player has not been in Room_Top_of_the_Pine_Tree]Grandpa said you climbed that tree before. You be careful[else]You climbed all the way to the top? [moms_serious_name]! You're scaring me![end if],' mom says.".
+
+Response of mom when asked-or-told about topic_creek:
+	say "'Your grandpa used to take me fishing when I was little. All I wanted to do is play in the water and chase tadpoles. He used to get mad at me because I couldn't sit still. He never caught a fish when I was there.' mom says laughing.'".
+
+Response of mom when asked-or-told about deep pool:
+	say "[one of]'I know you are almost a grown up, but you be careful down at that old swimming hole,' mom says.[or]'If you really want to go swimming, you go with your grandpa,' mom says, 'I don't want you to go swimming by yourself.'[at random]".
+
+Response of mom when asked about topic_life:
+	say "'We have a beautiful life, don't we?' mom asks smiling.".
+
+Response of mom when asked about topic_work:
+	say "'I'm still working at Hawthorne Manor,' mom says. 'The old people are so sweet to me.'".
+
+Response of mom when asked about topic_love:
+	say "'You are my [moms_nickname] and my super-duper favorite,' mom says and [mom_stuff].".
+
+Response of mom when asked about topic_death:
+	say "'Well, someday we are all going to die, but not for a long long while,' mom says and [mom_stuff].".
+
+Response of mom when asked about topic_family:
+	say "'Your family loves you, [moms_nickname],' mom says, 'sometimes all we have is family.'".
+
+Response of mom when asked-or-told about topic_war:
+	say "'That's a question for your grandpa,' mom says, 'though he doesn't like to talk about it.'".
 
 Chapter - Rants
 
