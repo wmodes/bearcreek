@@ -322,6 +322,7 @@ Release along with a website.
 Release along with an interpreter.
 Release along with the library card.
 
+Use MAX_DICT_ENTRIES of 2000.
 
 Volume - Mechanics
 
@@ -372,7 +373,7 @@ Understand
 	as asking for credits.
 
 Carry out asking for credits:
-	say "[story title] was created by [story author]. Inform 7, in which it was written, is the work of Graham Nelson. The IF authors Emily Short, Eric Eve, and Aaron Reed provided helpful extensions to Inform. The author is grateful for the testing feedback offered by many good folks since the first version in 2012. The cover was generously provided by Darrin Barry."
+	say "[story title] was created by [story author]. Inform 7, in which it was written, is the work of Graham Nelson. The IF authors Emily Short, Eric Eve, and Aaron Reed provided helpful extensions to Inform. The author is grateful for the testing feedback offered by many good folks since the first version in 2012. The cover was generously provided by Darrin Barry.[paragraph break]The story is dedicated to the Sierra Miwok and Yokut people who lived along the shores of what is now known as Bear Creek."
 
 Chapter - Instructions
 
@@ -812,7 +813,7 @@ Instead of attacking someone (called the subject):
 	say "[one of]Sometimes you get so mad you wish you had a laser ray that could just zap somebody dead. No, better, a disappearance ray that made someone disappear like they'd never ever existed.
 	[paragraph break]But then you think about it a bit, and wonder: What if you disappeared [subject] and [sub_pronoun of subject] was meant to help you or save your life or something later and you'd never know it because [sub_pronoun of subject] never existed? Or if you had a Disappear Ray, why couldn't someone else have one? And what would keep them from disappearing you?[or]If you knew Kung Fu you'd chop [obj_pronoun of subject] to pieces. But then what if [subject] didn't die right away and [sub_pronoun of subject] just laid there suffering? Could you finish [obj_pronoun of subject] off while [sub_pronoun of subject] laid there helpless?[or]What is you hurt [obj_pronoun of subject] and you got put in jail and you never saw your mom again?[cycling][line break]The thought makes you [nervous]. Maybe violence isn't the answer."
 
-Chapter - Sing
+Chapter - Singing
 
 Understand the command "sing", "hum" as something new.
 Singing is an action applying to nothing.
@@ -840,12 +841,24 @@ To say sing_action:
 		say " [Reactor] [one of]looks at[or]glances over at[or]smiles at[at random] you.[run paragraph on]";
 	say "[line break]";
 
-Chapter - Jump
+Chapter - Jumping
 
 Instead of jumping:
 	say "You jump around like a monkey."
 
-Chapter - Cry
+Chapter - Peeing
+
+Peeing is an action applying to nothing.
+
+Understand "pee", "urinate", "poop", "piss" as peeing.
+
+Carry out peeing:
+	If Scene_Dream_Have_To_Pee is happening:
+		say "Probably best to hustle to the restroom in the snack bar.";
+	else:
+		say "You don't have to go."
+
+Chapter - Crying
 
 Crying is an action applying to nothing.
 
@@ -854,16 +867,16 @@ Understand "cry", "sob", "wail" as crying.
 Carry out crying:
 	say "You try to hold back your tears but they leak out.";
 
-Chapter - Breathe
+Chapter - Breathing
 
 Breathing is an action applying to nothing.
 
 Understand "breathe", "take a breath" as breathing.
 
 Carry out breathing:
-	say "You take a deep breath. It's calming.");
+	say "You take a deep breath. It's calming.";
 
-Chapter - Find
+Chapter - Finding
 
 Finding is an action applying to one topic.
 
@@ -872,7 +885,7 @@ Understand "find [text]" as finding.
 Carry out finding:
 	say "You'll have to be more specific. Perhaps if you stop and observe what's around you.";
 
-Chapter - Stop
+Chapter - Stopping
 
 Stopping is an action applying to nothing.
 
@@ -885,12 +898,12 @@ Carry out stopping:
 	O is for OBSERVE.[line break]
 	P stands for PLAN."
 
-Chapter - Observe
+Chapter - Observing
 
 Understand "observe" as looking.
 Understand "observe [thing]" as examining.
 
-Chapter - Plan
+Chapter - Planning
 
 Planning is an action applying to nothing.
 
@@ -899,7 +912,7 @@ Understand "plan" as planning.
 Carry out planning:
 	say "Good idea. What have you come up with?";
 
-Chapter - Hunt
+Chapter - Hunting
 
 Hunting is an action applying to one thing.
 
@@ -913,7 +926,7 @@ Carry out hunting:
 	else:
 		say "Yeah, no. That's not likely.";
 
-Chapter - Smell
+Chapter - Smelling
 
 An object has some text called scent. The scent of a thing is usually "nothing".
 
@@ -1397,7 +1410,7 @@ At 6 PM:
 	queue_report "Crickets are warming up for the evening symphony, but it only reminds you that you should be home. You can feel yourself starting to cry. You wish you had your mom, or your grandpa was here. Then you really do cry.
 	[paragraph break]Eventually, your tears turn to sniffles and your wipe your eyes with your dirty hands." with priority 2.
 
-At 9 PM:
+At 8 PM:
 	Now the current_time_period is night;
 	Now the right hand status line is "Night";
 	queue_report "The last of the sunset's indigo glow has disappeared from the sky." with priority 3.
@@ -1762,9 +1775,6 @@ Scene_Sleep_Two begins when
 Scene_Sleep_Two ends when
 	Scene_Dreams ends.
 
-When Scene_Sleep_Two begins:
-	Now the right hand status line is "Night";
-
 Instead of sleeping during Scene_Sleep_Two:
 	if Room_Protected_Hollow is not made_cozy:
 		say "Again, you are too cold to sleep.";
@@ -1781,7 +1791,7 @@ Scene_Dreams begins when
 Scene_Dreams ends when player is in Room_Dream_Stone_Bridge.
 
 When Scene_Dreams begins:
-	Now the time of day is 9:01 PM;
+	Now the time of day is 9:15 PM;
 	Now the right hand status line is "";
 	Now Honey is in Room_Dream_Railroad_Tracks;
 	Now grandpa is in Room_Dream_Railroad_Tracks;
@@ -1795,46 +1805,50 @@ When Scene_Dreams ends:
 	now player is in Room_Protected_Hollow;
 	now player is not asleep;
 
+test dreams with "teleport to meadow / purloin brown paper bag / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z / z / z / sleep"
+
 [During Scene_Dreams player cannot move to next location until the scene for that location is finished]
 
+Chapter - Scene_Dream_About_Drive_In
+
+There is a scene called Scene_Dream_About_Drive_In.
+Scene_Dream_About_Drive_In begins when Scene_Dreams begins.
+Scene_Dream_About_Drive_In ends when player has been in Room_Drive_In
+	and (player holds popcorn or player holds Milk Duds).
 
 Chapter - Scene_Dream_about_Mom
 
 There is a scene called Scene_Dream_about_Mom.
 Scene_Dream_about_Mom begins when Scene_Dreams begins.
-[Scene_Dream_about_Mom ends when player is in Room_Camaro_With_Stepdad.]
+Scene_Dream_about_Mom ends when player is in Room_Drive_In.
+
+Mom_free_to_go is truth state that varies.
+	Mom_free_to_go is false.
+
+When Scene_Dream_about_Mom begins:
+	now seq_mom_watching_movie is in-progress
+
+When Scene_Dream_about_Mom ends:
+		now seq_mom_watching_movie is not in-progress
 
 Chapter - Scene_Dream_Have_To_Pee
 
 There is a scene called Scene_Dream_Have_To_Pee.
-Scene_Dream_Have_To_Pee begins when Scene_Dream_about_Mom begins [TODO: ends].
+Scene_Dream_Have_To_Pee begins when Scene_Dream_About_Drive_In is happening and the index of seq_mom_watching_movie is 5.
 Scene_Dream_Have_To_Pee ends when player has been in Room_Restroom.
 
 [TODO: Reminder that you have to pee every few turns]
 Every turn during Scene_Dream_Have_To_Pee:
-	if the remainder after dividing the turn count by three is zero:
-		queue_report "[one of]You suddenly realize that you've been holding it, and you really have to pee[or][one of]You really have to go[or]You do a little dance, your body reminding you that you really have to go[or]Your really really really don't want to wet yourself[cycling][stopping]." with priority 1.
-
-Peeing is an action applying to nothing.
-Understand "pee", "urinate", "poop", "piss" as peeing.
-Carry out peeing:
-	If Scene_Dream_Have_To_Pee is happening:
-		say "Probably best to hustle to the restroom in the snack bar.";
-	else:
-		say "You don't have to go."
-
-Chapter - Scene_Dream_About_Drive_In
-
-There is a scene called Scene_Dream_About_Drive_In.
-Scene_Dream_About_Drive_In begins when player is in Room_Drive_In.
-Scene_Dream_About_Drive_In ends when player has been in Room_Drive_In
-	and (player holds popcorn or player holds Milk Duds).
+	queue_report "[one of]You suddenly realize that you've been holding it, and you really have to pee[or][one of]You really have to go[or]You do a little dance, your body reminding you that you really have to go[or]Your really really really don't want to wet yourself[cycling][stopping]." with priority 1.
 
 Chapter - Scene_Dream_About_Stepdad
 
 There is a scene called Scene_Dream_About_Stepdad.
 Scene_Dream_About_Stepdad begins when player is in Room_Camaro_With_Stepdad.
 Scene_Dream_About_Stepdad ends when player is in Room_Dream_Grassy_Field.
+
+stepdad_free_to_go is truth state that varies.
+	stepdad_free_to_go is false.
 
 Chapter - Scene_Dream_About_the_Tango
 
@@ -2237,7 +2251,7 @@ Chapter - Places
 
 topic_forest is a subject.
 	The printed name is "woods".
-	Understand "woods" as topic_forest.
+	Understand "dark/-- forest/woods" as topic_forest.
 
 [topic_swimming is a subject. Understand "swim/swimming/diving" as topic_swimming.
 Does the player mean quizzing about topic_swimming: it is likely.
@@ -2267,6 +2281,10 @@ topic_tree is a subject.
 
 Chapter - Big Topics
 
+topic_dreams is a subject.
+	The printed name is "dreams".
+	Understand "am/are/-- i/you/-- having/-- a/-- dream/dreams/visions/sleeping" as topic_dreams.
+
 topic_life is a subject.
 	The printed name is "life".
 	Understand "living/life" as topic_life.
@@ -2290,6 +2308,10 @@ topic_family is a subject.
 topic_war is a subject.
 	The printed name is "war".
 	Understand "Vietnam/Nam/ww2/battle/war/service", "ww ii/2", "world war 2/two/--", "Vietnam war" as topic_war.
+
+topic_indians is a subject.
+	The printed name is "indians".
+	Understand "indians/Miwok", "Sierra Miwok", "Miwok people" as topic_indians.
 
 Chapter - Various Objects
 
@@ -5138,8 +5160,8 @@ Room_Drive_In is east of Room_Car_With_Mom
 
 Section - Objects
 
-Some Del Taco Wrappers on the floor are in Room_Car_With_Mom.
-The description is "Some Fridays your mom picks you up from after school care and takes you out to Del Taco. Then you go to the drive-in if there is a good movie playing."
+Some Del Taco wrappers on the floor are in Room_Car_With_Mom.
+The description is "Some Fridays your mom picks you up from After School Care and takes you out to Del Taco. Then you go to the drive-in if there is a good movie playing."
 The scent is "bean burritos and taco sauce".
 
 Money is held by mom.
@@ -5150,8 +5172,8 @@ Understand "dollar/cash/bill" as money.
 Section - Backdrops and Scenery
 
 The movie is backdrop in Room_Car_With_Mom.
-The description is "Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Bengi. Mom loved that one too. [only]This one, The Omen, is scary and probably not made for kids."
-	Understand "film/drive-in/omen" as movie.
+The description is "Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Bengi. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who killed his mom and another guy."
+	Understand "film/drive-in/omen", "drive in" as movie.
 
 The Camaro is backdrop in Room_Car_With_Mom.
 The description is "This is mom's Camaro that she's had since you were a baby. It's green and has black bucket seats. You and mom go everywhere in it, especially to Honey and Grandpa's almost every weekend."
@@ -5167,6 +5189,10 @@ Instead of going outside when player is in Room_Car_With_Mom:
 
 Instead of climbing out when player is in Room_Car_With_Mom,
 	try room_navigating Room_Drive_In.
+
+[keep player here until they finish their convo with mom]
+Instead of going to Room_Drive_In when mom_free_to_go is not true:
+	say "You can't bring yourself to leave yet. There is something important here."
 
 
 Chapter - Room_Drive_In
@@ -5235,10 +5261,10 @@ Instead of going to Room_Drive_In when player is in Room_Car_With_Mom:
 Instead of climbing virtual_camaro,
 	try entering virtual_Camaro.
 
-Instead of entering virtual_camaro,
-	say "You really have to go. Better visit the restroom first."
+Instead of entering virtual_camaro:
+	Try room_navigating Room_Camaro_With_Stepdad.
 
-Instead of room_navigating Room_Camaro_With_Stepdad when Room_Restroom is unvisited,
+Instead of room_navigating Room_Camaro_With_Stepdad when Room_Restroom is unvisited:
 	say "You really have to go. Better visit the restroom first."
 
 Instead of entering Virtual_Snack_Bar,
@@ -5266,7 +5292,7 @@ Section - Objects and People
 
 The counter lady is a undescribed _female woman in Room_Snack_Bar.
 The description of the counter lady is "She looks like the Cat Lady from the trailer park, but younger somehow, and prettier. She's wearing a uniform. She looks bored as she helps the customers."
-Understand "cat lady", "sharon" as counter lady.
+Understand "cat lady", "uniform/sharon" as counter lady.
 
 Popcorn is edible thing in Limbo.
 Popcorn can be empty, half-full, or full. Popcorn is full.
@@ -5313,7 +5339,9 @@ Instead of taking or eating popcorn_maker:
 	try buying popcorn_maker.
 
 Instead of buying popcorn_maker when player is in Room_Snack_Bar:
-	if the player has money:
+	if Scene_Dream_Have_To_Pee is happening:
+		say "Probably best to visit the restroom first.";
+	else if the player has money:
 		say "[snack_bar_interaction]She turns efficiently and fills up a tub of popcorn. You awkwardly take the popcorn, spilling a little on the counter. She says, 'That'll be a dollar, hon.' She takes your dollar, smiles, and turns to the next customer.";
 		now money is in Limbo;
 		now player has popcorn;
@@ -5338,7 +5366,9 @@ Instead of taking or eating candy_selection:
 	try buying candy_selection.
 
 Instead of buying candy_selection when player is in Room_Snack_Bar:
-	if the player has money:
+	if Scene_Dream_Have_To_Pee is happening:
+		say "Probably best to visit the restroom first.";
+	else if the player has money:
 		say "[snack_bar_interaction]She bends down and takes a box of Milk Duds from the glass counter and hands it to you. She says, 'That'll be a dollar, hon.' She takes your dollar, smiles, and turns to the next customer.";
 		now money is in Limbo;
 		now player has Milk Duds;
@@ -5378,7 +5408,7 @@ The printed name is "Snack Bar Restroom".
 The description is "[first time]Oh, what a relief. You use the facilities just barely in time.[paragraph break][only]The restroom is all white tile including the floors and wall. Your footsteps echo in a funny way. The stuff they use to make it not smell bad, smells bad and makes your nose tingle.
 [paragraph break][available_exits]".
 The scent is "the stuff they use to make it not smell bad which makes you feel like you have to sneeze. Still, that's better than the terrible pit toilets you had to use at the state park that you went to with Honey and Grandpa. One time you cried because you had to go but didn't want to go into the smelly toilets".
-Understand "restroom/bathroom/toilet", "bath/rest room" as Room_Restroom.
+Understand "restroom/bathroom/toilet/potty", "bath/rest room" as Room_Restroom.
 
 Section - Navigation
 
@@ -6119,6 +6149,9 @@ Response of Honey when asked-or-told about Lee:
 Response of Honey when asked-or-told about Mom:
 	say "[one of]'Don't worry about your mom,' Honey says, 'She'll be fine. Why don't you go over and help your grandpa some.'[or]'I said, she'll be fine,' Honey snaps.[stopping]".
 
+Response of Honey when asked-or-told about topic_dreams:
+	say "'What do you think, [honeys_nickname]?' Honey asks, 'Your grandpa only dreams about fishing. Me, I don't sleep enough these days to dream. But I get pretty good at crosswords.'".
+
 Response of Honey when asked-or-told about topic_berries:
 	say "'I'd like you to pick one more pail before you go wondering off,' she says.".
 
@@ -6479,6 +6512,15 @@ Response of Grandpa when asked-or-told about Lee:
 Response of Grandpa when asked-or-told about Step-Dad:
 	say "[one of]'Mark? He seemed like a nice enough guy when I met him, but...' Grandpa looks like he's going to get mad at you, 'he better start being a whole heck of a lot nicer to you and your[if player is in Room_Grassy_Clearing]--'[paragraph break]Honey cuts him off, 'John, that's enough. Remember, little pitchers have big ears.'[paragraph break]Grandpa leans down and says a little quieter, 'Well, you just know that your mom, your Honey, and your grandpa love you,' and he [grandpa_stuff].[else] mom or he's going to have to answer to me. That's all I have to say.'[end if][or]Grandpa face goes tight. 'I don't think I can rightly say anything more about that without saying anything I don't want to.'[stopping]".
 
+Response of grandpa when asked-or-told about topic_dreams:
+	say "'We all have dreams, [grandpas_nickname]. Sometimes as you get older, or if you getta be an old man like me, you have different dreams than you did when you were a young man,' grandpa says, 'These days, I dream about a quiet river with a fishing pole.'".
+
+Response of grandpa when asked-or-told about backdrop_creek:
+	say "'Well, I love that old creek. It's one of the reasons we bought our house here,' grandpa says, 'You know we call it [']Bear Creek,['] but the Miwok people who lived here long before us had another name for it. I've never known this creek's true name.'".
+
+Response of grandpa when asked-or-told about topic_indians:
+	say "'The Miwok people used to live in these hills along Bear Creek,' grandpa says, 'You know, there are still remains of houses and petroglyphs, those are  drawings on rocks, made by Indians who lived here long before we came here.'".
+
 Response of Grandpa when asked-or-told about topic_berries:
 [Response of Grandpa when asked about backdrop_berries or told about backdrop_berries:]
 	say "'How you doing, [grandpas_nickname]?' Grandpa [grandpa_stuff]. 'You helping your Honey and grandpa make blackberry jam?'".
@@ -6638,8 +6680,10 @@ This is the seq_grandpa_begins_walk_handler rule:
 			now time_left_waiting of Grandpa is zero;
 
 This is the seq_grandpa_begins_walk_interrupt_test rule:
-	if grandpa is not visible, rule succeeds;
-	if we are speaking to Grandpa, rule succeeds;
+	if grandpa is not visible:
+		rule succeeds;
+	if we are speaking to Grandpa:
+		rule succeeds;
 	rule fails.
 
 [
@@ -7119,6 +7163,8 @@ To refill the teacups:
 
 
 Part - Lee
+
+[TODO: Consider having Lee sympathize with American Indians or even have native roots]
 
 Lee is a _male man in Room_C_Loop.
 	The initial appearance is "Lee is [if Lee is in Room_C_Loop]sitting on a lawn chair in his empty carport, chain smoking[else if Lee is in Room_Lees_Trailer and Lee's TV is switched on]watching TV[else]here[end if]. [first time][description of lee][only]".
@@ -7769,9 +7815,9 @@ Part - Mom
 
 Mom is a _female woman.
 Mom is in Room_Car_With_Mom.
-The initial appearance is "[if player is in Room_Car_With_Mom]Your mom is watching the movie. Sensing you looking, she looks back at you smiling[else]Your mom is here looking very worried[end if].".
-The description is "Mom is, well mom. She's silly and smart and plays with you. [one of]Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you until your tears stopped.[only] She's strict and good and understanding. All you know is she loves you more than you know how to say.[if a random chance of 1 in 3 succeeds]
-[paragraph break]While you are looking at her, she catches your eye and smiles sweetly.[end if]"
+The initial appearance is "[if player is in Room_Car_With_Mom]Your mom is watching the movie[first time]. Sensing you looking, she smiles at you[only][else]Your mom is here looking very worried[end if].".
+The description is "Mom is, well mom. She's silly and smart and plays with you. [first time]Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you saying 'I'm sorry' until your tears stopped. [only]She's strict and good and understanding. All you know is she loves you more than you know how to say.[if a random chance of 1 in 3 succeeds]
+[paragraph break]While you are looking at her, she catches your eye and smiles sweetly.[end if]".
 Understand "mommy/ma/mother/rachel/rach" as Mom.
 The scent is "home".
 
@@ -7814,7 +7860,20 @@ To say moms_salutation:
 	say "[one of]Hi[or]Hello[as decreasingly likely outcomes]";
 
 To say mom_stuff:
-		say "[one of]smiles[or]squeezes your shoulder[or]gives you a quick squeeze[at random]";
+	say "[one of]smiles[or]squeezes your shoulder[or]gives you a quick squeeze[at random]";
+
+[ The following prefaces mom's utterances in the drive-in ]
+Last after conversing when the current interlocutor is mom and player is in Room_Car_With_Mom and a random chance of 1 in 2 succeeds:
+	say "[looks_away_from_movie][run paragraph on]";
+	continue the action.
+
+To say looks_away_from_movie:
+	if player is in Room_Car_With_Mom and a random chance of 1 in 2 succeeds:
+		say "[one of]Mom turns away from the movie[or]Mom, absorbed in the movie, takes a second to respond[or]Mom turns toward you[at random]. ";
+
+[Before speaking to mom:
+	say looks_away_from_movie;
+	continue the action.]
 
 [
 	Defaults
@@ -7842,7 +7901,7 @@ Default yes-no response for mom:
 	if saying yes:
 		say "[one of]'Good,' mom says, smiling[or]Mom nods[at random].";
 	else:
-		say "[one of]'No?,'[or]'I'm sorry to hear that,'[cycling] mom says looking at you carefully.";
+		say "[one of]'No?,' mom says lookng worried[or]'I'm sorry to hear that,' mom says looking at you carefully[cycling].";
 
 Default response for mom:
 	say "'Okay, [moms_nickname],' mom says.";
@@ -7852,19 +7911,28 @@ Default response for mom:
 ]
 
 Response of mom when asked-or-told about player:
-	say "Mom looks serious. 'You don't need me to tell you anything. You know who you are,' mom says.".
+	say "Mom looks serious. 'You don't need me to tell you anything. You know who you are, and you always have from the time you were a baby,' mom says.".
 
 Response of mom when asked-or-told about mom:
-	say "'Me?' mom asks, 'You know wverything about me already.' I should be asking you.".
+	say "'Me?' mom asks, 'You know everything about me already.' I should be asking you!'".
 
 Response of mom when asked-or-told about Honey:
-	say "'Your Honey?' mom says, 'She really loves you, even if she's strict with you. You know that, don't you?''".
+	say "'Your Honey?' mom says, 'She really loves you, even if she's strict with you. You know that, don't you?'".
+
+Response of mom when asked-or-told about Grandpa:
+	say "'When you were born I saw the look on your grandpa's face. I don't think he's ever loved someone more,' your mom says. 'He still does. As far as he's concerned, you hang the moon.'".
 
 Response of mom when asked-or-told about Aunt Mary:
 	say "'My Aunt Mary seemed like an old lady when I was kid,' mom says, 'She's your Honey's older sister.'".
 
 Response of mom when asked-or-told about Lee:
-	say "'I like Lee,' mom says, 'I know that your Honey doesn't trust him, but I think he's got a big heart.'".
+	say "'I like Lee,' mom says, 'You know he was in the war? He's had a hard life. I know that your Honey doesn't trust him, but I think he's got a big heart.'".
+
+Response of mom when asked-or-told about Sharon:
+	say "'Sharon? The lady with all the cats?' mom says, 'She's a sweet old lady. I worry about her a little bit, but she has a good heart. She reminds me of Mrs. Dawson that I still write to in Massachusetts.'".
+
+Response of mom when asked-or-told about dad:
+	say "'Your dad loves you, in his way,' mom says looking thoughtful, 'We used to be very happy, but sometimes people grow apart. I've grown a lot since we were together.' She smiles, but you can tell she looks a little sad too.".
 
 [Response of mom when asked-or-told about Sheriff:
 	say "".]
@@ -7872,8 +7940,10 @@ Response of mom when asked-or-told about Lee:
 Response of mom when asked-or-told about Step-Dad:
 	say "'Your step-dad? He's a good guy. He really is. He tries his best even if he doesn't have an easy time showing it. And he's good to us,' mom says, looking concerned, 'Don't you think?'".
 
+Response of mom when asked-or-told about topic_dreams:
+	say "'I think dreams have meaning,' mom says, 'I choose to think they are trying to speak to us in some way, to wake up our brains, to alert us, or to confirm something we’re wondering about.'".
+
 Response of mom when asked-or-told about topic_berries:
-[Response of mom when asked about backdrop_berries or told about backdrop_berries:]
 	say "'Were you helping your Honey and grandpa pick berries?' she asks.".
 
 Response of mom when asked-or-told about topic_trailer:
@@ -7883,7 +7953,7 @@ Response of mom when asked about train tracks:
 	say "[moms_train_ask_response].";
 
 To say moms_train_ask_response:
-	say "Your grandpa used to work on the railroad and when they bought their house, he was happy that there was a train that passed nearby".
+	say "'Your grandpa used to work on the railroad and when they bought their house, he was happy that there was a train that passed nearby', mom says".
 
 Response of mom when told about train tracks:
 	if player is not train-experienced:
@@ -7900,14 +7970,17 @@ Response of mom when asked-or-told about flattened coin or given-or-shown flatte
 Response of mom when asked-or-told about dog:
 	say "'Be careful around that dog, [moms_nickname],' mom says, 'It tried to bite your grampa once.'".
 
-[Response of mom when asked-or-told about forest:
-	say "".]
+Response of mom when asked-or-told about  topic_forest:
+	say "'I like to walk in the woods with your grandpa, but sometimes those woods seem scary to me. But I know I'm just being silly,' mom laughs.".
+
+Response of mom when asked-or-told about movie:
+	say "'I love going to the drive-in with you. My favorite Friday date,' then mom looks more serious, 'I have my doubts about this movie though.'".
 
 Response of mom when asked about topic_tree:
 	say moms_big_tree_ask_response;
 
 To say moms_big_tree_ask_response:
-	"'You be careful climbing trees,' mom says, 'I know a boy who broke his arm falling out of a tree.'";
+	say "'You be careful climbing trees,' mom says, 'I know a boy who broke his arm falling out of a tree.'";
 
 Response of mom when told about topic_tree:
 	say "'[if player has not been in Room_Top_of_the_Pine_Tree]Grandpa said you climbed that tree before. You be careful[else]You climbed all the way to the top? [moms_serious_name]! You're scaring me![end if],' mom says.".
@@ -7930,7 +8003,7 @@ Response of mom when asked about topic_love:
 Response of mom when asked about topic_death:
 	say "'Well, someday we are all going to die, but not for a long long while,' mom says and [mom_stuff].".
 
-Response of mom when asked about topic_family:
+Response of mom when asked-or-told about topic_family:
 	say "'Your family loves you, [moms_nickname],' mom says, 'sometimes all we have is family.'".
 
 Response of mom when asked-or-told about topic_war:
@@ -7940,6 +8013,38 @@ Chapter - Rants
 
 Chapter - Sequences
 
+seq_mom_watching_movie is a sequence.
+	The action_handler is the seq_mom_watching_movie_handler rule.
+	The interrupt_test is seq_mom_watching_movie_interrupt_test rule.
+	The length_of_seq is 6.
+
+This is the seq_mom_watching_movie_handler rule:
+	let index be index of seq_mom_watching_movie;
+	if index is 2:
+		if mom is visible:
+			queue_report "You and mom watch the movie for a while. The boy that the movie is about doesn't say much, but everyone seems scared of him including his mom and dad. There is something bad that happens at his birthday party but mom makes you cover your eyes. 'I'll tell you when you can look,' mom says." at priority 2;
+			now current interlocutor is mom;
+	else if index is 3:
+		if mom is visible:
+			queue_report "In the movie, the bad kid knocks his mom over a railing, but she doesn't die." at priority 2;
+	else if index is 4:
+		if mom is visible:
+			queue_report "The dad and another guy go to a cemetary and find a dog skeleton and are attacked by other dogs. Are they protecting the dead dog? This movie is really scary. [paragraph break]'Are you okay, hon?' mom asks. Something else happens to the boy's mom and your mom makes you cover your eyes. Did she die? You think about what would happen if your mom died and you almost start to cry. You quickly think about something else and sneak a glance at mom. Thankfully she didn't notice." at priority 2;
+	else if index is 5:
+		if mom is visible:
+			queue_report "In the movie, the dad and the other guy get some knives for some reason. The dad is angry and throws them away. And then, oh! a truck with glass cuts off the other guy's head too fast for you to cover your eyes! You watch his head bounce away. You burst out crying.[paragraph break]'Oh, honey,' your mom says, holding you, 'I'm so sorry. I'm sorry.' She rocks you as your tears subside. 'Do you want to go? We don't have to stay. I'm sorry.'[paragraph break]You want to go. But you also want to stay. What happens to the evil boy? Will the dad kill him? 'No,' you manage through sniffles.[paragraph break]'Okay,' your mom says, clearly doubtful. 'You want to get us snacks?'" at priority 2;
+			now mom_free_to_go is true;
+	else if index is 6:
+		if mom is visible:
+			queue_report "'The snack bar is right there,' mom says pointing, 'You can pick us up a snack and, I can tell by the way you are squirming, you have to use the potty.' That embarrasses you, but you don't say anything." at priority 2;
+
+This is the seq_mom_watching_movie_interrupt_test rule:
+	[if mom is not visible:
+		rule succeeds;
+	if we are speaking to mom:
+		rule succeeds;]
+	rule fails.
+
 
 Part - Step-Dad
 
@@ -7947,7 +8052,7 @@ Step-dad is a _male man.
 Step-dad is in Room_Camaro_With_Stepdad.
 The initial appearance is "Your stepdad is driving. He focuses on the road and you can sense an edge of anger just beneath the surface.".
 The description is "Your stepdad's name is Mark. You call him 'dad' because your mom asked if you wanted to call him dad when she first got re-married. You shrugged, 'Okay.' So you did. Who knows what the rules are here? You have an inkling that your mom married him because she thought you needed a father. But if you are honest, you're scared of him. You never know whether he will be nice or angry. He's nicer when he drinks beer, but if he has too much, your mom and stepdad get in arguments. One night there was yelling and someone broke the glass clock that used to sit on the endtable in the living room. You know this though, if he ever hurt your mom, you don't know how, but you would kill him."
-Understand "dad/step-dad/step-father/stepdad/stepfather/mark", "step dad/father" as Step-dad.
+Understand "step-dad/step-father/stepdad/stepfather/mark", "step dad/father" as Step-dad.
 
 Chapter - Properties
 
