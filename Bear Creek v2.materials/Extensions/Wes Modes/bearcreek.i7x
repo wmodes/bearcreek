@@ -404,6 +404,25 @@ Carry out surface_going:
 	else:
 		Try room_navigating destination of noun.
 
+Chapter - Looking_ouside
+
+[When we "look outside" we are examining objects within the room]
+
+A room has some text called outside_view.
+
+Looking_outside is an action applying to nothing.
+
+Understand "look outside/out" as looking_outside.
+
+Carry out looking_outside:
+	let this_view be outside_view of location;
+	if this_view is empty:
+		try looking;
+	else:
+		say "Outside you can see [this_view].";
+
+Understand "look out of/-- [something]" as examining.
+
 Chapter - Swimming
 
 [We want swimming to be a deliberate act, so when the player asks to swim at the swimming hole, we will give her a warning and hint at her trying again, then we will do it the second time she asks.]
@@ -878,12 +897,15 @@ Carry out breathing:
 
 Chapter - Finding
 
-Finding is an action applying to one topic.
+Finding is an action applying to one visible thing.
 
-Understand "find [text]" as finding.
+Understand "find [something]" as finding.
 
 Carry out finding:
-	say "You'll have to be more specific. Perhaps if you stop and observe what's around you.";
+	if noun is visible:
+		try examining noun;
+	else:
+		say "You'll have to be more specific. Perhaps if you stop and observe what's around you.";
 
 Chapter - Stopping
 
@@ -925,6 +947,16 @@ Carry out hunting:
 		try taking noun;
 	else:
 		say "Yeah, no. That's not likely.";
+
+Chapter - Waking
+
+Instead of waking up:
+	if Scene_Dreams is not happening:
+		say "Alas, it's not a dream.";
+	else if dog_free_to_go is not true:
+		say "Try as you might, you can't. Perhaps it's not yet time.";
+	else:
+		now player is awake;
 
 Chapter - Smelling
 
@@ -1746,8 +1778,8 @@ Instead of sleeping during Scene_Sleep_One:
 		say "...and are awakened what seems like seconds later. You heard a noise very nearby.";
 		try looking;
 
-When cene_Sleep_One ends:
-	now player is not asleep;
+When Scene_Sleep_One ends:
+	now player is awake;
 
 Chapter - Scene_Defend_the_Fort
 
@@ -1775,6 +1807,9 @@ Scene_Sleep_Two begins when
 Scene_Sleep_Two ends when
 	Scene_Dreams ends.
 
+When Scene_Sleep_Two begins:
+	say "Again, warm in your cozy nest, you are pretty sure you could sleep.";
+
 Instead of sleeping during Scene_Sleep_Two:
 	if Room_Protected_Hollow is not made_cozy:
 		say "Again, you are too cold to sleep.";
@@ -1788,7 +1823,7 @@ There is a scene called Scene_Dreams.
 Scene_Dreams begins when
 	Scene_Sleep_Two is happening and
 	player is asleep.
-Scene_Dreams ends when player is in Room_Dream_Stone_Bridge.
+Scene_Dreams ends when Scene_Dog_Dream has happened and player is awake.
 
 When Scene_Dreams begins:
 	Now the time of day is 9:15 PM;
@@ -1797,15 +1832,16 @@ When Scene_Dreams begins:
 	Now grandpa is in Room_Dream_Railroad_Tracks;
 	store_all_your_stuff;
 	Now flattened coin is in Room_Dream_Railroad_Tracks;
+	Now player is asleep;
 	Move the player to Room_Car_With_Mom;
 
 When Scene_Dreams ends:
 	now seq_dog_convo is not in-progress;
 	unstore_all_your_stuff;
 	now player is in Room_Protected_Hollow;
-	now player is not asleep;
+	now player is awake;
 
-test dreams with "teleport to meadow / purloin brown paper bag / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z / z / z / sleep"
+test dreams with "teleport to meadow / purloin brown paper bag / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z / z / z / sleep"
 
 [During Scene_Dreams player cannot move to next location until the scene for that location is finished]
 
@@ -1847,8 +1883,15 @@ There is a scene called Scene_Dream_About_Stepdad.
 Scene_Dream_About_Stepdad begins when player is in Room_Camaro_With_Stepdad.
 Scene_Dream_About_Stepdad ends when player is in Room_Dream_Grassy_Field.
 
-stepdad_free_to_go is truth state that varies.
+stepdad_free_to_go is a truth state that varies.
 	stepdad_free_to_go is false.
+
+When Scene_Dream_About_Stepdad begins:
+	now seq_stepdad_in_car is in-progress.
+
+When Scene_Dream_About_Stepdad ends:
+	now seq_stepdad_in_car is not in-progress.
+
 
 Chapter - Scene_Dream_About_the_Tango
 
@@ -1867,7 +1910,7 @@ When Scene_Dream_About_the_Tango begins:
 	sheriff_goes_to_field in 3 turn from now;
 
 At the time when sheriff_plays_music:
-	queue_report "Suddenly, the sheriff rolls up in his car. Neither the Cat Lady nor Lee look at him. The sheriff pops out of his car with an accordion and begins playing music. It's a funny tune and somehow you know it's an Argentine tango. The Cat Lady and Lee begin to dance." with priority 2;
+	queue_report "Suddenly, the sheriff rolls up in his car. Neither the Cat Lady nor Lee look at him. The sheriff pops out of his car with a big box, no an accordion! and begins playing music. It's a funny tune and somehow you know it's an Argentine Tango. The Cat Lady and Lee begin to dance." with priority 2;
 	now the sheriff is in Limbo;
 	now the sheriffs_car is in Room_Dream_Grassy_Field;
 
@@ -2013,7 +2056,7 @@ To say Title_Card_Part_1:
 	say paragraph break;
 	say line break;
 	say italic type;
-	say "[second custom style]What's too painful to remember[line break]
+	say "[second custom style]Memories may be beautiful and yet[line break][second custom style]What's too painful to remember[line break]
 	[second custom style]We simply choose to forget[line break]
 	[second custom style]-- Gladys Knight And The Pips, 1975";
 	say roman type;
@@ -2041,7 +2084,7 @@ To say Title_Card_Part_3:
 	say "[second custom style]Fallout[line break]";
 	say paragraph break;
 	say line break;
-	say "[second custom style]And butterflies are free to fly [line break]
+	say "[second custom style]Butterflies are free to fly [line break]
 	[second custom style]Fly away, high away, bye bye [line break]
 	[second custom style]-- 'Someone Saved My Life Tonight,' Elton John, 1975";
 	say roman type;
@@ -2054,7 +2097,7 @@ To say Sleep_Card:
 	clear only the main screen;
 
 To pause the/-- game:
-say "[paragraph break]Please press ANY KEY to continue.";
+say "[paragraph break]Press any key to continue.";
 wait for any key;
 clear the screen.
 
@@ -2245,7 +2288,7 @@ Chapter - Characters
 Dad is a familiar _male man. Understand "dad/father/Nick/Nicolas/papa" as dad.
 Joseph is a familiar _male man. Understand "joe/joseph", "cat lady's husband", "Sharon's husband" as joseph.
 
-Grandpa, Honey, Aunt Mary, Sharon, Lee, Sheriff, Step-dad, Mom, Joseph are familiar.
+Grandpa, Honey, Aunt Mary, Sharon, Lee, Sheriff, stepdad, Mom, Joseph are familiar.
 
 Chapter - Places
 
@@ -2279,6 +2322,10 @@ topic_tree is a subject.
 	The printed name is "tall Doug fir".
 	Understand "pine/fir/tall/-- doug/-- fir/tree/branches" as topic_tree.
 
+topic_creek is a subject.
+	The printed name is "Bear Creek".
+	Understand "bear/-- river/creek/crick/water/stream" as topic_creek.
+
 Chapter - Big Topics
 
 topic_dreams is a subject.
@@ -2311,7 +2358,7 @@ topic_war is a subject.
 
 topic_indians is a subject.
 	The printed name is "indians".
-	Understand "indians/Miwok", "Sierra Miwok", "Miwok people" as topic_indians.
+	Understand "indians/Miwok/pineridge/reservation/rez/Dakota/Lakota/aim", "Sierra Miwok", "Miwok people", "Pine Ridge", "american/-- indian movement" as topic_indians.
 
 Chapter - Various Objects
 
@@ -2323,7 +2370,7 @@ The radio is familiar.
 
 topic_cat is a subject.
 	The printed name is "cats".
-	Understand "tabby", "tabby cat", "cat", "yellow", "tiger", "feline", "kitty", "kitten", "cat", "cats", "feline", "kitties", "kitty", "kitten", "pack", "one eye", "black", "skinny", "white", "gray", "fluffy", "tortoise-shell", "calico", "tomcat", "chunky", "patchy", "yellow", "dirty", "bony" as topic_cat.
+	Understand "yellow/tiger/black/skinny/white/gray/fluffy/tortoise-shell/calico/tomcat/skinny/patchy/dirty/bony/-- cat/tabby/cats/kitty/kitties/kitten/kittens", "tabby cat" as topic_cat.
 
 topic_jam is a subject.
 	The printed name is "jam".
@@ -2810,14 +2857,14 @@ Understand "tune radio/tv/station/stations/channel/channels/dial/dials",
 Tuning is an action applying to nothing.
 
 Check tuning:
-	if Cat Lady's TV is visible:
-		if Cat Lady's TV is not switched on:
+	if sharons_tv is visible:
+		if sharons_tv is not switched on:
 			say "You'll have to turn the set on first." instead;
 	else if Honeys_tv is visible:
 		if Honeys_tv is not switched on:
 			say "You'll have to turn the set on first." instead;
-	else if Lee's TV is visible:
-		if Lee's TV is not switched on:
+	else if lees_tv is visible:
+		if lees_tv is not switched on:
 			say "You'll have to turn the set on first." instead;
 	else if portable transistor radio is not visible:
 		say "Hmm. There's nothing to tune here." instead;
@@ -2825,7 +2872,7 @@ Check tuning:
 Carry out tuning:
 	if portable transistor radio is visible:
 		try taking portable transistor radio;
-	else if Lee's TV is visible:
+	else if lees_tv is visible:
 		change_TV_channel;
 
 Chapter - The Radio
@@ -2916,8 +2963,8 @@ Title	Artist	Length	Fave
 
 Chapter - The TV
 
-Every turn when player is in Room_Lees_Trailer and Lee's TV is switched on:
-	if current action is not tuning or examining Lee's TV or switching on Lee's TV:
+Every turn when player is in Room_Lees_Trailer and lees_tv is switched on:
+	if current action is not tuning or examining lees_tv or switching on lees_tv:
 		if time_for_a_new_show:
 			report_new_tv_show_begins;
 		else if a random chance of 1 in 3 succeeds:
@@ -2939,7 +2986,7 @@ When play begins:
 	Now the show index is a random number from 1 to 5;
 	find_show_in_table;
 
-After switching on Lee's TV:
+After switching on lees_tv:
 	say what_show_is_playing;
 	say line break;
 
@@ -4301,7 +4348,7 @@ Instead of inserting something into grandpas_virtual_trailer:
 	say "You might want to just go in there."
 
 
-Chapter 4 Room_Sharons_Trailer
+Chapter - Room_Sharons_Trailer
 
 Section - Description
 
@@ -4309,6 +4356,7 @@ Room_Sharons_Trailer is a room.
 The printed name is "Cat Lady's Trailer".
 The description is "[one of]The first thing you notice is the smell of cat pee and rotten fish[or]You are starting to get used to the smell[stopping]. Rose-tinted light comes slanting through the dingy ruffled curtains. The Cat Lady's Trailer is full of lace doilies, porcelain figurines, and most of all cats -- sitting, lying, prowling, and meowing. The little figures catch your eye."
 The scent is "Yucky fish and cat pee".
+The outside_view is "D Loop".
 Understand "catlady's/catladys/sharon's/sharons/shannon's/shannons/pink/-- trailer/house/place/home", "cat lady's/ladys trailer/house/place/home" as Room_Sharons_Trailer.
 
 Section - Navigation
@@ -4355,11 +4403,12 @@ The description is "This tea is barely worthy of the name, a lukewarm watery som
 
 [Instead of taking tea things,... what? the default's not good enough?]
 
-The Cat Lady's TV is scenery in Room_Sharons_Trailer.
-	The Cat Lady's TV is a device. The printed name is "TV".
-	The indefinite article is "the Cat Lady's".
+The sharons_tv is scenery device in Room_Sharons_Trailer.
+	The printed name is "TV".
 	The description is "This is a standard color set, but not as big and fancy as Honey's.".
-	Understand "television/tele/tely/telly/boob/tube/set" as Cat Lady's TV.
+	Understand "tv/television/tele/tely/telly/boob/tube/set" as sharons_tv.
+	The indefinite article is "the".
+	Include (- with articles "The" "the" "a", -) when defining sharons_tv.
 
 Knickknacks are scenery.
 	They are in Room_Sharons_Trailer.
@@ -4395,9 +4444,9 @@ Does the player mean doing anything to tea things: it is unlikely.
 
 Understand "get --/more tea", "fill teacup" as a mistake ("It would be rude for a guest to fill their own teacup. Honey's efforts to teach you manners were not wasted.").
 
-Instead of switching on the Cat Lady's TV:
-	if Cat Lady's TV is not switched on:
-		say "[first time][description of Cat Lady's TV]
+Instead of switching on the sharons_tv:
+	if sharons_tv is not switched on:
+		say "[first time][description of sharons_tv]
 		[paragraph break][only]The moment you start to turn it on, the Cat Lady comes in and says, 'Let's keep that off for now. My shows are on soon. You can watch with me then.'";
 
 Instead of taking Mika:
@@ -4482,7 +4531,7 @@ Instead of inserting something into lees_virtual_trailer:
 	say "You might want to just go in there."
 
 
-Chapter 6 Room_Lees_Trailer
+Chapter - Room_Lees_Trailer
 
 Section - Description
 
@@ -4490,6 +4539,7 @@ Room_Lees_Trailer is a room.
 The printed name is "Lee's Trailer".
 The description is "Lee's trailer is empty. Or nearly so. [first time]It looks like he moved in yesterday, but you know he's been here for a long time. Where is his furniture?[only] There is a small table with some stuff on it and a single chair. A tiny black and white TV on a crate. And that's about it.".
 The scent is "Lee's cigarette smoke lingering in the air".
+The outside_view is "C Loop".
 Understand "Lee's/lees Trailer" as Room_Lees_Trailer.
 
 Section - Navigation
@@ -4521,11 +4571,12 @@ A coffee mug is an undescribed unopenable open container on Lee's table.
 	Understand "mug/cup/glass", "coffee mug/cup" as coffee mug.
 	The scent is "stale bitter coffee".
 
-Lee's TV is an undescribed fixed in place device in Room_Lees_Trailer.
+The lees_tv is an undescribed fixed in place device in Room_Lees_Trailer.
 	The printed name is "TV".
-	The indefinite article is "Lee's".
-	The description is "This is a tiny portable black and white set with a giant channel changer and bent rabbit ears propped on a crate[if Lee's TV is switched on] [what_show_is_playing][else].[end if]".
-	Understand "television/tele/tely/telly/boob/tube/set", "boob tube", "crate/box", "rabbit ears", "antenna/antennas/antena" as Lee's TV.
+	The description is "This is a tiny portable black and white set with a giant channel changer and bent rabbit ears propped on a crate[if lees_tv is switched on] [what_show_is_playing][else].[end if]".
+	Understand "tv/television/tele/tely/telly/boob/tube/set/crate/box/antenna/antennas/antena", "boob tube", "rabbit ears" as lees_tv.
+	The indefinite article is "the".
+	Include (- with articles "The" "the" "a", -) when defining lees_tv.
 
 Section - Backdrops & Scenery
 
@@ -4544,8 +4595,8 @@ After inserting newspaper into pail:
 Instead of taking coffee mug:
 	say "Your manners suggest that it is better to leave Lee's coffee cup alone.";
 
-Instead of switching on Lee's TV:
-	if Lee's TV is not switched on:
+Instead of switching on lees_tv:
+	if lees_tv is not switched on:
 		say "Lee is the only one who lets you watch TV whenever you want and even change the channels. You switch on Lee's little black and white set.";
 	continue the action;
 
@@ -4608,7 +4659,7 @@ Understand "ride bike/bicycle" as a mistake ("Unfortunately, the tires of your b
 Understand "fix bike" as a mistake ("if only you knew how to do that, you'd ride like the wind.");
 
 
-Chapter 8 Room_Grandpas_Trailer
+Chapter - Room_Grandpas_Trailer
 
 Section - Description
 
@@ -4616,8 +4667,9 @@ Room_Grandpas_Trailer is a room.
 The printed name is "Honey and Grandpa's Trailer".
 The description is "This trailer feels comfy to you, as much home as your real home with your mom. Honey and Grandpa have lived here as long as you remember[one of]. All these things are touchstones of familiarity, the floral-patterned couch on which you and Grandpa cuddle and watch Bowling for Dollars, the big TV, even the brown carpeting with its mottled pattern that looks like lichen on rocks[or]. All of the familiar stuff, the couch and the TV are here[stopping].
 [paragraph break]Today all the windows are steamed up. Fragrant steam wafts from the kitchen. Occasionally, you hear the rattle of jars and lids being washed and set out.".
-Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas trailer" as Room_Grandpas_Trailer.
 The scent is "what it would smell like if you lived inside a blackberry pie".
+The outside_view is "B Loop and your broken bicycle".
+Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas trailer" as Room_Grandpas_Trailer.
 
 
 Section - Navigation
@@ -4637,11 +4689,12 @@ Some jam_jars are scenery in Room_Grandpas_Trailer.
 	The description of the jam_jars is "Jars and lids and pots and pans and paraffin and tongs and boiling water are laid out strategically all over the kitchen. Who knew making jam was so complicated?".
 	Understand "jar", "lid/lids", "parafin/paraffin/wax", "tongs", "water", "boiling" as jam_jars.
 
-Honeys_tv is undescribed fixed in place device in Room_Grandpas_Trailer.
+The Honeys_tv is undescribed fixed in place device in Room_Grandpas_Trailer.
 	The printed name is "TV".
-	The indefinite article is "Honey's".
 	The description is "This is Honey's big color TV in its wooden case, pretty much like the one you have at home with mom, but with lighter wood. On weekend nights you lie on the floor with Grandpa and watch Bowling for Dollars, Wild World of Animals, and sometimes, if you and mom aren't going home early, Wonderful World of Disney on Sunday night.".
-	Understand "honeys/honey's/-- big/color/-- television/tv/tele/tely/telly/boob/tube/set" as Honeys_tv.
+	Understand "honeys/honey's/-- big/color/-- television/tv/tele/tely/telly/boob/tube/set" as honeys_tv.
+	The indefinite article is "the".
+	Include (- with articles "The" "the" "a", -) when defining honeys_tv.
 
 The floral print couch is a lie-able surface in Room_Grandpas_Trailer.
 		The description is "Sometimes you curl up on Honey's floral print couches with a crocheted afghan and a book and spend the afternoon.".
@@ -4978,7 +5031,7 @@ Some meadow grass is lie-able surface in Room_Forest_Meadow.
 
 A fallen tree is a fixed in place undescribed enterable container in Room_Forest_Meadow.
 	The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
-	Understand "protected/-- hollow/cave/nest/underbrush", "in/under fallen/- tree" as fallen tree.
+	Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under fallen/- tree" as fallen tree.
 
 Some crickets are backdrop in Room_Forest_Meadow.
 	The description is "You can hear the clear sound of crickets even if you can't see them. Fun fact: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
@@ -5023,6 +5076,7 @@ The printed name is "Protected Hollow".
 The description is "[if Scene_Day_Two has not happened]This is a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. It is dark and would normally be kind of scary, but the dark woods are scarier[first time]. It helps to have some shelter. The Explorer Scouts taught you that shelter is the first thing you are supposed to find in a survival situation[only][else]You woke up in a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. [first time]All things considered, it was rather cozy. Your mom wasn't crazy about you going to Explorer Scouts, but your stepdad said you had to. And even though you hated it at first, you learned stuff. [only] Under the protection of the fallen logs, you've made a nest of dried leaves which kept you insulated from the cold[end if].
 [paragraph break][available_exits]".
 The scent is "musty forest smell, like dirt or mushrooms".
+The outside_view is "the meadow".
 Understand "protected/-- hollow", "fallen tree", "my/-- fort" as Room_Protected_Hollow.
 Understand "protected/-- hollow/cave/nest" as Room_Protected_Hollow.
 
@@ -5124,7 +5178,7 @@ Section - Description
 
 Region_Dreams is a region.
 Room_Car_With_Mom, Room_Drive_In, Room_Snack_Bar, Room_Restroom,
-Room_Camaro_With_Stepdad, Room_Dream_Grassy_Field, Room_Dream_Railroad_Tracks, Room_Mars, Room_Chryse_Planitia, Room_Dream_Dirt_Road, Room_Dream_Stone_Bridge are in Region_Dreams.
+Room_Camaro_With_Stepdad, Room_Dream_Grassy_Field, Room_Dream_Railroad_Tracks, Room_Mars, Room_Chryse_Planitia, Room_Dream_Dirt_Road are in Region_Dreams.
 
 Section - Backdrops and Scenery
 
@@ -5135,7 +5189,7 @@ Section - Backdrops and Scenery
 Section - Navigation
 
 The return_dest of Region_Dreams is Room_Car_With_Mom.
-The forward_dest of Region_Dreams is Room_Dream_Stone_Bridge.
+The forward_dest of Region_Dreams is Room_Dream_Dirt_Road.
 The upstream_dest of Region_Dreams is Limbo.
 The downstream_dest of Region_Dreams is Limbo.
 The uppath_dest of Region_Dreams is Limbo.
@@ -5150,8 +5204,9 @@ Section - Description
 
 Room_Car_With_Mom is a room.
 The printed name is "In The Car at the Drive-In".
-The description is "[one of]It's Friday and your mom picked you up from school to take you to the drive-in. You can still smell your take out dinner from Del Taco. You love these times with mom, though some part of your mind notes that they stopped when she met your stepdad. The movie is The Omen, which probably isn't a kids movie[or]You are watching a movie with mom at the drive-in[stopping]."
+The description is "[one of]It's Friday and your mom picked you up from school to take you to the drive-in. You know all of this, but not how you got here. You can still smell your take out dinner from Del Taco. You love these times with mom, though some part of your mind notes that they stopped when she met your stepdad. The movie is The Omen, which probably isn't a kids movie[or]You are watching a movie with mom at the drive-in[stopping]."
 The scent is "bean burritos and taco sauce".
+The outside_view is "the movie. [description of movie]".
 Understand "Car With Mom" as Room_Car_With_Mom.
 
 Section - Navigation
@@ -5172,8 +5227,8 @@ Understand "dollar/cash/bill" as money.
 Section - Backdrops and Scenery
 
 The movie is backdrop in Room_Car_With_Mom.
-The description is "Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Bengi. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who killed his mom and another guy."
-	Understand "film/drive-in/omen", "drive in" as movie.
+The description is "The movie is playing on the big screen. In the last of the sunset light, you can still see the figures of kids running around at the playground at the front of the drive-in. It seems unsettling that some parents would let their kids run around in the dark.[paragraph break]Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Bengi. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who kills people by looking at them."
+	Understand "film/drive-in/omen/window", "drive in" as movie.
 
 The Camaro is backdrop in Room_Car_With_Mom.
 The description is "This is mom's Camaro that she's had since you were a baby. It's green and has black bucket seats. You and mom go everywhere in it, especially to Honey and Grandpa's almost every weekend."
@@ -5201,7 +5256,7 @@ Section - Description
 
 Room_Drive_In is a room.
 The printed name is "At the Drive-In".
-The description is "The movie is playing on the big screen. The drive-in is like a big parking lot but with bumps that cars can drive up on. There are a million cars here on a Friday night and each one is parked beside a pole that has the speakers you can put in your car. There is trash and spilled popcorn on the ground.
+The description is "The movie is playing on the big screen. The drive-in is like a big parking lot but with bumps that cars can drive up on. There are a million cars here on a Friday night and each one is parked beside a pole that has the speakers you can put in your car. There is trash and drifts of spilled popcorn on the ground.
 [paragraph break][available_exits]".
 The scent is "popcorn".
 Understand "drive-in/lot", "drive in", "parking lot" as Room_Drive_In.
@@ -5244,8 +5299,8 @@ Understand "berms" as bumps.
 
 Spilled_popcorn is scenery in Room_Drive_In.
 The printed name is "spilled popcorn".
-The description is "There is popcorn scattered about like snow on the ground. The popcorn squeeks when you step on it."
-Understand "spilled popcorn", "popcorn" as spilled_popcorn.
+The description is "There is popcorn blowing in drifts on the ground turning the drive-in into a winter wonderland. The popcorn squeeks when you step on it."
+Understand "spilled/-- popcorn/snow", "popcorn" as spilled_popcorn.
 
 Some paper trash is scenery in Room_Drive_In.
 
@@ -5280,6 +5335,7 @@ The printed name is "The Snack Bar".
 The description is "The line is smaller since the movie's already started. There is a big popcorn maker full of popcorn behind the counter. Candy is stacked behind glass in the counter. The floor is checked like a checkers board, and you try to only walk on the black squares. There is a lady at the counter helping people. She looks a little like the Cat Lady. The smell of popcorn and melted butter makes you want some.
 [paragraph break][available_exits]".
 The scent is "fresh popped popcorn and melted butter".
+The outside_view is "the drive-in".
 Understand "snack bar", "snackbar", "snack-bar", "snack shack" as Room_Snack_Bar.
 
 Section - Navigation
@@ -5432,8 +5488,9 @@ Section - Description
 
 Room_Camaro_With_Stepdad is a room.
 The printed name is "The Camaro".
-The description is "You are in the car. Your stepdad is driving mom's Camaro."
+The description is "You are in mom's Camaro. Your stepdad is driving. He focuses on the road and you can sense an edge of anger just beneath the surface.[first time] How did you get here? Where's mom?[only]".
 The scent is "".
+The outside_view is "the highway. [description of road]".
 Understand "Camaro/car" as Room_Camaro_With_Stepdad.
 
 Section - Navigation
@@ -5447,6 +5504,12 @@ Section - Backdrops and Scenery
 
 The Camaro is backdrop in Room_Camaro_With_Stepdad.
 
+The cigarette lighter is scenery in Room_Camaro_With_Stepdad.
+
+The road is backdrop in Room_Camaro_With_Stepdad.
+	The description is "The road and the trees zoom by as the car barrels down the highway.".
+	Understand "trees/road/window/highway/outside" as road.
+
 Virtual_Mom is scenery in Room_Camaro_With_Stepdad.
 	The printed name is "Mom".
 	The description is "Mom is no longer here."
@@ -5454,15 +5517,31 @@ Virtual_Mom is scenery in Room_Camaro_With_Stepdad.
 
 Section - Rules and Actions
 
+[Transition text]
+Instead of going to Room_Camaro_With_Stepdad when player is in Room_Drive_In:
+	say "With the logic of dreams, you're in the car speeding down the road.";
+	Continue the action.
+
+Instead of searching road:
+	try examining road.
+
+Instead of doing anything except examining to cigarette lighter:
+	say "No way. Touching that is a good way to lose a hand."
+
+Instead of jumping when player is in Room_Camaro_With_Stepdad:
+	try room_navigating Room_Dream_Grassy_Field.
+
 Instead of exiting when player is in Room_Camaro_With_Stepdad and player is not on supporter:
 	Try room_navigating Room_Dream_Grassy_Field.
+
 Instead of going outside when player is in Room_Camaro_With_Stepdad:
 	try room_navigating Room_Dream_Grassy_Field.
+
 Instead of climbing out when player is in Room_Camaro_With_Stepdad,
 	try room_navigating Room_Dream_Grassy_Field.
 
 Instead of going to Room_Dream_Grassy_Field when player is in Room_Camaro_With_Stepdad:
-	if Scene_Dream_About_Stepdad is happening:
+	if stepdad_free_to_go is false:
 		say "[one of]Are you sure? The car's still moving.[or]You've got to get out of here, but how and when?[or]Wait. Maybe he will stop or slow down up ahead.[stopping]";
 		stop the action;
 	else:
@@ -5484,7 +5563,7 @@ Section - Navigation
 
 Room_Dream_Grassy_Field is east of Room_Camaro_With_Stepdad.
 
-The available_exits of Room_Dream_Grassy_Field are "The gate to the trailer park seems fuzzy and out of focus. The railroad crossing is a little clearer. The only way from here is to go on";
+The available_exits of Room_Dream_Grassy_Field are "The gate to the trailer park seems fuzzy and out of focus. The railroad crossing is a little clearer.[if dream_sheriff is visible] The only way from here is to go on.[end if]";
 
 Section - Objects and People
 
@@ -5493,7 +5572,7 @@ The description of the dream_sharon is "This is the Cat Lady alright, though non
 Understand "cat lady", "sharon/curls/makeup", "high heels", "evening/-- dress" as dream_sharon.
 
 Dream_lee is a undescribed _male man in Room_Dream_Grassy_Field.
-The description of the dream_lee is "Lee has his long blond hair pulled back in a neat ponytail. He's not wearing his army pants, but a fancy tuxedo and a bowtie. He looks quite handsome. He's staring intensely at the Cat Lady[if dream_sheriff is not visible]. What is happening?[else] as they Tango.[end if]".
+The description of the dream_lee is "Lee has his long black hair pulled back in a neat ponytail. He's not wearing his army pants, but a fancy tuxedo and a bowtie. He looks quite handsome. He's staring intensely at the Cat Lady[if dream_sheriff is not visible]. What is happening?[else] as they Tango.[end if]".
 Understand "lee/ponytail/tuxedo/tie/bowtie" as dream_lee.
 
 Dream_sheriff is an undescribed _male man.
@@ -5512,8 +5591,8 @@ The back fence is backdrop in Room_Grassy_Field.
 Section - Rules and Actions
 
 Instead of going to Room_Dream_Grassy_Field when player is in Room_Camaro_With_Stepdad:
-	say "You open the car door and look at the surface of the road speeding by. You gather your courage and prepare to jump. Your stepdad's hand shoots out to try to stop you. You duck the hand, glancing back at your stepdad's startled face, and jump.
-	[paragraph break]You land surprisingly softly, with no more force than if you had fallen down from a standstill. You pick yourself up to familiar surroundings.";
+	say "You open the car door and look at the surface of the road speeding by. You gather your courage and prepare to jump. Mark's hand shoots out to stop you. You duck the hand, glancing back at Mark's startled face, and jump.
+	[paragraph break][line break][line break]...And land surprisingly softly, with no more force than if you had fallen down from a standstill. You pick yourself up to familiar surroundings.";
 	continue the action.
 
 Every turn when player is in Room_Dream_Grassy_Field:
@@ -5603,9 +5682,6 @@ The back fence is backdrop in Room_Dream_Railroad_Tracks.
 
 Section - Rules and Actions
 
-After entering dream_train_tracks:
-	say "Was that a train? Mom tells you not to play anywhere near the railroad tracks. You nervously step between the tracks, experimentally trying to balance on one rail. Be careful."
-
 Instead of putting anything on dream_train_tracks:
 	say "You are pretty sure no trains are coming here.".
 
@@ -5623,7 +5699,7 @@ Section - Description
 
 Room_Mars is a room.
 The printed name is "On Mars".
-The description is "This is the surface of Mars, the red planet, at least 100 million miles from Earth. [if grandpa is visible]You recognize it instantly from the Viking photos. Thick red dust scattered with various-sized dark rocks all under an orange-pink sky. You also know that it should be -80 degrees Fahrenheit, but you aren't feeling the cold. And though there is a very light unbreathable atmosphere, you aren't wearing a suit. You stumble, trying to get the hang of walking in the light gravity, only about a third of Earth's gravity.   How high could you jump here?[else]Now you just feel lonely and alone. You are no longer excited at the prospect of this alien world.
+The description is "This is the surface of Mars, the red planet, at least 100 million miles from Earth. [if grandpa is visible]You recognize it instantly from the Viking photos. Thick red dust scattered with various-sized dark rocks all under an orange-pink sky. You also know that it should be -80 degrees Fahrenheit, but you aren't feeling the cold. And though there is a very light unbreathable atmosphere, you aren't wearing a suit. You stumble, trying to get the hang of walking in the light gravity, only about a third of Earth's gravity. How high could you jump here?[else]Now you just feel lonely and alone. You are no longer excited at the prospect of this alien world.
 [paragraph break][available_exits][end if]".
 The scent is "billion year old dust".
 Understand "Mars" as Room_Mars.
@@ -5632,7 +5708,7 @@ Section - Navigation
 
 Room_Mars is east of Room_Dream_Railroad_Tracks.
 
-The available_exits of Room_Mars is "Here on this flat plain, you can go in any direction. At this point, what is there left to do but go on?"
+The available_exits of Room_Mars is "Here on this flat plain, you can go in any direction.[if Scene_Dream_Bouncing has ended] At this point, what is there left to do but go on?[end if]"
 
 Section - Objects
 
@@ -5708,7 +5784,7 @@ Martian_sky is backdrop in Room_Chryse_Planitia.
 Thick red dust is backdrop in Room_Chryse_Planitia.
 
 The Viking 1 Lander is scenery in Room_Chryse_Planitia.
-	The description is "The is the first Viking lander. It is shaped like a flying saucer, short and squat, with three tripod legs. Its about your height, not counting the communication dish on top. It has all kinds of complicated devices, wires, and tubes. It has a light dusting of Martian dust. It will be here for centuries, sending back pictures until it malfunctions."
+	The description is "The is the first Viking lander. It is shaped like a flying saucer, short and squat, with three tripod legs. It's about your height, not counting the communication dish on top. It has all kinds of complicated devices, wires, and tubes. It has a light dusting of Martian dust. It will be here for centuries, sending back pictures until it malfunctions."
 	Understand "viking/-- 1/-- lander", "viking/saucer/tripod/legs/dish/communications/devices/wires/tubes" as Viking 1 lander.
 
 Section - Rules and Actions
@@ -5736,7 +5812,7 @@ Section - Description
 
 Room_Dream_Dirt_Road is a room.
 The printed name is "Dirt Road".
-The description is "The dirt road slopes down as it runs along the creek before turning into a trail over the stone bridge. There is a field full of tall weeds and junk cars separated by a chainlink fence. There is a sizablee hole dug under the fence.".
+The description is "The dirt road slopes down as it runs along the creek before turning into a trail over the stone bridge. There is a field full of tall weeds and junk cars separated by a chainlink fence. There is a sizable hole dug under the fence.".
 The scent is "sunshine and dust".
 Understand "Dream Dirt Road" as Room_Dream_Dirt_Road
 
@@ -5744,7 +5820,7 @@ Section - Navigation
 
 Room_Dream_Dirt_Road is east of Room_Chryse_Planitia.
 
-The available_exits of Room_Dream_Dirt_Road are "The old dirt road that runs uphill is vague. Back toward the old stone bridge, the road narrows to a ragged trail but after that it gets fuzzy."
+The available_exits of Room_Dream_Dirt_Road are "The old dirt road that runs uphill is vague. Back toward the old stone bridge, the road narrows to a ragged trail but after that it gets fuzzy.[if dog_free_to_go is true] Time to go on or wake up.[end if]"
 
 Section - Objects and People
 
@@ -5770,33 +5846,15 @@ Section - Rules and Actions
 
 [Transition text]
 Instead of going to Room_Dream_Dirt_Road when player is in Room_Chryse_Planitia:
-	say "You look at your feet and notice that the dust has changed to a more familiar color.";
+	say "As you walk, you look at your feet and notice that the dust has changed to a more familiar color.";
 	continue the action.
 
 [keep player here until they finish their convo with dog]
-Instead of going to Room_Dream_Stone_Bridge when dog_free_to_go is not true:
-	say "You're pretty sure, the dog will not let you."
-
-
-Chapter - Room_Dream_Stone_Bridge
-
-Section - Description
-
-Room_Dream_Stone_Bridge is a room.
-The printed name is "Stone Bridge".
-The description is "".
-Understand "old/-- stone/-- bridge", "river/creek" as Room_Dream_Stone_Bridge.
-
-Section - Navigation
-
-Room_Dream_Stone_Bridge is east of Room_Dream_Dirt_Road.
-
-Section - Objects
-
-Section - Backdrops and Scenery
-
-Section - Rules and Actions
-
+Instead of going_on when player is in Room_Dream_Dirt_Road:
+	if dog_free_to_go is not true:
+		say "You're pretty sure, the dog will not let you.";
+	else:
+		try waking up;
 
 
 Book - People
@@ -5820,7 +5878,8 @@ Yourself can be arm_aware1.
 Yourself can be arm_aware2.
 The player is not injured, not sappy, not dirty, not clothing_ripped, not covered_in_leaves, not arm_aware1, not arm_aware2.
 
-Yourself can be asleep.
+Yourself is either awake or asleep.
+ 	Yourself is awake.
 
 Yourself can be dog_warned.
 	Yourself is not dog_warned.
@@ -6249,7 +6308,7 @@ Quote
 "'I think it takes more than being at the right place at the right time to be a father,' Honey says, and after a moment, 'Sorry, [honeys_nickname], I'm not mad at you. I'm mad about grown up stuff.'"
 "'I'm done waiting for him to step up and be your father,' Honey says."
 
-Response of Honey when asked-or-told about Step-Dad:
+Response of Honey when asked-or-told about stepdad:
 	now gma_stepdad_rant is in-progress.
 gma_stepdad_rant is a rant.
 	The quote_table is the Table of gma_stepdad_rant.
@@ -6378,7 +6437,7 @@ This is the seq_grandparents_bounce_handler rule:
 		else if index is 6:
 			queue_report "'Watch this!' Grandpa says like a little kid and leaps high into the air yelling 'Woo!' while Honey laughs." at priority 1;
 		else if index is 7:
-			queue_report "Grandpa gathers up his strength, squating down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'John!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing in misery. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
+			queue_report "Grandpa gathers up his strength, squating down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'John!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
 			now seq_grandparents_bounce is not in-progress;
 			now mars_free_to_go is true;
 			now Honey is in Limbo;
@@ -6509,17 +6568,17 @@ Response of Grandpa when asked-or-told about Lee:
 [Response of Grandpa when asked-or-told about Sheriff:
 	say "".]
 
-Response of Grandpa when asked-or-told about Step-Dad:
+Response of Grandpa when asked-or-told about stepdad:
 	say "[one of]'Mark? He seemed like a nice enough guy when I met him, but...' Grandpa looks like he's going to get mad at you, 'he better start being a whole heck of a lot nicer to you and your[if player is in Room_Grassy_Clearing]--'[paragraph break]Honey cuts him off, 'John, that's enough. Remember, little pitchers have big ears.'[paragraph break]Grandpa leans down and says a little quieter, 'Well, you just know that your mom, your Honey, and your grandpa love you,' and he [grandpa_stuff].[else] mom or he's going to have to answer to me. That's all I have to say.'[end if][or]Grandpa face goes tight. 'I don't think I can rightly say anything more about that without saying anything I don't want to.'[stopping]".
 
 Response of grandpa when asked-or-told about topic_dreams:
-	say "'We all have dreams, [grandpas_nickname]. Sometimes as you get older, or if you getta be an old man like me, you have different dreams than you did when you were a young man,' grandpa says, 'These days, I dream about a quiet river with a fishing pole.'".
+	say "'We all have dreams, [grandpas_nickname]. Sometimes as you get older, or if you get to be an old man like me, you have different dreams than you did when you were a young man,' grandpa says, 'These days, I dream about a quiet river with a fishing pole.'".
 
-Response of grandpa when asked-or-told about backdrop_creek:
+Response of grandpa when asked-or-told about topic_creek:
 	say "'Well, I love that old creek. It's one of the reasons we bought our house here,' grandpa says, 'You know we call it [']Bear Creek,['] but the Miwok people who lived here long before us had another name for it. I've never known this creek's true name.'".
 
 Response of grandpa when asked-or-told about topic_indians:
-	say "'The Miwok people used to live in these hills along Bear Creek,' grandpa says, 'You know, there are still remains of houses and petroglyphs, those are  drawings on rocks, made by Indians who lived here long before we came here.'".
+	say "'The Miwok people used to live in these hills along Bear Creek,' grandpa says, 'You know, there are still remains of houses and petroglyphs, those are drawings on rocks, made by Indians who lived here long before we came here.'".
 
 Response of Grandpa when asked-or-told about topic_berries:
 [Response of Grandpa when asked about backdrop_berries or told about backdrop_berries:]
@@ -6546,7 +6605,8 @@ Response of Grandpa when asked-or-told about topic_trailer:
 	say "Our house? We've been living there since you were knee-high to a grasshopper. Do you remember when the big truck moved our trailer into place? No, you wouldn't remember that. You were a babe in your mama's arms.".
 
 Response of Grandpa when asked about train tracks:
-	say "[one of]'Yeah? The one that runs by the trailer park? You can hear it going by if you listen,' Grandpa says. 'Maybe later we can put pennies on the track again.'[or]'You be careful around those train tracks, a train could roll right over you and not even blink,' Grandpa says.[stopping]".
+	say "'You be careful around those train tracks, a train could roll right over you and not even blink,' Grandpa says.".
+
 Response of Grandpa when told about train tracks:
 	if player is not train-experienced:
 		say "'Yeah? The one that runs by the trailer park? You can hear it going by if you listen,' Grandpa says. 'Maybe later we can put pennies on the track again.'";
@@ -7043,7 +7103,7 @@ Quote
 "'Another time, Lee yelled at me, I thought he was going to [italic type]kill[roman type] me, when I accidentally scared him one night,' the Cat Lady's says. 'I didn't [italic type]mean[roman type] to scare him, I was just on an evening walk. I had to call the sheriff before he'd settle down.'"
 "'I know Lee had a hard time in Vietnam,' the Cat Lady says, 'but there is no call to take it out on me.'"
 
-Response of Sharon when asked-or-told about Step-Dad:
+Response of Sharon when asked-or-told about stepdad:
 	now sharon_stepdad_rant is in-progress.
 sharon_stepdad_rant is a rant.
 	The quote_table is the Table of sharon_stepdad_rant.
@@ -7167,8 +7227,8 @@ Part - Lee
 [TODO: Consider having Lee sympathize with American Indians or even have native roots]
 
 Lee is a _male man in Room_C_Loop.
-	The initial appearance is "Lee is [if Lee is in Room_C_Loop]sitting on a lawn chair in his empty carport, chain smoking[else if Lee is in Room_Lees_Trailer and Lee's TV is switched on]watching TV[else]here[end if]. [first time][description of lee][only]".
-	The description is  "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long dirty blond hair pulled back in an untidy ponytail. He's wearing a tanktop and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name."
+	The initial appearance is "Lee is [if Lee is in Room_C_Loop]sitting on a lawn chair in his empty carport, chain smoking[else if Lee is in Room_Lees_Trailer and lees_tv is switched on]watching TV[else]here[end if]. [first time][description of lee][only]".
+	The description is  "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long black hair pulled back in an untidy ponytail. He's wearing a tanktop and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name."
 	Understand "lee/veteran/vet" as Lee.
 	The scent is "cigarettes and alcohol".
 
@@ -7261,7 +7321,7 @@ Response of Lee when asked-or-told about Mom:
 Response of Lee when asked-or-told about Dad:
 	say "'Yeah, I definitely don't know your dad,' Lee says. 'Is he around much? Do you see him ever?'".
 
-Response of Lee when asked-or-told about Step-Dad:
+Response of Lee when asked-or-told about stepdad:
 	say "'I don't know your step-dad, man,' Lee says, 'I heard him yelling at your mom once, but I'm in no position to criticize.'".
 
 Response of Lee when asked-or-told about topic_jam or topic_berries:
@@ -7286,13 +7346,14 @@ Response of Lee when asked about topic_love:
 	say "'I don't know a thing about it,' Lee says. 'Not a single goddamn thing. Pardon my language.'".
 
 Response of Lee when asked-or-told about topic_family:
-	say "'Ah, my family. Yeah, I don't talk to [']em much anymore. My mom. My dad. My brother,' Lee says. 'Did you know I was married? Might even still be. When I came back, she couldn't take it and split.' Lee lights another cigarette. 'I guess good for her. Get out while the gettin's good.'".
+	say "'Ah, my family. Yeah, I don't talk to [']em much anymore. My mom. My dad. My brother,' Lee says, 'My mom grew up in Pine Ridge. That's a genuine Indian rez, man.'[paragraph break]'Did you know I was married? Might even still be. When I came back, she couldn't take it and split.' Lee lights another cigarette. 'I guess good for her. Get out while the gettin's good.'".
 
 Response of Lee when asked-or-told about metal cube:
 	if player has held metal cube:
 		say "'It was nothing,' Lee says, 'Don't even mention it.' Though you can tell he's pleased to be able to give you the gift.";
 	else:
 		continue the action;
+
 Before going from Room_Lees_Trailer during Scene_Hangout_With_Lee:
 	if index of seq_lee_hangout is greater than 4:
 		say "You give a wave to Lee as you go.
@@ -7304,7 +7365,7 @@ At the time when Lee resumes smoking:
 	if lee is not in Room_C_Loop:
 		move Lee out of his trailer;
 
-The metal cube is a thing. The description is "This is a solid metal cube about the size of your hand. It has very slightly rounded edges. Not as shiny as a ball bearing, but it's really pretty. It's considerably heavier than it appears[first time].
+The metal cube is a thing. The description is "This is a solid metal cube about an inch to a side. It has very slightly rounded edges. Not as shiny as a ball bearing, but it's really pretty. It's considerably heavier than it appears[first time].
 [paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break]
 [paragraph break][italic type]What will happen if your mom discovers this? You determine to hide the cube and not let her find out.[roman type][only].";
 
@@ -7344,6 +7405,8 @@ Quote
 "Lee is angry and stubs out his cigarette in a coffee can. 'They're living things, man! They need to be loved. And petted. And each one needs a name and to be cared for and to feel unique in the whole world.' He wipes his eyes angrily."
 "'Sorry, I get carried away,' Lee says. 'I really like cats.'"
 
+[TODO: For critical topics like lee_war_rant add objects that can trigger these rants]
+
 Response of Lee when asked about topic_war:
 	now lee_war_rant is in-progress.
 lee_war_rant is a rant.
@@ -7366,6 +7429,20 @@ Quote
 "'No one asked me, [']Hey, dude, did you kill anyone?['] Or [']Hey, what were you most scared of?[']' Lee seems really angry, but for some reason you're not scared. 'Nah, nobody asked me nothin[']. Nobody asked me shit. Oh sorry pardon my language, [Lee's nickname].' Lee looks up and remembers you."
 "Lee looks at you. 'You know what I mean? It was like I'd been down the street buying a loaf a bread. Did anyone know I was gone? I wanted to stop people and shake them. [']Hey, bud, did you know I was in southeast Asia trying not to get myself killed?[']'"
 "'Yeah, that's not my best topic, but thanks for listening to my war stories,' Lee says with a smile. 'And hey, thanks for askin[']. Really.'"
+
+Response of Lee when asked-or-told about topic_indians:
+	now lee_indian_rant is in-progress.
+
+lee_indian_rant is a rant.
+	The quote_table is the Table of lee_indian_rant.
+	The speaker is Lee;
+
+Table of lee_indian_rant
+Quote
+"'This whole area, hell, this whole country, is Indian land, Jody.', Lee says, 'I grew up here, but my mom grew up on the rez. I don't think she ever wanted to go back. She was full blood Dakota. They took her out for Indian School and erased her culture, man. I knew I was Indian, but had no connection to it, you know?' Lee takes a drag of his cigarette."
+"Lee continues. 'I met more Indians in the service than I ever did anywhere else,' Lee laughs bitterly. 'I mean they like to send poor people to war, don't they? And that means Blacks and Chicanos and Indians.'"
+"'That's why we're seeing all that stuff on the news about the Indian Movement,' Lee continues, 'They're fed up, man. You watch, Jody, someday the Indians are gonna take back this whole country.'"
+
 
 Chapter - Sequences
 
@@ -7437,7 +7514,7 @@ This is the seq_lee_hangout_handler rule:
 			queue_report "You start to thank Lee, but he looks embarrassed even before you say it and cuts you off. 'I wonder what's on the tube,' He turns to the television and starts fiddling with the rabbit ears." at priority 1;
 	else if index is 6:
 		if lee is visible:
-			try Lee switching on Lee's TV;
+			try Lee switching on lees_tv;
 			say what_show_is_playing;
 			say line break;
 			queue_report "'There's never anything really on. Don't know why I bother,' Lee says. 'Feel free to find something that you like.'" at priority 1;
@@ -7538,7 +7615,7 @@ Response of Mary when asked-or-told about Mom:
 Response of Mary when asked-or-told about Dad:
 	say "'Well, he, I'm...' her eyes get faraway and she trails off.".
 
-Response of Mary when asked-or-told about Step-Dad:
+Response of Mary when asked-or-told about stepdad:
 	say "Her eyes look sharp for a moment, 'I know he and your grandmother have their differences, but I can tell you that he looks like he really loves your mom. When she leaves the room, that man looks like someone just let the air out of him.'"
 
 Response of Mary when asked-or-told about topic_berries:
@@ -7786,7 +7863,7 @@ This is the seq_sheriffs_drive_by_handler rule:
 		if sharon is not in Room_D_Loop:
 			move sharon out of her trailer;
 		if player is in Room_D_Loop:
-			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 1;
+			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing, Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 1;
 	else if index is 3:
 		if player is in Room_D_Loop:
 			queue_report "'Well, pretty good, Bill. I can't complain,' the Cat Lady tells the Sheriff. Then a frown crosses her face, 'Oh except Oliver has an abscess. I have to take him to the kitty doctor next week.'" with priority 1;
@@ -7816,7 +7893,7 @@ Part - Mom
 Mom is a _female woman.
 Mom is in Room_Car_With_Mom.
 The initial appearance is "[if player is in Room_Car_With_Mom]Your mom is watching the movie[first time]. Sensing you looking, she smiles at you[only][else]Your mom is here looking very worried[end if].".
-The description is "Mom is, well mom. She's silly and smart and plays with you. [first time]Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you saying 'I'm sorry' until your tears stopped. [only]She's strict and good and understanding. All you know is she loves you more than you know how to say.[if a random chance of 1 in 3 succeeds]
+The description is "Mom is, well mom. She's silly and smart and plays with you and you know she works hard at her job. [first time]Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you saying 'I'm sorry' until your tears stopped. [only]She's strict and good and understanding. All you know is she loves you more than you know how to say.[if a random chance of 1 in 3 succeeds]
 [paragraph break]While you are looking at her, she catches your eye and smiles sweetly.[end if]".
 Understand "mommy/ma/mother/rachel/rach" as Mom.
 The scent is "home".
@@ -7870,10 +7947,6 @@ Last after conversing when the current interlocutor is mom and player is in Room
 To say looks_away_from_movie:
 	if player is in Room_Car_With_Mom and a random chance of 1 in 2 succeeds:
 		say "[one of]Mom turns away from the movie[or]Mom, absorbed in the movie, takes a second to respond[or]Mom turns toward you[at random]. ";
-
-[Before speaking to mom:
-	say looks_away_from_movie;
-	continue the action.]
 
 [
 	Defaults
@@ -7937,7 +8010,7 @@ Response of mom when asked-or-told about dad:
 [Response of mom when asked-or-told about Sheriff:
 	say "".]
 
-Response of mom when asked-or-told about Step-Dad:
+Response of mom when asked-or-told about stepdad:
 	say "'Your step-dad? He's a good guy. He really is. He tries his best even if he doesn't have an easy time showing it. And he's good to us,' mom says, looking concerned, 'Don't you think?'".
 
 Response of mom when asked-or-told about topic_dreams:
@@ -8032,7 +8105,7 @@ This is the seq_mom_watching_movie_handler rule:
 			queue_report "The dad and another guy go to a cemetary and find a dog skeleton and are attacked by other dogs. Are they protecting the dead dog? This movie is really scary. [paragraph break]'Are you okay, hon?' mom asks. Something else happens to the boy's mom and your mom makes you cover your eyes. Did she die? You think about what would happen if your mom died and you almost start to cry. You quickly think about something else and sneak a glance at mom. Thankfully she didn't notice." at priority 2;
 	else if index is 5:
 		if mom is visible:
-			queue_report "In the movie, the dad and the other guy get some knives for some reason. The dad is angry and throws them away. And then, oh! a truck with glass cuts off the other guy's head too fast for you to cover your eyes! You watch his head bounce away. You burst out crying.[paragraph break]'Oh, honey,' your mom says, holding you, 'I'm so sorry. I'm sorry.' She rocks you as your tears subside. 'Do you want to go? We don't have to stay. I'm sorry.'[paragraph break]You want to go. But you also want to stay. What happens to the evil boy? Will the dad kill him? 'No,' you manage through sniffles.[paragraph break]'Okay,' your mom says, clearly doubtful. 'You want to get us snacks?'" at priority 2;
+			queue_report "In the movie, the dad and the other guy get some knives for some reason. The dad is angry and throws them away. And then, oh! a truck with glass cuts off the other guy's head too fast for you to cover your eyes! You watch his head bounce away. You burst out crying.[paragraph break]'Oh, honey,' your mom says, holding you, 'I'm so sorry. I'm sorry.' She rocks you as your tears subside. 'Do you want to go? We don't have to stay. I'm sorry.'[paragraph break]The movie is scary, but you feel safe. There is something important here. You want to go. But you also want to stay. What happens to the evil boy? Will the dad kill him? 'No,' you manage through sniffles.[paragraph break]'Okay,' your mom says, clearly doubtful. 'You want to get us snacks?'" at priority 2;
 			now mom_free_to_go is true;
 	else if index is 6:
 		if mom is visible:
@@ -8046,23 +8119,167 @@ This is the seq_mom_watching_movie_interrupt_test rule:
 	rule fails.
 
 
-Part - Step-Dad
+Part - Stepdad
 
-Step-dad is a _male man.
-Step-dad is in Room_Camaro_With_Stepdad.
-The initial appearance is "Your stepdad is driving. He focuses on the road and you can sense an edge of anger just beneath the surface.".
-The description is "Your stepdad's name is Mark. You call him 'dad' because your mom asked if you wanted to call him dad when she first got re-married. You shrugged, 'Okay.' So you did. Who knows what the rules are here? You have an inkling that your mom married him because she thought you needed a father. But if you are honest, you're scared of him. You never know whether he will be nice or angry. He's nicer when he drinks beer, but if he has too much, your mom and stepdad get in arguments. One night there was yelling and someone broke the glass clock that used to sit on the endtable in the living room. You know this though, if he ever hurt your mom, you don't know how, but you would kill him."
-Understand "step-dad/step-father/stepdad/stepfather/mark", "step dad/father" as Step-dad.
+Stepdad is an undescribed _male man.
+The printed name is "Mark".
+Stepdad is in Room_Camaro_With_Stepdad.
+The description is "[first time]Your stepdad's name is Mark. You call him 'dad' because your mom asked if you wanted to call him dad when she first got re-married. So you did. Who knows what the rules are here? You have an inkling that your mom married him because she thought you needed a father. He was nice to you at first, but now it seems like you just make him mad. [paragraph break]If you are honest, you're scared of him. You never know whether he will be nice or angry. He's nicer when he drinks beer, but if he has too much, your mom and stepdad get in arguments. One night there was yelling and someone broke the glass clock that used to sit on the end table in the living room.[paragraph break]You know this though: if he ever hurt your mom, you don't know how, but you would kill him.[paragraph break][only]He is intensely focusing on the road in a way that you know is seething anger."
+Understand "step-dad/step-father/stepdad/stepfather/mark", "step dad/father" as stepdad.
 
 Chapter - Properties
 
 Chapter - Rules and Actions
 
+Instead of touching stepdad:
+	say "No way. You are not 100% sure what would happen, but you don't want to risk it.";
+
 Chapter - Responses
+[
+		Preliminaries and greetings
+]
+
+Greeting response for stepdad:
+	say "'Hey,' he says.";
+
+Implicit greeting response for stepdad:
+	do nothing;
+
+Farewell response for stepdad:
+	do nothing;
+
+Implicit farewell response for stepdad:
+	do nothing;
+
+To say stepdad_stuff:
+	say "[one of]flicks his eyes toward you[or]grits his teeth[or]stabs the cigarette lighter in, then seems to forget about it[at random]";
+
+[
+	Defaults
+]
+
+Default tell response for stepdad:
+	say "'Okay, sure,' Mark says.";
+
+Default ask response for stepdad:
+	say stepdad_disinterested;
+
+Default give-show response for stepdad:
+	say "'Okay, I don't know what to do with that,' Mark says.";
+
+Default ask-for response for stepdad:
+	if player holds second noun:
+		say "'What are you asking? You already have that' Mark says.";
+	else:
+		say "'That's not yours,' Mark says.";
+
+Default yes-no response for stepdad:
+	if saying yes:
+		say "[one of]'Good,' Mark says[or]Mark nods curtly[at random].";
+	else:
+		say "[one of]'No? Are you telling me no?' Mark says[or]'Be careful what you are saying,' Mark says and [stepdad_stuff][cycling].";
+
+Default response for stepdad:
+	say "'Sure,' Mark says.";
+
+To say stepdad_disinterested:
+	say "[one of]'That's none of my business,' Mark says, 'You better ask your mom.'[or]'I don't know, Jody,' Mark shrugs.[at random]";
+
+To say stepdad_dont_know:
+	say "'I don't know, Jody,' Mark shrugs.";
+
+[
+	Responses
+]
+
+Response of stepdad when asked-or-told about stepdad:
+	say stepdad_dont_know;
+
+Response of stepdad when asked-or-told about Honey:
+	say stepdad_disinterested.
+
+Response of stepdad when asked-or-told about Grandpa:
+	say "'Your grandpa's a good guy,' Mark says. 'He helped me build our house.'".
+
+Response of stepdad when asked-or-told about Lee:
+	say "'That guy,' Mark says, 'I don't know him well, but he's a vet. I respect that.'".
+
+[Response of stepdad when asked-or-told about Sheriff:
+	say "".]
+
+Response of stepdad when asked-or-told about virtual_mom:
+	say "'We're working things out, but that's none of your business,' Mark says.".
+
+Response of stepdad when asked-or-told about topic_forest:
+	say "'Stay out of there,' Mark says.".
+
+Response of stepdad when asked-or-told about topic_creek:
+	say "'Your grandpa likes freshwater fishing,' Mark says, 'but I've never liked it much. I'd rather be deep-sea fishing.'".
+
+Response of stepdad when asked about topic_work:
+	say "'I don't want to talk about it,' Mark says, 'Things aren't going well at the shop right now.'".
+
+Response of stepdad when asked-or-told about topic_family:
+	say "'All you've got is your family, Jody,' Mark says.".
+
+Response of stepdad when asked-or-told about topic_war:
+	say "'I was never in the war,' Mark says, 'I served between wars. On a torpedo boat in the Pacific.'".
 
 Chapter - Rants
 
 Chapter - Sequences
+
+seq_stepdad_in_car is a sequence.
+	The action_handler is the seq_stepdad_in_car_handler rule.
+	The interrupt_test is seq_stepdad_in_car_interrupt_test rule.
+	The length_of_seq is 17.
+
+This is the seq_stepdad_in_car_handler rule:
+	let index be index of seq_stepdad_in_car;
+	if index is 2:
+		if stepdad is visible:
+			queue_report "Your step-dad reaches behind the seat and grabs a can of beer. He pulls the pop-top and tosses it out the window. He takes a long drink and puts the can between his legs. He shoots you a glance and you carefully look out the window." at priority 2;
+			now current interlocutor is stepdad;
+	else if index is 5:
+		if stepdad is visible:
+			queue_report "Mark takes another long swig of his beer and taps on the steering wheel." at priority 2;
+	else if index is 8:
+		if stepdad is visible:
+			queue_report "You can tell Mark is working up to say something. Instead he drains his beer, drops the empty behind the seat, and grabs another can. He pops the top and puts the can between his legs." at priority 2;
+	else if index is 9:
+		if stepdad is visible:
+			queue_report "Mark taps out a cigarette but doesn't light it." at priority 2;
+	else if index is 11:
+		if stepdad is visible:
+			queue_report "Mark clears his throat as if he's not used to using his voice. 'When you asked to use my tools, I told you that I expected you to put them away when you were done,' Mark says and [stepdad_stuff]." at priority 2;
+	else if index is 12:
+		if stepdad is visible:
+			queue_report "'This morning, I found my screwdriver on the porch where you were playing with that old radio,' Mark says." at priority 2;
+	else if index is 13:
+		if stepdad is visible:
+			queue_report "He waits and glances as you like he's expecting an answer. 'Did you leave it out there deliberately or are you just thoughtless?' he asks." at priority 2;
+	else if index is 15:
+		if stepdad is visible:
+			queue_report "'What did I tell you?' Mark says glancing at you angrily, 'I told you to put away my tools.' He grabs your arm, 'Why can't you listen? Huh?' There are stopped cars ahead and Mark puts both hands on the wheel.[paragraph break]You've got to get out of here." at priority 2;
+	else if index is 16:
+		if stepdad is visible:
+			queue_report "'I know your mom lets you do whatever you want,' Mark says, 'I told her she was spoiling you, but I'm not going to do that.' Mark slows the Camaro. Maybe this is your chance." at priority 2;
+			now stepdad_free_to_go is true;
+	else if index is 17:
+		if stepdad is visible:
+			queue_report "[one of]'Are you just trying to make me mad?' Mark asks.[or]'When I was a kid, I understood that if I didn't do what my parents told me, I would get my ass whipped,' Mark says.[or]Mark grabs your arm, 'Are you listening to me?'[or]'Are you going to answer me?' Mark demands.[in random order]" at priority 2;
+			[We do the following, because we want this step to repeat]
+			decrease index of seq_stepdad_in_car by one;
+			[we make sure this ends when Scene_Dream_About_Stepdad begins]
+
+
+This is the seq_stepdad_in_car_interrupt_test rule:
+	[if stepdad is not visible:
+		rule succeeds;]
+	[if we are speaking to stepdad:
+		rule succeeds;]
+	rule fails.
+
 
 
 
@@ -8199,7 +8416,7 @@ Part - Dream Dog
 The dream_dog is a _critter animal in Room_Dream_Dirt_Road.
 	The printed name is "dog".
 	The initial appearance is "Oh no. The dog is wandering in the road. The dog perks up [pos_pronoun of dog] ears as you approach.".
-	The description is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. Do you [italic type]still[roman type] have to get past this dog?".
+	The description is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. Do you [italic type]still[roman type] have to get past this damn dog?".
 	Understand "dogs/bitch/mutt/canine/yellow/medium/pointy", "doberman/shepher/cujo/kujo/puppy", "german shepherd", "guard dog" as the dream_dog.
 	The indefinite article of dream_dog is "the".
 	Include (- with articles "The" "the" "a", -) when defining dream_dog.
@@ -8282,57 +8499,48 @@ Response of dream_dog when saying sorry:
 Response of dream_dog when asked-or-told about player:
 	say "'I don't know you, kid, but you seem okay. Not the worst person I've met,' the dog says, 'At least you didn't tease me like some of these brats who make it their mission to make me miserable.'".
 
+Response of dream_dog when asked-or-told about dream_dog:
+	say "'I'm a good dog. Or I try to be,' the dog says, 'Sometimes I still make my people angry, but that's my fault.'".
+
 [telling about my people]
 
-Response of dream_dog when told about honey:
+Response of dream_dog when asked-or-told about honey:
 	say_dog_people_response;
 
-Response of dream_dog when told about grandpa:
+Response of dream_dog when asked-or-told about grandpa:
+	say "'I think one time when I got out of that goddamn fence I tried to bite him,' the dog laughs.".
+
+Response of dream_dog when asked-or-told about lee:
 	say_dog_people_response;
 
-Response of dream_dog when told about lee:
-	say_dog_people_response;
-
-Response of dream_dog when told about sharon:
+Response of dream_dog when asked-or-told about sharon:
 	say_dog_people_response;
 
 Response of dream_dog when told about sheriff:
-	say_dog_people_response;
+	say "'Now him I know,' the dog says, 'He wears a uniform, right? I hate people in uniform. Cops, postmen, the water guy, I just want to sink my teeth into them.'";
 
-Response of dream_dog when told about step-dad:
-	say_dog_people_response;
-
-[asking about my people]
-
-Response of dream_dog when asked about honey:
-	say_dog_people_response;
-
-Response of dream_dog when asked about grandpa:
-	say_dog_people_response;
-
-Response of dream_dog when asked about lee:
-	say_dog_people_response;
-
-Response of dream_dog when asked about sharon:
-	say_dog_people_response;
-
-Response of dream_dog when asked about sheriff:
-	say_dog_people_response;
-
-Response of dream_dog when asked about step-dad:
+Response of dream_dog when asked-or-told about stepdad:
 	say_dog_people_response;
 
 To say_dog_people_response:
 	say "'Listen, kid. There's people who are in my pack, and people who aren't. And if they aren't, they all pretty much look the same to me,' the dog says, 'Why don't you tell me about [']em?'".
+
+Response of dream_dog when asked-or-told about topic_dreams:
+	say "'They say dreams have meaning, kid,' the dog says, 'but I don't know. I dream about chasing rabbits. And getting out of that goddamn fence.'";
+
+Response of dream_dog when asked-or-told about topic_creek:
+	say "'Sometimes on hot days, if I can get out of that terrible fence,' the dog says, 'I run through the forest until I'm panting and hot, then I lie down in the cool water of the creek and watch the little swimmers.'";
 
 Chapter - Rants
 
 Response of dream_dog when asked-or-told about topic_work:
 	now dog_self_rant is in-progress;
 	now dream_dog is friendly.
+
 Response of dream_dog when asked-or-told about dream_dog:
 	now dog_self_rant is in-progress;
 	now dream_dog is friendly.
+
 dog_self_rant is a rant.
 	The quote_table is the Table of dog_self_rant.
 	The speaker is dream_dog.
@@ -8490,7 +8698,7 @@ To say racoon_description:
 Instead of yelling during Scene_Defend_the_Fort:
 	say "You let out a low terrifying roar from somewhere deep in your belly, and for a moment everything is completely quiet.";
 
-test coons with "teleport to meadow / wait / wait / wait / go to hollow / pile leaves / sleep";
+test coons with "teleport to meadow / wait / wait / wait / wait / go to hollow / pile leaves / sleep";
 
 Chapter - Responses
 
@@ -8549,7 +8757,7 @@ To do_raccoon_things:
 		now virtual_raccoons are in Limbo;
 		now seq_raccoon_visit is not in-progress;
 		if player is in Room_Protected_Hollow:
-			queue_report  "You hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 2;
+			queue_report  "Suddenly, you hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 2;
 		else if player is in Room_Forest_Meadow:
 			queue_report  "The invaders have taken their sandwiches and gone. You protected the fort."  at priority 2;
 
