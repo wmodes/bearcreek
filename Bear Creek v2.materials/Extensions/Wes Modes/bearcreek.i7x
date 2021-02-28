@@ -620,6 +620,8 @@ report climbing in
 Does the player mean climbing in an unclimbable thing:
 	it is unlikely.
 
+[TODO: Impement climbing_in_nothing where an assumption is made about climbing into enterable things in location, i.e., climb in]
+
 [
 climbing on
 ]
@@ -645,28 +647,17 @@ Does the player mean climbing on an unclimbable thing:
 [
 climbing out
 ]
+climbing_out_something is an action applying to one topic.
+Understand "climb out [text]"
+as climbing_out_something.
+Carry out climbing_out_something:
+	try exiting.
 
-climbing out is an action applying to one thing.
-Understand
-	"climb out of/-- [something]"
-	as climbing out.
-
-report climbing out
-(this is the climbing out rule):
-	if the noun is climbable:
-		say "You climb out of [the noun].";
-		now the player is in the location;
-	else if the noun is an enterable supporter:
-		say "You climb off of [the noun].";
-		now the player is in the location;
-	else if the noun is an enterable container:
-		say "You climb out of [the noun].";
-		now the player is in the location;
-	else:
-		say "You can't climb out of [the noun]." instead.
-
-Does the player mean climbing out an unclimbable thing:
-	it is unlikely.
+climbing_out_nothing is an action applying to nothing.
+Understand "climb out"
+as climbing_out_nothing.
+Carry out climbing_out_nothing:
+	try exiting.
 
 [
 climbing over
@@ -822,6 +813,7 @@ Carry out piling:
 		say "You pile the leaves under yourself for a cozy bed, and then over yourself in a heaping pile for a cozy banket. You are much warmer.";
 		now Room_Protected_Hollow is made_cozy;
 
+[TODO: Implement thank [Somebody] and thank you]
 
 Chapter - Attacking
 
@@ -1575,8 +1567,7 @@ Chapter - Scene_Walk_With_Grandpa
 	* when player is near blackberry clearing ]
 
 There is a scene called Scene_Walk_With_Grandpa.
-[Scene_Walk_With_Grandpa begins when player has been in Region_Trailer_Indoors and player is in Region_Blackberry_Area.]
-Scene_Walk_With_Grandpa begins when player has been in Region_Dirt_Road for four turns.
+Scene_Walk_With_Grandpa begins when player has been in Region_Trailer_Indoors.
 Scene_Walk_With_Grandpa ends when Grandpa has been in Room_Grandpas_Trailer and Grandpa is not in Room_Grandpas_Trailer.
 
 When Scene_Walk_With_Grandpa begins:
@@ -1616,6 +1607,7 @@ Scene_Visit_With_Sharon ends when Scene_Sheriffs_Drive_By begins.
 Scene_Visit_With_Sharon ends when player is not in Room_D_Loop and player is not in Room_Sharons_Trailer.
 
 When Scene_Visit_With_Sharon begins:
+	try saying hello to Sharon;
 	if Scene_Tea_Time has not happened:
 		now seq_sharon_invite is in-progress.
 
@@ -1636,6 +1628,7 @@ Scene_Visit_With_Lee begins when player is in Room_C_Loop.
 Scene_Visit_With_Lee ends when player is not in Room_C_Loop and player is not in Room_Lees_Trailer.
 
 When Scene_Visit_With_Lee begins:
+	try saying hello to Lee;
 	if Scene_Hangout_With_Lee has not happened:
 		now seq_lee_invite is in-progress.
 
@@ -2115,17 +2108,17 @@ After going to Room_Dirt_Road for the first time:
 	queue_report "[italic type]This dog makes you suddenly queasy, though you couldn't have known then what part it would play in what happened.[roman type]" with priority 1;
 	continue the action.
 
-To do sharon teatime premonition:
+To do Sharon_Teatime_Premonition:
 	queue_report "[italic type]A sudden thought: What if you are here talking to the Cat Lady and something happens to your Grandpa or Honey? Or worse, your mom? You struggle to think about something else.[roman type]" at priority 1.
 
-To say lee invite premonition:
-	say "[italic type]You remember your grandma's warning and suddenly feel [nervous][roman type]".
+To say Lee_Invite_Premonition:
+	say "[italic type]You remember your grandma's warning and suddenly feel [nervous], but something tells you it will be okay. You couldn't say why, but you trust Lee.[roman type]".
 
 When Scene_Bringing_Lunch begins:
-	Premonition About Something Wrong in 30 turns from now;
+	Premonition_About_Something_Wrong in 30 turns from now;
 	continue the action.
 
-At the time when Premonition About Something Wrong:
+At the time when Premonition_About_Something_Wrong:
 	queue_report "[italic type]You get a feeling something is wrong. What if something happened to your grandpa?[roman type]" with priority 1;
 
 After going to Room_Long_Stretch during Scene_Bringing_Lunch:
@@ -2139,27 +2132,32 @@ After going to Room_Crossing for the first time:
 	continue the action.
 
 After going to Room_Dirt_Road during Scene_Bringing_Lunch:
-	Premonition About Another Way in three turns from now;
+	Premonition_About_Another_Way in three turns from now;
 	continue the action.
 
-At the time when Premonition About Another Way:
+At the time when Premonition_About_Another_Way:
 	queue_report "[italic type]You've got to get back to the clearing. There must be another way.[roman type]" at priority 1;
 
+[NIX: We'll keep the log here to come back later.
 After going to Room_Other_Shore during Scene_Across_the_Creek:
 	queue_report "[italic type]Oh no. The log has come unstuck and floated downstream.[roman type]" at priority 1;
-	continue the action.
+	continue the action.]
 
-To say sharon-stepdad premonition:
+To say Sharon_Stepdad_Premonition:
 	say "[italic type]For a moment, you share her vision -- a rocky shore stretching for miles and miles -- a child picking among the rocks completely and hopelessly alone. [roman type]".
 
-To say forest premonition:
-	say "[italic type]You get a funny feeling like the forest is looking back and you shiver[roman type]".
+After going to Room_Dark_Woods_South:
+	Woods_Premonition in one turn from now;
+	continue the action;
+
+At the time when Woods_Premonition:
+	say "[italic type]You get a funny feeling like the forest is looking back at you, and you shiver[roman type].";
 
 Part - Payoffs
 
 To say blackberry_payoff:
 	say "That should be enough to satisfy Honey.
-	[paragraph break]Even though you love picking blackberries -- and you certainly love blackberry jam, blackberry pie, blackberry and cream, or just eating fresh blackberries -- you've been picking berries all morning. You must have picked a [italic type]million[roman type] pails already. And you want to see if the red ants ate the dead cricket you put near their hole. Oh, and you want to see if you can find a lucky penny. And you may even want to swim.".
+	[paragraph break]Even though you love picking blackberries -- and you certainly love blackberry jam, blackberry pie, blackberries and cream, or just eating fresh blackberries -- you've been picking berries all morning. You must have picked a [italic type]million[roman type] pails already. And you want to see if the red ants ate the dead cricket you put near their hole. Oh, and you want to see if you can find a lucky penny. And you may even want to swim.".
 
 To say swimming_payoff:
 	say "You stand at the edge of the rocks curling your toes over the edge. You hesitate before jumping in. At the count of three. One. Two.
@@ -2320,7 +2318,7 @@ Train tracks are familiar.
 
 topic_tree is a subject.
 	The printed name is "tall Doug fir".
-	Understand "pine/fir/tall/-- doug/-- fir/tree/branches" as topic_tree.
+	Understand "big/pine/fir/tall/-- doug/-- fir/tree/branches" as topic_tree.
 
 topic_creek is a subject.
 	The printed name is "Bear Creek".
@@ -2647,8 +2645,9 @@ To eat_berries_from_pail:
 		stop the action;
 	say eat_berries;
 
-Before going when pail is full and pail is held by player:
+Instead of going when pail is full and pail is held by player:
 	say "[one of]With your heaping full pail, you imagine tripping and blackberries going everywhere and getting in trouble[or]Your full pail is making you nervous[or]You are concentrating so hard on your full pail, your hands start to shake and a ripe berry tumbles off into the dirt[or]You have to stop for a minute to catch your breath and steady your hands holding your full pail[or]You walk slow steading your pail full of blackberries[stopping].";
+	continue the action;
 
 [Does player mean inserting backdrop_berries into pail:
 	It is very likely.
@@ -3111,7 +3110,7 @@ At the time when evening train hits the crossing:
 
 To show train crossing:
 	if player is in Room_Railroad_Tracks:
-		if player is not train-experienced:
+		if player is not train_experienced:
 			queue_report "The train arrives!
 			[paragraph break]You see the single light of the locomotive as it comes around the bend while it is still a ways away. The track begins to hum and you hear the squeal of the wheels on the curve. There's a moment where it just kind of hangs there in space[if player is on the train tracks]. The engineer sees you standing on the tracks and blows the whistle LOUD and long! It very nearly scares the pee out of you. You leap off to safety, tripping on the rail![otherwise].[end if]
 			[paragraph break]The train is suddenly very close and moving very fast. You can feel hot air the train pushes ahead of it. The locomotive roars past you with a terrifying racket. Then car after car is swooshing past you, clanking and clattering.
@@ -3125,7 +3124,7 @@ To show train crossing:
 			now player is courageous;
 			queue_report "Though your close call with the train scared you, you also feel tremendously brave." at priority 1;
 			try silently getting off Train tracks;
-		now player is train-experienced;
+		now player is train_experienced;
 	else if location of player is Room_Top_of_the_Pine_Tree:
 		queue_report "The train is approaching the dirt road near the trailer park, passing almost directly beneath you. It sounds it's whistle for the crossing. Still loud, even up here! For a moment, you can see the whole train, end to end. It's going fast, and before you know it, the train is past the crossing, past the trailer park, and around the next bend and out of sight." at priority 2;
 		move distant-train to Limbo.
@@ -3668,11 +3667,15 @@ Instead of taking off tennis_shoes in Room_Swimming_Hole:
 	say "You take off your shoes and put them on the rocks.";
 	move tennis_shoes to location;
 
-Before going from Room_Swimming_Hole, put clothes back on.
+Instead of going from Room_Swimming_Hole:
+	put clothes back on;
+	continue the action.
 
-Instead of entering deep pool, try doing_some_swimming.
+Instead of entering deep pool:
+	try doing_some_swimming.
 
-Instead of jumping in Room_Swimming_Hole, try doing_some_swimming.
+Instead of jumping in Room_Swimming_Hole:
+ 	try doing_some_swimming.
 
 Deep pool has a number called swim attempts. Swim attempts is 0.
 
@@ -3681,7 +3684,7 @@ Instead of doing_some_swimming in Room_Swimming_Hole:
 	if swim attempts of deep pool is greater than 1:
 		say "[if clothes are worn]You look around again to see if you are alone[one of]. The path from the dirt road is deep forest and there is no one else at the swimming hole[or] and there is no one in sight[stopping]. So you carefully strip down to your skivvies, folding your clothes on the rocks. [run paragraph on][end if][one of][swimming_payoff][or]You leap in! Cold! But you get used to it, and it feels good. Actually, it feels great, as you swim around for a bit[or]You try diving like they taught you at the YWCA, but you're scared of conking your head. So your uncommitted dive turns into a belly flop[or]You make a huge splash[or]The water feels refreshing on this hot day[or]You dip in the cool water and swim about[stopping]. When you get out of the water, [one of]the warm air feels good on your skin[or]you dry quickly in the warm air[or]you stand in the cool shade, and you get a sudden chill[in random order].[paragraph break]";
 		now player is courageous;
-		now player is swim-experienced;
+		now player is swim_experienced;
 		drop_all_your_stuff;
 		make underwear wet;
 	else:
@@ -4072,7 +4075,7 @@ Instead of going to Room_Halfway_Up when player is in Room_Long_Stretch:
 		Now player is sappy;
 		Now player is persistent;
 		Now player is resourceful;
-		Now player is tree-experienced;
+		Now player is tree_experienced;
 		continue the action;
 
 Instead of climbing Doug_Fir2:
@@ -4175,7 +4178,7 @@ Instead of going to Room_Top_of_the_Pine_Tree when player is in Room_Halfway_Up:
 	else if treetop tries of player is 3:
 		say "This time you work your way around to the sunny side of the tree where the branches are a little bit thicker. You test each branch a little and keep a hold of another branch before committing your weight. In this way, you slowly make your way up to the top.";
 		Now player is courageous;
-		Now player is treetop-experienced;
+		Now player is treetop_experienced;
 	otherwise:
 		say "You slowly climb to the top of the tree, carefully avoiding weak or thin branches.";
 	continue the action.
@@ -4303,7 +4306,9 @@ Understand "D Loop" as Room_D_Loop.
 
 Section - Navigation
 
-The Room_D_Loop is west of Room_Picnic_Area.
+East from Room_D_Loop is Room_Picnic_Area.
+West from Room_D_Loop is Room_C_Loop.
+Inside and south from Room_D_Loop is Room_Sharons_Trailer.
 
 The available_exits are "You can go to the C Loop on the way to Honey and Grandpa's trailer. Or you can go back to the picnic area at the back of the trailer park."
 
@@ -4335,16 +4340,10 @@ Big old cars are backdrop in Room_D_Loop.
 
 Section - Rules and Actions
 
-Instead of going inside when player is in Room_B_Loop:
-	try room_navigating Room_Grandpas_Trailer.
+Instead of entering sharons_virtual_trailer:
+	try room_navigating Room_Sharons_Trailer.
 
-Instead of entering grandpas_virtual_trailer:
-	try room_navigating Room_Grandpas_Trailer.
-
-[Instead of object_navigating grandpas_virtual_trailer when player is in Room_B_Loop:
-	try room_navigating Room_Grandpas_Trailer.]
-
-Instead of inserting something into grandpas_virtual_trailer:
+Instead of inserting something into sharons_virtual_trailer:
 	say "You might want to just go in there."
 
 
@@ -4361,7 +4360,8 @@ Understand "catlady's/catladys/sharon's/sharons/shannon's/shannons/pink/-- trail
 
 Section - Navigation
 
-Room_Sharons_Trailer is south of Room_D_Loop.
+Outside from Room_Sharons_Trailer is Room_D_Loop.
+North from Room_Sharons_Trailer is Room_D_Loop.
 
 Section - Objects
 
@@ -4422,11 +4422,6 @@ The Mika figure can be palmed.
 
 Section - Rules and Actions
 
-Instead of exiting when player is in Room_Sharons_Trailer:
-	try room_navigating Room_D_Loop.
-Instead of going outside when player is in Room_Sharons_Trailer:
-	try room_navigating Room_D_Loop.
-
 Instead of drinking teacup:
 	if player does not hold teacup:
 		silently try taking teacup;
@@ -4458,10 +4453,11 @@ Instead of taking Mika:
 	otherwise:
 		continue the action;
 
-Before going north when player is in Room_Sharons_Trailer and (Mika has been palmed):
+Instead of going north when player is in Room_Sharons_Trailer and (Mika has been palmed):
 	say "You look at the Cat Lady[if Sharon is in Room_D_Loop] outside watering her plants[otherwise] who's not paying attention for one moment[end if] and[paragraph break]with your heart pounding in your throat, you pocket the little Mika figurine.";
 	Now player holds Mika;
 	Now player is courageous;
+	Continue the action.
 
 [Instead of doing anything except object_navigating or examining or taking or quizzing or informing or implicit-quizzing or implicit-informing Mika, say "Best to just keep that in your pocket for now."]
 
@@ -4474,7 +4470,7 @@ Instead of showing Mika to Sharon,
 Instead of giving Mika to Sharon:
 	Say "[one of]'Well, I'll be. You are an honest, sweet little child.' she says. 'That little black and white cat was given me by my Joseph, God rest his soul. But, dearie, I want you to have it now. It belongs with you.' There are tears in her eyes. She closes your fist around the figurine and pats your hand, 'And you keep that little kitty safe now, you hear?' A shiver seems to pass though the Cat Lady, and she says seriously, 'And yourself too.'[or]She shakes her head, no.[stopping]";
 	Now player is compassionate;
-	Now player is mika-experienced;
+	Now player is mika_experienced;
 
 
 
@@ -4492,7 +4488,9 @@ Understand "C Loop" as Room_C_Loop.
 
 Section - Navigation
 
-The Room_C_Loop is west of Room_D_Loop.
+East from Room_C_Loop is Room_D_Loop.
+West from Room_C_Loop is Room_B_Loop.
+Inside and south from Room_C_Loop is Room_Lees_Trailer.
 
 The available_exits are "You can go to B Loop where Honey and Grandpa's trailer is, or you can go back to D Loop."
 
@@ -4518,14 +4516,8 @@ Big old cars are backdrop in Room_C_Loop.
 
 Section - Rules and Actions
 
-Instead of going inside when player is in Room_C_Loop:
-	try room_navigating Room_Lees_Trailer.
-
 Instead of entering lees_virtual_trailer:
 	try room_navigating Room_Lees_Trailer.
-
-[Instead of object_navigating grandpas_virtual_trailer when player is in Room_B_Loop:
-	try room_navigating Room_Grandpas_Trailer.]
 
 Instead of inserting something into lees_virtual_trailer:
 	say "You might want to just go in there."
@@ -4533,28 +4525,37 @@ Instead of inserting something into lees_virtual_trailer:
 
 Chapter - Room_Lees_Trailer
 
+[TODO: Make sure the two seq work together going in and out of trailer (ie make sure Lee's not in two places at once), same with Sharon]
+
 Section - Description
+
+[TODO: Choose nearest location:
+>go to c loop
+C Loop
+>go to trailer
+Which do you mean, Cat Lady's Trailer or Lee's Trailer]
 
 Room_Lees_Trailer is a room.
 The printed name is "Lee's Trailer".
-The description is "Lee's trailer is empty. Or nearly so. [first time]It looks like he moved in yesterday, but you know he's been here for a long time. Where is his furniture?[only] There is a small table with some stuff on it and a single chair. A tiny black and white TV on a crate. And that's about it.".
+The description is "Lee's trailer is empty. Or nearly so. [first time]It looks like he moved in yesterday, but you know he's been here for a long time. Where is his furniture?[only] There is a small table with [if newspaper is on lees_table]a newspaper[else]some stuff[end if] on it and a single chair. A tiny black and white TV on a crate. And that's about it.".
 The scent is "Lee's cigarette smoke lingering in the air".
 The outside_view is "C Loop".
-Understand "Lee's/lees Trailer" as Room_Lees_Trailer.
+Understand "Lee's/lees/-- trailer/house/place/home" as Room_Lees_Trailer.
 
 Section - Navigation
 
-Room_Lees_Trailer is south of Room_C_Loop and inside from Room_C_Loop.
+Outside from Room_Lees_Trailer is Room_C_Loop.
+North from Room_Lees_Trailer is Room_C_Loop.
 
 Section - Objects
 
-The Lee's table is a undescribed fixed in place enterable sit-at-able supporter in Room_Lees_Trailer.
+The lees_table is a undescribed fixed in place enterable sit-at-able supporter in Room_Lees_Trailer.
 	The printed name is "table".
 	The indefinite article is "Lee's".
-	The description is "Like the rest of Lee's trailer, the table is mostly empty[if there is something on Lee's table]. On the table, there's [a list of things on Lee's table][end if].".
-	Understand "chairs", "chair" as Lee's table.
+	The description is "Like the rest of Lee's trailer, the table is mostly empty[if there is something on lees_table]. On the table, there's [a list of things on lees_table][end if].".
+	Understand "table/chairs/chair" as lees_table.
 
-A newspaper is floating undescribed thing on Lee's table.
+A newspaper is floating undescribed thing on lees_table.
 	The description is "[if newspaper is wet]The newspaper has gotten wet and is now unreadable[else if newspaper is stained]The newspaper is stained and is now unreadable[else]This is the local newspaper. Usually when grandpa reads the newspaper or Honey does the crossword, you ask for the comics[one of]. An article on the front page catches your eye[or]. Among the usual disasters, bombings, and boring politics, there is an article about the Viking lander to Mars[stopping][end if]."
 	Understand "news/newspaper/paper/journal" as newspaper.
 	The dry_time is 20.
@@ -4565,7 +4566,7 @@ An article is an undescribed part of the newspaper.
 	[paragraph break]You spend a few minutes thinking about being an explorer on the Martian surface, where you'd weigh less than half of what you do on Earth and would be able to jump high in the air like a superhero. If you could do that here, you would leap out of the trailer park, up into the top of the big pine tree.[end if]".
 	Understand "article/story/viking/lander/mars/comics/comic" as article.
 
-A coffee mug is an undescribed unopenable open container on Lee's table.
+A coffee mug is an undescribed unopenable open container on lees_table.
 	The indefinite article is "Lee's".
 	The description is "The mug has some kind of blue and yellow coat of arms on it, and says underneath in fancy letters 'Brave and True.'[run paragraph on] [if coffee mug is empty]There is nothing in Lee's coffee mug except gross.[end if][line break]".
 	Understand "mug/cup/glass", "coffee mug/cup" as coffee mug.
@@ -4578,19 +4579,19 @@ The lees_tv is an undescribed fixed in place device in Room_Lees_Trailer.
 	The indefinite article is "the".
 	Include (- with articles "The" "the" "a", -) when defining lees_tv.
 
+The purple_heart is a familiar thing in Limbo.
+	The printed name is "Purple Heart".
+	The description is "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like Geroge Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break][paragraph break][italic type]What will happen if your mom discovers this? You determine to hide the medal and not let her find out.[roman type][only].".
+	Understand "war/service/purple/-- medal/heart/ribbon" as purple_heart.
+	The indefinite article is "the".
+	Include (- with articles "The" "the" "a", -) when defining purple_heart.
+
 Section - Backdrops & Scenery
 
 Section - Rules and Actions
 
-Instead of exiting when player is in Room_Lees_Trailer:
-	try room_navigating Room_C_Loop.
-Instead of going outside when player is in Room_Lees_Trailer:
-	try room_navigating Room_C_Loop.
-
-After inserting newspaper into pail:
-	now newspaper is stained;
-	now article is off-stage;
-	continue the action;
+Instead of inserting newspaper into pail:
+	say "That's a good idea if you want to get berry stains all over it. You think better of it."
 
 Instead of taking coffee mug:
 	say "Your manners suggest that it is better to leave Lee's coffee cup alone.";
@@ -4600,6 +4601,17 @@ Instead of switching on lees_tv:
 		say "Lee is the only one who lets you watch TV whenever you want and even change the channels. You switch on Lee's little black and white set.";
 	continue the action;
 
+Instead of showing purple_heart to someone:
+	if second noun is not Lee:
+		say "You want to show the Purple Heart, but also want to keep the feeling to yourself. Plus, what if they make you give it back? You think better of it.";
+	else:
+		say lee_purple_heart_story;
+
+Instead of giving purple_heart to someone:
+	if second noun is not Lee:
+		say "What if they make you give it back? You think better of it.";
+	else:
+		say lee_purple_heart_story;
 
 
 
@@ -4617,7 +4629,8 @@ Understand "B Loop" as Room_B_Loop.
 
 Section - Navigation
 
-The Room_B_Loop is west of Room_C_Loop.
+East from Room_B_Loop is Room_C_Loop.
+Inside and south from Room_B_Loop is Room_Grandpas_Trailer.
 
 The available_exits are "You can go in to Honey and Grandpa's trailer of course. Or you can go back to C Loop and the train tracks behind the trailer park."
 
@@ -4640,14 +4653,8 @@ Big old cars are backdrop in Room_B_Loop.
 
 Section - Rules and Actions
 
-Instead of going inside when player is in Room_B_Loop:
-	try room_navigating Room_Grandpas_Trailer.
-
 Instead of entering grandpas_virtual_trailer:
 	try room_navigating Room_Grandpas_Trailer.
-
-[Instead of object_navigating grandpas_virtual_trailer when player is in Room_B_Loop:
-	try room_navigating Room_Grandpas_Trailer.]
 
 Instead of inserting something into grandpas_virtual_trailer:
 	say "You might want to just go in there."
@@ -4674,7 +4681,8 @@ Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas trailer" as Roo
 
 Section - Navigation
 
-Room_Grandpas_Trailer is south of Room_B_Loop.
+Outside from Room_Grandpas_Trailer is Room_B_Loop.
+North from Room_Grandpas_Trailer is Room_B_Loop.
 
 Section - Objects
 
@@ -4705,11 +4713,6 @@ The carpet is a lie-able surface in Room_Grandpas_Trailer.
 	Understand "rug", "floor" as carpet.
 
 Section - Rules and Actions
-
-Instead of exiting when player is in Room_Grandpas_Trailer:
-	try room_navigating Room_B_Loop.
-Instead of going outside when player is in Room_Grandpas_Trailer:
-	try room_navigating Room_B_Loop.
 
 Does the player mean doing anything to pot_of_blackberry_jam: it is likely.
 
@@ -5001,14 +5004,16 @@ Room_Forest_Meadow can be observed.
 Section - Navigation
 
 East from Room_Forest_Meadow is Room_Protected_Hollow.
-South from Room_Forest_Meadow is nowhere.
-West from Room_Forest_Meadow is nowhere.
-Up from Room_Forest_Meadow is nowhere.
+
 [Later when Scene_Day_Two is happening:
 	Up from Room_Forest_Meadow is Room_Sentinel_Tree.]
+Up from Room_Forest_Meadow is nowhere.
+
 [After player has visited Sentinel_Tree:
 	West of Room_Forest_Meadow is Room_Dappled_Forest_Path;
 	South of Room_Forest_Meadow is Room_Dark_Woods_North.]
+West from Room_Forest_Meadow is nowhere.
+South from Room_Forest_Meadow is nowhere.
 
 The available_exits of Room_Forest_Meadow are "[if Scene_Day_Two has not happened][meadow_exit_day1][else if Scene_Orienteering has not ended][meadow_exit_day2_before_orient][else][meadow_exit_day2_after_orient][end if]."
 
@@ -5084,7 +5089,8 @@ Room_Protected_Hollow can be made_cozy.
 
 Section - Navigation
 
-Room_Protected_Hollow is east of Room_Forest_Meadow.
+Outside from Room_Protected_Hollow is Room_Forest_Meadow.
+West from Room_Protected_Hollow is Room_Forest_Meadow.
 
 The available_exits of Room_Protected_Hollow are "You can climb back out and go back to the forest meadow."
 
@@ -5119,15 +5125,6 @@ Instead of going to Room_Forest_Meadow when player is in Room_Protected_Hollow a
 	say "You shake off the pile of leaves and crawl out of your nest.";
 	now Room_Protected_Hollow is not made_cozy;
 	continue the action.
-
-Instead of exiting when player is in Room_Protected_Hollow and player is not on supporter:
-	Try room_navigating Room_Forest_Meadow.
-
-Instead of going outside when player is in Room_Protected_Hollow:
-	try room_navigating Room_Forest_Meadow.
-
-Instead of climbing out when player is in Room_Protected_Hollow,
-	try room_navigating Room_Forest_Meadow.
 
 Instead of listening when player is in Room_Protected_Hollow and Scene_Night_In_The_Woods is happening:
 	if raccoons are in Room_Forest_Meadow:
@@ -5211,7 +5208,7 @@ Understand "Car With Mom" as Room_Car_With_Mom.
 
 Section - Navigation
 
-Room_Drive_In is east of Room_Car_With_Mom
+Outside from Room_Car_With_Mom is Room_Drive_In.
 
 Section - Objects
 
@@ -5236,15 +5233,6 @@ Understand "Camaro/car/seats/dash/dashboard" as Camaro.
 
 Section - Rules and Actions
 
-Instead of exiting when player is in Room_Car_With_Mom and player is not on supporter:
-	Try room_navigating Room_Drive_In.
-
-Instead of going outside when player is in Room_Car_With_Mom:
-	try room_navigating Room_Drive_In.
-
-Instead of climbing out when player is in Room_Car_With_Mom,
-	try room_navigating Room_Drive_In.
-
 [keep player here until they finish their convo with mom]
 Instead of going to Room_Drive_In when mom_free_to_go is not true:
 	say "You can't bring yourself to leave yet. There is something important here."
@@ -5264,7 +5252,7 @@ Understand "drive-in/lot", "drive in", "parking lot" as Room_Drive_In.
 Section - Navigation
 
 East of Room_Drive_In is Room_Snack_Bar.
-West of Room_Drive_In is Room_Camaro_With_Stepdad.
+Inside from Room_Drive_In is Room_Camaro_With_Stepdad.
 
 The available_exits of Room_Drive_In are "You can get back in the car or head to the snack bar from which waves of popcorn smell are emerging."
 
@@ -5340,7 +5328,9 @@ Understand "snack bar", "snackbar", "snack-bar", "snack shack" as Room_Snack_Bar
 
 Section - Navigation
 
-Room_Snack_Bar is east of Room_Drive_In.
+West of Room_Snack_Bar is Room_Drive_In.
+Outside of Room_Snack_Bar is Room_Drive_In.
+East of Room_Snack_Bar is Room_Restroom.
 
 The available_exits of Room_Snack_Bar are "The door to the restroom is down at the end, or you can go back to the car."
 
@@ -5382,9 +5372,6 @@ Understand "candy/counter/case", "milk duds" as candy_selection.
 Section - Rules and Actions
 
 Test snacks with "teleport to car with mom / go to snack bar / go to snack bar".
-
-Instead of exiting when player is in Room_Snack_Bar,
-	try room_navigating Room_Drive_In.
 
 [Popcorn]
 
@@ -5468,7 +5455,8 @@ Understand "restroom/bathroom/toilet/potty", "bath/rest room" as Room_Restroom.
 
 Section - Navigation
 
-Room_Restroom is east of Room_Snack_Bar.
+West of Room_Restroom is Room_Snack_Bar.
+Outside of Room_Restroom is Room_Snack_Bar.
 
 The available_exits of Room_Restroom are "The only door out goes back to the snack bar."
 
@@ -5478,8 +5466,6 @@ Section - Backdrops and Scenery
 
 Section - Rules and Actions
 
-Instead of exiting when player is in Room_Restroom,
-	try room_navigating Room_Snack_Bar.
 
 
 Chapter - Room_Camaro_With_Stepdad
@@ -5495,8 +5481,7 @@ Understand "Camaro/car" as Room_Camaro_With_Stepdad.
 
 Section - Navigation
 
-East of Room_Camaro_With_Stepdad is Room_Dream_Grassy_Field.
-West of Room_Camaro_With_Stepdad is nowhere.
+Outside from Room_Camaro_With_Stepdad is Room_Dream_Grassy_Field.
 
 Section - Objects
 
@@ -5529,15 +5514,6 @@ Instead of doing anything except examining to cigarette lighter:
 	say "No way. Touching that is a good way to lose a hand."
 
 Instead of jumping when player is in Room_Camaro_With_Stepdad:
-	try room_navigating Room_Dream_Grassy_Field.
-
-Instead of exiting when player is in Room_Camaro_With_Stepdad and player is not on supporter:
-	Try room_navigating Room_Dream_Grassy_Field.
-
-Instead of going outside when player is in Room_Camaro_With_Stepdad:
-	try room_navigating Room_Dream_Grassy_Field.
-
-Instead of climbing out when player is in Room_Camaro_With_Stepdad,
 	try room_navigating Room_Dream_Grassy_Field.
 
 Instead of going to Room_Dream_Grassy_Field when player is in Room_Camaro_With_Stepdad:
@@ -5894,14 +5870,14 @@ Yourself can be compassionate.
 Yourself can be violent.
 The player is not perceptive, not courageous, not confident, not resourceful, not affectionate, not persistent, not compassionate, not violent.
 
-Yourself can be train-experienced. Player is not train-experienced.
-Yourself can be dog-experienced. Player is not dog-experienced.
-Yourself can be swim-experienced. Player is not swim-experienced.
-Yourself can be tree-experienced. Player is not tree-experienced.
-Yourself can be treetop-experienced. Player is not treetop-experienced.
-Yourself can be mika-experienced. Player is not mika-experienced.
-Yourself can be lee-experienced. Player is not lee-experienced.
-Yourself can be Sharon-experienced. Player is not Sharon-experienced.
+Yourself can be train_experienced. Player is not train_experienced.
+Yourself can be dog_experienced. Player is not dog_experienced.
+Yourself can be swim_experienced. Player is not swim_experienced.
+Yourself can be tree_experienced. Player is not tree_experienced.
+Yourself can be treetop_experienced. Player is not treetop_experienced.
+Yourself can be mika_experienced. Player is not mika_experienced.
+Yourself can be lee_experienced. Player is not lee_experienced.
+Yourself can be Sharon_experienced. Player is not Sharon_experienced.
 
 The player has a number called persistence count. Persistence count is 0.
 The player has a number called Pine Tree Tries. Pine Tree Tries is 0.
@@ -6108,17 +6084,18 @@ To say honey_initial_description:
 Player has a number called attempts_to_leave.
 	Attempts_to_leave is zero.
 
-Before going down when player is in Room_Grassy_Clearing during Scene_Picking_Berries:
-	say "[one of]Honey looks up, as you go by[or]Honey notices as you go past[or]Honey catches your eye and give you a Meaningful Look as you pass[or]Honey looks up as you go by and you catch a flicker of annoyance[as decreasingly likely outcomes].".
+Instead of going down when player is in Room_Grassy_Clearing:
+	if Scene_Picking_Berries is happening:
+		say "[one of]Honey looks up, as you go by[or]Honey notices as you go past[or]Honey catches your eye and give you a Meaningful Look as you pass[or]Honey looks up as you go by and you catch a flicker of annoyance[as decreasingly likely outcomes].";
+	else if Scene_Explorations is happening:
+		say "Honey looks up and says, '[one of]Have fun, but don't wander too far[or]Stay where you can hear me call[or]Don't go too far[cycling].'";
+	continue the action;
 
 Instead of going down when player is in Room_Blackberry_Tangle during Scene_Picking_Berries:
 	Increase attempts_to_leave of Player by 1;
 	say "[one of]Ever vigilant[or]Again[or]Once again[or]Of course[stopping], Honey looks down the trail and sees you [one of]wandering[or]leaving[or]exploring[at random]. [one of]'Hey, why don't you stay here with us? Don't you want to help your Honey and grandpa? One more pail, okay?'[run paragraph on][or]'Hey Ants-In-The-Pants, are you getting bored? Why don't you come pick some more berries?'[run paragraph on][or]'I want you to pick one more pail before you go exploring.'[run paragraph on][or]'Uh. What did I tell you?'[run paragraph on][or]She gives you A Look.[run paragraph on][stopping] You reluctantly head back to the clearing.";
 	Move player to Room_Grassy_Clearing with little fuss;
 	now player is warned_by_grandma;
-
-Before going down when player is in Room_Grassy_Clearing during Scene_Explorations:
-	say "Honey looks up and says, '[one of]Have fun, but don't wander too far[or]Stay where you can hear me call[or]Don't go too far[cycling].'"
 
 Chapter - Responses
 
@@ -6151,11 +6128,11 @@ To say Honey stuff:
 
 Default tell response for Honey:
 	if the second noun is not nothing:
-		say "'That's great, [honeys_nickname]. [Honey's berry urging]' Honey goes back to picking.[line break][line break]";
+		say "'That's great, [honeys_nickname]. [Honeys_berry_urging]' Honey goes back to picking.[line break][line break]";
 	else:
-		say "She looks a little irritated. 'Okay. [Honey's berry urging]'[line break][line break]";
+		say "She looks a little irritated. 'Okay. [Honeys_berry_urging]'[line break][line break]";
 
-To say Honey's berry urging:
+To say Honeys_berry_urging:
 	say "[one of]You gonna pick any more berries[or]You done picking blackberries[or]Are you going to help your Honey and Grandpa[at random]?[run paragraph on]";
 
 Default ask response for Honey:
@@ -6236,7 +6213,7 @@ Response of Honey when asked-or-told about topic_trailer:
 Response of Honey when asked about train tracks:
 	say "'Don't you let me catch you playing anywhere near those tracks, or I'll paddle your bottom,' Honey says.".
 Response of Honey when told about train tracks:
-	if player is not train-experienced:
+	if player is not train_experienced:
 		say "'Don't you let me catch you playing anywhere near those tracks, or I'll paddle your bottom,' Honey says.";
 	else:
 		say Honey's train response;
@@ -6473,7 +6450,10 @@ Chapter - Responses
 ]
 
 Greeting response for Grandpa:
-	say "[grandpa's greeting].";
+	say "[grandpas_greeting].";
+
+To say grandpas_greeting:
+	say "'[one of]Well[or]Hey[or]Hm[as decreasingly likely outcomes] [grandpas_salutation], [grandpas_nickname],' Grandpa says[if a random chance of 1 in 2 succeeds] and [grandpa_stuff][end if]";
 
 Implicit greeting response for Grandpa:
 	do nothing;
@@ -6483,9 +6463,6 @@ Farewell response for Grandpa:
 
 Implicit farewell response for Grandpa:
 	do nothing;
-
-To say grandpa's greeting:
-	say "'[one of]Well[or]Hey[or]Hm[as decreasingly likely outcomes] [grandpas_salutation], [grandpas_nickname],' Grandpa says[if a random chance of 1 in 2 succeeds] and [grandpa_stuff][end if]";
 
 [Do we want to have Jody name in here, or is it better if the PC is a blank slate for the player to project onto?]
 To say grandpas_nickname:
@@ -6584,6 +6561,8 @@ Response of Grandpa when asked-or-told about topic_berries:
 [Response of Grandpa when asked about backdrop_berries or told about backdrop_berries:]
 	say "'How you doing, [grandpas_nickname]?' Grandpa [grandpa_stuff]. 'You helping your Honey and grandpa make blackberry jam?'".
 
+[TODO: Grandpa doesn't respond here]
+
 Response of Grandpa when asked-or-told about bucket:
 	say "[if Scene_Bringing_Lunch has not happened]'That's our berry pickin' bucket, [grandpas_nickname]. Soon as we get that filled up I'm gonna take it up to your Aunt Mary,' Grandpa says. 'You going to help me?'[else if Scene_Bringing_Lunch is happening]'Got to take this up to Mary, so she can turn this into jam,' Grandpa says. 'You gonna help your old grandpa get this up to the house?'[else]'I gotta get this down to your Honey before she needs to dump her pail,' Grandpa says. 'You wanna walk with me?'[end if]".
 
@@ -6608,7 +6587,7 @@ Response of Grandpa when asked about train tracks:
 	say "'You be careful around those train tracks, a train could roll right over you and not even blink,' Grandpa says.".
 
 Response of Grandpa when told about train tracks:
-	if player is not train-experienced:
+	if player is not train_experienced:
 		say "'Yeah? The one that runs by the trailer park? You can hear it going by if you listen,' Grandpa says. 'Maybe later we can put pennies on the track again.'";
 	else:
 		say Grandpa's train response;
@@ -6777,7 +6756,6 @@ This is the seq_grandpa_in_trailer_handler rule:
 	else if index is 4:
 		queue_report "'I better hustle back,' Grandpa says, 'before Ellie needs the bucket.' Grandpa turns to you on his way out, 'See you down there, [grandpas_nickname].' Grandpa squeezes your shoulder and heads out the door." at priority 2;
 		now grandpa is in Room_Grassy_Clearing;
-		increase the time of day by ten minutes;
 
 This is the seq_grandpa_in_trailer_interrupt_test rule:
 	if index of seq_grandpa_in_trailer is 0 and turns_so_far of seq_grandpa_in_trailer is 1 and grandpa is not visible, rule succeeds;
@@ -6914,7 +6892,7 @@ At the time when Sharon tends garden:
 		Sharon tends garden in 15 minutes from now;
 	Otherwise:
 		if Sharon is visible:
-			queue_report "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'Well, [Cat Lady's nickname], I have to go water the garden.' [run paragraph on]" at priority 3;
+			queue_report "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharon_nickname], I have to go water the garden.' [run paragraph on]" at priority 3;
 		Move Sharon out of her trailer;
 		Now Sharon is tending-garden;
 		if Sharon is visible:
@@ -6935,7 +6913,7 @@ At the time when Sharon watches TV:
 		Sharon watches TV in 15 minutes from now;
 	Otherwise:
 		if Sharon is visible:
-			queue_report "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'Well, [Cat Lady's nickname], my favorite show is on. You can join me if you want.' [run paragraph on]" at priority 3;
+			queue_report "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharon_nickname], my favorite show is on. You can join me if you want.' [run paragraph on]" at priority 3;
 		Move Sharon into her trailer;
 		Now Sharon is watching-tv;
 		if Sharon is visible:
@@ -6947,11 +6925,11 @@ At the time when Sharon feeds cats:
 		stop;
 	if Sharon is ready-for-tea-time:
 		if Sharon is visible:
-			queue_report "The Cat Lady [Cat Lady stuff] and says, 'The little dearies are hungry, but we're having so much fun, aren't we?'" at priority 3;
+			queue_report "The Cat Lady [sharon_stuff] and says, 'The little dearies are hungry, but we're having so much fun, aren't we?'" at priority 3;
 		Sharon feeds cats in 15 minutes from now;
 	Otherwise:
 		if Sharon is visible:
-			queue_report "The Cat Lady [Cat Lady stuff] and says, 'Well, [Cat Lady's nickname], I have to go feed the kitties.' [run paragraph on]" at priority 3;
+			queue_report "The Cat Lady [sharon_stuff] and says, 'Well, [sharon_nickname], I have to go feed the kitties.' [run paragraph on]" at priority 3;
 		Move Sharon into her trailer;
 		Now Sharon is feeding-cats;
 		if Sharon is visible:
@@ -6969,7 +6947,7 @@ To move Sharon into her trailer:
 	if player is in Room_D_Loop:
 		queue_report "She goes into her trailer, going slowly up the steps. The tabby cat licks its paw and, after a bit, follows through the cat door." at priority 3;
 	otherwise if player is in Room_Sharons_Trailer:
-		queue_report "The Cat Lady comes into the trailer and sees you, 'Hi, [Cat Lady's nickname].' The tabby cat follows through the cat door." at priority 3;
+		queue_report "The Cat Lady comes into the trailer and sees you, 'Hi, [sharon_nickname].' The tabby cat follows through the cat door." at priority 3;
 	Now Sharon is in Room_Sharons_Trailer;
 	Now yellow tabby is in Room_Sharons_Trailer;
 
@@ -6980,21 +6958,21 @@ Chapter - Responses
 ]
 
 Greeting response for Sharon:
-	say "'Oh [one of]hello[or]hello again[stopping], [Cat Lady's nickname],' the Cat Lady says[if a random chance of 1 in 3 succeeds] who [Cat Lady stuff][end if].";
+	say "[one of]'Oh, hello, [sharon_nickname],' the Cat Lady says, 'So good to see you. Out for an adventure today?'[or]'Oh, hi again, [sharon_nickname]. Will you spend a few minutes talking to your old neighbor?' the Cat Lady says[if a random chance of 1 in 3 succeeds] who [sharon_stuff][end if].[stopping]";
 
 Implicit greeting response for Sharon:
 	do nothing;
 
 Farewell response for Sharon:
-	say "'Goodbye now, [Cat Lady's nickname],' the Cat Lady says.";
+	say "'Goodbye now, [sharon_nickname],' the Cat Lady says.";
 
 Implicit farewell response for Sharon:
 	do nothing.
 
-To say Cat Lady's nickname:
+To say sharon_nickname:
 	say "[one of]dear[or]dearie[or]sweetheart[or]honey[at random]";
 
-To say Cat Lady stuff:
+To say sharon_stuff:
 		say "[one of]carelessly ruffles the fur of a cat you'd be scared to get near[or]pats the yellow tabby on the head so heavily you can see it squash down like a shock absorber[or]gently removes a kitten trying to climb her like a tree[or]picks off clumps of cat hair that have settled on you[at random]";
 
 [
@@ -7002,16 +6980,16 @@ To say Cat Lady stuff:
 ]
 
 Default give-show response for Sharon:
-	say "'Thanks, dearie, not sure I'd know what to do with it,' says the Cat Lady[if a random chance of 1 in 3 succeeds] as she [Cat Lady stuff][end if].";
+	say "'Thanks, dearie, not sure I'd know what to do with it,' says the Cat Lady[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
 
 Default response for Sharon:
-	say "'Oh yes, [Cat Lady's nickname], of course,' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [Cat Lady stuff][end if].";
+	say "'Oh yes, [sharon_nickname], of course,' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
 
 Default ask response for Sharon:
-	say "'Well, I don't know, [Cat Lady's nickname],' the Cat Lady says.";
+	say "'Well, I don't know, [sharon_nickname],' the Cat Lady says.";
 
 Default tell response for Sharon:
-	say "'[one of]Oh yes, [Cat Lady's nickname], I can see it now![run paragraph on][or]How delightful![run paragraph on][or]Oh please tell me more, [Cat Lady's nickname],[or]You don't say? That's great![run paragraph on][or]Have you talked to your grandpa about that?[run paragraph on][or]You must be thrilled, [Cat Lady's nickname],[at random]' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [Cat Lady stuff][end if].";
+	say "'[one of]Oh yes, [sharon_nickname], I can see it now![run paragraph on][or]How delightful![run paragraph on][or]Oh please tell me more, [sharon_nickname],[or]You don't say? That's great![run paragraph on][or]Have you talked to your grandpa about that?[run paragraph on][or]You must be thrilled, [sharon_nickname],[at random]' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
 
 Default yes-no response for Sharon:
 	if saying yes:
@@ -7028,7 +7006,7 @@ Instead of touching Sharon:
 ]
 
 Response of Sharon when asked-or-told about player:
-	say "'Well [Cat Lady's nickname], you are the sweetest child and my very favorite neighbor,' the Cat Lady says patting you on the head affectionately.".
+	say "'Well [sharon_nickname], you are the sweetest child and my very favorite neighbor,' the Cat Lady says patting you on the head affectionately.".
 
 Response of Sharon when asked-or-told about Grandpa:
 	say "'Your grandfather is such a nice man,' the Cat Lady says. 'Just the other day, he helped me get Zoey out of the neighbor's tree[if grandpa is visible].' She smiles at your Grandpa and puts her hand on his arm.[else].'[end if]".
@@ -7040,28 +7018,28 @@ Response of Sharon when asked-or-told about Aunt Mary:
 	say "'Oh, Mary,' she claps her hands together, 'such a dear heart. I love her cooking and her preserves.'".
 
 Response of Sharon when asked-or-told about Sharon:
-	say "'Oh, [Cat Lady's nickname], I've nothing really to say about myself,' the Cat Lady says.".
+	say "'Oh, [sharon_nickname], I've nothing really to say about myself,' the Cat Lady says.".
 
 Response of Sharon when asked-or-told about Sheriff:
 	say "'Oh, Bill's a nice man. He checks on me at least once a week,' the Cat Lady says[if sheriff is visible] smiling at the Sheriff[end if].".
 
 Response of Sharon when asked-or-told about Mom:
-	say "'Your mom, [Cat Lady's nickname], you better treat her like an angel, because she is. You know she came and brought me soup when I had pneumonia? And went to the store and got me medicines.".
+	say "'Your mom, [sharon_nickname], you better treat her like an angel, because she is. You know she came and brought me soup when I had pneumonia? And went to the store and got me medicines.".
 
 Response of Sharon when asked-or-told about Dad:
-	say "'I didn't know your dad, [Cat Lady's nickname], but I heard he was a very charming man,' the Cat Lady says.".
+	say "'I didn't know your dad, [sharon_nickname], but I heard he was a very charming man,' the Cat Lady says.".
 
 Response of Sharon when asked-or-told about topic_jam:
 	say "'I love your grandmother's preserves,' says the Cat Lady.";
 
 Response of Sharon when asked-or-told about topic_trailer:
-	say "'I've lived here for 20 years, [Cat Lady's Nickname]. I've seen people come and go,' says the Cat Lady.";
+	say "'I've lived here for 20 years, [sharon_nickname]. I've seen people come and go,' says the Cat Lady.";
 
 Response of Sharon when asked-or-told about dog:
 	say "Oh dogs, they absolutely terrorize my babies. Just the other day, several of my kitties had to defend their very lives from a ferocious doggy that someone brought in to the park on a leash. It served that bad dog right and he had to be taken to the vet.";
 
 Response of Sharon when asked-or-told about topic_tea:
-	say "'Oh, I dearly love tea time, don't you, [Cat Lady's Nickname]?' the Cat Lady asks.";
+	say "'Oh, I dearly love tea time, don't you, [sharon_nickname]?' the Cat Lady asks.";
 
 Response of Sharon when asked for topic_tea [or implicit-asked for tea]:
 	if Scene_Tea_Time is happening:
@@ -7080,7 +7058,7 @@ Response of Sharon when asked-or-told about mika:
 	I'm just going to leave this as an instead rule for now, since it is well-tested.]
 
 Response of Sharon when asked about topic_work:
-	say "'My job, [Cat Lady's Nickname], is taking care of all my babies,' the Cat Lady says.";
+	say "'My job, [sharon_nickname], is taking care of all my babies,' the Cat Lady says.";
 
 Response of Sharon when asked about topic_love or asked about Joseph or asked about topic_family:
 	say "The Cat Lady looks wistful for a moment, 'When my Joseph was alive...' and she just kind of drifts off and doesn't finish.";
@@ -7111,7 +7089,7 @@ sharon_stepdad_rant is a rant.
 
 Table of sharon_stepdad_rant
 Quote
-"'Well, your mom just got married and we all wished her the best of luck,' the Cat Lady says, 'It hasn't always been easy for her.' And in spite of himself, that man really does love your mom.[paragraph break]She looks off into the distance and gets a funny look on her face, 'I see it will be very tough for a while as well.'[paragraph break][sharon-stepdad premonition][paragraph break]You almost start to cry, but hold it in."
+"'Well, your mom just got married and we all wished her the best of luck,' the Cat Lady says, 'It hasn't always been easy for her.' And in spite of himself, that man really does love your mom.[paragraph break]She looks off into the distance and gets a funny look on her face, 'I see it will be very tough for a while as well.'[paragraph break][Sharon_Stepdad_Premonition][paragraph break]You almost start to cry, but hold it in."
 "'Don't worry about that,' the Cat Lady says, 'Your mom is an [italic type]angel[roman type]. I've never seen a mother who loved her child more than her.'"
 
 Response of Sharon when asked-or-told about topic_cat:
@@ -7142,16 +7120,16 @@ This is the seq_sharon_invite_handler rule:
 	let index be index of seq_sharon_invite;
 	if Sharon is visible:
 		now current interlocutor is Sharon;
-	if index is 1:
-		if player is in Room_D_Loop and Sharon is visible:
-			queue_report "[one of]'Oh, hello, [Cat Lady's Nickname],' the Cat Lady says, 'So good to see you. Out for an adventure today?'[or]'Oh, hi again, [Cat Lady's Nickname]. Will you spend a few minutes talking to your old neighbor?' the Cat Lady says.[stopping]" at priority 2;
-	else if index is 2:
-		if player is in Room_D_Loop and Sharon is visible:
-			queue_report "'Won't you come in for a moment?' the Cat Lady gestures at her trailer, 'I just love guests. And I do so enjoy talking to you.'" at priority 2;
+	if index is 2:
+		queue_report "'Won't you come in for a moment?' the Cat Lady gestures at her trailer, 'I just love guests. And I do so enjoy talking to you.'" at priority 2;
 
 This is the seq_sharon_invite_interrupt_test rule:
-	if we are speaking to sharon, rule succeeds;
-	if Scene_Sheriffs_Drive_By is happening, rule succeeds;
+	if player is not in Room_D_Loop or Sharon is not visible:
+		rule succeeds;
+	if we are speaking to sharon:
+		rule succeeds;
+	if Scene_Sheriffs_Drive_By is happening:
+		rule succeeds;
 	rule fails.
 
 [
@@ -7174,20 +7152,20 @@ This is the seq_sharon_teatime_handler rule:
 		queue_report "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest." at priority 2;
 	else if index is 2:
 		if sharon is visible:
-			queue_report "'[if player is not on Cat Lady's kitchen table]Oh, [Cat Lady's Nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things." at priority 2;
-			do sharon teatime premonition;
+			queue_report "'[if player is not on Cat Lady's kitchen table]Oh, [sharon_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things." at priority 2;
+			do Sharon_Teatime_Premonition;
 	else if index is 3:
 		if sharon is visible:
-			queue_report "'[if player is not on Cat Lady's kitchen table]Please, [Cat Lady's Nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [Cat Lady's Nickname]. What adventures have you had since we talked last?'" at priority 2;
+			queue_report "'[if player is not on Cat Lady's kitchen table]Please, [sharon_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharon_nickname]. What adventures have you had since we talked last?'" at priority 2;
 	else if index is 4:
 		if sharon is visible:
 			if player is not on Cat Lady's kitchen table:
 				queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3;
 				silently try entering the Cat Lady's kitchen table;
-			queue_report "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [Cat Lady's Nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard." at priority 2;
+			queue_report "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharon_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard." at priority 2;
 			now your teacup is filled;
 			Now player is confident;
-			Now player is sharon-experienced;
+			Now player is sharon_experienced;
 	else if index is 5:
 		if turns_so_far of seq_sharon_teatime is less than 40 and player is on Cat Lady's kitchen table:
 			decrease index of seq_sharon_teatime by one;
@@ -7200,7 +7178,7 @@ This is the seq_sharon_teatime_handler rule:
 			now index is 6;
 	if index is 6:
 		if sharon is visible:
-			queue_report "'Oh [Cat Lady's Nickname], it's been so nice talking to you. I can see you have to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you." at priority 2;
+			queue_report "'Oh [sharon_nickname], it's been so nice talking to you. I can see you have to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you." at priority 2;
 		if player holds your teacup:
 			queue_report "You return your teacup to the table." at priority 1;
 			now your teacup is on the Cat Lady's kitchen table;
@@ -7224,7 +7202,10 @@ To refill the teacups:
 
 Part - Lee
 
-[TODO: Consider having Lee sympathize with American Indians or even have native roots]
+[TODO:
+"Hey, Jody," Lee says, "How you doin'?".
+>talk to lee
+You are already talking to Lee]
 
 Lee is a _male man in Room_C_Loop.
 	The initial appearance is "Lee is [if Lee is in Room_C_Loop]sitting on a lawn chair in his empty carport, chain smoking[else if Lee is in Room_Lees_Trailer and lees_tv is switched on]watching TV[else]here[end if]. [first time][description of lee][only]".
@@ -7236,11 +7217,30 @@ Chapter - Properties
 
 Chapter - Rules and Actions
 
-To say Lee's Nickname:
-	say "Jody";
+Instead of touching Lee:
+	say "You're not sure at all if it's the right thing to do or whether you're sure you even want to, but you do, and Lee gives you a pat on the back and you can see his eyes have kind of teared up and he turns away to wipe them.";
+	Now player is affectionate.
 
-To say Lee stuff:
-	say "[one of]looking awkward[or]watching you[or]hanging out[at random]";
+At the time when lee_resumes_smoking:
+	if lee is not in Room_C_Loop:
+		move_lee_out_of_his_trailer;
+
+To move_lee_into_his_trailer:
+	now Lee is in Room_Lees_Trailer;
+	if player is in Room_Lees_Trailer:
+		queue_report "Lee comes in stubbing out his cigarette in an ashtray and says, 'Hey, Jody.'" at priority 3;
+	else:
+		queue_report "Lee gives you a wave and heads inside his trailer." at priority 3;
+
+To move_lee_out_of_his_trailer:
+	now Lee is on the lawn chair;
+	if player is in Room_Lees_Trailer:
+		queue_report "Lee gives you a wave and heads out the door, grabbing a pack of smokes on the way outside." at priority 3;
+	else:
+		if Lee is visible:
+			queue_report "Lee comes out of his trailer, gives you a nod, sits down in his chair, and lights up a smoke." at priority 3;
+
+[TODO: Every turn when Lee is not talking, do Lee stuff, smoke cigarette, etc ]
 
 Chapter - Responses
 
@@ -7249,7 +7249,7 @@ Chapter - Responses
 ]
 
 Greeting response for Lee:
-	say "'[one of]Hello[or]Hello again[stopping], [Lee's Nickname],' Lee says.";
+	say "[one of]'Hey, Jody,' Lee says, 'How you doin[']?'.[or]'Hi again, Jody,' Lee says.[stopping]";
 
 Implicit greeting response for Lee:
 	do nothing;
@@ -7259,6 +7259,12 @@ Farewell response for Lee:
 
 Implicit farewell response for Lee:
 	do nothing.
+
+To say Lee's Nickname:
+	say "Jody";
+
+To say Lee stuff:
+	say "[one of]looking awkward[or]watching you[or]hanging out[at random]";
 
 [
 	Defaults
@@ -7271,7 +7277,7 @@ Default show response for Lee:
 	say "'Hey, that's cool,' Lee says.";
 
 Default response for Lee:
-	say "'Hmm, yeah cool.";
+	say "'Hmm, yeah cool,' Lee says.";
 
 Default ask response for Lee:
 	say "'Well, like a lot of things, I don't know the answer to that[one of][or] either[stopping], [Lee's nickname],' Lee says.";
@@ -7284,10 +7290,6 @@ Response of Lee when saying no:
 
 Response of Lee when saying sorry:
 	say "'Ah no, don't be sorry,' Lee says, 'I'm sorry. I'm the one who should be sorry.'";
-
-Instead of touching Lee:
-	say "You're not sure at all if it's the right thing to do or whether you're sure you even want to, but you do, and Lee gives you a pat on the back and you can see his eyes have kind of teared up and he turns away to wipe them.";
-	Now player is affectionate.
 
 [
 	Responses
@@ -7324,6 +7326,9 @@ Response of Lee when asked-or-told about Dad:
 Response of Lee when asked-or-told about stepdad:
 	say "'I don't know your step-dad, man,' Lee says, 'I heard him yelling at your mom once, but I'm in no position to criticize.'".
 
+Response of Lee when asked-or-told about topic_tree:
+	say "'I must have spent half my time up in the treetops when I was a kid,' Lee says. 'Fell out of some too. I even built a treehouse deep in the woods. Not much to look at, but it was a great hideout. I made friends with squirrels and birds. I liked to think I was part of the Squirrel clan.' Lee takes a drag from his cigarette.[if player is tree_experienced] 'I guess you might be part of that clan too.'[end if]".
+
 Response of Lee when asked-or-told about topic_jam or topic_berries:
 	say "'You know, I grew up around here. Guess that's why I came back here,' Lee says mostly to himself. 'I used to pick blackberries in August too. Me and my brother used to pick berries and eat every single one until our tongues and our fingers were purple and our bellies were sore.'".
 
@@ -7348,47 +7353,22 @@ Response of Lee when asked about topic_love:
 Response of Lee when asked-or-told about topic_family:
 	say "'Ah, my family. Yeah, I don't talk to [']em much anymore. My mom. My dad. My brother,' Lee says, 'My mom grew up in Pine Ridge. That's a genuine Indian rez, man.'[paragraph break]'Did you know I was married? Might even still be. When I came back, she couldn't take it and split.' Lee lights another cigarette. 'I guess good for her. Get out while the gettin's good.'".
 
-Response of Lee when asked-or-told about metal cube:
-	if player has held metal cube:
-		say "'It was nothing,' Lee says, 'Don't even mention it.' Though you can tell he's pleased to be able to give you the gift.";
+Response of Lee when asked-or-told about purple_heart:
+	if purple_heart is not in Limbo:
+		say lee_purple_heart_story;
 	else:
 		continue the action;
 
-Before going from Room_Lees_Trailer during Scene_Hangout_With_Lee:
+To say lee_purple_heart_story:
+	say "'It was nothing,' Lee says, though you can tell he's pleased to be able to give you the gift. 'You hold on to that. That's for your courage and endurance.'[paragraph break]'You know, they gave me that when I got hurt in the war,' Lee says, 'I wasn't even shot. I just crashed a jeep,' Lee laughs. 'I was a driver at the base in Da Nang and there was a rocket attack. A fuel tank went up and I turned to look. Hit a Jersey barrier. Add so I got a purple heart like a hero.'[paragraph break]";
+
+[transition text]
+Instead of going from Room_Lees_Trailer during Scene_Hangout_With_Lee:
+	say "You give a wave to Lee as you go.[paragraph break]'Alright, drop by any time, Jody,' Lee says. 'You take care of yourself. And don't let the assholes get you down,' he adds with a wink.";
 	if index of seq_lee_hangout is greater than 4:
-		say "You give a wave to Lee as you go.
-		[paragraph break]'Alright, drop by any time, Jody,' Lee says. 'You take care of yourself. And don't let the assholes get you down,' he adds with a wink.";
 		now seq_lee_hangout is not in-progress;
-		Lee resumes smoking in four turns from now;
-
-At the time when Lee resumes smoking:
-	if lee is not in Room_C_Loop:
-		move Lee out of his trailer;
-
-The metal cube is a thing. The description is "This is a solid metal cube about an inch to a side. It has very slightly rounded edges. Not as shiny as a ball bearing, but it's really pretty. It's considerably heavier than it appears[first time].
-[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break]
-[paragraph break][italic type]What will happen if your mom discovers this? You determine to hide the cube and not let her find out.[roman type][only].";
-
-After examining the metal cube:
-	Now player is compassionate;
-	Continue the action.
-
-To move Lee into his trailer:
-	now Lee is in Room_Lees_Trailer;
-	if player is in Room_Lees_Trailer:
-		queue_report "Lee comes in stubbing out his cigarette in an ashtray and says, 'Hey, Jody.'" at priority 3;
-	else:
-		queue_report "Lee gives you a wave and heads inside his trailer." at priority 3;
-
-To move Lee out of his trailer:
-	now Lee is on the lawn chair;
-	if player is in Room_Lees_Trailer:
-		queue_report "Lee gives you a wave and heads out the door, grabbing a pack of smokes on the way outside." at priority 3;
-	else:
-		if Lee is visible:
-			queue_report "Lee comes out of his trailer, gives you a nod, sits down in his chair, and lights up a smoke." at priority 3;
-
-[TODO: Every turn when Lee is not talking, do Lee stuff, smoke cigarette, etc ]
+		lee_resumes_smoking in four turns from now;
+	continue the action.
 
 Chapter - Rants
 
@@ -7413,11 +7393,6 @@ lee_war_rant is a rant.
 	The quote_table is the Table of lee_war_rant.
 	The speaker is Lee;
 
-[ TODO: Fix why this is throwing errors
-After quizzing Lee about topic_war:
-	Now player is compassionate;
-	continue the action;]
-
 Table of lee_war_rant
 Quote
 "'I don't want to talk about it,' Lee snaps and turns away. You're suddenly regretful and embarrassed that you brought it up."
@@ -7429,6 +7404,10 @@ Quote
 "'No one asked me, [']Hey, dude, did you kill anyone?['] Or [']Hey, what were you most scared of?[']' Lee seems really angry, but for some reason you're not scared. 'Nah, nobody asked me nothin[']. Nobody asked me shit. Oh sorry pardon my language, [Lee's nickname].' Lee looks up and remembers you."
 "Lee looks at you. 'You know what I mean? It was like I'd been down the street buying a loaf a bread. Did anyone know I was gone? I wanted to stop people and shake them. [']Hey, bud, did you know I was in southeast Asia trying not to get myself killed?[']'"
 "'Yeah, that's not my best topic, but thanks for listening to my war stories,' Lee says with a smile. 'And hey, thanks for askin[']. Really.'"
+
+After quizzing Lee about topic_war:
+	Now player is compassionate;
+	continue the action;
 
 Response of Lee when asked-or-told about topic_indians:
 	now lee_indian_rant is in-progress.
@@ -7450,33 +7429,44 @@ Chapter - Sequences
 	Lee Invite Sequence
 ]
 
+[TODO: All seq should stop if rant is in progress]
+
 seq_lee_invite is a sequence.
 	The action_handler is the seq_lee_invite_handler rule.
 	The interrupt_test is seq_lee_invite_interrupt_test rule.
-	The length_of_seq is 2.
+	The length_of_seq is 5.
 
 This is the seq_lee_invite_handler rule:
 	let index be index of seq_lee_invite;
 	if Lee is visible:
 		now current interlocutor is Lee;
-	if index is 1:
-		if player is in Room_C_Loop and lee is visible:
-			queue_report "[one of]'Hey, Jody,' Lee says, 'How you doin[']?'.[or]'Hi again, Jody,' Lee says.[stopping]" at priority 2;
-	else if index is 2:
-		if player is in Room_C_Loop and lee is visible:
-			queue_report "'I have something for you,' Lee says. 'Last time we were talking about my work, so I picked something up for you. You're welcome to come in, if you want.'[first time]
-			[paragraph break][lee invite premonition].[only]" at priority 2;
+	if index is 2:
+		queue_report "Lee looks you over. 'What happened to your arm?' he asks with what seems like genuine concern.[if player is injured] 'I see you're looking a little rough around the edges. You okay?' You notice you've been holding your side where you bashed it on the big pine tree.[end if]" at priority 2;
+	else if index is 4:
+		queue_report "Lee looks like he is thinking about something. Finally, he nods to himself." at priority 2;
+	else if index is 5:
+		queue_report "'I think I have something for you. You're welcome to come in, if you want,' Lee shrugs.[first time]
+		[paragraph break][Lee_Invite_Premonition].[only]" at priority 2;
+
+[TODO: Add visibility rule to interrupt tests and eliminate stuff like "if player is in Room_C_Loop and lee is visible" from the individual sequence steps, making sure they only apply within Day One or Day Two as appropriate]
 
 This is the seq_lee_invite_interrupt_test rule:
-	if we are speaking to lee, rule succeeds;
-	if Scene_Sheriffs_Drive_By is happening, rule succeeds;
+	[End seq if still in-progress but scene has ended]
+	if Scene_Day_One is not happening or Scene_Hangout_With_Lee has happened:
+		now seq_lee_invite is not in-progress;
+		rule succeeds;
+	[Pause seq if we walk away]
+	if Lee is not visible or player is not in Room_C_Loop:
+		rule succeeds;
+	[if we are speaking to lee:
+		rule succeeds;]
+	if Scene_Sheriffs_Drive_By is happening:
+		rule succeeds;
 	rule fails.
 
 [
 	Scene_Hangout_With_Lee Sequence
 ]
-
-test lee-hangout with "go to bridge/g/g/pick berries/g/g/eat berries/go to lee's trailer/g/g/g/g/g/g/g/g/g";
 
 seq_lee_hangout is a sequence.
 	The action_handler is the seq_lee_hangout_handler rule.
@@ -7489,26 +7479,25 @@ This is the seq_lee_hangout_handler rule:
 		now current interlocutor is Lee;
 	if index is 1:
 		if Lee is not in Room_Lees_Trailer:
-			move Lee into his trailer;
+			move_lee_into_his_trailer;
 		if lee is visible:
-			queue_report "'So what's up in your world?' Lee asks. 'Anything good? Oh, I have something for you.'
+			queue_report "'So what's up in your world?' Lee asks. 'Anything good?' He pauses for a moment. 'I have something here for you.'
 			[paragraph break]Lee is fumbling around in a drawer." at priority 1;
 	if index is 2:
 		if lee is visible:
-			queue_report "'Hey, make yourself comfortable,' Lee says. 'Mi casa, es su casa. That means [']My home is your home.['] Do you want anything? A drink or anything?'
-			[paragraph break]It makes you [nervous] to think of drinking or eating in Lee's trailer. You can smell a little alcohol on his breath like your step-dad.
+			queue_report "'Hey, make yourself comfortable,' Lee says. 'Mi casa, es su casa. That means [']My home is your home.['] Do you want anything? A drink or anything?' It makes you [nervous] to think of drinking or eating in Lee's trailer. You can smell a little alcohol on his breath like your step-dad.
 			[paragraph break]Lee is fumbling around in a drawer." at priority 1;
 	if index is 3:
 		if lee is visible:
-			queue_report "'Okay, so last time we were talking about my job. The one at the machine shop,' Lee says. 'I don't work there anymore, but I still have a friend who does, a guy who was in my unit.'
+			queue_report "'I got this when I got hurt in Da Nang,' Lee says. 'And now I think it's time to pass it on to you.'
 			[paragraph break]Lee is still looking for something." at priority 1;
 	else if index is 4:
 		if lee is visible:
-			queue_report "'I told my friend that you really liked the ball bearing I gave you,' Lee is still fumbling in a drawer.
-			[paragraph break]'I told him you liked how shiny and heavy it was. And so,'  Lee seems to find what he's looking for and puts it behind his back. 'He gave me this.'
-			[paragraph break]He holds out a solid cube about the size of your hand. Not as shiny as the ball bearing, but with a beautiful metal sheen.  You want to hold it in your hand and feel its weight. You put out your hand and, for a moment, are scared Lee is going to snatch it back.
-			[paragraph break]But Lee puts the cube in your hand with a smile. It's heavier even than it appears." at priority 1;
-			now player holds cube;
+			queue_report "'They gave it to me just for being in the wrong place at the wrong time,' Lee is still fumbling in a drawer.
+			[paragraph break]'And I didn't even want to be there. So I always felt weird about it. Like it wasn't really mine. Like I didn't deserve it,' Lee says, 'But you're full of spirit and should have this.' Lee seems to find what he's looking for and puts it behind his back. 'This is for you.'
+			[paragraph break]He holds out a purple medal. It has a purple ribbon and a gold heart-shaped medalion, purple around a gold figure in the middle. You want to hold it in your hand and feel its weight. You put out your hand and, for a moment, are scared Lee is going to snatch it back.
+			[paragraph break]But Lee puts the medal in your hand with a smile. It's heavier even than it appears." at priority 1;
+			now player holds purple_heart;
 	else if index is 5:
 		if lee is visible:
 			queue_report "You start to thank Lee, but he looks embarrassed even before you say it and cuts you off. 'I wonder what's on the tube,' He turns to the television and starts fiddling with the rabbit ears." at priority 1;
@@ -7524,17 +7513,19 @@ This is the seq_lee_hangout_handler rule:
 	else if index is greater than 7:
 		if lee is visible:
 			queue_report "'Okay, I'm heading out. You can stay here long as you want. Drop by any time, Jody,' Lee says. 'You take care of yourself. And don't let the assholes get you down,' he adds with a wink." at priority 1;
-		Lee resumes smoking in one turn from now;
+		lee_resumes_smoking in one turn from now;
 
 This is the seq_lee_hangout_interrupt_test rule:
-	if we are speaking to Lee, rule succeeds;
-	if player is not in Room_Lees_Trailer and player is not on Lee's table:
+	if we are speaking to Lee:
+		rule succeeds;
+	if player is not in Room_Lees_Trailer and player is not on lees_table:
 		[a condition so if player leaves, Lee doesn't get stuck waiting]
 		if turns_so_far of seq_lee_hangout is greater than 40:
 			rule fails;
 		else:
 			rule succeeds;
-	if player is not in Room_Lees_Trailer, rule succeeds;
+	if player is not in Room_Lees_Trailer:
+		rule succeeds;
 	rule fails.
 
 
@@ -8029,7 +8020,7 @@ To say moms_train_ask_response:
 	say "'Your grandpa used to work on the railroad and when they bought their house, he was happy that there was a train that passed nearby', mom says".
 
 Response of mom when told about train tracks:
-	if player is not train-experienced:
+	if player is not train_experienced:
 		say "[moms_train_ask_response].";
 	else:
 		say "[moms_train_tell_response].";
@@ -8301,7 +8292,7 @@ After examining the dog two times:
 	now dream_dog is _female;
 	now dog is examined;
 	now player is perceptive;
-	now player is dog-experienced;
+	now player is dog_experienced;
 	continue the action.
 
 To say dog_sub_pronoun:
@@ -8341,7 +8332,7 @@ After examining the dog two times:
 	now dog is female;
 	now dog is examined;
 	now player is perceptive;
-	now player is dog-experienced;
+	now player is dog_experienced;
 	continue the action.
 
 [
