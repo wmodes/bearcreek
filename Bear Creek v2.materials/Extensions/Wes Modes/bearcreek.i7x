@@ -844,7 +844,7 @@ To say sing_action:
 	if a random chance of 1 in 3 succeeds:
 		say "You make up a song about [one of]killer red ants that eat everyone[or]picking blackberries until your fingers are bloody[or]riding the train out of town and living like a hobo[at random] [one of][or]to the tune of 'When You Need a Friend'[or]to the tune of 'Baby I'm a Want You'[or]to the tune of 'American Pie'[at random].[run paragraph on]";
 	else if player is in Region_Blackberry_Area:
-		say "You sing along to [current_song], but you [one of]only know the chorus[or]only know some of the words[or]have to make up most of it[or]don't know most of the words, but you don't really care[at random].[run paragraph on]";
+		say "You sing along to [current_song], but you [one of]only know the chorus[or]only know some of the words[or]have to make up most of it[or]don't know most of the words, and you don't really care[at random].[run paragraph on]";
 	else:
 		say "You sing a little bit of one of your favorite songs, [one of]'Knock Three Times on the Ceiling If You Want Me'[or]'Before the Next Teardrop Falls'[or]'Thank God I'm a Country Boy'[or]'He Don't Love You Like I Love You'[or]'How Sweet It Is To Be Loved By You'[or]'Kung Fu Fighting'[at random], but you [one of]only know the chorus[or]don't really know the words[or]have to make up most of it[or]but you don't know most of the words, but you don't really care[at random].[run paragraph on]";
 	if people who are not the player are visible and a random chance of 1 in 3 succeeds:
@@ -1830,9 +1830,6 @@ When Scene_Dreams begins:
 
 When Scene_Dreams ends:
 	now seq_dog_convo is not in-progress;
-	unstore_all_your_stuff;
-	now player is in Room_Protected_Hollow;
-	now player is awake;
 
 test dreams with "teleport to meadow / purloin brown paper bag / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z / z / z / sleep"
 
@@ -1943,7 +1940,7 @@ Chapter - Scene_Mars_Dream
 
 There is a scene called Scene_Mars_Dream.
 Scene_Mars_Dream begins when player is in Room_Mars.
-[Scene_Mars_Dream ends when .]
+Scene_Mars_Dream ends when player is in Room_Dream_Dirt_Road.
 
 Chapter - Scene_Dog_Dream
 
@@ -1959,16 +1956,24 @@ When Scene_Dog_Dream begins:
 Part - Scene_Day_Two
 
 There is a scene called Scene_Day_Two.
-Scene_Day_Two begins when Scene_Dreams ends.
+Scene_Day_Two begins when Scene_Dreams has ended.
 
-Chapter - Scene_Morning_After
+When Scene_Day_Two begins:
+	unstore_all_your_stuff;
+	now player is in Room_Protected_Hollow;
+	now player is awake;
+	Now the right hand status line is "Morning";
+
+test day2 with "teleport to meadow / purloin brown paper bag / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump/z/z/z/z/ go to tracks/go on/ z/z/z/z/z/z/ go on/ go on/ z/z/z/z/z/z/z".
+
+Chapter - Morning After
 
 There is a scene called Scene_Morning_After.
-Scene_Morning_After begins when Scene_Day_Two begins.
+Scene_Morning_After begins when Scene_Day_Two is happening and player is in Room_Forest_Meadow.
 
-When Scene_Morning_After ends:
-	Now player is in Room_Protected_Hollow;
-	Change up exit of Room_Forest_Meadow to Room_Sentinel_Tree.
+When Scene_Morning_After begins:
+	pause the game;
+	say Title_Card_Part_3;
 
 Chapter - Scene_Orienteering
 
@@ -1976,22 +1981,32 @@ There is a scene called Scene_Orienteering.
 Scene_Orienteering begins when Scene_Day_Two begins.
 Scene_Orienteering ends when player is in Room_Sentinel_Tree.
 
+When Scene_Orienteering begins:
+	Change up exit of Room_Forest_Meadow to Room_Sentinel_Tree.
+
 When Scene_Orienteering ends:
 	Change south exit of Room_Forest_Meadow to Room_Dark_Woods_North;
 	Change west exit of Room_Forest_Meadow to Room_Dappled_Forest_Path;
 	Change south exit of Room_Dark_Woods_North to Room_Dark_Woods_South;
 	Change northwest exit of Room_Dark_Woods_North to Room_Dappled_Forest_Path;
+	remind_to_orient in 3 turns from now;
+
+At the time when remind_to_orient:
+	queue_report "It's time to figure out where you are. Perhaps if you could find out where you are." with priority 1.
 
 Chapter - Scene_Foraging_for_Breakfast
 
 There is a scene called Scene_Foraging_for_Breakfast.
-Scene_Foraging_for_Breakfast begins when Scene_Day_Two begins.
+Scene_Foraging_for_Breakfast begins when Scene_Morning_After begins.
 Scene_Foraging_for_Breakfast ends when Scene_Found begins.
+
+Every turn during Scene_Foraging_for_Breakfast:
+	if a random chance of 1 in 3 succeeds:
+		queue_report "[one of]You are quite hungry[or]You didn't have dinner (or lunch) yesterday, so you are really quite famished[or]You find you are really hungry. Perhaps you can forage something like a good Exporer Scout[cycling]." with priority 1.
 
 Chapter - Scene_Out_of_the_Woods
 
 There is a scene called Scene_Out_of_the_Woods.
-
 
 Chapter - Scene_Found
 
@@ -4994,10 +5009,16 @@ Section - Description
 
 Room_Forest_Meadow is a room.
 The printed name is "Forest Meadow".
-The description is "[if Scene_Day_Two has not happened]You have found a dark shaded forest meadow with tall grass up to your waist[first time]. You can't help thinking about ticks. You got a tick once in your neck and Honey had to burn it out with a cigarette[only]. There is a steady symphony of crickets tuning up for the night. Seeing the darkening sky overhead makes you [nervous]. [else]This is the dark forest meadow you found last night, except in the morning light, it is bright and crispy cold. The meadow still makes you think of ticks, but you try not to as you push through the tall grass. You can see paths in a few different directions. You might be able to get your bearrings from the tall pine at the edge of the meadow.[end if]
+The description is "[if Scene_Day_Two has not happened][meadow_desc_day1][else][meadow_desc_day2][end if].
 [paragraph break][available_exits]".
 The scent is "musty forest smell".
 Understand "forest/-- meadow", "golden/-- grass" as Room_Forest_Meadow.
+
+To say meadow_desc_day1:
+	say "You have found a dark shaded forest meadow with tall grass up to your waist[first time]. You can't help thinking about ticks. You got a tick once in your neck and Honey had to burn it out with a cigarette[only]. There is a steady symphony of crickets tuning up for the night. Seeing the darkening sky overhead makes you [nervous]";
+
+To say meadow_desc_day2:
+	say "This is the dark forest meadow you found last night, except in the morning light, it is bright and crispy cold. The meadow still makes you think of ticks, but you try not to as you push through the tall grass. You can see paths in a few different directions. You might be able to get your bearrings from the tall pine at the edge of the meadow";
 
 Room_Forest_Meadow can be observed.
 
@@ -5078,12 +5099,18 @@ Section - Description
 
 Room_Protected_Hollow is a room.
 The printed name is "Protected Hollow".
-The description is "[if Scene_Day_Two has not happened]This is a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. It is dark and would normally be kind of scary, but the dark woods are scarier[first time]. It helps to have some shelter. The Explorer Scouts taught you that shelter is the first thing you are supposed to find in a survival situation[only][else]You woke up in a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. [first time]All things considered, it was rather cozy. Your mom wasn't crazy about you going to Explorer Scouts, but your stepdad said you had to. And even though you hated it at first, you learned stuff. [only] Under the protection of the fallen logs, you've made a nest of dried leaves which kept you insulated from the cold[end if].
+The description is "[if Scene_Dreams has not ended][hollow_desc_day1][else][hollow_desc_day2][end if].
 [paragraph break][available_exits]".
 The scent is "musty forest smell, like dirt or mushrooms".
 The outside_view is "the meadow".
 Understand "protected/-- hollow", "fallen tree", "my/-- fort" as Room_Protected_Hollow.
 Understand "protected/-- hollow/cave/nest" as Room_Protected_Hollow.
+
+To say hollow_desc_day1:
+	say "This is a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. It is dark and would normally be kind of scary, but the dark woods are scarier[first time]. It helps to have some shelter. The Explorer Scouts taught you that shelter is the first thing you are supposed to find in a survival situation[only]";
+
+To say hollow_desc_day2:
+	say "You woke up in a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. The sunlight streaks in through the branches above you[first time]. All things considered, it was rather cozy. Your mom wasn't crazy about you going to Explorer Scouts, but your stepdad said you had to. And even though you hated it at first, you learned stuff [only]. Under the protection of the fallen logs, you've made a nest of dried leaves which kept you insulated from the cold";
 
 Room_Protected_Hollow can be made_cozy.
 
@@ -5711,7 +5738,7 @@ Section - Rules and Actions
 
 [Transition text]
 Instead of going to Room_Mars when player is in Room_Dream_Railroad_Tracks:
-	say "For some reason, you are not worried about a train coming. You follow the railroad tracks walking silently with Honey and Grandpa, briefly balancing on the rails while you hold Honey's hand. You walk for a while humming a little tune. You look down and realize you've lost the train tracks and see only red dust.";
+	say "You follow the railroad tracks walking silently with Honey and Grandpa, briefly balancing on the rails while you hold Honey's hand. This time, you're not worried about a train coming. You walk for a while humming a little tune. You look down and realize you've lost the train tracks and see only red dust.";
 	Now honey is in Room_Mars;
 	Now grandpa is in Room_Mars;
 	Continue the action.
@@ -8574,7 +8601,7 @@ This is the seq_dog_convo_handler rule:
 			queue_report "[sub_pronoun_cap of dog] sees you, sizes you up, and to your surprise says, 'You ain't gettin['] by here, kid.'" at priority 3;
 	else if index is 4:
 		if dream_dog is visible:
-			queue_report "Listen, kid,' the dog says, 'It's my job to protect my pack's territory.' [sub_pronoun_cap of dog] looks back at the fence uncertainly, then squats at the edge of the road and pees. 'I'm not sure where that ends, but better safe than sorry.'" at priority 3;
+			queue_report "'Listen, kid,' the dog says, 'It's my job to protect my pack's territory.' [sub_pronoun_cap of dog] looks back at the fence uncertainly, then squats at the edge of the road and pees. 'I'm not sure where that ends, but better safe than sorry.'" at priority 3;
 	else if index is 5:
 		if dream_dog is visible:
 			queue_report "The dog looks at you and looks around. 'Shouldn't you be with your pack?' [sub_pronoun of dog] says." at priority 3;
@@ -8583,11 +8610,11 @@ This is the seq_dog_convo_handler rule:
 			queue_report "The dog [dog_does_stuff]. 'You know,' the dog says, 'You've been through a lot, but you're doing okay.' [sub_pronoun_cap of dog] wags [pos_pronoun of dog] tail." at priority 3;
 	else if index is 8:
 		if dream_dog is visible:
-			queue_report "The dog looks thoughtful, 'If you don't mind me sayin['], it's about time you woke up,' [sub_pronoun of dog] says, [dog_doing_stuff], 'You can't spend your whole like dreaming. I'm gonna let you get going,' the dog says, glancing toward the Stone Bridge." at priority 3;
+			queue_report "The dog looks thoughtful, 'If you don't mind me sayin['], it's about time you woke up,' [sub_pronoun of dog] says, [dog_doing_stuff], 'You can't spend your whole like dreaming. I'm gonna let you get going,' the dog says." at priority 3;
 			now dog_free_to_go is true;
 	else if index is 9:
 		if dream_dog is visible:
-			queue_report "[one of]'Pal, I think it's time for you to get going,' the dog says wagging [pos_pronoun of dog] tail.[or]'I've liked talking to you. You better get going,' the dog says.'[or]The dog looks at the stone bridge, 'Time for you to go on and wake up,' [sub_pronoun of dog] says.[in random order]" at priority 3;
+			queue_report "[one of]'Pal, I think it's time for you to get going,' the dog says wagging [pos_pronoun of dog] tail.[or]'I've liked talking to you. You better get going,' the dog says.'[or]The dog looks seriously at you, 'Time for you to go on and wake up,' [sub_pronoun of dog] says.[in random order]" at priority 3;
 			[We do the following, because we want this step to repeat]
 			decrease index of seq_dog_convo by one;
 			[we make sure this ends when Scene_Dreams ends]
