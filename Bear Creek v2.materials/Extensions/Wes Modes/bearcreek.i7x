@@ -330,25 +330,38 @@ Book - Commands
 
 Part - Modifications to standard commands
 
+Chapter - Game Configuration
+
+Use no scoring, the serial comma and American dialect. Use MAX_SYMBOLS of 8000. Use full-length room descriptions.
+
+Chapter - Room Descriptions
+
 The room description heading rule does nothing when turn count is 1 and player is in Room_Lost_in_the_Brambles for the first time.
 
 Rule for printing room description details: do nothing.
 
+To say location heading:
+	say "[line break][bold type][location][roman type]".
+
+Chapter - Taking Things
+
 Rule for implicitly taking something (called target):
 	try silently taking the target;
+
 Rule for clarifying the parser's choice of something:
 	do nothing.
 
-To say location heading:
-	say "[line break][bold type][location][roman type]".
+Chapter - Moving Player
 
 To move player to (new-location - a room) with little fuss:
 	Move player to new-location, without printing a room description;
 	say "[line break][bold type][location][roman type][line break]".
 
-Use no scoring, the serial comma and American dialect. Use MAX_SYMBOLS of 8000. Use full-length room descriptions.
+Chapter - Waiting
 
 The standard report waiting rule response (A) is "You wait for a bit and time passes."
+
+Chapter - Can't See That
 
 Rule for printing a parser error when the latest parser error is the can't see any such thing error:
 	say "You don't see that anywhere around here." instead;
@@ -359,6 +372,10 @@ Replace PrintInferredCommand;
 
 [ PrintInferredCommand; ];
 -) before "Parser.i6t".
+
+Chapter - Printing Descriptions
+
+The examine undescribed things rule response (A) is "[if Scene_Dreams is not happening][We] [see] nothing [one of]interesting[or]noteworthy[or]special[at random] about [the noun][else]You look at [the noun], but the details are[one of] foggy[or] indestinct[or] fuzzy[at random][end if]."
 
 Part - New commands
 
@@ -4358,7 +4375,7 @@ The printed name is "D Loop".
 The description is "The D Loop of the trailer park is pretty much like the B and C Loops. Rows of trailers on either side, many fringed with teeny tiny gardens of flowers and shrubs. The most noteworthy thing on this loop is the Cat Lady's trailer, painted bright pink and white with an outrageously overflowing flower garden out in front.
 [paragraph break][available_exits]".
 The scent is "that smell when water falls on hot asphalt".
-Understand "D Loop" as Room_D_Loop.
+Understand "d loop", "loop d" as Room_D_Loop.
 
 Section - Navigation
 
@@ -4540,7 +4557,7 @@ The printed name is "C Loop".
 The description is "C Loop is pretty much like B and D Loops. Rows of trailers on either side, all different colors[one of], though the one's across from Lee's trailer go red, brown, green, red, brown, green, which is weird. Did they do that on purpose?[run paragraph on][or].[run paragraph on][stopping] The most noteworthy thing on this loop for you is Lee's trailer, though it looks pretty much like every other one. [line break]
 [paragraph break][available_exits]".
 The scent is "Lee's cigarette smoke lingering in the air".
-Understand "C Loop" as Room_C_Loop.
+Understand "C Loop", "loop c" as Room_C_Loop.
 
 Section - Navigation
 
@@ -4564,7 +4581,7 @@ A lawn chair is scenery. It is in Room_C_Loop.
 
 A coffee can is backdrop in Room_C_Loop and in Room_Lees_Trailer.
 	The printed name is "coffee can filled with stinky cigarette butts".
-	Understand "stinky/cigarette/butts" as coffee can.
+	Understand "cigarette butts", "ashtray" as coffee can.
 
 Trailers are backdrop in Room_C_Loop.
 Gardens are backdrop in Room_C_Loop.
@@ -4681,7 +4698,7 @@ The description is "B Loop is just like C and D Loops, except Honey and Grandpa'
 [paragraph break][available_exits]".
 Understand "loop b" as Room_B_Loop.
 The scent is "the scent of blackberries drifting out of Honey and Grandpa's trailer".
-Understand "B Loop" as Room_B_Loop.
+Understand "B Loop", "loop b" as Room_B_Loop.
 
 Section - Navigation
 
@@ -5387,7 +5404,7 @@ Understand "cars" as drive_in_cars.
 
 Some bumps are scenery in Room_Drive_In.
 The description is "These are also called 'berms,' but you're not sure how you know that. Driving up on the berm with the car pointed into the sky is your favorite part of going to the drive-in."
-Understand "berms" as bumps.
+Understand "berms/berm" as bumps.
 
 Spilled_popcorn is scenery in Room_Drive_In.
 The printed name is "spilled popcorn".
