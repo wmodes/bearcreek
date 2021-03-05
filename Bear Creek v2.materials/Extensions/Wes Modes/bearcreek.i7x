@@ -834,7 +834,43 @@ Carry out piling:
 		now player is covered_in_leaves;
 		now player is dirty;
 
+Chapter - Thanking
+
 [TODO: Implement thank [Somebody] and thank you]
+
+The default thanks response rules are an object-based rulebook.
+The default thanks response rules have default success.
+
+The try default response rule is listed last in the default thanks response rules.
+
+Report thanking (this is the default thanks rule):
+  abide by the default thanks response rules for the current interlocutor.
+
+thanking is an action applying to one visible thing.
+
+Understand "thanks/thank" or "thank you" as "[thanking verb]".
+
+Understand "[thanking verb]" or "[thanking verb] [something]" or "say [thanking verb] to [something]", "tell [something] [thanking verb]" as thanking.
+
+[TODO: This works, unless a person is not here and then we get "That's not a verb I recognize"]
+
+Check thanking:
+	say "(checking thanking)";
+	if noun is not a person or noun is player:
+		say "You thank the heavens." instead;
+	else if noun is not visible:
+		say "You'll have to find them first.";
+
+Carry out thanking:
+	say "(carrying out thanking)";
+	now current interlocutor is noun;
+
+Rule for supplying a missing noun when thanking:
+	let subject be a random [other] person enclosed by the location;
+	if subject is not a person:
+		say "You thank the heavens.";
+	else:
+		now the noun is the subject;
 
 Chapter - Attacking
 
@@ -2265,8 +2301,8 @@ Understand "howdy", "how do", "how are/-- you/ya doing/feeling/--", "how is your
 asking_howdy is an action applying to nothing.
 
 Carry out asking_howdy:
-	let person be the current interlocutor;
-	try quizzing person about person.
+	let subject be the current interlocutor;
+	try quizzing subject about subject.
 
 Part - Multi-Part Rants
 
@@ -6273,6 +6309,9 @@ Default ask-for response for Honey:
 	else:
 		say "'That's not going to happen, [honeys_nickname],' Honey says.";
 
+Default thanks response for Honey:
+	say "'Sure,' Honey says.";
+
 Default yes-no response for Honey:
 	if saying yes:
 		say "'Okay, then get to it,' Honey says.";
@@ -6636,6 +6675,9 @@ Default ask-for response for Grandpa:
 		say "'Easily done, you kidder. You already got it,' Grandpa smiles.";
 	else:
 		say "'Oh, though I wish I could,' Grandpa smiles.";
+
+Default thanks response for Grandpa:
+	say "'Of course,' Grandpa says and [grandpa_stuff].";
 
 Default yes-no response for Grandpa:
 	if saying yes:
@@ -7120,6 +7162,9 @@ Default ask response for Sharon:
 Default tell response for Sharon:
 	say "'[one of]Oh yes, [sharon_nickname], I can see it now![run paragraph on][or]How delightful![run paragraph on][or]Oh please tell me more, [sharon_nickname],[or]You don't say? That's great![run paragraph on][or]Have you talked to your grandpa about that?[run paragraph on][or]You must be thrilled, [sharon_nickname],[at random]' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
 
+Default thanks response for Sharon:
+	say "'Oh, of course, dear,' the Cat Lady says, 'You are very welcome.'";
+
 Default yes-no response for Sharon:
 	if saying yes:
 		say "'Alright, good,' the Cat Lady nods.";
@@ -7410,6 +7455,9 @@ Default response for Lee:
 
 Default ask response for Lee:
 	say "'Well, like a lot of things, I don't know the answer to that[one of][or] either[stopping], [Lee's nickname],' Lee says.";
+
+Default thanks response for Lee:
+	say "'Don't mention it,' Lee says and looks away.";
 
 Response of Lee when saying yes:
 	say "Lee smiles.";
@@ -8089,6 +8137,9 @@ Default ask-for response for mom:
 	else:
 		say "'That's not for you,' mom says.";
 
+Default thanks response for mom:
+	say "'You're welcome, [moms_nickname],' mom says.";
+
 Default yes-no response for mom:
 	if saying yes:
 		say "[one of]'Good,' mom says, smiling[or]Mom nods[at random].";
@@ -8291,6 +8342,9 @@ Default ask-for response for stepdad:
 		say "'What are you asking? You already have that' Mark says.";
 	else:
 		say "'That's not yours,' Mark says.";
+
+Default thanks response for stepdad:
+	say "'Don't be smart with [italic type]me[roman type],' Mark snaps.";
 
 Default yes-no response for stepdad:
 	if saying yes:
@@ -8601,6 +8655,9 @@ Default ask response for dream_dog:
 
 Default tell response for dream_dog:
 	say "'Well, kid,' the dog says, 'That sounds great. Good for you.'";
+
+Default thanks response for dream_dog:
+	say "'Sure, kid. Sure,' the dog says.";
 
 Response of dream_dog when saying yes:
 	say "'Alright,' the dog says.";
