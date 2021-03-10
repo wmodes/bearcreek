@@ -73,7 +73,7 @@ Part - Notes
 
 Book - Extensions
 
-Part 1 - Screen Effects
+Part - Screen Effects
 
 Include Basic Screen Effects by Emily Short.
 
@@ -85,7 +85,7 @@ special-style-1 	center-justified 	false 	0 	0 	bold-weight 	false 	0 	--
 special-style-2 	center-justified 	true 	0 	0 	regular-weight 	false 	0 	--
 
 
-Part 2 - Conversation Frameworks
+Part - Conversation Frameworks
 
 Include Conversation Framework by Eric Eve.
 
@@ -93,7 +93,43 @@ Include Conversational Defaults by Eric Eve.
 
 Include Conversation Responses by Eric Eve.
 
-Part 3 - Smarter Parser
+Part - Epistemology
+
+[Keeping track of what the player character knows and sees]
+
+Include Epistemology by Eric Eve.
+
+Part - Remembering
+
+[Replaces 'You can't see any such thing' for a seen but out-of-scope noun with a message acknowledging that the parser recognizes the object.]
+
+[Include Remembering by Aaron Reed.]
+
+[Understand
+	"examine [any seen thing]" or
+	"x [any remembered thing]" or
+	"look at/for [any seen thing]" or
+	"take [any seen thing]" or
+	"get [any seen thing]" or
+	"pick up [any seen thing]" or
+	"pick [any seen thing] up" or
+	"drop [any seen thing]" or
+	"put down [any seen thing]" or
+	"put [any seen thing] down" or
+	"drop [any seen thing] away" or
+	"drop away [any seen thing]" or
+	"find [any seen thing]" or
+	"where is/are [any seen thing]" or
+	"thank [any seen thing]"
+	as remembering.]
+
+[The Remembering specific report remembering rule response (A) is "You look around, but don't see [the noun]. Last you remember, [they] [was-were of noun] [at the remembered location of noun].[line break]".]
+
+A room has some text called casual_name.
+
+[The Remembering saying room name rule response (A) is "[the casual_name of the place]".]
+
+Part - Smarter Parser
 
 Include Smarter Parser by Aaron Reed.
 
@@ -363,10 +399,13 @@ The standard report waiting rule response (A) is "You wait for a bit and time pa
 
 Chapter - Can't See That
 
-Rule for printing a parser error when the latest parser error is the can't see any such thing error:
-	say "You don't see that anywhere around here." instead;
+[Rule for printing a parser error when the latest parser error is the can't see any such thing error:
+	say "[regarding the noun](The noun is [noun] whose pronoun is [them])";
+	say "You don't see that anywhere around here." instead;]
 
-[ Remove all the messages that clarify the parser's choice of something]
+[The parser error internal rule response (E) is "[We] look around, but don't see that anywhere around here."]
+
+[Remove all the messages that clarify the parser's choice of something]
 Include (-
 Replace PrintInferredCommand;
 
@@ -848,26 +887,30 @@ Report thanking (this is the default thanks rule):
 
 thanking is an action applying to one visible thing.
 
-Understand "thanks/thank" or "thank you" as "[thanking verb]".
-
-Understand "[thanking verb]" or "[thanking verb] [something]" or "say [thanking verb] to [something]", "tell [something] [thanking verb]" as thanking.
+Understand
+	"thanks",
+	"thank you/--",
+	"thanks [something]",
+	"thank you/-- [something]",
+	"say thanks/thank you/-- to [something]",
+	"tell [something] thanks/thank you/--" as thanking.
 
 [TODO: This works, unless a person is not here and then we get "That's not a verb I recognize"]
 
 Check thanking:
-	say "(checking thanking)";
+	[say "(checking thanking)";]
 	if noun is not a person or noun is player:
 		say "You thank the heavens." instead;
 	else if noun is not visible:
 		say "You'll have to find them first.";
 
 Carry out thanking:
-	say "(carrying out thanking)";
+	[say "(carrying out thanking)";]
 	now current interlocutor is noun;
 
 Rule for supplying a missing noun when thanking:
 	let subject be a random [other] person enclosed by the location;
-	if subject is not a person:
+	if subject is not a person and subject is not an animal:
 		say "You thank the heavens.";
 	else:
 		now the noun is the subject;
@@ -1022,8 +1065,6 @@ The last carry out smelling rule:
 		say "[The noun] smell[if noun is singular-named]s[end if] like [the scent of the noun].".
 
 Instead of smelling a room:
-	[say "(location: [location of the player], scent: [the scent of the location of the player])";
-	say "(region: [map region of the location of the player], scent: [the scent of the map region of the location of the player])";]
 	if the scent of the location of the player is not empty:
 		say "You smell [the scent of the location of the player].";
 	else if the scent of the map region of the location of the player is not empty:
@@ -2489,7 +2530,7 @@ A supporter can be sit-at-able. Supporters are usually not sit-at-able.
 
 A thing is either climbable or unclimbable. a thing is usually unclimbable.
 
-A thing can be familiar or unfamiliar. A thing is usually unfamiliar.
+[A thing can be familiar or unfamiliar. A thing is usually unfamiliar.]
 A subject is a kind of thing. A subject is usually familiar.
 
 A sequence is a kind of thing.
@@ -3411,6 +3452,7 @@ The description is "[one of]You were sure that this was a better spot than where
 [paragraph break][description of backdrop_sunlight]".
 Understand "lost/-- in/-- the/-- brambles" as Room_Lost_in_the_Brambles.
 The scent is "sunshine and that dusty fragrance of pine trees that you remember from hiking with Grandpa in the mountains".
+The casual_name is "lost in the brambles".
 
 Section - Navigation
 
@@ -3432,11 +3474,13 @@ Chapter - Room_Grassy_Clearing
 
 Section - Description
 
-Room_Grassy_Clearing is a room.
+The Room_Grassy_Clearing is a room.
 The printed name is "Grassy Clearing".
 The description is "[if turn count is 1][bold type][location][roman type][line break][end if][one of]The water churgles in the nearby creek but you can't see it through the forest of blackberry brambles all around you. Every summer since you were little, you pick blackberries with your Honey and Grandpa down along Bear Creak[or]You are near the creek, but it can't be seen through the blackberry brambles[stopping]. This is a pleasant clearing carpeted with stubbly grass under a sycamore tree. There are paths and clearings beaten down among the brambles that allow you to squeeze in to get the ripest berries. [if big_bucket is visible]There is a big bucket in the middle of the clearing. [end if][if grandpas_shirt is in location]Grandpa's shirt and Honey's portable transistor radio are[else]Honey's portable transistor radio is[end if] on the bank under the tree playing music.
 [paragraph break][first time]Looking around, you see places you can go: [only][available_exits]".
 Understand "grassy/-- clearing" as Room_Grassy_Clearing.
+
+The casual_name is "at the grassy clearing".
 
 Section - Navigation
 
@@ -3457,10 +3501,12 @@ The big_bucket is scenery unopenable open container in Room_Grassy_Clearing.
 The portable transistor radio is scenery.
 	It is in Room_Grassy_Clearing.
 	It is a familiar device.
-	The printed name is "Honey's portable transistor radio".
+	The printed name is "portable transistor radio".
 	The description of the radio is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
 	Understand "knob", "cube", "woodgrain", "plastic", "wax", "music", "finish" as the portable transistor radio.
 	The scent is "ozone".
+	The indefinite article is "Honey's".
+	Include (- with articles "Honey's" "the" "a", -) when defining portable transistor radio.
 
 Grandpas_shirt is an undescribed thing in Room_Grassy_Clearing.
 	The printed name is "Grandpa's shirt".
@@ -3506,6 +3552,8 @@ The description is "There are paths through the brambles, a maze with tantalizin
 [paragraph break][available_exits]".
 Understand "blackberry/-- tangle/maze" as Room_Blackberry_Tangle.
 
+The casual_name is "in the blackberry tangle".
+
 Section - Navigation
 
 Room_Blackberry_Tangle is south of Room_Grassy_Clearing and down from Room_Grassy_Clearing.
@@ -3540,6 +3588,8 @@ The description is "This is a trail running roughly parallel the creek with tall
 [paragraph break][available_exits]".
 Understand "blackberry/willow/willows trail/--" as Room_Willow_Trail.
 
+The casual_name is "on the willow trail".
+
 Section - Navigation
 
 Room_Willow_Trail is south of Room_Blackberry_Tangle and down from Room_Blackberry_Tangle.
@@ -3566,6 +3616,8 @@ The description is "You follow the trail on this side of the creek until it is l
 [paragraph break][available_exits]".
 Understand "lost/-- trail", "underbrush" as Room_Lost_Trail.
 
+The casual_name is "on the lost trail".
+
 Section - Navigation
 
 Room_Lost_Trail is south of Room_Willow_Trail.
@@ -3583,6 +3635,8 @@ The description is "This is a wide path, more of a long meadow really, that cuts
 [paragraph break][available_exits]".
 The scent is "tangy pine".
 Understand "dappled/-- forest/-- path" as Room_Dappled_Forest_Path.
+
+The casual_name is "on the dappled forest path".
 
 Section - Navigation
 
@@ -3638,6 +3692,8 @@ The description is "[one of]The trail crosses an old stone bridge -- an excellen
 [paragraph break][available_exits]".
 The scent is "cool creek water and mossy stone".
 Understand "old/-- stone/-- bridge", "river/creek/stream" as Room_Stone_Bridge.
+
+The casual_name is "at the stone bridge".
 
 Section - Navigation
 
@@ -3710,6 +3766,8 @@ Room_Swimming_Hole is a room.
 	[paragraph break][available_exits]".
 	The scent is "cool creek water and mossy rocks".
 	Understand "swimming/-- hole/pool", "hole/pool", "zigzag/steep trail" as Room_Swimming_Hole.
+
+The casual_name is "at the swimming hole".
 
 Section - Navigation
 
@@ -3797,6 +3855,8 @@ The description is "Here the creek broadens out a little and, except for a place
 [paragraph break][available_exits]".
 The scent is "cool creek water and mossy rocks".
 Understand "crossing" as Room_Crossing.
+
+The casual_name is "at the river crossing".
 
 Section - Navigation
 
@@ -3926,6 +3986,8 @@ The description is "[one of]The trail over the stone bridge turns into a dirt ro
 The scent is "sunshine and dust".
 Understand "dirt/-- road", "end", "end of the/-- dirt/-- road" as Room_Dirt_Road.
 
+The casual_name is "at the end of the dirt road".
+
 Section - Navigation
 
 Room_Dirt_Road is up from Room_Stone_Bridge and west of Room_Stone_Bridge.
@@ -3963,6 +4025,8 @@ The description of Room_Long_Stretch is "This is a really long stretch of the di
 [paragraph break][available_exits]".
 The scent is "sunshine and dust".
 Understand "long stretch" as Room_Long_Stretch.
+
+The casual_name is "at the long stretch of dirt road".
 
 Section - Navigation
 
@@ -4005,6 +4069,8 @@ The description of Room_Railroad_Tracks is "Railroad tracks cross the old dirt r
 [paragraph break][available_exits][penny_status]".
 The scent is "dust and grease".
 Understand "railroad/train/sp/-- tracks", "southern pacific tracks", "railroad/train/sp crossing" as Room_Railroad_Tracks.
+
+The casual_name is "at the railroad tracks".
 
 Section - Navigation
 
@@ -4077,6 +4143,8 @@ The description of Room_Grassy_Field is "This is the grassy field behind the tra
 [paragraph break][available_exits]".
 The scent is "the sweet smell of dried hay".
 Understand "grassy/-- field" as Room_Grassy_Field.
+
+The casual_name is "in the grassy field near the trailer park".
 
 Section - Navigation
 
@@ -4154,6 +4222,8 @@ The description is "You're about Halfway Up the tree, really pretty high. The br
 [paragraph break]Looking around, it's hard to see much of anything, although you can see [dog_from_a_distance] through the thick branches. It looks like the view is much better higher up.".
 The scent is "pine sap".
 
+The casual_name is "halfway up the big pine tree".
+
 Section - Navigation
 
 Room_Halfway_Up is up from Room_Long_Stretch.
@@ -4229,6 +4299,8 @@ Room_Top_of_Pine_Tree is a room.
 The printed name is "Room_Top_of_Pine_Tree".
 The description is "This is very close to the very top. You are holding on to the narrow trunk of the tree. You can feel it sway in the faint breeze. It is slightly cooler up here. [treetop_payoff]".
 The scent is "pine sap".
+
+The casual_name is "at the top of the big pine tree".
 
 Section - Navigation
 
@@ -4351,7 +4423,7 @@ The uppath_dest of Region_Trailer_Indoors is Limbo.
 The downpath_dest of Region_Trailer_Indoors is Limbo.
 
 
-Chapter 2 Room_Picnic_Area
+Chapter - Room_Picnic_Area
 
 Section - Description
 
@@ -4361,6 +4433,8 @@ The description of Room_Picnic_Area is "At the back of the trailer park, there i
 [paragraph break][available_exits]".
 The scent is "dust and mowed grass".
 Understand "picnic area" as Room_Picnic_Area.
+
+The casual_name is "in the picnic area of the trailer park".
 
 Section - Navigation
 
@@ -4402,7 +4476,7 @@ Section - Rules and Actions
 
 
 
-Chapter 3 Room_D_Loop
+Chapter - Room_D_Loop
 
 Section - Description
 
@@ -4412,6 +4486,8 @@ The description is "The D Loop of the trailer park is pretty much like the B and
 [paragraph break][available_exits]".
 The scent is "that smell when water falls on hot asphalt".
 Understand "d loop", "loop d" as Room_D_Loop.
+
+The casual_name is "in D loop of the trailer park".
 
 Section - Navigation
 
@@ -4466,6 +4542,8 @@ The description is "[one of]The first thing you notice is the smell of cat pee a
 The scent is "Yucky fish and cat pee".
 The outside_view is "D Loop".
 Understand "catlady's/catladys/sharon's/sharons/shannon's/shannons/pink/-- trailer/house/place/home", "cat lady's/ladys trailer/house/place/home" as Room_Sharons_Trailer.
+
+The casual_name is "in the Cat Lady's trailer".
 
 Section - Navigation
 
@@ -4584,7 +4662,7 @@ Instead of giving Mika to Sharon:
 
 
 
-Chapter 5 Room_C_Loop
+Chapter - Room_C_Loop
 
 Section - Description
 
@@ -4594,6 +4672,8 @@ The description is "C Loop is pretty much like B and D Loops. Rows of trailers o
 [paragraph break][available_exits]".
 The scent is "Lee's cigarette smoke lingering in the air".
 Understand "C Loop", "loop c" as Room_C_Loop.
+
+The casual_name is "in C loop of the trailer park".
 
 Section - Navigation
 
@@ -4650,6 +4730,8 @@ The description is "Lee's trailer is empty. Or nearly so. [first time]It looks l
 The scent is "Lee's cigarette smoke lingering in the air".
 The outside_view is "C Loop".
 Understand "Lee's/lees/-- trailer/house/place/home" as Room_Lees_Trailer.
+
+The casual_name is "in Lee's trailer".
 
 Section - Navigation
 
@@ -4724,7 +4806,7 @@ Instead of giving purple_heart to someone:
 
 
 
-Chapter 7 Room_B_Loop
+Chapter - Room_B_Loop
 
 Section - Description
 
@@ -4735,6 +4817,8 @@ The description is "B Loop is just like C and D Loops, except Honey and Grandpa'
 Understand "loop b" as Room_B_Loop.
 The scent is "the scent of blackberries drifting out of Honey and Grandpa's trailer".
 Understand "B Loop", "loop b" as Room_B_Loop.
+
+The casual_name is "in B loop of the trailer park".
 
 Section - Navigation
 
@@ -4787,6 +4871,7 @@ The scent is "what it would smell like if you lived inside a blackberry pie".
 The outside_view is "B Loop and your broken bicycle".
 Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas trailer" as Room_Grandpas_Trailer.
 
+The casual_name is "in Honey and Grandpa's trailer".
 
 Section - Navigation
 
@@ -4887,6 +4972,8 @@ The description is "[if Scene_Day_Two has not happened]You are on the far side o
 The scent is "cool creek water and mossy rocks".
 Understand "other/-- shore" as Room_Other_Shore.
 
+The casual_name is "on the other shore of the creek".
+
 Section - Navigation
 
 West of Room_Other_Shore is Room_Crossing.
@@ -4968,6 +5055,8 @@ The description is "[if Scene_Day_Two has not happened]You are on a wooded trail
 The scent is "musty forest smell".
 Understand "wooded trail" as Room_Wooded_Trail.
 
+The casual_name is "on the wooded trail".
+
 Section - Navigation
 
 North of Room_Wooded_Trail is Room_Dark_Woods_South.
@@ -4998,6 +5087,8 @@ To say day1_woods_desc:
 
 To say day2_woods_desc:
 	say "These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night: a madrone tree, a huge stump";
+
+The casual_name is "in the dark woods".
 
 [TODO: pick random elusive_landmarks and place in Room_Dark_Woods_North and Room_Dark_Woods_South - maybe two in each]
 
@@ -5089,6 +5180,8 @@ The description is "[if Scene_Day_Two is not happening]The woods still look fami
 The scent is "musty forest smell".
 Understand "dark woods" as Room_Dark_Woods_North.
 
+The casual_name is "in the dark woods".
+
 Section - Navigation
 
 North of Room_Dark_Woods_North is Room_Forest_Meadow.
@@ -5123,6 +5216,8 @@ To say meadow_desc_day1:
 
 To say meadow_desc_day2:
 	say "This is the dark forest meadow you found last night, except in the morning light, it is bright and crispy cold. The meadow still makes you think of ticks, but you try not to as you push through the tall grass. You can see paths in a few different directions";
+
+The casual_name is "in the forest meadow".
 
 Room_Forest_Meadow can be observed.
 
@@ -5218,6 +5313,8 @@ The outside_view is "the meadow".
 Understand "protected/-- hollow", "fallen tree", "my/-- fort" as Room_Protected_Hollow.
 Understand "protected/-- hollow/cave/nest" as Room_Protected_Hollow.
 
+The casual_name is "in the protected hollow".
+
 To say hollow_desc_day1:
 	say "This is a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. It is dark and would normally be kind of scary, but the dark woods are scarier[first time]. It helps to have some shelter. The Explorer Scouts taught you that shelter is the first thing you are supposed to find in a survival situation[only]";
 
@@ -5292,6 +5389,8 @@ The description is "This is a tall pine tree, though not as tall as the massive 
 The scent is "tangy pine".
 Understand "tall/-- pine/-- tree", "sentinel tree" as Room_Sentinel_Tree.
 
+The casual_name is "in the sentinel tree".
+
 Section - Navigation
 
 Down from Room_Sentinel_Tree is Room_Forest_Meadow.
@@ -5363,6 +5462,8 @@ The scent is "bean burritos and taco sauce".
 The outside_view is "the movie. [description of movie]".
 Understand "Car With Mom" as Room_Car_With_Mom.
 
+The casual_name is "at the drive-in in a dream".
+
 Section - Navigation
 
 Outside from Room_Car_With_Mom is Room_Drive_In.
@@ -5405,6 +5506,8 @@ The description is "The movie is playing on the big screen. The drive-in is like
 [paragraph break][available_exits]".
 The scent is "popcorn".
 Understand "drive-in/lot", "drive in", "parking lot" as Room_Drive_In.
+
+The casual_name is "at the drive-in in a dream".
 
 Section - Navigation
 
@@ -5482,6 +5585,8 @@ The description is "The line is smaller since the movie's already started. There
 The scent is "fresh popped popcorn and melted butter".
 The outside_view is "the drive-in".
 Understand "snack bar", "snackbar", "snack-bar", "snack shack" as Room_Snack_Bar.
+
+The casual_name is "at the snack bar in a dream".
 
 Section - Navigation
 
@@ -5610,6 +5715,8 @@ The description is "[first time]Oh, what a relief. You use the facilities just b
 The scent is "the stuff they use to make it not smell bad which makes you feel like you have to sneeze. Still, that's better than the terrible pit toilets you had to use at the state park that you went to with Honey and Grandpa. One time you cried because you had to go but didn't want to go into the smelly toilets".
 Understand "restroom/bathroom/toilet/potty", "bath/rest room" as Room_Restroom.
 
+The casual_name is "at the snack bar in a dream".
+
 Section - Navigation
 
 West of Room_Restroom is Room_Snack_Bar.
@@ -5635,6 +5742,8 @@ The description is "You are in mom's Camaro. Your stepdad is driving. He focuses
 The scent is "".
 The outside_view is "the highway. [description of road]".
 Understand "Camaro/car" as Room_Camaro_With_Stepdad.
+
+The casual_name is "in a dream".
 
 Section - Navigation
 
@@ -5691,6 +5800,8 @@ The description is "This is the grassy field behind the trailer park. On either 
 [paragraph break][available_exits]".
 The scent is "the sweet smell of dried hay".
 Understand "Dream grassy/-- field" as Room_Dream_Grassy_Field.
+
+The casual_name is "in a dream".
 
 Section - Navigation
 
@@ -5778,6 +5889,8 @@ The description is "Railroad tracks cross the old dirt road here in a small rise
 The scent is "dust and grease".
 Understand "dream/-- railroad/train/sp/-- tracks", "southern pacific tracks", "railroad/train/sp crossing" as Room_Dream_Railroad_Tracks.
 
+The casual_name is "at the railroad tracks in a dream".
+
 Section - Navigation
 
 Room_Dream_Railroad_Tracks is east of Room_Dream_Grassy_Field.
@@ -5836,6 +5949,8 @@ The description is "This is the surface of Mars, the red planet, at least 100 mi
 [paragraph break][available_exits][end if]".
 The scent is "billion year old dust".
 Understand "Mars" as Room_Mars.
+
+The casual_name is "in a dream about Mars".
 
 Section - Navigation
 
@@ -5897,6 +6012,8 @@ The description is "Hey, here's the Viking 1 Lander. So that means you must be o
 The scent is "billion year old dust".
 Understand "Chryse Planitia" as Room_Chryse_Planitia.
 
+The casual_name is "in a dream about Mars".
+
 Section - Navigation
 
 [TODO: Fix this:
@@ -5948,6 +6065,8 @@ The printed name is "Dirt Road".
 The description is "The dirt road slopes down as it runs along the creek before turning into a trail over the stone bridge. There is a field full of tall weeds and junk cars separated by a chainlink fence. There is a sizable hole dug under the fence.".
 The scent is "sunshine and dust".
 Understand "Dream Dirt Road" as Room_Dream_Dirt_Road
+
+The casual_name is "in a dream".
 
 Section - Navigation
 
@@ -6095,13 +6214,17 @@ Instead of examining arm:
 A pail is an unopenable floating open container.
 	The printed name is "your pail".
 	It is held by the player.
-	The description of the pail is "[one of]A purple pail with a yellow handle. You recognize this pail from your trip to the beach with mom. She had to run out and get it when the waves tried to steal it. You thought she'd be mad, but you both laughed and laughed. That was a long time ago[or]Your purple beach pail[stopping][if pail is empty]. The pail is empty, but it is still stained from juice at the bottom[else if pail is quarter-full]. It has a good number of ripe berries in it and a puddle of purple juice[else if pail is half-full]. It is about half full of berries[else if pail is three-quarter-full]. It is getting pretty full of blackberries[otherwise]. ripe blackberries heap over the rim of the pail. You are careful not to spill them[end if]."
+	The description of the pail is "This is [one of]a purple pail with a yellow handle. You recognize this pail from your trip to the beach with mom. She had to run out and get it when the waves tried to steal it. You thought she'd be mad, but you both laughed and laughed. That was a long time ago[or]your purple beach pail[stopping][if pail is empty]. The pail is empty, but it is still stained from juice at the bottom[else if pail is quarter-full]. It has a good number of ripe berries in it and a puddle of purple juice[else if pail is half-full]. It is about half full of berries[else if pail is three-quarter-full]. It is getting pretty full of blackberries[otherwise]. ripe blackberries heap over the rim of the pail. You are careful not to spill them[end if]."
 	Understand "purple/-- pail/juice" as pail.
-	Instead of searching pail, try examining pail.
-	A pail can be empty, quarter-full, half-full, three-quarter-full, or full.
+
+A pail can be empty, quarter-full, half-full, three-quarter-full, or full.
 	It is quarter-full.
-	The dry_time of pail is 1.
+
+The dry_time of pail is 1.
 	Include (- with articles "Your" "your" "a", -) when defining pail.
+
+Instead of searching pail:
+	try examining pail.
 
 Chapter - Rules and Actions
 
@@ -6961,6 +7084,17 @@ When Scene_Walk_With_Grandpa begins:
 
 test grandpa-walk with "go to bridge/g/g/pick berries/g/g/eat berries/go to grandpa's trailer/g/g/g/g/g/g/g/g/g/g/go to blackberry clearing/g/g/g/g/g/g/g/g".
 
+[TODO: Generalize "take action on Grandpa's walk" to anyone who has a goal they are headed to. Each set of actions has the following:
+	* start location
+	* ending location
+	* behavior before you get there
+	* behavior if you keep them waiting
+	* behavior while waiting to move to next location
+	* behavior before moving to next location
+	* behavior if they catch up to you
+	* behavior when they arrive
+]
+
 To take action on Grandpa's walk:
 	[ START: grandpa tells you he's leaving and wants your help ]
 	[if time since Scene_Walk_With_Grandpa began is 0 minutes:]
@@ -7031,6 +7165,8 @@ Sharon is a _female woman in Room_D_Loop.
 	The initial appearance is "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of a soap opera on her old black and white TV[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She is staring briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs."
 	The description is "[first time]She has a name, but you never can remember it, especially since both your mom and Honey call her the crazy cat lady behind her back. Is it Sharon? Shannon? And that's not all they call her. Honey says she is a crazy old B-I-T-C-H. But she's always been nice to you. [only]Her makeup is a little bit too thick and she seems to wear a bathrobe at all hours, but you can see how she used to be pretty when she was young."
 	Understand "cat lady", "Sharon", "lady", "crazy", "Sharon", or "Shannon" as Sharon.
+	The indefinite article is "the".
+	Include (- with articles "The" "the" "a", -) when defining Sharon.
 
 Chapter - Properties
 
@@ -7491,7 +7627,7 @@ Response of Lee when asked-or-told about Sharon:
 	say "Lee glances toward D Loop. 'I don't have nothin['] to say about that lady,' Lee says, 'but don't even get me started on her cats.'".
 
 Response of Lee when asked-or-told about Sheriff:
-	say "'Ah, man, don't even get me started on that fat pig,' Lee says. 'I don't have beef with every cop like some guys, but this sheriff is always trying to bust my chops. Reminds me of some of the Em-Fics we had in Nam. Some of them, good guys. Some of them, a-holes trying to make a point.".
+	say "'Ah, man, don't even get me started on that fat pig,' Lee says. 'I don't have beef with every cop like some guys, but this sheriff is always trying to bust my chops. Reminds me of some of the Em-Fics we had in Nam. Some of them, good guys. Some of them, a-holes trying to make a point. Excuse my language.".
 
 Response of Lee when asked-or-told about Mom:
 	say "[one of]'I know your mom. Rachel,' Lee says seriously. 'She's good people. I get people up in my face all the time. People avoiding me. Your mom, she smiles nicely at me and tells me hello.
@@ -7594,7 +7730,7 @@ lee_indian_rant is a rant.
 Table of lee_indian_rant
 Quote
 "'This whole area, hell, this whole country, is Indian land, Jody.', Lee says, 'I grew up here, but my mom grew up on the rez. I don't think she ever wanted to go back. She was full blood Dakota. They took her out for Indian School and erased her culture, man. I knew I was Indian, but had no connection to it, you know?' Lee takes a drag of his cigarette."
-"Lee continues. 'I met more Indians in the service than I ever did anywhere else,' Lee laughs bitterly. 'I mean they like to send poor people to war, don't they? And that means Blacks and Chicanos and Indians.'"
+"Lee continues. 'I met more Indians in name than I ever did in the World,' Lee laughs bitterly. 'I mean they like to send poor people to war, don't they? And that means Blacks and Chicanos and Indians.'"
 "'That's why we're seeing all that stuff on the news about the Indian Movement,' Lee continues, 'They're fed up, man. You watch, Jody, someday the Indians are gonna take back this whole country.'"
 
 
@@ -7746,6 +7882,9 @@ Default give-show response for Mary:
 
 Default response for Mary:
 	say "[one of]'Uh huh,' Aunt Mary says distractedly[or]'I apologize, dear, but I have to go stir the jam,' Mary says[or]'Hm, what was that?' Mary says[or]'Oh, you don't say,' Mary says vaguely[at random][if a random chance of 1 in 3 succeeds], [mary_stuff][end if].";
+
+Default thanks response for Mary:
+	say "'Okay, dear,' Aunt Mary says.";
 
 Instead of touching Mary:
 	say "'You're a darling,' she says. Now help your old Aunty here.";
@@ -7909,7 +8048,7 @@ This is the seq_mary_sandwich_handler rule:
 			queue_report "Your Aunt Mary has you on the assembly line constructing tuna fish sandwiches and putting them in sandwich bags." at priority 1;
 	else if index is 3:
 		if mary is visible:
-			queue_report "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich_ingredients. 'Okay, you take those sandwiches down to your grandparents. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles." at priority 1;
+			queue_report "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makin's. 'Okay, you take those sandwiches down to your grandparents. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles." at priority 1;
 		now all tuna sandwiches are in brown paper bag;
 		now brown paper bag is held by player;
 		now sandwich_ingredients are off-stage;
@@ -8476,15 +8615,6 @@ After examining the dog two times:
 	now player is perceptive;
 	now player is dog_experienced;
 	continue the action.
-
-To say dog_sub_pronoun:
-	say "[sub_pronoun of dog]";
-
-To say dog_pos_pronoun:
-	say "[pos_pronoun of dog]";
-
-To say dog_obj_pronoun:
-	say "[obj_pronoun of dog]";
 
 The dog can be examined.
 The dog can be loose.
