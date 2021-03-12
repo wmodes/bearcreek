@@ -99,36 +99,6 @@ Part - Epistemology
 
 Include Epistemology by Eric Eve.
 
-Part - Remembering
-
-[Replaces 'You can't see any such thing' for a seen but out-of-scope noun with a message acknowledging that the parser recognizes the object.]
-
-[Include Remembering by Aaron Reed.]
-
-[Understand
-	"examine [any seen thing]" or
-	"x [any remembered thing]" or
-	"look at/for [any seen thing]" or
-	"take [any seen thing]" or
-	"get [any seen thing]" or
-	"pick up [any seen thing]" or
-	"pick [any seen thing] up" or
-	"drop [any seen thing]" or
-	"put down [any seen thing]" or
-	"put [any seen thing] down" or
-	"drop [any seen thing] away" or
-	"drop away [any seen thing]" or
-	"find [any seen thing]" or
-	"where is/are [any seen thing]" or
-	"thank [any seen thing]"
-	as remembering.]
-
-[The Remembering specific report remembering rule response (A) is "You look around, but don't see [the noun]. Last you remember, [they] [was-were of noun] [at the remembered location of noun].[line break]".]
-
-A room has some text called casual_name.
-
-[The Remembering saying room name rule response (A) is "[the casual_name of the place]".]
-
 Part - Smarter Parser
 
 Include Smarter Parser by Aaron Reed.
@@ -411,6 +381,8 @@ Replace PrintInferredCommand;
 
 [ PrintInferredCommand; ];
 -) before "Parser.i6t".
+
+
 
 Chapter - Printing Descriptions
 
@@ -1119,6 +1091,101 @@ Carry out taking inventory (this is the print non-standard inventory rule):
 		list the contents of the player, as a sentence, including contents, listing marked items only;
 	say "[other_attributes].";
 
+Chapter - New Can't See That Report
+
+[
+	Remembering last seen locations
+
+	From Aaron Reed's remembering
+
+	Replaces 'You can't see any such thing' for a seen but out-of-scope noun with a message acknowledging that the parser recognizes the object.
+]
+
+Every thing has an object called the remembered location.
+	The remembered location of a thing is usually nothing.
+
+Last when play begins (this is the Remembering update remembered positions for first turn rule):
+	follow the Remembering update remembered positions of things rule.
+
+Every turn (this is the Remembering update remembered positions of things rule):
+	unless in darkness:
+		repeat with item running through things that are enclosed by the location:
+			if remembered location of item is not holder of item:
+				if item is visible:
+					now the remembered location of item is the holder of item.
+
+To decide whether (item - an object) acts plural:
+	if the item is plural-named or the item is ambiguously plural:
+		yes;
+	no.
+
+To say was-were of (N - an object):
+	if the story tense is future tense:
+		say "will have been";
+	otherwise if N acts plural:
+		say "were";
+	otherwise:
+		say "was".
+
+To say at the (place - an object):
+	carry out the saying the location name activity with place.
+
+saying the location name of something is an activity on objects.
+
+For saying the location name of a room (called place) (this is the Remembering saying room name rule): say "at '[the place]'" (A).
+
+For saying the location name of the location (this is the Remembering saying current location name rule): say "right here" (A).
+
+For saying the location name of a person (called subject) (this is the Remembering saying person name rule): say "in the possession of [the subject]" (A).
+
+For saying the location name of a person who is the player (this is the Remembering saying player name rule): say "in your possession" (A).
+
+For saying the location name of a container (called the holder) (this is the Remembering saying container name rule): say "in [the holder]" (A).
+
+For saying the location name of a supporter (called the holder) (this is the Remembering saying supporter name rule): say "on [the holder]" (A).
+
+[
+	my mods to remembering
+]
+
+A room has some text called casual_name.
+
+The Remembering saying room name rule response (A) is "[the casual_name of the place]".
+
+[
+	Deciding scope and Reporting
+
+	Courtesy of @otistdog https://intfiction.org/t/remembering-mysteries/49840/15?u=wmodes
+]
+
+[An alternative to scope testing via direct object tree inspection]
+To decide whether (X - thing) has line of sight to (Y - thing):
+    if the common ancestor of X with Y is nothing, decide no;
+    if Y is enclosed by a closed opaque container that does not enclose X, decide no;
+    if X is enclosed by a closed opaque container that does not enclose Y, decide no;
+    decide yes.
+
+To decide whether (X - thing) does not have line of sight to (Y - thing):
+	if X has line of sight to Y:
+		decide no;
+	otherwise:
+		decide yes.
+
+Definition: a thing is unavailable if it is seen and the player does not have line of sight to it.
+
+After deciding the scope of the player:
+	repeat with X running through unavailable things:
+		place X in scope.
+
+[Uses before rules to intervene ahead of visibility checks]
+Before doing something when the noun is unavailable:
+	[say "[The noun] [are] nowhere to be seen." instead.]
+	say "You look around, but don't see [the noun]. Last you remember, [they] [was-were of noun] [at the remembered location of noun].[line break]" instead.
+
+Before doing something when the second noun is unavailable:
+	[say "[The second noun] [are] nowhere to be seen." instead.]
+	say "You look around, but don't see [the second noun]. Last you remember, [they] [was-were of noun] [at the remembered location of noun].[line break]" instead.
+
 
 Book - Hints
 
@@ -1616,6 +1683,27 @@ This is the show reports rule:
 
 [TODO: Find a new rulebook for the above rule that triggers every turn. As it is, some every turn rules that queue_reports get shown one after another.]
 
+Part - Reporting People Speaking
+
+[ This is a shortcut for queue_report.
+
+ 	First it checks to see if speaker is present and sets the current interlocutor.
+
+	In it's simplest form it looks like:
+
+		Report Lee saying "blah blah".
+
+	In practice, multiple people can be speaking, so we set the speaker to the last person who spoke:
+
+		Report Honey saying "'Have you heard from Nick about this summer?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says.";
+
+	By default it reports at priority 2, with priority 1 (printed last) reserved for premonitions and other important things.
+]
+
+To report (speaker - person) saying (speech_text - text):
+	if speaker is visible:
+		queue_report speech_text at priority 2;
+		now current interlocutor is speaker;
 
 Book - Scenes
 
@@ -2380,8 +2468,9 @@ To step_a_rant for (this_rant - a rant):
 	let orig_room be orig_room of this_rant;
 	let max_quotes be the number of rows in quote_table of this_rant;
 	[if player is in orig_room and speaker of this_rant is in orig_room:]
-	if speaker of this_rant is visible:
-		queue_report quote in row index of the quote_table of this_rant with priority 1;
+	report speaker of this_rant saying quote in row index of the quote_table of this_rant;
+	[if speaker of this_rant is visible:
+		queue_report quote in row index of the quote_table of this_rant with priority 1;]
 	if index is max_quotes:
 		now this_rant is not in-progress;
 		[ we repeat the last quote from here on out ]
@@ -6607,30 +6696,30 @@ This is the seq_grandparents_chat_handler rule:
 			queue_report "You hear Honey and Grandpa talking and you perk up your ears." at priority 1;
 		else if player is in Room_Grassy_Clearing:
 			if index is 1:
-				queue_report "Honey and Grandpa continue their conversation: 'Have you heard from Nick about this summer? Is he planning a visit or are we just left guessing?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says." at priority 1;
+				Report Honey saying "Honey and Grandpa continue their conversation: 'Have you heard from Nick about this summer? Is he planning a visit or are we just left guessing?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says.";
 			else if index is 2:
-				queue_report "[grandparent_random]" at priority 1;
+				queue_report "[grandparent_random]" at priority 2;
 			else if index is 3:
-				queue_report "'Did you call Rachel?' Honey asks Grandpa. 'Sounded like she wanted to talk to her dad.'" at priority 1;
+				Report Honey saying "'Did you call Rachel?' Honey asks Grandpa. 'Sounded like she wanted to talk to her dad.'";
 			else if index is 4:
-				queue_report "'I'll call her tonight, see how she is,' Grandpa says to Honey." at priority 1;
+				Report Grandpa saying "'I'll call her tonight, see how she is,' Grandpa says to Honey.";
 			else if index is 5:
-				queue_report "'You're not worried about her?' Honey asks Grandpa in a low voice glancing your way, 'With Mark?' You keep your head down and try to look like you are concentrating on picking berries." at priority 1;
+				Report Honey saying "'You're not worried about her?' Honey asks Grandpa in a low voice glancing your way, 'With Mark?' You keep your head down and try to look like you are concentrating on picking berries.";
 			else if index is 6:
-				queue_report "'Well, you know Rach, she can take care of herself,' Grandpa says to Honey, 'She's a big girl.' And after a moment, 'But I'll tell ya...'" at priority 1;
+				Report Grandpa saying "'Well, you know Rach, she can take care of herself,' Grandpa says to Honey, 'She's a big girl.' And after a moment, 'But I'll tell ya...'";
 			else if index is 7:
-				queue_report "You wander a little distance away, but close enough that you can still hear. 'I do not like the way he treats, ah, the little one. At all.' Grampa says." at priority 1;
+				Report Grandpa saying "You wander a little distance away, but close enough that you can still hear. 'I do not like the way he treats, ah, the little one. At all.' Grampa says.";
 			else if index is 8:
 				queue_report "[grandparent_random]" at priority 1;
 			else if index is 9:
-				queue_report "'I don't know,' Honey says quietly. 'I trust Rachel too, but still. I'm not happy how it's turning out with this guy. Maybe it happened too quickly." at priority 1;
+				Report Honey saying "'I don't know,' Honey says quietly. 'I trust Rachel too, but still. I'm not happy how it's turning out with this guy. Maybe it happened too quickly.";
 			else if index is 10:
-				queue_report "'Did you ask about the arm?' Honey asks Grandpa, glancing in your direction." at priority 1;
+				Report Honey saying "'Did you ask about the arm?' Honey asks Grandpa, glancing in your direction.";
 				now player is arm_aware1;
 			else if index is 11:
-				queue_report "'I did ask about the arm, but I didn't find out anything,' Grandpa says, looking over at you. 'To think that asshole, pardon my French, might have...' Grandpa just shakes his head." at priority 1;
+				Report Grandpa saying "'I did ask about the arm, but I didn't find out anything,' Grandpa says, looking over at you. 'To think that asshole, pardon my French, might have...' Grandpa just shakes his head.";
 			else if index is 12:
-				queue_report "''I don't put anything past him when he's been drinking,' Honey says to Grandpa. 'Yeah, he's a charmer. What were you thinking, Rachel?'" at priority 1;
+				Report Honey saying "'I wouldn't put anything past him when he's been drinking,' Honey says to Grandpa. 'Yeah, he's a charmer. What was Rachel thinking?'";
 			else if index is 13:
 				queue_report "[grandparent_random]" at priority 1;
 				[We do the following, because we want this step to repeat]
@@ -6661,20 +6750,20 @@ This is the seq_grandparents_tracks_handler rule:
 	let index be index of seq_grandparents_tracks;
 	if player is in Room_Dream_Railroad_Tracks:
 		if index is 1:
-			queue_report "'Hey, [grandpas_nickname]. We've been waiting for you,' Grandpa says gently. Honey smiles at you." at priority 1;
+			Report Grandpa saying "'Hey, [grandpas_nickname]. We've been waiting for you,' Grandpa says gently. Honey smiles at you.";
 		else if index is 2:
-			queue_report "Grandpa puts his hand on your shoulder, 'You've had quite a time, haven't you? Don't you worry about it, about him.' Who is grandpa talking about?" at priority 1;
+			Report Grandpa saying "Grandpa puts his hand on your shoulder, 'You've had quite a time, haven't you? Don't you worry about it, about him.' Who is grandpa talking about?";
 		else if index is 3:
-			queue_report "'Sometimes we worry about you,  [grandpas_nickname],' grandpa says, 'But it'll be okay, I promise.'" at priority 1;
+			Report Grandpa saying "'Sometimes we worry about you,  [grandpas_nickname],' grandpa says, 'But it'll be okay, I promise.'";
 		else if index is 4:
-			queue_report "Honey leans over and whispers, 'Try as we might, we may not always be able to keep you safe, [honeys_nickname].' She takes a deep breath, 'But I know you can take care of yourself when you need to.'" at priority 1;
+			Report Honey saying "Honey leans over and whispers, 'Try as we might, we may not always be able to keep you safe, [honeys_nickname].' She takes a deep breath, 'But I know you can take care of yourself when you need to.'";
 		else if index is 5:
-			queue_report "'Let's see where this journey takes us', Grandpa says, inviting you with his hand to follow the tracks." at priority 1;
+			Report Grandpa saying "'Let's see where this journey takes us', Grandpa says, inviting you with his hand to follow the tracks.";
 			now grandparents_track_done is true;
 		else if index is 5:
-			queue_report "Grandpa says, 'Let's get going. I think we're meant to follow these,' he says gesturing at the tracks. [paragraph break]Honey laughs, 'There's a metaphor there somewhere.'" at priority 1;
+			Report Honey saying "Grandpa says, 'Let's get going. I think we're meant to follow these,' he says gesturing at the tracks. [paragraph break]Honey laughs, 'There's a metaphor there somewhere.'";
 		else if index is 6:
-			queue_report "[one of]'Time to go,' says grandpa.[or]Honey says, 'Let's see what's next, [honeys_nickname],' pointing at the tracks.[or]'Time to make like a hobo', says grandpa looking at the tracks.[at random]" at priority 1;
+			Report Grandpa saying "[one of]'Time to go,' says grandpa.[or]Honey says, 'Let's see what's next, [honeys_nickname],' pointing at the tracks.[or]'Time to make like a hobo', says grandpa looking at the tracks.[at random]";
 			[We do the following, because we want this step tp repeat]
 			decrease index of seq_grandparents_tracks by one;
 			[we make sure this ends when Scene_Dream_Tracks ends]
@@ -6696,11 +6785,11 @@ This is the seq_grandparents_bounce_handler rule:
 	let index be index of seq_grandparents_bounce;
 	if player is in Room_Mars:
 		if index is 2:
-			queue_report "Honey and Grandpa both stumble in the light gravity. Honey looks concerned, but Grandpa looks thrilled. 'Hmm,' he says smiling broadly taking several experimental hops." at priority 1;
+			Report Grandpa saying "Honey and Grandpa both stumble in the light gravity. Honey looks concerned, but Grandpa looks thrilled. 'Hmm,' he says smiling broadly taking several experimental hops.";
 		else if index is 4:
 			queue_report "Honey smiles as she gives a little jump and sails high. Grandpa gives a bigger jump and flies almost as high as he is tall. They are both laughing." at priority 1;
 		else if index is 6:
-			queue_report "'Watch this!' Grandpa says like a little kid and leaps high into the air yelling 'Woo!' while Honey laughs." at priority 1;
+			Report Grandpa saying "'Watch this!' Grandpa says like a little kid and leaps high into the air yelling 'Woo!' while Honey laughs.";
 		else if index is 7:
 			queue_report "Grandpa gathers up his strength, squating down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'John!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
 			now seq_grandparents_bounce is not in-progress;
@@ -6997,17 +7086,14 @@ seq_grandpa_begins_walk is a sequence.
 This is the seq_grandpa_begins_walk_handler rule:
 	let index be index of seq_grandpa_begins_walk;
 	if index is 1:
-		if grandpa is visible:
-			queue_report "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old grandpa?'" at priority 1;
-			now current interlocutor is Grandpa;
+		Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old grandpa?'";
 	else if index is 2:
-		if grandpa is visible:
-			queue_report "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge, and heads off down the trail toward the bridge." at priority 1;
-			now Grandpa is described;
-			now Grandpa holds bucket;
-			move Grandpa to Room_Blackberry_Tangle;
-			now time_until_leaving of Grandpa is 2;
-			now time_left_waiting of Grandpa is zero;
+		Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge, and heads off down the trail toward the bridge.";
+		now Grandpa is described;
+		now Grandpa holds bucket;
+		move Grandpa to Room_Blackberry_Tangle;
+		now time_until_leaving of Grandpa is 2;
+		now time_left_waiting of Grandpa is zero;
 
 This is the seq_grandpa_begins_walk_interrupt_test rule:
 	if grandpa is not visible:
@@ -7032,20 +7118,16 @@ seq_grandpa_in_trailer is a sequence.
 This is the seq_grandpa_in_trailer_handler rule:
 	let index be index of seq_grandpa_in_trailer;
 	if index is 1:
-		if grandpa is visible:
-			queue_report "'Mornin', Mary,' Grandpa says as he comes in.[paragraph break]'How's the berry picking?' Mary asks." at priority 1;
+		Report Mary saying "'Mornin', Mary,' Grandpa says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
 	else if index is 2:
-		if grandpa is visible:
-			queue_report "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops." at priority 2;
-			now bucket is empty;
+		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
+		now bucket is empty;
 	else if index is 3:
-		if grandpa is visible:
-			queue_report "Your grandpa gets a big glass of water from the sink and drinks it.
-			[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'" at priority 2;
-			now current interlocutor is Mary;
-			now seq_mary_sandwich is in-progress;
+		Report Mary saying "Your grandpa gets a big glass of water from the sink and drinks it.
+		[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'";
+		now seq_mary_sandwich is in-progress;
 	else if index is 4:
-		queue_report "'I better hustle back,' Grandpa says, 'before Ellie needs the bucket.' Grandpa turns to you on his way out, 'See you down there, [grandpas_nickname].' Grandpa squeezes your shoulder and heads out the door." at priority 2;
+		Report Grandpa saying "'I better hustle back,' Grandpa says, 'before Ellie needs the bucket.' Grandpa turns to you on his way out, 'See you down there, [grandpas_nickname].' Grandpa squeezes your shoulder and heads out the door.";
 		now grandpa is in Room_Grassy_Clearing;
 
 This is the seq_grandpa_in_trailer_interrupt_test rule:
@@ -7082,7 +7164,7 @@ When Scene_Walk_With_Grandpa begins:
 	* turn n+1: one turn after you arrive, grandpa says something to you and goes one step closer
 	* turn n+m: if you take more than m turns to get to him and you are a location away, grandpa comes to get you and ask if you are coming ]
 
-test grandpa-walk with "go to bridge/g/g/pick berries/g/g/eat berries/go to grandpa's trailer/g/g/g/g/g/g/g/g/g/g/go to blackberry clearing/g/g/g/g/g/g/g/g".
+test grandpa-walk with "go to bridge/g/g/pick berries/g/g/dump berries into bucke/go to grandpa's trailer/g/g/g/g/g/g/g/g/g/g/g/go to grassy clearing/g/g/g/g/g/g/g/g/g/g".
 
 [TODO: Generalize "take action on Grandpa's walk" to anyone who has a goal they are headed to. Each set of actions has the following:
 	* start location
@@ -7119,7 +7201,7 @@ To take action on Grandpa's walk:
 		else: [ if grandpa is here ]
 			[ if you kept grandpa waiting, he says something about it ]
 			if time_left_waiting of Grandpa is greater than two:
-				queue_report "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]" at priority 3;
+				Report Grandpa saying "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]";
 				[If you kept grandpa waiting, he leaves immediately?]
 				now time_until_leaving of Grandpa is one; [if made to wait, leaves immediately]
 			now time_left_waiting of Grandpa is zero;
@@ -7194,12 +7276,10 @@ At the time when Sharon tends garden:
 		Sharon tends garden in 10 minutes from now;
 		stop;
 	if Sharon is ready-for-tea-time:
-		if Sharon is visible:
-			queue_report "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'I was going to water the garden, but we're having so much fun, I'll do it later.'" at priority 3;
+		Report Sharon saying "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'I was going to water the garden, but we're having so much fun, I'll do it later.'";
 		Sharon tends garden in 15 minutes from now;
 	Otherwise:
-		if Sharon is visible:
-			queue_report "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharon_nickname], I have to go water the garden.' [run paragraph on]" at priority 3;
+		Report Sharon saying "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharon_nickname], I have to go water the garden.' [run paragraph on]";
 		Move Sharon out of her trailer;
 		Now Sharon is tending-garden;
 		if Sharon is visible:
@@ -7215,12 +7295,10 @@ At the time when Sharon watches TV:
 		Sharon watches TV in 10 minutes from now;
 		stop;
 	if Sharon is ready-for-tea-time:
-		if Sharon is visible:
-			queue_report "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'One of my shows is on, but it is so much fun talking to you, I'll skip it.'" at priority 3;
+		Report Sharon saying "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'One of my shows is on, but it is so much fun talking to you, I'll skip it.'";
 		Sharon watches TV in 15 minutes from now;
 	Otherwise:
-		if Sharon is visible:
-			queue_report "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharon_nickname], my favorite show is on. You can join me if you want.' [run paragraph on]" at priority 3;
+		Report Sharon saying "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharon_nickname], my favorite show is on. You can join me if you want.' [run paragraph on]";
 		Move Sharon into her trailer;
 		Now Sharon is watching-tv;
 		if Sharon is visible:
@@ -7231,12 +7309,10 @@ At the time when Sharon feeds cats:
 		Sharon feeds cats in 10 minutes from now;
 		stop;
 	if Sharon is ready-for-tea-time:
-		if Sharon is visible:
-			queue_report "The Cat Lady [sharon_stuff] and says, 'The little dearies are hungry, but we're having so much fun, aren't we?'" at priority 3;
+		Report Sharon saying "The Cat Lady [sharon_stuff] and says, 'The little dearies are hungry, but we're having so much fun, aren't we?'";
 		Sharon feeds cats in 15 minutes from now;
 	Otherwise:
-		if Sharon is visible:
-			queue_report "The Cat Lady [sharon_stuff] and says, 'Well, [sharon_nickname], I have to go feed the kitties.' [run paragraph on]" at priority 3;
+		Report Sharon saying "The Cat Lady [sharon_stuff] and says, 'Well, [sharon_nickname], I have to go feed the kitties.' [run paragraph on]";
 		Move Sharon into her trailer;
 		Now Sharon is feeding-cats;
 		if Sharon is visible:
@@ -7254,7 +7330,7 @@ To move Sharon into her trailer:
 	if player is in Room_D_Loop:
 		queue_report "She goes into her trailer, going slowly up the steps. The tabby cat licks its paw and, after a bit, follows through the cat door." at priority 3;
 	otherwise if player is in Room_Sharons_Trailer:
-		queue_report "The Cat Lady comes into the trailer and sees you, 'Hi, [sharon_nickname].' The tabby cat follows through the cat door." at priority 3;
+		Report Sharon saying "The Cat Lady comes into the trailer and sees you, 'Hi, [sharon_nickname].' The tabby cat follows through the cat door.";
 	Now Sharon is in Room_Sharons_Trailer;
 	Now yellow tabby is in Room_Sharons_Trailer;
 
@@ -7431,7 +7507,7 @@ This is the seq_sharon_invite_handler rule:
 	if Sharon is visible:
 		now current interlocutor is Sharon;
 	if index is 2:
-		queue_report "'Won't you come in for a moment?' the Cat Lady gestures at her trailer, 'I just love guests. And I do so enjoy talking to you.'" at priority 2;
+		Report Sharon saying "'Won't you come in for a moment?' the Cat Lady gestures at her trailer, 'I just love guests. And I do so enjoy talking to you.'";
 
 This is the seq_sharon_invite_interrupt_test rule:
 	if player is not in Room_D_Loop or Sharon is not visible:
@@ -7459,20 +7535,18 @@ This is the seq_sharon_teatime_handler rule:
 		if sharon is not in Room_Sharons_Trailer:
 			Move Sharon into her trailer;
 		now sharon is ready-for-tea-time;
-		queue_report "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest." at priority 2;
+		Report Sharon saying "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest.";
 	else if index is 2:
-		if sharon is visible:
-			queue_report "'[if player is not on Cat Lady's kitchen table]Oh, [sharon_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things." at priority 2;
-			do Sharon_Teatime_Premonition;
+		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Oh, [sharon_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
+		do Sharon_Teatime_Premonition;
 	else if index is 3:
-		if sharon is visible:
-			queue_report "'[if player is not on Cat Lady's kitchen table]Please, [sharon_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharon_nickname]. What adventures have you had since we talked last?'" at priority 2;
+		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Please, [sharon_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharon_nickname]. What adventures have you had since we talked last?'";
 	else if index is 4:
 		if sharon is visible:
 			if player is not on Cat Lady's kitchen table:
 				queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3;
 				silently try entering the Cat Lady's kitchen table;
-			queue_report "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharon_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard." at priority 2;
+			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharon_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
 			now your teacup is filled;
 			Now player is confident;
 			Now player is sharon_experienced;
@@ -7487,8 +7561,7 @@ This is the seq_sharon_teatime_handler rule:
 			now index of seq_sharon_teatime is 6;
 			now index is 6;
 	if index is 6:
-		if sharon is visible:
-			queue_report "'Oh [sharon_nickname], it's been so nice talking to you. I can see you have to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you." at priority 2;
+		Report Sharon saying "'Oh [sharon_nickname], it's been so nice talking to you. I can see you have to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you.";
 		if player holds your teacup:
 			queue_report "You return your teacup to the table." at priority 1;
 			now your teacup is on the Cat Lady's kitchen table;
@@ -7538,7 +7611,7 @@ At the time when lee_resumes_smoking:
 To move_lee_into_his_trailer:
 	now Lee is in Room_Lees_Trailer;
 	if player is in Room_Lees_Trailer:
-		queue_report "Lee comes in stubbing out his cigarette in an ashtray and says, 'Hey, Jody.'" at priority 3;
+		Report Lee saying "Lee comes in stubbing out his cigarette in an ashtray and says, 'Hey, Jody.'";
 	else:
 		queue_report "Lee gives you a wave and heads inside his trailer." at priority 3;
 
@@ -7547,8 +7620,7 @@ To move_lee_out_of_his_trailer:
 	if player is in Room_Lees_Trailer:
 		queue_report "Lee gives you a wave and heads out the door, grabbing a pack of smokes on the way outside." at priority 3;
 	else:
-		if Lee is visible:
-			queue_report "Lee comes out of his trailer, gives you a nod, sits down in his chair, and lights up a smoke." at priority 3;
+		Report Lee saying "Lee comes out of his trailer, gives you a nod, sits down in his chair, and lights up a smoke.";
 
 [TODO: Every turn when Lee is not talking, do Lee stuff, smoke cigarette, etc ]
 
@@ -7752,13 +7824,13 @@ This is the seq_lee_invite_handler rule:
 	if Lee is visible:
 		now current interlocutor is Lee;
 	if index is 2:
-		queue_report "Lee looks you over. 'What happened to your arm?' he asks with what seems like genuine concern.[if player is injured] 'I see you're looking a little rough around the edges. You okay?' You notice you've been holding your side where you bashed it on the big pine tree.[end if]" at priority 2;
+		Report Lee saying "Lee looks you over. 'What happened to your arm?' he asks with what seems like genuine concern.[if player is injured] 'I see you're looking a little rough around the edges. You okay?' You notice you've been holding your side where you bashed it on the big pine tree.[end if]";
 		now player is arm_aware1;
 	else if index is 4:
 		queue_report "Lee looks like he is thinking about something. Finally, he nods to himself." at priority 2;
 	else if index is 5:
-		queue_report "'I think I have something for you. You're welcome to come in, if you want,' Lee shrugs.[first time]
-		[paragraph break][Lee_Invite_Premonition].[only]" at priority 2;
+		Report Lee saying "'I think I have something for you. You're welcome to come in, if you want,' Lee shrugs.[first time]
+		[paragraph break][Lee_Invite_Premonition].[only]";
 
 [TODO: Add visibility rule to interrupt tests and eliminate stuff like "if player is in Room_C_Loop and lee is visible" from the individual sequence steps, making sure they only apply within Day One or Day Two as appropriate]
 
@@ -7792,39 +7864,33 @@ This is the seq_lee_hangout_handler rule:
 	if index is 1:
 		if Lee is not in Room_Lees_Trailer:
 			move_lee_into_his_trailer;
-		if lee is visible:
-			queue_report "'So what's up in your world?' Lee asks. 'Anything good?' He pauses for a moment. 'I have something here for you.'
-			[paragraph break]Lee is fumbling around in a drawer." at priority 1;
+		Report Lee saying "'So what's up in your world?' Lee asks. 'Anything good?' He pauses for a moment. 'I have something here for you.'
+			[paragraph break]Lee is fumbling around in a drawer.";
 	if index is 2:
-		if lee is visible:
-			queue_report "'Hey, make yourself comfortable,' Lee says. 'Mi casa, es su casa. That means [']My home is your home.['] Do you want anything? A drink or anything?' It makes you [nervous] to think of drinking or eating in Lee's trailer. You can smell a little alcohol on his breath like your step-dad.
-			[paragraph break]Lee is fumbling around in a drawer." at priority 1;
+		Report Lee saying "'Hey, make yourself comfortable,' Lee says. 'Mi casa, es su casa. That means [']My home is your home.['] Do you want anything? A drink or anything?' It makes you [nervous] to think of drinking or eating in Lee's trailer. You can smell a little alcohol on his breath like your step-dad.
+		[paragraph break]Lee is fumbling around in a drawer.";
 	if index is 3:
-		if lee is visible:
-			queue_report "'I got this when I got hurt in Da Nang,' Lee says. 'And now I think it's time to pass it on to you.'
-			[paragraph break]Lee is still looking for something." at priority 1;
+		Report Lee saying "'I got this when I got hurt in Da Nang,' Lee says. 'And now I think it's time to pass it on to you.'
+		[paragraph break]Lee is still looking for something.";
 	else if index is 4:
-		if lee is visible:
-			queue_report "'They gave it to me just for being in the wrong place at the wrong time,' Lee is still fumbling in a drawer.
-			[paragraph break]'And I didn't even want to be there. So I always felt weird about it. Like it wasn't really mine. Like I didn't deserve it,' Lee says, 'But you're full of spirit and should have this.' Lee seems to find what he's looking for and puts it behind his back. 'This is for you.'
-			[paragraph break]He holds out a purple medal. It has a purple ribbon and a gold heart-shaped medalion, purple around a gold figure in the middle. You want to hold it in your hand and feel its weight. You put out your hand and, for a moment, are scared Lee is going to snatch it back.
-			[paragraph break]But Lee puts the medal in your hand with a smile. It's heavier even than it appears." at priority 1;
-			now player holds purple_heart;
+		Report Lee saying "'They gave it to me just for being in the wrong place at the wrong time,' Lee is still fumbling in a drawer.
+		[paragraph break]'And I didn't even want to be there. So I always felt weird about it. Like it wasn't really mine. Like I didn't deserve it,' Lee says, 'But you're full of spirit and should have this.' Lee seems to find what he's looking for and puts it behind his back. 'This is for you.'
+		[paragraph break]He holds out a purple medal. It has a purple ribbon and a gold heart-shaped medalion, purple around a gold figure in the middle. You want to hold it in your hand and feel its weight. You put out your hand and, for a moment, are scared Lee is going to snatch it back.
+		[paragraph break]But Lee puts the medal in your hand with a smile. It's heavier even than it appears.";
+		now player holds purple_heart;
 	else if index is 5:
-		if lee is visible:
-			queue_report "You start to thank Lee, but he looks embarrassed even before you say it and cuts you off. 'I wonder what's on the tube,' He turns to the television and starts fiddling with the rabbit ears." at priority 1;
+		Report Lee saying "You start to thank Lee, but he looks embarrassed even before you say it and cuts you off. 'I wonder what's on the tube,' He turns to the television and starts fiddling with the rabbit ears.";
 	else if index is 6:
 		if lee is visible:
 			try Lee switching on lees_tv;
 			say what_show_is_playing;
 			say line break;
-			queue_report "'There's never anything really on. Don't know why I bother,' Lee says. 'Feel free to find something that you like.'" at priority 1;
+			Report Lee saying "'There's never anything really on. Don't know why I bother,' Lee says. 'Feel free to find something that you like.'";
 	else if index is 7:
 		if turns_so_far of seq_lee_hangout is less than 40:
 			decrease index of seq_lee_hangout by one;
 	else if index is greater than 7:
-		if lee is visible:
-			queue_report "'Okay, I'm heading out. You can stay here long as you want. Drop by any time, Jody,' Lee says. 'You take care of yourself. And don't let the assholes get you down,' he adds with a wink." at priority 1;
+		Report Lee saying "'Okay, I'm heading out. You can stay here long as you want. Drop by any time, Jody,' Lee says. 'You take care of yourself. And don't let the assholes get you down,' he adds with a wink.";
 		lee_resumes_smoking in one turn from now;
 
 This is the seq_lee_hangout_interrupt_test rule:
@@ -7980,14 +8046,11 @@ seq_mary_suggestion is a sequence.
 This is the seq_mary_suggestion_handler rule:
 	let index be index of seq_mary_suggestion;
 	if index is 1:
-		if mary is visible:
-			queue_report "Aunt Mary pauses for a moment from her jam making to talk to you, 'You know your grandpa may need some company if he's bringing that bucket up here.'" at priority 3;
+		Report Mary saying "Aunt Mary pauses for a moment from her jam making to talk to you, 'You know your grandpa may need some company if he's bringing that bucket up here.'";
 	else if index is 2:
-		if mary is visible:
-			queue_report "'Also, when you go down to the creek, ask your Grandpa and Grandma about lunch,' Aunt Mary says. 'I can make some sandwiches to send down with you.'" at priority 3;
+		Report Mary saying "'Also, when you go down to the creek, ask your Grandpa and Grandma about lunch,' Aunt Mary says. 'I can make some sandwiches to send down with you.'";
 	else if index is 3:
-		if mary is visible:
-			queue_report "'Why don't you hustle down to the creek and help your grandpa,' Aunt Mary says and goes back to stirring the jam." at priority 3;
+		Report Mary saying "'Why don't you hustle down to the creek and help your grandpa,' Aunt Mary says and goes back to stirring the jam.";
 
 This is the seq_mary_suggestion_interrupt_test rule:
 	if Scene_Explorations has ended, rule fails; [if no longer applicable, run out the sequence]
@@ -8041,14 +8104,12 @@ This is the seq_mary_sandwich_handler rule:
 	let index be index of seq_mary_sandwich;
 	if index is 1:
 		if mary is visible:
-			queue_report "Your Aunt Mary recruits you to help make lunch, getting out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread." at priority 1;
+			Report Mary saying "Your Aunt Mary recruits you to help make lunch, getting out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread.";
 			now sandwich_ingredients are in Room_Grandpas_Trailer;
 	else if index is 2:
-		if mary is visible:
-			queue_report "Your Aunt Mary has you on the assembly line constructing tuna fish sandwiches and putting them in sandwich bags." at priority 1;
+		Report Mary saying "Your Aunt Mary has you on the assembly line constructing tuna fish sandwiches and putting them in sandwich bags.";
 	else if index is 3:
-		if mary is visible:
-			queue_report "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makin's. 'Okay, you take those sandwiches down to your grandparents. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles." at priority 1;
+		Report Mary saying "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makin's. 'Okay, you take those sandwiches down to your grandparents. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles.";
 		now all tuna sandwiches are in brown paper bag;
 		now brown paper bag is held by player;
 		now sandwich_ingredients are off-stage;
