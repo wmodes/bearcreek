@@ -8464,22 +8464,16 @@ seq_mom_watching_movie is a sequence.
 This is the seq_mom_watching_movie_handler rule:
 	let index be index of seq_mom_watching_movie;
 	if index is 2:
-		if mom is visible:
-			queue_report "You and mom watch the movie for a while. The boy that the movie is about doesn't say much, but everyone seems scared of him including his mom and dad. There is something bad that happens at his birthday party but mom makes you cover your eyes. 'I'll tell you when you can look,' mom says." at priority 2;
-			now current interlocutor is mom;
+		Report Mom saying "You and mom watch the movie for a while. The boy that the movie is about doesn't say much, but everyone seems scared of him including his mom and dad. There is something bad that happens at his birthday party but mom makes you cover your eyes. 'I'll tell you when you can look,' mom says.";
 	else if index is 3:
-		if mom is visible:
-			queue_report "In the movie, the bad kid knocks his mom over a railing, but she doesn't die." at priority 2;
+		queue_report "In the movie, the bad kid knocks his mom over a railing, but she doesn't die." at priority 2;
 	else if index is 4:
-		if mom is visible:
-			queue_report "The dad and another guy go to a cemetary and find a dog skeleton and are attacked by other dogs. Are they protecting the dead dog? This movie is really scary. [paragraph break]'Are you okay, hon?' mom asks. Something else happens to the boy's mom and your mom makes you cover your eyes. Did she die? You think about what would happen if your mom died and you almost start to cry. You quickly think about something else and sneak a glance at mom. Thankfully she didn't notice." at priority 2;
+		Report Mom saying "The dad and another guy go to a cemetary and find a dog skeleton and are attacked by other dogs. Are they protecting the dead dog? This movie is really scary. [paragraph break]'Are you okay, hon?' mom asks. Something else happens to the boy's mom and your mom makes you cover your eyes. Did she die? You think about what would happen if your mom died and you almost start to cry. You quickly think about something else and sneak a glance at mom. Thankfully she didn't notice.";
 	else if index is 5:
-		if mom is visible:
-			queue_report "In the movie, the dad and the other guy get some knives for some reason. The dad is angry and throws them away. And then, oh! a truck with glass cuts off the other guy's head too fast for you to cover your eyes! You watch his head bounce away. You burst out crying.[paragraph break]'Oh, honey,' your mom says, holding you, 'I'm so sorry. I'm sorry.' She rocks you as your tears subside. 'Do you want to go? We don't have to stay. I'm sorry.'[paragraph break]The movie is scary, but you feel safe. There is something important here. You want to go. But you also want to stay. What happens to the evil boy? Will the dad kill him? 'No,' you manage through sniffles.[paragraph break]'Okay,' your mom says, clearly doubtful. 'You want to get us snacks?'" at priority 2;
-			now mom_free_to_go is true;
+		Report Mom saying "In the movie, the dad and the other guy get some knives for some reason. The dad is angry and throws them away. And then, oh! a truck with glass cuts off the other guy's head too fast for you to cover your eyes! You watch his head bounce away. You burst out crying.[paragraph break]'Oh, honey,' your mom says, holding you, 'I'm so sorry. I'm sorry.' She rocks you as your tears subside. 'Do you want to go? We don't have to stay. I'm sorry.'[paragraph break]The movie is scary, but you feel safe. There is something important here. You want to go. But you also want to stay. What happens to the evil boy? Will the dad kill him? 'No,' you manage through sniffles.[paragraph break]'Okay,' your mom says, clearly doubtful. 'You want to get us snacks?'";
+		now mom_free_to_go is true;
 	else if index is 6:
-		if mom is visible:
-			queue_report "'The snack bar is right there,' mom says pointing, 'You can pick us up a snack and, I can tell by the way you are squirming, you have to use the potty.' That embarrasses you, but you don't say anything." at priority 2;
+		Report Mom saying "'The snack bar is right there,' mom says pointing, 'You can pick us up a snack and, I can tell by the way you are squirming, you have to use the potty.' That embarrasses you, but you don't say anything.";
 
 This is the seq_mom_watching_movie_interrupt_test rule:
 	[if mom is not visible:
@@ -8610,40 +8604,29 @@ seq_stepdad_in_car is a sequence.
 This is the seq_stepdad_in_car_handler rule:
 	let index be index of seq_stepdad_in_car;
 	if index is 2:
-		if stepdad is visible:
-			queue_report "Your step-dad reaches behind the seat and grabs a can of beer. He pulls the pop-top and tosses it out the window. He takes a long drink and puts the can between his legs. He shoots you a glance and you carefully look out the window." at priority 2;
-			now current interlocutor is stepdad;
+		Report stepdad saying "Your step-dad reaches behind the seat and grabs a can of beer. He pulls the pop-top and tosses it out the window. He takes a long drink and puts the can between his legs. He shoots you a glance and you carefully look out the window.";
 	else if index is 5:
-		if stepdad is visible:
-			queue_report "Mark takes another long swig of his beer and taps on the steering wheel." at priority 2;
+		queue_report "Mark takes another long swig of his beer and taps on the steering wheel." at priority 2;
 	else if index is 8:
-		if stepdad is visible:
-			queue_report "You can tell Mark is working up to say something. Instead he drains his beer, drops the empty behind the seat, and grabs another can. He pops the top and puts the can between his legs." at priority 2;
+		queue_report "You can tell Mark is working up to say something. Instead he drains his beer, drops the empty behind the seat, and grabs another can. He pops the top and puts the can between his legs." at priority 2;
 	else if index is 9:
-		if stepdad is visible:
-			queue_report "Mark taps out a cigarette but doesn't light it." at priority 2;
+		queue_report "Mark taps out a cigarette but doesn't light it." at priority 2;
 	else if index is 11:
-		if stepdad is visible:
-			queue_report "Mark clears his throat as if he's not used to using his voice. 'When you asked to use my tools, I told you that I expected you to put them away when you were done,' Mark says and [stepdad_stuff]." at priority 2;
+		Report stepdad saying "Mark clears his throat as if he's not used to using his voice. 'When you asked to use my tools, I told you that I expected you to put them away when you were done,' Mark says and [stepdad_stuff].";
 	else if index is 12:
-		if stepdad is visible:
-			queue_report "'This morning, I found my screwdriver on the porch where you were playing with that old radio,' Mark says." at priority 2;
+		Report stepdad saying "'This morning, I found my screwdriver on the porch where you were playing with that old radio,' Mark says.";
 	else if index is 13:
-		if stepdad is visible:
-			queue_report "He waits and glances as you like he's expecting an answer. 'Did you leave it out there deliberately or are you just thoughtless?' he asks." at priority 2;
+		Report stepdad saying "He waits and glances as you like he's expecting an answer. 'Did you leave it out there deliberately or are you just thoughtless?' he asks.";
 	else if index is 15:
-		if stepdad is visible:
-			queue_report "'What did I tell you?' Mark says glancing at you angrily, 'I told you to put away my tools.' He grabs your arm, 'Why can't you listen? Huh?' There are stopped cars ahead and Mark puts both hands on the wheel.[paragraph break]You've got to get out of here." at priority 2;
+		Report stepdad saying "'What did I tell you?' Mark says glancing at you angrily, 'I told you to put away my tools.' He grabs your arm, 'Why can't you listen? Huh?' There are stopped cars ahead and Mark puts both hands on the wheel.[paragraph break]You've got to get out of here.";
 	else if index is 16:
-		if stepdad is visible:
-			queue_report "'I know your mom lets you do whatever you want,' Mark says, 'I told her she was spoiling you, but I'm not going to do that.' Mark slows the Camaro. Maybe this is your chance." at priority 2;
-			now stepdad_free_to_go is true;
+		Report stepdad saying "'I know your mom lets you do whatever you want,' Mark says, 'I told her she was spoiling you, but I'm not going to do that.' Mark slows the Camaro. Maybe this is your chance.";
+		now stepdad_free_to_go is true;
 	else if index is 17:
-		if stepdad is visible:
-			queue_report "[one of]'Are you just trying to make me mad?' Mark asks.[or]'When I was a kid, I understood that if I didn't do what my parents told me, I would get my ass whipped,' Mark says.[or]Mark grabs your arm, 'Are you listening to me?'[or]'Are you going to answer me?' Mark demands.[in random order]" at priority 2;
-			[We do the following, because we want this step to repeat]
-			decrease index of seq_stepdad_in_car by one;
-			[we make sure this ends when Scene_Dream_About_Stepdad begins]
+		Report stepdad saying "[one of]'Are you just trying to make me mad?' Mark asks.[or]'When I was a kid, I understood that if I didn't do what my parents told me, I would get my ass whipped,' Mark says.[or]Mark grabs your arm, 'Are you listening to me?'[or]'Are you going to answer me?' Mark demands.[in random order]";
+		[We do the following, because we want this step to repeat]
+		decrease index of seq_stepdad_in_car by one;
+		[we make sure this ends when Scene_Dream_About_Stepdad begins]
 
 
 This is the seq_stepdad_in_car_interrupt_test rule:
@@ -8946,27 +8929,21 @@ seq_dog_convo is a sequence.
 This is the seq_dog_convo_handler rule:
 	let index be index of seq_dog_convo;
 	if index is 2:
-		if dream_dog is visible:
-			queue_report "[sub_pronoun_cap of dog] sees you, sizes you up, and to your surprise says, 'You ain't gettin['] by here, kid.'" at priority 3;
+		Report dream_dog saying "[sub_pronoun_cap of dog] sees you, sizes you up, and to your surprise says, 'You ain't gettin['] by here, kid.'";
 	else if index is 4:
-		if dream_dog is visible:
-			queue_report "'Listen, kid,' the dog says, 'It's my job to protect my pack's territory.' [sub_pronoun_cap of dog] looks back at the fence uncertainly, then squats at the edge of the road and pees. 'I'm not sure where that ends, but better safe than sorry.'" at priority 3;
+		Report dream_dog saying "'Listen, kid,' the dog says, 'It's my job to protect my pack's territory.' [sub_pronoun_cap of dog] looks back at the fence uncertainly, then squats at the edge of the road and pees. 'I'm not sure where that ends, but better safe than sorry.'";
 	else if index is 5:
-		if dream_dog is visible:
-			queue_report "The dog looks at you and looks around. 'Shouldn't you be with your pack?' [sub_pronoun of dog] says." at priority 3;
+		Report dream_dog saying "The dog looks at you and looks around. 'Shouldn't you be with your pack?' [sub_pronoun of dog] says.";
 	else if index is 7:
-		if dream_dog is visible:
-			queue_report "The dog [dog_does_stuff]. 'You know,' the dog says, 'You've been through a lot, but you're doing okay.' [sub_pronoun_cap of dog] wags [pos_pronoun of dog] tail." at priority 3;
+		Report dream_dog saying "The dog [dog_does_stuff]. 'You know,' the dog says, 'You've been through a lot, but you're doing okay.' [sub_pronoun_cap of dog] wags [pos_pronoun of dog] tail.";
 	else if index is 8:
-		if dream_dog is visible:
-			queue_report "The dog looks thoughtful, 'If you don't mind me sayin['], it's about time you woke up,' [sub_pronoun of dog] says, [dog_doing_stuff], 'You can't spend your whole like dreaming. I'm gonna let you get going,' the dog says." at priority 3;
-			now dog_free_to_go is true;
+		Report dream_dog saying "The dog looks thoughtful, 'If you don't mind me sayin['], it's about time you woke up,' [sub_pronoun of dog] says, [dog_doing_stuff], 'You can't spend your whole like dreaming. I'm gonna let you get going,' the dog says.";
+		now dog_free_to_go is true;
 	else if index is 9:
-		if dream_dog is visible:
-			queue_report "[one of]'Pal, I think it's time for you to get going,' the dog says wagging [pos_pronoun of dog] tail.[or]'I've liked talking to you. You better get going,' the dog says.[or]The dog looks seriously at you, 'Time for you to go on and wake up,' [sub_pronoun of dog] says.[in random order]" at priority 3;
-			[We do the following, because we want this step to repeat]
-			decrease index of seq_dog_convo by one;
-			[we make sure this ends when Scene_Dreams ends]
+		Report dream_dog saying "[one of]'Pal, I think it's time for you to get going,' the dog says wagging [pos_pronoun of dog] tail.[or]'I've liked talking to you. You better get going,' the dog says.[or]The dog looks seriously at you, 'Time for you to go on and wake up,' [sub_pronoun of dog] says.[in random order]";
+		[We do the following, because we want this step to repeat]
+		decrease index of seq_dog_convo by one;
+		[we make sure this ends when Scene_Dreams ends]
 
 This is the seq_dog_convo_interrupt_test rule:
 	if we are speaking to dream_dog:
