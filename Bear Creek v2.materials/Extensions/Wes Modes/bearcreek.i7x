@@ -845,6 +845,17 @@ Carry out piling:
 		now player is covered_in_leaves;
 		now player is dirty;
 
+	Part - Howdy?
+
+	[howdy / how are you doing? asking about self]
+
+	Understand "howdy", "how do", "how are/-- you/ya doing/feeling/--", "how is your day/morning/afternoon/evening", "what is/-- up/going on/--", "what's up/going on/--" as asking_howdy.
+	asking_howdy is an action applying to nothing.
+
+	Carry out asking_howdy:
+		let subject be the current interlocutor;
+		try quizzing subject about subject.
+
 Chapter - Thanking
 
 [TODO: Implement thank [Somebody] and thank you]
@@ -1769,6 +1780,7 @@ Scene_Walk_With_Grandpa ends when Grandpa has been in Room_Grandpas_Trailer and 
 When Scene_Walk_With_Grandpa begins:
 		now big_bucket is full;
 		now seq_grandparents_chat is not in-progress;
+		now journey_gpa_walk is in-progress;
 
 When Scene_Walk_With_Grandpa ends:
 	now big_bucket is empty.
@@ -2400,12 +2412,235 @@ To say lost_in_the_woods_payoff:
 	[paragraph break]You have to admit it: You are hopelessly lost.
 	[paragraph break]You sit down right where you are and sob miserably.";
 
+Book - Sequence Mechanics
+
+Part - Action Sequences
+
+[	Questions:
+		* How is this run during each turn?
+			An every turn thing?
+			An every turn during a scene thing?
+			Or just scheduled for next move?
+		* How do we remember the important deets about each sequence while it is running?
+			A: If sequences are their own kind of thing, they can keep track of their own deets, e.g., have_run, seq_index
+
+	Flow of sequencer:
+		Check if interrupted, if yes, delay one turn
+		Increment sequence count
+		Get action associated with this count
+		Do it ]
+
+Chapter - The Properties
+
+A sequence is a kind of thing.
+
+A sequences has a rule called the action_handler.
+
+A sequences has a rule called the interrupt_test.
+
+A sequences has a number called the index.
+
+A sequences has a number called the length_of_seq.
+
+A sequences has a number called the turns_so_far.
+
+A sequence can be in-progress.
+	It is usually not in-progress.
+
+A sequence can be run.
+	It is usually not run.
+
+Chapter - The Mechanics
+
+Every turn:
+	repeat with this_seq running through every in-progress sequence:
+		step a sequence for this_seq;
+
+To step a sequence for (this_seq - a sequence):
+	now this_seq is run;
+	increase turns_so_far of this_seq by one;
+	follow the interrupt_test of this_seq;
+	if rule failed and number of in-progress rants is zero:
+		increase index of this_seq by one;
+		follow the action_handler of this_seq;
+		if rule failed:
+			decrease index of this_seq by one;
+		if index of this_seq is the length_of_seq of this_seq:
+			now this_seq is not in-progress;
+			now index of this_seq is zero;
+	[say "Sequence [this_seq] - in progress (turns: [turns_so_far of this_seq]; index: [index of this_seq]; actions: [length_of_seq of this_seq]).";]
+
+Chapter - An Example
+
+[
+	Lee's Visit Sequence - An Example
+]
+
+[seq_lees_visit is a sequence.
+	The action_handler is the seq_lees_visit_handler rule.
+	The interrupt_test is seq_lees_visit_interrupt_test rule.
+	The length_of_seq is 3.
+
+This is the seq_lees_visit_handler rule:
+	let index be index of seq_lees_visit;
+	if index is 1:
+		say "Lee busts in and says, 'Duuuuuude, whaz up?'";
+		now lee is in Room_Lees_Trailer;
+	else if index is 2:
+		say "Lee looks you up and down, 'Where you been, man. You look like shit.'";
+	else if index is 3:
+		say "Seriously, dude. You better go take a shower and change your clothes.";
+
+This is the seq_lees_visit_interrupt_test rule:
+	if we are speaking to Lee, rule succeeds;
+	if player is not in Room_Lees_Trailer, rule succeeds;
+	rule fails.
+
+After going to Room_Lees_Trailer:
+	now seq_lees_visit is in-progress;
+]
+
+
+Part - NPC_Journeys
+
+Chapter - The Properties
+
+An npc_journey is a kind of thing.
+
+An npc_journey can be in-progress.
+	It is usually not in-progress.
+
+An npc_journey can be run.
+	It is usually not run.
+
+An npc_journey has a person called the npc.
+
+An npc_journey has a room called the origin.
+
+An npc_journey has a room called the destination.
+
+[How long has the NPC been in this location]
+An npc_journey has a number called time_here.
+	Time_here is usually zero.
+
+[How long does the NPC want to wait at each location]
+An npc_journey has a number called wait_time.
+	Wait_time is usually 1.
+
+[How long does the NPC wait if the player's not there]
+An npc_journey has a number called max_wait.
+	Max_wait is usually 3.
+
+[Does the NPC wait for the player?]
+An npc_journey has a truth state called waits_for_player.
+	Waits_for_player is usually true.
+
+[An npc_journey has a rule called the action_handler.]
+
+An npc_journey has a rule called the interrupt_test.
+
+An npc_journey has a rule called the action_at_start.
+
+An npc_journey has a rule called the action_at_end.
+
+An npc_journey has a rule called the action_before_moving.
+
+An npc_journey has a rule called the action_after_waiting.
+
+An npc_journey has a rule called the action_catching_up.
+
+Chapter - The Mechanics
+
+Every turn:
+	repeat with this_journey running through every in-progress npc_journey:
+		take one step on this journey for this_journey;
+
+To take one step on this journey for (this_journey - an npc_journey):
+	[make sure npc shows up in room descriptions]
+	now npc of this_journey is described;
+	[increment time_here]
+	increase time_here of this_journey by one;
+	[set some local vars to make things easier]
+	let npc be the npc of this_journey;
+	let origin be the origin of this_journey;
+	let destination be the destination of this_journey;
+	let time_here be time_here of this_journey;
+	let wait_time be wait_time of this_journey;
+	now this_journey is run;
+	[debugging]
+	say "(NPC Journey of [npc] from [origin] to [destination][line break][npc] in [location of npc] for [time_here] turns)[line break]";
+	[if npc is still at origin]
+	if location of npc is origin:
+		[do action_at_start (which may include action before player arrives)]
+		follow the action_at_start of this_journey;
+		[if rule succeeds continue?]
+		if rule failed:
+			stop the action;
+	[if npc is at destination]
+	if location of npc is destination:
+		[do action_at_end]
+		follow the action_at_end of this_journey;
+		[if rule succeeds, stop the journey]
+		if rule succeeded:
+			[this_journey is not in-progress]
+			now this_journey is not in-progress;
+			stop the action;
+	[follow the interrupt_test of this_journey]
+	follow the interrupt_test of this_journey;
+	[if we are ready to move]
+	if npc is ready to move on this_journey:
+		[get the heading and next room]
+		let heading be the best route from location of npc to destination;
+		let next_room be the room heading from location of npc;
+		[if player is not here]
+		if npc is not visible:
+			[if we don't wait for player]
+			if waits_for_player of this_journey is false:
+				[move npc]
+				try silently npc going heading;
+				[time_here = 0]
+				now time_here of this_journey is zero;
+			[if we DO wait for player]
+			else:
+				[if player is in next room]
+				[TODO: Right now, if you go forward beyond the next_room the NPC is stuck waiting for you. Better if we figure out whether the player is behind (wait), or ahead (proceed)]
+				if player is in next_room:
+					[do catch up action]
+					follow the action_catching_up of this_journey;
+					[move npc]
+					try silently npc going heading;
+					[time_here = 0]
+					now time_here of this_journey is zero;
+				[if player is elsewhere, we wait tracking how long in time_here]
+		[if player is here]
+		else:
+			[if npc has waited too long]
+			if time_here of this_journey is greater than wait_time:
+				[do grumpy waiting action]
+				follow the action_after_waiting of this_journey;
+			[do action_before_moving]
+			follow the action_before_moving of this_journey;
+			[move npc]
+			try silently npc going heading;
+			[time_here = 0]
+			now time_here of this_journey is zero;
+
+
+To decide if npc is ready to move on (this_journey - a npc_journey):
+	follow the interrupt_test of this_journey;
+	if rule succeeded:
+		decide no;
+	if time_here of this_journey is less than wait_time of this_journey:
+		decide no;
+	if number of in-progress rants is not zero:
+		decide no;
+	decide yes;
+
+Chapter An Example Journey
+
 
 
 Book - Conversation system
-
-A sequence is a kind of thing.
-A rant is a kind of thing.
 
 Part - Conversation Rules
 
@@ -2422,16 +2657,14 @@ Does the player mean requesting for a subject: it
 Does the player mean implicit-requesting a subject:
 	it is very likely.
 
-Part - Howdy?
+Part - You Talking to Me?
 
-[howdy / how are you doing? asking about self]
-
-Understand "howdy", "how do", "how are/-- you/ya doing/feeling/--", "how is your day/morning/afternoon/evening", "what is/-- up/going on/--", "what's up/going on/--" as asking_howdy.
-asking_howdy is an action applying to nothing.
-
-Carry out asking_howdy:
-	let subject be the current interlocutor;
-	try quizzing subject about subject.
+To decide if we are talking/speaking to/at (char1 - a person):
+	if char1 is current interlocutor:
+		if conversing, decide yes;
+		if speaking, decide yes;
+		if implicit-conversing, decide yes;
+	decide no.
 
 Part - Multi-Part Rants
 
@@ -2621,9 +2854,6 @@ A thing is either climbable or unclimbable. a thing is usually unclimbable.
 
 [A thing can be familiar or unfamiliar. A thing is usually unfamiliar.]
 A subject is a kind of thing. A subject is usually familiar.
-
-A sequence is a kind of thing.
-A rant is a kind of thing.
 
 Definition: a container is empty if the number of things in it is zero.
 Definition: a supporter is empty if the number of things on it is zero.
@@ -3380,84 +3610,6 @@ To schedule evening train for (arrival - a time):
 	evening train enters area at 7 minutes before arrival;
 	evening train is nearby at 5 minutes before arrival;
 	evening train hits the crossing at 2 minutes before arrival.
-
-Part - Action Sequences
-
-[	Questions:
-		* How is this run during each turn?
-			An every turn thing?
-			An every turn during a scene thing?
-			Or just scheduled for next move?
-		* How do we remember the important deets about each sequence while it is running?
-			A: If sequences are their own kind of thing, they can keep track of their own deets, e.g., have_run, seq_index
-
-	Flow of sequencer:
-		Check if interrupted, if yes, delay one turn
-		Increment sequence count
-		Get action associated with this count
-		Do it ]
-
-Chapter - The Properties
-
-A sequence is a kind of thing.
-A sequences has a rule called the action_handler.
-A sequences has a rule called the interrupt_test.
-A sequences has a number called the index.
-A sequences has a number called the length_of_seq.
-A sequences has a number called the turns_so_far.
-A sequence can be in-progress. It is usually not in-progress.
-A sequence can be run. It is usually not run.
-
-Chapter - The Mechanics
-
-Every turn:
-	repeat with this_seq running through every in-progress sequence:
-		step a sequence for this_seq;
-
-To step a sequence for (this_seq - a sequence):
-	now this_seq is run;
-	increase turns_so_far of this_seq by one;
-	follow the interrupt_test of this_seq;
-	if rule failed and number of in-progress rants is zero:
-		increase index of this_seq by one;
-		follow the action_handler of this_seq;
-		if rule failed:
-			decrease index of this_seq by one;
-		if index of this_seq is the length_of_seq of this_seq:
-			now this_seq is not in-progress;
-			now index of this_seq is zero;
-	[say "Sequence [this_seq] - in progress (turns: [turns_so_far of this_seq]; index: [index of this_seq]; actions: [length_of_seq of this_seq]).";]
-
-Chapter - An Example
-
-[
-	Lee's Visit Sequence - An Example
-]
-
-[seq_lees_visit is a sequence.
-	The action_handler is the seq_lees_visit_handler rule.
-	The interrupt_test is seq_lees_visit_interrupt_test rule.
-	The length_of_seq is 3.
-
-This is the seq_lees_visit_handler rule:
-	let index be index of seq_lees_visit;
-	if index is 1:
-		say "Lee busts in and says, 'Duuuuuude, whaz up?'";
-		now lee is in Room_Lees_Trailer;
-	else if index is 2:
-		say "Lee looks you up and down, 'Where you been, man. You look like shit.'";
-	else if index is 3:
-		say "Seriously, dude. You better go take a shower and change your clothes.";
-
-This is the seq_lees_visit_interrupt_test rule:
-	if we are speaking to Lee, rule succeeds;
-	if player is not in Room_Lees_Trailer, rule succeeds;
-	rule fails.
-
-After going to Room_Lees_Trailer:
-	now seq_lees_visit is in-progress;
-]
-
 
 
 Volume - World
@@ -6394,7 +6546,6 @@ Instead of doing anything except examining tennis_shoes, say "Better keep those 
 Instead of doing anything except examining underwear, say "Better keep those on."]
 
 
-
 Chapter - Sequences
 
 [ seq_jody_stop sequence
@@ -7146,8 +7297,8 @@ This is the seq_grandpa_in_trailer_interrupt_test rule:
 	* after player has been to trailer park indoors
 	* when player is in blackberry clearing]
 
-Every turn during Scene_Walk_With_Grandpa:
-	Take action on Grandpa's walk.
+[Every turn during Scene_Walk_With_Grandpa:
+	Take action on Grandpa's walk.]
 
 Grandpa has a number called time_until_leaving.
 Grandpa has a number called time_left_waiting.
@@ -7164,19 +7315,59 @@ When Scene_Walk_With_Grandpa begins:
 	* turn n+1: one turn after you arrive, grandpa says something to you and goes one step closer
 	* turn n+m: if you take more than m turns to get to him and you are a location away, grandpa comes to get you and ask if you are coming ]
 
-test grandpa-walk with "go to bridge/g/g/pick berries/g/g/dump berries into bucke/go to grandpa's trailer/g/g/g/g/g/g/g/g/g/g/g/go to grassy clearing/g/g/g/g/g/g/g/g/g/g".
+test grandpa-walk with "teleport to grandpas trailer / go to grassy clearing / g / g / g / g / g / g / g / g / g / g / g".
 
-[TODO: Generalize "take action on Grandpa's walk" to anyone who has a goal they are headed to. Each set of actions has the following:
-	* start location
-	* ending location
-	* behavior before you get there
-	* behavior if you keep them waiting
-	* behavior while waiting to move to next location
-	* behavior before moving to next location
-	* behavior if they catch up to you
-	* behavior when they arrive
-]
+journey_gpa_walk is an npc_journey.
+	The npc is Grandpa.
+	The origin is Room_Grassy_Clearing.
+	The destination is Room_Grandpas_Trailer.
+	The wait_time is 2.
+	The max_wait is 3.
+	Waits_for_player is true.
+	The interrupt_test is the journey_gpa_walk_interrupt_test rule.
+	The action_at_start is the journey_gpa_walk_start rule.
+	The action_at_end is the journey_gpa_walk_end rule.
+	The action_before_moving is the journey_gpa_walk_before_moving rule.
+	The action_after_waiting is the journey_gpa_walk_after_waiting rule.
+	The action_catching_up is the journey_gpa_walk_catching_up rule.
 
+This is the journey_gpa_walk_interrupt_test rule:
+	if we are speaking to Grandpa, rule succeeds;
+	rule fails.
+
+This is the journey_gpa_walk_start rule:
+	if grandpa is not visible:
+		if player is in Region_Blackberry_Area:
+			queue_report "[one of]You hear grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
+		else if player is in Region_River_Area or player is in Region_Dirt_Road:
+			if a random chance of 1 in 2 succeeds:
+				queue_report "[one of]You think you hear your Grandpa calling you[or]Is that grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think grandpa's calling.[at random]" at priority 1;
+		rule fails;
+	else:
+		[TODO: include this sequence into this rule]
+		if seq_grandpa_begins_walk is not in-progress:
+			now seq_grandpa_begins_walk is in-progress;
+			rule succeeds;
+		else:
+			rule fails;
+
+This is the
+journey_gpa_walk_before_moving rule:
+	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]goes through the back gate into the trailer park[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Room_B_Loop]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 1;
+
+This is the
+journey_gpa_walk_after_waiting rule:
+	Report Grandpa saying "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]";
+
+This is the
+	journey_gpa_walk_catching_up rule:
+	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 2;
+
+This is the
+		journey_gpa_walk_end rule:
+	now seq_grandpa_in_trailer is in-progress;
+
+[TODO: Nix after testing replacement
 To take action on Grandpa's walk:
 	[ START: grandpa tells you he's leaving and wants your help ]
 	[if time since Scene_Walk_With_Grandpa began is 0 minutes:]
@@ -7222,18 +7413,12 @@ To take action on Grandpa's walk:
 			if grandpa is in Room_Grandpas_Trailer:
 				now seq_grandpa_in_trailer is in-progress;
 			now time_until_leaving of Grandpa is 2;
-			now time_left_waiting of Grandpa is zero;
+			now time_left_waiting of Grandpa is zero;]
 
-To decide if we are talking/speaking to/at (char1 - a person):
-	if char1 is current interlocutor:
-		if conversing, decide yes;
-		if speaking, decide yes;
-		if implicit-conversing, decide yes;
-	decide no.
-
+[TODO: Nix after testing replacement
 To move Grandpa toward trailer:
 	let heading be the best route from location of Grandpa to Room_Grandpas_Trailer;
-	try silently Grandpa going heading.
+	try silently Grandpa going heading.]
 
 
 Part - Sharon
