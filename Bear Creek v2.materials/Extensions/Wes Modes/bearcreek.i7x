@@ -1194,6 +1194,8 @@ Before doing something when the noun is unavailable:
 	say "You look around, but don't see [the noun]. Last you remember, [they] [was-were of noun] [at the remembered location of noun].[line break]" instead.
 
 Before doing something when the second noun is unavailable:
+	if quizzing or implicit-quizzing or conversing or speaking or implicit-conversing:
+		continue the action;
 	[say "[The second noun] [are] nowhere to be seen." instead.]
 	say "You look around, but don't see [the second noun]. Last you remember, [they] [was-were of noun] [at the remembered location of noun].[line break]" instead.
 
@@ -1712,7 +1714,7 @@ Part - Reporting People Speaking
 ]
 
 To report (speaker - person) saying (speech_text - text):
-	if speaker is visible:
+	if player is enclosed by location of speaker:
 		queue_report speech_text at priority 2;
 		now current interlocutor is speaker;
 
@@ -2364,11 +2366,6 @@ After going to Room_Dirt_Road during Scene_Bringing_Lunch:
 At the time when Premonition_About_Another_Way:
 	queue_report "[italic type]You've got to get back to the clearing. There must be another way.[roman type]" at priority 1;
 
-[NIX: We'll keep the log here to come back later.
-After going to Room_Other_Shore during Scene_Across_the_Creek:
-	queue_report "[italic type]Oh no. The log has come unstuck and floated downstream.[roman type]" at priority 1;
-	continue the action.]
-
 To say Sharon_Stepdad_Premonition:
 	say "[italic type]For a moment, you share her vision -- a rocky shore stretching for miles and miles -- a child picking among the rocks completely and hopelessly alone. [roman type]".
 
@@ -2535,8 +2532,6 @@ An npc_journey has a number called max_wait.
 An npc_journey has a truth state called waits_for_player.
 	Waits_for_player is usually true.
 
-[An npc_journey has a rule called the action_handler.]
-
 An npc_journey has a rule called the interrupt_test.
 
 An npc_journey has a rule called the action_at_start.
@@ -2556,27 +2551,35 @@ Every turn:
 		take one step on this journey for this_journey;
 
 To take one step on this journey for (this_journey - an npc_journey):
-	[make sure npc shows up in room descriptions]
-	now npc of this_journey is described;
-	[increment time_here]
-	increase time_here of this_journey by one;
 	[set some local vars to make things easier]
 	let npc be the npc of this_journey;
 	let origin be the origin of this_journey;
 	let destination be the destination of this_journey;
-	let time_here be time_here of this_journey;
-	let wait_time be wait_time of this_journey;
 	now this_journey is run;
-	[debugging]
-	say "(NPC Journey of [npc] from [origin] to [destination][line break][npc] in [location of npc] for [time_here] turns)[line break]";
-	[if npc is still at origin]
+	[
+		increment the counter (time_here)
+	]
+	[we increment time_here if:
+		npc doesn't wait for player, or
+		npc is not at the origin, or
+		npc waits for player and they are there]
+	if waits_for_player of this_journey is false or location of npc is not origin:
+		increment time_here of this_journey;
+	else if waits_for_player of this_journey is true and player is in this_room:
+		increment time_here of this_journey;
+	say "(NPC Journey of [npc] from [origin] to [destination][line break][npc] in [location of npc] for [time_here of this_journey] turns)[line break]";
+	[
+		if npc is still at origin
+	]
 	if location of npc is origin:
 		[do action_at_start (which may include action before player arrives)]
 		follow the action_at_start of this_journey;
-		[if rule succeeds continue?]
+		[if rule succeeds continue]
 		if rule failed:
 			stop the action;
-	[if npc is at destination]
+	[
+		if npc arrives at destination
+	]
 	if location of npc is destination:
 		[do action_at_end]
 		follow the action_at_end of this_journey;
@@ -2584,55 +2587,89 @@ To take one step on this journey for (this_journey - an npc_journey):
 		if rule succeeded:
 			[this_journey is not in-progress]
 			now this_journey is not in-progress;
-			stop the action;
-	[follow the interrupt_test of this_journey]
-	follow the interrupt_test of this_journey;
-	[if we are ready to move]
-	if npc is ready to move on this_journey:
-		[get the heading and next room]
-		let heading be the best route from location of npc to destination;
-		let next_room be the room heading from location of npc;
-		[if player is not here]
-		if npc is not visible:
-			[if we don't wait for player]
-			if waits_for_player of this_journey is false:
-				[move npc]
-				try silently npc going heading;
-				[time_here = 0]
-				now time_here of this_journey is zero;
-			[if we DO wait for player]
+		stop the action;
+	[make sure npc shows up in room descriptions]
+	now npc of this_journey is described;
+	[if NPC is interrupted]
+	if npc is interrupted on this_journey:
+		if time_here of this_journey >=	 wait_time of this_journey:
+			[let's not increment time_here]
+			now time_here of this_journey is wait_time of this_journey minus one;
+		[don't move NPC]
+		stop the action;
+	[if we are not ready to move]
+	if not npc is ready to move on this_journey:
+		[don't move NPC]
+		stop the action;
+	[
+		npc is ready to move
+	]
+	[remember where we are for later]
+	let this_room be the location of npc;
+	[get the heading to the destination]
+	let heading be the best route from location of npc to destination;
+	let next_room be the room heading from location of npc;
+	[if player is not here]
+	if player is not in this_room:
+		[should NPC wait for player]
+		if waits_for_player of this_journey is true:
+			[if player is behind NPC we wait]
+			[lets find out if they are ahead or behind NPC]
+			[determine if player is in direction of destination]
+			let player_heading be the best route from location of npc to location of player;
+			let next_room_to_player be the room player_heading from location of npc;
+			[if player is behind npc]
+			if next_room is not next_room_to_player:
+				[and NPC has not waited TOO long]
+				if time_here of this_journey is less than max_wait of this_journey:
+					[don't move NPC]
+					say "([npc] is waiting for you and will wait for [max_wait of this_journey] turns)[line break]";
+					stop the action;
+				else:
+					say "([npc] is tired of waiting for you)[line break]";
 			else:
-				[if player is in next room]
-				[TODO: Right now, if you go forward beyond the next_room the NPC is stuck waiting for you. Better if we figure out whether the player is behind (wait), or ahead (proceed)]
-				if player is in next_room:
-					[do catch up action]
-					follow the action_catching_up of this_journey;
-					[move npc]
-					try silently npc going heading;
-					[time_here = 0]
-					now time_here of this_journey is zero;
-				[if player is elsewhere, we wait tracking how long in time_here]
-		[if player is here]
+				say "([npc] thinks you are up ahead)[line break]";
 		else:
-			[if npc has waited too long]
-			if time_here of this_journey is greater than wait_time:
-				[do grumpy waiting action]
-				follow the action_after_waiting of this_journey;
-			[do action_before_moving]
-			follow the action_before_moving of this_journey;
-			[move npc]
-			try silently npc going heading;
-			[time_here = 0]
-			now time_here of this_journey is zero;
+			say "([npc] is not waiting for you)[line break]";
+	[
+		when we get here, NPC is ready to move and either:
+			a) player is visible, or
+			b) NPC doesn't wait, or
+			c) player is ahead of NPC, or
+			d) NPC has waited long enough
+		so we move the NPC
+	]
+	[if player is in NPC's current location]
+	if player is in this_room:
+		[if npc has waited too long]
+		if time_here of this_journey >=  wait_time of this_journey:
+			[do grumpy waiting action]
+			follow the action_after_waiting of this_journey;
+		[we say/do our normal moving out action]
+		follow the action_before_moving of this_journey;
+	[move npc]
+	say "([npc] is moving to [next_room])[line break]";
+	try silently npc going heading;
+	[time_here = 0]
+	now time_here of this_journey is zero;
+	[if player is in new location, we say/do catchup action]
+	if player is in next_room:
+		[we say/do catchup action]
+		follow the action_catching_up of this_journey;
 
-
-To decide if npc is ready to move on (this_journey - a npc_journey):
+To decide if npc is interrupted on (this_journey - a npc_journey):
+	[if interrupt rule succeeds, no]
 	follow the interrupt_test of this_journey;
 	if rule succeeded:
-		decide no;
-	if time_here of this_journey is less than wait_time of this_journey:
-		decide no;
+		decide yes;
+	[if npc is still talking, no]
 	if number of in-progress rants is not zero:
+		decide yes;
+	decide no;
+
+To decide if npc is ready to move on (this_journey - a npc_journey):
+	[if time is not up, no]
+	if time_here of this_journey is less than wait_time of this_journey:
 		decide no;
 	decide yes;
 
@@ -2955,12 +2992,6 @@ To say pick_berries:
 Instead of eating backdrop_berries:
 	say "[pick_berries] [eat_berries].";
 
-[Nix. This works without it.
-Procedural rule while eating the backdrop_berries:
-	ignore the carrying requirements rule.
-Procedural rule while eating the backdrop_berries:
-	ignore the can't eat unless edible rule.]
-
 Instead of inserting backdrop_berries into something:
 	try inserting pail into second noun.
 
@@ -3025,12 +3056,6 @@ A handful_of_berries is a sinking edible thing.
 	The description of handful_of_berries is "You've picked a big handful of blackberries. [looking_closely_at_berries].".
 	The scent is "mmm, blackberry jam, blackberry pie, yum".
 	Understand "bunch/handful/lots/-- of/-- ripe/big/-- black/-- blackberries/blackberry/berries/berry" as handful_of_berries.
-
-[Nix. The pouring-in action takes care of this.
-Instead of pouring_in handful_of_berries into big_bucket:
-	try inserting handful berries into big_bucket.
-Instead of pouring_in handful_of_berries into something:
-	try inserting berries into second noun.]
 
 Instead of eating handful_of_berries:
 	say "[eat_berries].";
@@ -4411,10 +4436,6 @@ Some crickets are backdrop in Room_Grassy_Field.
 Some ticks are backdrop in Room_Grassy_Field.
 
 Section - Rules and Actions
-
-[Nix: we replaced this with an action]
-[Understand "catch crickets/grasshoppers", "hunt crickets/grasshoppers", "get crickets/grasshoppers" as a mistake
-	("You sit for a minute in the grass watching carefully, but apparently they are in hiding today. You get up a little disappointed.").]
 
 Instead of climbing back fence, say "Perhaps it is easier to just go around through the gate."
 
@@ -6581,7 +6602,7 @@ This is the seq_jody_stop_interrupt_test rule:
 Part - Honey
 
 Honey is a _female woman.
-The initial appearance  is "[honey_initial_description]".
+The initial appearance is "[honey_initial_description]".
 The description of Honey is "She's stern with a sneaky smile. Sometimes you think you hate Honey. Though, thinking about it, you remember how when you stayed the summer at Honey and Grandpa's house, she taught you to make pots on the potter's wheel. And how she took you for a ride on the motorcycle. You know she loves you, but why does she have to be so mean sometimes?".
 Understand "grandma/grandmother/gramma/granma/gram/ma/grams", "Elinore/Ellinore/Elie/Ellie" as Honey.
 Honey is in Room_Grassy_Clearing.
@@ -6599,8 +6620,12 @@ To say honey_initial_description:
 	else:
 		if player is in Region_Blackberry_Area:
 			say "Honey and Grandpa are here picking berries.[run paragraph on]";
+			now honey is not marked for listing;
+			now grandpa is not marked for listing;
 		else:
 			say "Honey and Grandpa are here waiting for you.[run paragraph on]";
+			now honey is not marked for listing;
+			now grandpa is not marked for listing;
 
 [
 	Honey picking berries
@@ -6957,7 +6982,7 @@ Part - Grandpa
 [TODO: Decide whether Grandpa/grandpa should be capitalized, and then make it consistent.]
 
 Grandpa is an undescribed _male man in Room_Grassy_Clearing.
-	The initial appearance is "Your Grandpa is here[if Grandpa holds big_bucket and big_bucket is full] with the big bucket full of berries[else if Grandpa holds big_bucket and big_bucket is empty] with the empty bucket[end if].".
+	The initial appearance is "[grandpas_initial_appearance]".
 	The description of Grandpa is "Grandpa is, well, Grandpa. He's not tall. He's not fat. He has a bald spot right on top of his head like a little hat. He's like a bull, kind of, but skinnier and wears a warm plaid shirt. Today he's in a t-shirt, but usually. He smells good, like cigarettes and that stuff he puts on his face when he shaves.[if a random chance of 1 in 3 succeeds]
 	[paragraph break]While you are looking, he sees you and smiles.[end if]".
 	Understand "grampa/granpa/grandfather/gramp/pa/gramps/John" as grandpa.
@@ -6966,6 +6991,13 @@ Grandpa is an undescribed _male man in Room_Grassy_Clearing.
 Chapter - Properties
 
 Chapter - Rules and Actions
+
+To say grandpas_initial_appearance:
+	[if location of player is Room_Grassy_Clearing:
+		now grandpa is not marked for listing;
+		now grandpa is undescribed;
+	else:]
+		say "Your Grandpa is here[if Grandpa holds big_bucket and big_bucket is full] with the big bucket full of berries[else if Grandpa holds big_bucket and big_bucket is empty] with the empty bucket[end if].";
 
 Instead of touching Grandpa:
 	say "Grandpa gives you a big hug.";
@@ -7071,7 +7103,7 @@ Response of Grandpa when asked-or-told about Aunt Mary:
 	say "'She's your Honey's older sister. Did you know your Honey had twelve brothers and sisters. Let's see, you know Uncle Charley and Aunt Ethel and Aunt Mary,' Grandpa says counting on his fingers. 'Mary has grandkids that are your mom's age.'".
 
 Response of Grandpa when asked-or-told about Lee:
-	say "'I don't know much about him, [grandpas_nickname],' Grandpa says. 'He's pretty quiet and keeps mostly to himself. I heard from your Aunt Mary that he was in Vietnam.'".
+	say "'I don't know much about him, [grandpas_nickname],' Grandpa says. 'He's pretty quiet and keeps mostly to himself. I heard from your Aunt Mary that he served in Vietnam.'".
 
 [Response of Grandpa when asked-or-told about Sheriff:
 	say "".]
@@ -7222,107 +7254,29 @@ Quote
 Chapter - Sequences
 
 [
-	Grandpa Begins Walk Sequence
-
-	summary: Grandpa tells you he's headed back to the house with the bucket
-	conditions: after explorations, player is back in Room_Grassy_Clearing
-	trigger: started at beginning of Scene_Walk_With_Grandpa
-]
-
-seq_grandpa_begins_walk is a sequence.
-	The action_handler is the seq_grandpa_begins_walk_handler rule.
-	The interrupt_test is seq_grandpa_begins_walk_interrupt_test rule.
-	The length_of_seq is 2.
-
-This is the seq_grandpa_begins_walk_handler rule:
-	let index be index of seq_grandpa_begins_walk;
-	if index is 1:
-		Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old grandpa?'";
-	else if index is 2:
-		Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge, and heads off down the trail toward the bridge.";
-		now Grandpa is described;
-		now Grandpa holds bucket;
-		move Grandpa to Room_Blackberry_Tangle;
-		now time_until_leaving of Grandpa is 2;
-		now time_left_waiting of Grandpa is zero;
-
-This is the seq_grandpa_begins_walk_interrupt_test rule:
-	if grandpa is not visible:
-		rule succeeds;
-	if we are speaking to Grandpa:
-		rule succeeds;
-	rule fails.
-
-[
-	Grandpa in Trailer Sequence
-
-	summary: Grandpa and you get back to trailer, talk to Mary
-	conditions: in Room_Grandpas_Trailer, Grandpa visible, during Scene_Walk_With_Grandpa
-	trigger: started at end of Scene_Walk_With_Grandpa
-]
-
-seq_grandpa_in_trailer is a sequence.
-	The action_handler is the seq_grandpa_in_trailer_handler rule.
-	The interrupt_test is seq_grandpa_in_trailer_interrupt_test rule.
-	The length_of_seq is 4.
-
-This is the seq_grandpa_in_trailer_handler rule:
-	let index be index of seq_grandpa_in_trailer;
-	if index is 1:
-		Report Mary saying "'Mornin', Mary,' Grandpa says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
-	else if index is 2:
-		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
-		now bucket is empty;
-	else if index is 3:
-		Report Mary saying "Your grandpa gets a big glass of water from the sink and drinks it.
-		[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'";
-		now seq_mary_sandwich is in-progress;
-	else if index is 4:
-		Report Grandpa saying "'I better hustle back,' Grandpa says, 'before Ellie needs the bucket.' Grandpa turns to you on his way out, 'See you down there, [grandpas_nickname].' Grandpa squeezes your shoulder and heads out the door.";
-		now grandpa is in Room_Grassy_Clearing;
-
-This is the seq_grandpa_in_trailer_interrupt_test rule:
-	if index of seq_grandpa_in_trailer is 0 and turns_so_far of seq_grandpa_in_trailer is 1 and grandpa is not visible, rule succeeds;
-	if we are speaking to Grandpa, rule succeeds;
-	if we are speaking to Mary, rule succeeds;
-	if index of seq_grandpa_in_trailer is 3 and grandpa is not visible, rule succeeds;
-	rule fails.
-
-[
 	Grandpa on Walk
+
+	This is a journey that begins
+		* after Scene_Explorations
+		* after player has been to trailer park indoors
+		* when player is in blackberry clearing
+
+ 	What happens on Grandpa's walk:
+		* turn 1: 1 turn warning, grandpa tells you he wants your help
+		* turn 2: grandpa gets bucket, asks you to come along, and goes one step closer to goal
+		* turn n: you arrive where grandpa is waiting, maybe he says something if it has been more than a turn
+		* turn n+1: one turn after you arrive, grandpa says something to you and goes one step closer
+		* turn n+m: if you take more than m turns to get to him and you are a location away, grandpa comes to get you and ask if you are coming
 ]
 
-[ This is a scene that begins
-	* after Scene_Explorations
-	* after player has been to trailer park indoors
-	* when player is in blackberry clearing]
-
-[Every turn during Scene_Walk_With_Grandpa:
-	Take action on Grandpa's walk.]
-
-Grandpa has a number called time_until_leaving.
-Grandpa has a number called time_left_waiting.
-Grandpa has a number called time_in_trailer.
-Grandpa has a number called bb_index.
-
-When Scene_Walk_With_Grandpa begins:
-	now time_until_leaving of Grandpa is two;
-
-[ What happens on Grandpa's walk:
-	* turn 1: 1 turn warning, grandpa tells you he wants your help
-	* turn 2: grandpa gets bucket, asks you to come along, and goes one step closer to goal
-	* turn n: you arrive where grandpa is waiting, maybe he says something if it has been more than a turn
-	* turn n+1: one turn after you arrive, grandpa says something to you and goes one step closer
-	* turn n+m: if you take more than m turns to get to him and you are a location away, grandpa comes to get you and ask if you are coming ]
-
-test grandpa-walk with "teleport to grandpas trailer / go to grassy clearing / g / g / g / g / g / g / g / g / g / g / g".
+test gw with "teleport to grandpas trailer / teleport to grassy clearing / teleport to willow trail".
 
 journey_gpa_walk is an npc_journey.
 	The npc is Grandpa.
 	The origin is Room_Grassy_Clearing.
 	The destination is Room_Grandpas_Trailer.
 	The wait_time is 2.
-	The max_wait is 3.
+	The max_wait is 8.
 	Waits_for_player is true.
 	The interrupt_test is the journey_gpa_walk_interrupt_test rule.
 	The action_at_start is the journey_gpa_walk_start rule.
@@ -7335,6 +7289,10 @@ This is the journey_gpa_walk_interrupt_test rule:
 	if we are speaking to Grandpa, rule succeeds;
 	rule fails.
 
+[
+	Grandpa Begins Walk
+]
+
 This is the journey_gpa_walk_start rule:
 	if grandpa is not visible:
 		if player is in Region_Blackberry_Area:
@@ -7344,12 +7302,13 @@ This is the journey_gpa_walk_start rule:
 				queue_report "[one of]You think you hear your Grandpa calling you[or]Is that grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think grandpa's calling.[at random]" at priority 1;
 		rule fails;
 	else:
-		[TODO: include this sequence into this rule]
-		if seq_grandpa_begins_walk is not in-progress:
-			now seq_grandpa_begins_walk is in-progress;
-			rule succeeds;
-		else:
+		if time_here of journey_gpa_walk is 1:
+			Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old grandpa?'";
 			rule fails;
+		else if time_here of journey_gpa_walk is 2:
+			Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge.";
+			now Grandpa holds bucket;
+		rule succeeds;
 
 This is the
 journey_gpa_walk_before_moving rule:
@@ -7363,62 +7322,28 @@ This is the
 	journey_gpa_walk_catching_up rule:
 	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 2;
 
+[
+	Grandpa in Trailer
+]
+
 This is the
 		journey_gpa_walk_end rule:
-	now seq_grandpa_in_trailer is in-progress;
-
-[TODO: Nix after testing replacement
-To take action on Grandpa's walk:
-	[ START: grandpa tells you he's leaving and wants your help ]
-	[if time since Scene_Walk_With_Grandpa began is 0 minutes:]
-	if the bb_index of grandpa is zero:
-		if player is in Room_Grassy_Clearing:
-			now seq_grandpa_begins_walk is in-progress;
-			increase bb_index of Grandpa by one;
-		else if player is in Region_Blackberry_Area:
-			queue_report "[one of]You hear grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
-		else if player is in Region_River_Area or player is in Region_Dirt_Road:
-			if a random chance of 1 in 2 succeeds:
-				queue_report "[one of]You think you hear your Grandpa calling you[or]Is that grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think grandpa's calling.[at random]" at priority 1;
-	[ MIDDLE: grandpa is walking ]
-	if grandpa is not in Room_Grandpas_Trailer and grandpa is not in Room_Grassy_Clearing:
-		if grandpa is not visible: [ if grandpa is elsewhere ]
-			increase time_left_waiting of Grandpa by one;
-			[If you are a location _ahead_ of grandpa, he will just join you immediately.]
-			let heading be the best route from location of Grandpa to Room_Grandpas_Trailer;
-			let next_room be the room heading from location of Grandpa;
-			if player is in next_room:
-				now time_until_leaving of Grandpa is zero;
-		else: [ if grandpa is here ]
-			[ if you kept grandpa waiting, he says something about it ]
-			if time_left_waiting of Grandpa is greater than two:
-				Report Grandpa saying "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]";
-				[If you kept grandpa waiting, he leaves immediately?]
-				now time_until_leaving of Grandpa is one; [if made to wait, leaves immediately]
-			now time_left_waiting of Grandpa is zero;
-			[ countdown for grandpa's departure begins ]
-			decrease time_until_leaving of Grandpa by one;
-			if we are speaking to Grandpa:
-				increase time_until_leaving of Grandpa by one;
-			if time_until_leaving of Grandpa is greater than zero and a random chance of 1 in 8 succeeds and grandpa is not in Room_Grandpas_Trailer:
-				queue_report "Grandpa sets down the bucket [one of]for a moment and rubs his hands[or]and mops his forehead with his [']kerchief[or]and lights a cigarette and smokes for a bit[in random order]." at priority 3;
-		[ ADVANCE: one turn after you arrive, grandpa says something to you and goes one step closer to goal ]
-		if time_until_leaving of Grandpa is zero: [time to move]
-			if grandpa is visible:
-				queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]goes through the back gate into the trailer park[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Room_B_Loop]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 2;
-			else: [if grandpa is one location back]
-				queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 2;
-			move Grandpa toward trailer;
-			[ END: grandpa is in trailer and dumps berries and some other things ]
-			if grandpa is in Room_Grandpas_Trailer:
-				now seq_grandpa_in_trailer is in-progress;
-			now time_until_leaving of Grandpa is 2;
-			now time_left_waiting of Grandpa is zero;]
-
-[TODO: Nix after testing replacement
-To move Grandpa toward trailer:
-	let heading be the best route from location of Grandpa to Room_Grandpas_Trailer;
-	try silently Grandpa going heading.]
+	if time_here of journey_gpa_walk is 1:
+		Report Mary saying "'Mornin', Mary,' Grandpa says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
+		rule fails;
+	else if time_here of journey_gpa_walk is 2:
+		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
+		now bucket is empty;
+		rule fails;
+	else if time_here of journey_gpa_walk is 3:
+		Report Mary saying "Your grandpa gets a big glass of water from the sink and drinks it.
+		[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'";
+		now seq_mary_sandwich is in-progress;
+		rule fails;
+	else if time_here of journey_gpa_walk is 4:
+		Report Grandpa saying "'I better hustle back,' Grandpa says, 'before Ellie needs the bucket.' Grandpa turns to you on his way out, 'See you down there, [grandpas_nickname].' Grandpa squeezes your shoulder and heads out the door.";
+		now grandpa is in Room_Grassy_Clearing;
+		rule succeeds;
 
 
 Part - Sharon
