@@ -881,14 +881,14 @@ Understand
 [TODO: This works, unless a person is not here and then we get "That's not a verb I recognize"]
 
 Check thanking:
-	[say "(checking thanking)";]
+	[say "(DEBUG: checking thanking)";]
 	if noun is not a person or noun is player:
 		say "You thank the heavens." instead;
 	else if noun is not visible:
 		say "You'll have to find them first.";
 
 Carry out thanking:
-	[say "(carrying out thanking)";]
+	[say "(DEBUG: carrying out thanking)";]
 	now current interlocutor is noun;
 
 Rule for supplying a missing noun when thanking:
@@ -1308,7 +1308,7 @@ Understand
 	"run to/-- [any reachable room]" as room_navigating.
 
 Check room_navigating:
-	[say "(go from [location of player] to [the noun])[line break]";]
+	[say "(DEBUG: go from [location of player] to [the noun])[line break]";]
 	if the noun is the location, say "Well, happily you're already here." instead;
 
 Carry out room_navigating:
@@ -1317,7 +1317,7 @@ Carry out room_navigating:
 	if the initial location is the destination,
 		say "." instead;
 	let heading be the best route from the initial location to the destination;
-	[say "(heading toward [noun] is [heading])[line break]";]
+	[say "(DEBUG: heading toward [noun] is [heading])[line break]";]
 	if heading is nothing:
 		say cant_find_that instead;
 	else:
@@ -1430,7 +1430,7 @@ Carry out going_downpath:
 		try room_navigating destination.
 
 To long_range_navigate to (destination - a room):
-	[say "(Long range nav: [destination])[line break]";]
+	[say "(DEBUG: Long range nav: [destination])[line break]";]
 	if destination is the location of the player:
 		say "This is about as far as I can go.";
 	else if destination is Limbo:
@@ -2567,7 +2567,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 		increment time_here of this_journey;
 	else if waits_for_player of this_journey is true and player is in this_room:
 		increment time_here of this_journey;
-	say "(NPC Journey of [npc] from [origin] to [destination][line break][npc] in [location of npc] for [time_here of this_journey] turns)[line break]";
+	[say "(DEBUG: NPC Journey of [npc] from [origin] to [destination][line break][npc] in [location of npc] for [time_here of this_journey] turns)[line break]";]
 	[
 		if npc is still at origin
 	]
@@ -2623,14 +2623,14 @@ To take one step on this journey for (this_journey - an npc_journey):
 				[and NPC has not waited TOO long]
 				if time_here of this_journey is less than max_wait of this_journey:
 					[don't move NPC]
-					say "([npc] is waiting for you and will wait for [max_wait of this_journey] turns)[line break]";
+					[say "(DEBUG: [npc] is waiting for you and will wait for [max_wait of this_journey] turns)[line break]";]
 					stop the action;
-				else:
-					say "([npc] is tired of waiting for you)[line break]";
-			else:
-				say "([npc] thinks you are up ahead)[line break]";
-		else:
-			say "([npc] is not waiting for you)[line break]";
+				[else:
+					say "(DEBUG: [npc] is tired of waiting for you)[line break]";]
+			[else:
+				say "(DEBUG: [npc] thinks you are up ahead)[line break]";]
+		[else:
+			say "(DEBUG: [npc] is not waiting for you)[line break]";]
 	[
 		when we get here, NPC is ready to move and either:
 			a) player is visible, or
@@ -2648,7 +2648,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 		[we say/do our normal moving out action]
 		follow the action_before_moving of this_journey;
 	[move npc]
-	say "([npc] is moving to [next_room])[line break]";
+	[say "(DEBUG: [npc] is moving to [next_room])[line break]";]
 	try silently npc going heading;
 	[time_here = 0]
 	now time_here of this_journey is zero;
