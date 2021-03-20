@@ -2176,6 +2176,8 @@ When Scene_Day_Two begins:
 	now player is in Room_Protected_Hollow;
 	now player is awake;
 	Now the right hand status line is "Morning";
+	Now Sharon is in Room_Other_Shore;
+	Now Lee is in Room_Willow_Trail;
 
 test day2 with "purloin brown paper bag / teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / purloin brown paper bag / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump/z/z/z/z/ go to tracks/go on/ z/z/z/z/z/z/ go on/ go on/ z/z/z/z/z/z/z".
 
@@ -2219,12 +2221,27 @@ Every turn when player is hungry and Scene_Morning_After is happening:
 Chapter - Scene_Out_of_the_Woods
 
 There is a scene called Scene_Out_of_the_Woods.
+Scene_Out_of_the_Woods begins when Scene_Day_Two is happening and (player is in Room_Dappled_Forest_Path or player is in Room_Dark_Woods_South).
+Scene_Out_of_the_Woods ends when Scene_Found begins.
+
+Every turn during Scene_Out_of_the_Woods:
+	if player is in Room_Wooded_Trail:
+		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that the Cat Lady calling you?[or]Someone is calling you.[at random]" at priority 1;
+	else if player is in Room_Dappled_Forest_Path:
+		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that Lee calling you?[or]Someone is calling you.[at random]" at priority 1;
 
 Chapter - Scene_Found
 
 There is a scene called Scene_Found.
-Scene_Found begins when Scene_Day_Two is happening and (player is in Room_Blackberry_Tangle or player is in Room_Other_Shore).
-Scene_Found ends when player is in Room_D_Loop.
+Scene_Found begins when Scene_Day_Two is happening and (player is in Room_Willow_Trail or player is in Room_Other_Shore).
+Scene_Found ends when player is in Room_Grassy_Field.
+
+When Scene_Found begins:
+	if player is in Room_Willow_Trail:
+		now journey_lee_walk is in-progress;
+	else if player is in Room_Other_Shore:
+		now journey_sharon_walk is in-progress;
+
 
 Chapter - Scene_Reunions
 
@@ -2565,7 +2582,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 		npc waits for player and they are there]
 	if waits_for_player of this_journey is false or location of npc is not origin:
 		increment time_here of this_journey;
-	else if waits_for_player of this_journey is true and player is in this_room:
+	else if waits_for_player of this_journey is true and location of npc encloses player:
 		increment time_here of this_journey;
 	[say "(DEBUG: NPC Journey of [npc] from [origin] to [destination][line break][npc] in [location of npc] for [time_here of this_journey] turns)[line break]";]
 	[
@@ -4355,6 +4372,8 @@ A penny is in Room_Railroad_Tracks.
 	The initial appearance is "Hey, there's the penny you lost when you came here with Grandpa to make train pennies!".
 	The description of penny is "Ah, this is a wheat penny. Its tiny numbers say 1956.".
 	Understand "coin" as penny.
+
+[TODO: The train no longer flattens the penny, fix that.]
 
 A flattened coin is a described thing in Limbo.
 	The initial appearance is "[if player is not in Room_Dream_Railroad_Tracks]Hey, the train flattened the wheat penny! You made a lucky coin![else]Your lucky penny is here.[end if]".
@@ -7312,7 +7331,7 @@ This is the journey_gpa_walk_start rule:
 
 This is the
 journey_gpa_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]goes through the back gate into the trailer park[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Room_B_Loop]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 1;
+	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Room_Stone_Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]heads for the grassy field[else if player is in Room_Grassy_Field]goes through the back gate into the trailer park[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Room_B_Loop]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 1;
 
 This is the
 journey_gpa_walk_after_waiting rule:
@@ -7356,7 +7375,7 @@ Sharon is a _female woman in Room_D_Loop.
 	The printed name is "Cat Lady".
 	The initial appearance is "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of a soap opera on her old black and white TV[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She is staring briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs."
 	The description is "[first time]She has a name, but you never can remember it, especially since both your mom and Honey call her the crazy cat lady behind her back. Is it Sharon? Shannon? And that's not all they call her. Honey says she is a crazy old B-I-T-C-H. But she's always been nice to you. [only]Her makeup is a little bit too thick and she seems to wear a bathrobe at all hours, but you can see how she used to be pretty when she was young."
-	Understand "cat lady", "Sharon", "lady", "crazy", "Sharon", or "Shannon" as Sharon.
+	Understand "cat lady", "Sharon", "lady", "Sharon", or "Shannon" as Sharon.
 	The indefinite article is "the".
 	Include (- with articles "The" "the" "a", -) when defining Sharon.
 
@@ -7389,7 +7408,7 @@ At the time when Sharon tends garden:
 		Report Sharon saying "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'I was going to water the garden, but we're having so much fun, I'll do it later.'";
 		Sharon tends garden in 15 minutes from now;
 	Otherwise:
-		Report Sharon saying "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharon_nickname], I have to go water the garden.' [run paragraph on]";
+		Report Sharon saying "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], I have to go water the garden.' [run paragraph on]";
 		Move Sharon out of her trailer;
 		Now Sharon is tending-garden;
 		if Sharon is visible:
@@ -7408,7 +7427,7 @@ At the time when Sharon watches TV:
 		Report Sharon saying "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'One of my shows is on, but it is so much fun talking to you, I'll skip it.'";
 		Sharon watches TV in 15 minutes from now;
 	Otherwise:
-		Report Sharon saying "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharon_nickname], my favorite show is on. You can join me if you want.' [run paragraph on]";
+		Report Sharon saying "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], my favorite show is on. You can join me if you want.' [run paragraph on]";
 		Move Sharon into her trailer;
 		Now Sharon is watching-tv;
 		if Sharon is visible:
@@ -7422,7 +7441,7 @@ At the time when Sharon feeds cats:
 		Report Sharon saying "The Cat Lady [sharon_stuff] and says, 'The little dearies are hungry, but we're having so much fun, aren't we?'";
 		Sharon feeds cats in 15 minutes from now;
 	Otherwise:
-		Report Sharon saying "The Cat Lady [sharon_stuff] and says, 'Well, [sharon_nickname], I have to go feed the kitties.' [run paragraph on]";
+		Report Sharon saying "The Cat Lady [sharon_stuff] and says, 'Well, [sharons_nickname], I have to go feed the kitties.' [run paragraph on]";
 		Move Sharon into her trailer;
 		Now Sharon is feeding-cats;
 		if Sharon is visible:
@@ -7440,7 +7459,7 @@ To move Sharon into her trailer:
 	if player is in Room_D_Loop:
 		queue_report "She goes into her trailer, going slowly up the steps. The tabby cat licks its paw and, after a bit, follows through the cat door." at priority 3;
 	otherwise if player is in Room_Sharons_Trailer:
-		Report Sharon saying "The Cat Lady comes into the trailer and sees you, 'Hi, [sharon_nickname].' The tabby cat follows through the cat door.";
+		Report Sharon saying "The Cat Lady comes into the trailer and sees you, 'Hi, [sharons_nickname].' The tabby cat follows through the cat door.";
 	Now Sharon is in Room_Sharons_Trailer;
 	Now yellow tabby is in Room_Sharons_Trailer;
 
@@ -7451,18 +7470,18 @@ Chapter - Responses
 ]
 
 Greeting response for Sharon:
-	say "[one of]'Oh, hello, [sharon_nickname],' the Cat Lady says, 'So good to see you. Out for an adventure today?'[or]'Oh, hi again, [sharon_nickname]. Will you spend a few minutes talking to your old neighbor?' the Cat Lady says[if a random chance of 1 in 3 succeeds] who [sharon_stuff][end if].[stopping]";
+	say "[one of]'Oh, hello, [sharons_nickname],' the Cat Lady says, 'So good to see you. Out for an adventure today?'[or]'Oh, hi again, [sharons_nickname]. Will you spend a few minutes talking to your old neighbor?' the Cat Lady says[if a random chance of 1 in 3 succeeds] who [sharon_stuff][end if].[stopping]";
 
 Implicit greeting response for Sharon:
 	do nothing;
 
 Farewell response for Sharon:
-	say "'Goodbye now, [sharon_nickname],' the Cat Lady says.";
+	say "'Goodbye now, [sharons_nickname],' the Cat Lady says.";
 
 Implicit farewell response for Sharon:
 	do nothing.
 
-To say sharon_nickname:
+To say sharons_nickname:
 	say "[one of]dear[or]dearie[or]sweetheart[or]honey[at random]";
 
 To say sharon_stuff:
@@ -7476,13 +7495,13 @@ Default give-show response for Sharon:
 	say "'Thanks, dearie, not sure I'd know what to do with it,' says the Cat Lady[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
 
 Default response for Sharon:
-	say "'Oh yes, [sharon_nickname], of course,' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
+	say "'Oh yes, [sharons_nickname], of course,' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
 
 Default ask response for Sharon:
-	say "'Well, I don't know, [sharon_nickname],' the Cat Lady says.";
+	say "'Well, I don't know, [sharons_nickname],' the Cat Lady says.";
 
 Default tell response for Sharon:
-	say "'[one of]Oh yes, [sharon_nickname], I can see it now![run paragraph on][or]How delightful![run paragraph on][or]Oh please tell me more, [sharon_nickname],[or]You don't say? That's great![run paragraph on][or]Have you talked to your grandpa about that?[run paragraph on][or]You must be thrilled, [sharon_nickname],[at random]' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
+	say "'[one of]Oh yes, [sharons_nickname], I can see it now![run paragraph on][or]How delightful![run paragraph on][or]Oh please tell me more, [sharons_nickname],[or]You don't say? That's great![run paragraph on][or]Have you talked to your grandpa about that?[run paragraph on][or]You must be thrilled, [sharons_nickname],[at random]' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
 
 Default thanks response for Sharon:
 	say "'Oh, of course, dear,' the Cat Lady says, 'You are very welcome.'";
@@ -7502,7 +7521,7 @@ Instead of touching Sharon:
 ]
 
 Response of Sharon when asked-or-told about player:
-	say "'Well [sharon_nickname], you are the sweetest child and my very favorite neighbor,' the Cat Lady says patting you on the head affectionately.".
+	say "'Well [sharons_nickname], you are the sweetest child and my very favorite neighbor,' the Cat Lady says patting you on the head affectionately.".
 
 Response of Sharon when asked-or-told about Grandpa:
 	say "'Your grandfather is such a nice man,' the Cat Lady says. 'Just the other day, he helped me get Zoey out of the neighbor's tree[if grandpa is visible].' She smiles at your Grandpa and puts her hand on his arm.[else].'[end if]".
@@ -7514,28 +7533,28 @@ Response of Sharon when asked-or-told about Aunt Mary:
 	say "'Oh, Mary,' she claps her hands together, 'such a dear heart. I love her cooking and her preserves.'".
 
 Response of Sharon when asked-or-told about Sharon:
-	say "'Oh, [sharon_nickname], I've nothing really to say about myself,' the Cat Lady says.".
+	say "'Oh, [sharons_nickname], I've nothing really to say about myself,' the Cat Lady says.".
 
 Response of Sharon when asked-or-told about Sheriff:
 	say "'Oh, Bill's a nice man. He checks on me at least once a week,' the Cat Lady says[if sheriff is visible] smiling at the Sheriff[end if].".
 
 Response of Sharon when asked-or-told about Mom:
-	say "'Your mom, [sharon_nickname], you better treat her like an angel, because she is. You know she came and brought me soup when I had pneumonia? And went to the store and got me medicines.".
+	say "'Your mom, [sharons_nickname], you better treat her like an angel, because she is. You know she came and brought me soup when I had pneumonia? And went to the store and got me medicines.".
 
 Response of Sharon when asked-or-told about Dad:
-	say "'I didn't know your dad, [sharon_nickname], but I heard he was a very charming man,' the Cat Lady says.".
+	say "'I didn't know your dad, [sharons_nickname], but I heard he was a very charming man,' the Cat Lady says.".
 
 Response of Sharon when asked-or-told about topic_jam:
 	say "'I love your grandmother's preserves,' says the Cat Lady.";
 
 Response of Sharon when asked-or-told about topic_trailer:
-	say "'I've lived here for 20 years, [sharon_nickname]. I've seen people come and go,' says the Cat Lady.";
+	say "'I've lived here for 20 years, [sharons_nickname]. I've seen people come and go,' says the Cat Lady.";
 
 Response of Sharon when asked-or-told about dog:
 	say "Oh dogs, they absolutely terrorize my babies. Just the other day, several of my kitties had to defend their very lives from a ferocious doggy that someone brought in to the park on a leash. It served that bad dog right and he had to be taken to the vet.";
 
 Response of Sharon when asked-or-told about topic_tea:
-	say "'Oh, I dearly love tea time, don't you, [sharon_nickname]?' the Cat Lady asks.";
+	say "'Oh, I dearly love tea time, don't you, [sharons_nickname]?' the Cat Lady asks.";
 
 Response of Sharon when asked for topic_tea [or implicit-asked for tea]:
 	if Scene_Tea_Time is happening:
@@ -7554,7 +7573,7 @@ Response of Sharon when asked-or-told about mika:
 	I'm just going to leave this as an instead rule for now, since it is well-tested.]
 
 Response of Sharon when asked about topic_work:
-	say "'My job, [sharon_nickname], is taking care of all my babies,' the Cat Lady says.";
+	say "'My job, [sharons_nickname], is taking care of all my babies,' the Cat Lady says.";
 
 Response of Sharon when asked about topic_love or asked about Joseph or asked about topic_family:
 	say "The Cat Lady looks wistful for a moment, 'When my Joseph was alive...' and she just kind of drifts off and doesn't finish.";
@@ -7647,16 +7666,16 @@ This is the seq_sharon_teatime_handler rule:
 		now sharon is ready-for-tea-time;
 		Report Sharon saying "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest.";
 	else if index is 2:
-		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Oh, [sharon_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
+		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Oh, [sharons_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
 		do Sharon_Teatime_Premonition;
 	else if index is 3:
-		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Please, [sharon_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharon_nickname]. What adventures have you had since we talked last?'";
+		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Please, [sharons_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharons_nickname]. What adventures have you had since we talked last?'";
 	else if index is 4:
 		if sharon is visible:
 			if player is not on Cat Lady's kitchen table:
 				queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3;
 				silently try entering the Cat Lady's kitchen table;
-			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharon_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
+			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharons_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
 			now your teacup is filled;
 			Now player is confident;
 			Now player is sharon_experienced;
@@ -7671,7 +7690,7 @@ This is the seq_sharon_teatime_handler rule:
 			now index of seq_sharon_teatime is 6;
 			now index is 6;
 	if index is 6:
-		Report Sharon saying "'Oh [sharon_nickname], it's been so nice talking to you. I can see you have to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you.";
+		Report Sharon saying "'Oh [sharons_nickname], it's been so nice talking to you. I can see you have to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you.";
 		if player holds your teacup:
 			queue_report "You return your teacup to the table." at priority 1;
 			now your teacup is on the Cat Lady's kitchen table;
@@ -7691,6 +7710,94 @@ This is the seq_sharon_teatime_interrupt_test rule:
 To refill the teacups:
 	say "The Cat Lady re-fills [if a random chance of 1 in 2 succeeds]both of your cups[else]your cup[end if] with more tepid tea.";
 	now your teacup is filled;
+
+[
+	Sharon on Walk
+
+	This is a journey that begins
+		* during Scene_Found
+		* when player is in Room_Other_Shore
+
+ 	What happens on Sharon's walk:
+		* beginning: Sharon hugs you and says some stuff and sets off to return you home
+		* turn n: you arrive where sharon is waiting, maybe he says something if it has been more than a turn
+		* turn n+1: one turn after you arrive, sharon says something to you and goes one step closer
+		* turn n+m: if you take more than m turns to get to him and you are a location away, sharon comes to get you and ask if you are coming
+		* end: Sharon returns you to your family and tells where they found you, Lee arrives
+]
+
+[test gw with "teleport to sharons trailer / teleport to grassy clearing / teleport to willow trail".]
+
+[TODO: Create a rule that prevents us from going anywhere but toward goal during this walk]
+
+journey_sharon_walk is an npc_journey.
+	The npc is Sharon.
+	The origin is Room_Other_Shore.
+	The destination is Room_Grassy_Field.
+	The wait_time is 1.
+	The max_wait is 10.
+	Waits_for_player is true.
+	The interrupt_test is the journey_sharon_walk_interrupt_test rule.
+	The action_at_start is the journey_sharon_walk_start rule.
+	The action_at_end is the journey_sharon_walk_end rule.
+	The action_before_moving is the journey_sharon_walk_before_moving rule.
+	The action_after_waiting is the journey_sharon_walk_after_waiting rule.
+	The action_catching_up is the journey_sharon_walk_catching_up rule.
+
+This is the journey_sharon_walk_interrupt_test rule:
+	if we are speaking to Sharon, rule succeeds;
+	rule fails.
+
+[
+	Sharon Begins Walk
+]
+
+This is the journey_sharon_walk_start rule:
+	if time_here of journey_sharon_walk is 1:
+		Report Sharon saying "The Cat Lady sees you as you emerge from the woods and her eyes go wide. 'Oh my,' she says clutching her breast. The Cat Lady sweeps you up in a huge hug, 'Oh my, we were so worried. Look at you.' she holds you out and takes you and looks you up and down. Instead, you look at the Cat Lady and notice she's dressed very differently.";
+		rule fails;
+	else if time_here of journey_sharon_walk is 2:
+		Report Sharon saying "'Dearie, your grandparents are beside themselves with worry,' the Cat Lady says, 'I have to get you back home. We've been looking everywhere.'[line break]'Come on, dear, let's get you home,' the Cat Lady says.";
+	rule succeeds;
+
+This is the
+journey_sharon_walk_before_moving rule:
+	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if player is in Room_Other_Shore]crosses the river to the crossing[else if player is in Room_Crossing]carefully crosses the rocky shore toward the swimming hole[else if player is in Room_Swimming_Hole]makes her way up the steep trail to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+
+To say sharon_urging:
+	say "'[one of]Oh dear, are you okay? We need to get you home,'[or]Your grandpa was so worried,'[or]I'm so glad we found you, [sharons_nickname],'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you back,'[cycling]";
+
+This is the
+journey_sharon_walk_after_waiting rule:
+	Report Sharon saying "[one of]Sharon looks amused, 'Wanna keep me waiting, huh?'[or]Sharon looks impatient, 'You want to come with me, or not?'[or]Sharon looks irritated, '[sharons_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Sharon looks mad, 'Now, [sharons_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old sharon and hurry along.'[or]Sharon looks mad at you for making him wait.[stopping]";
+
+This is the
+	journey_sharon_walk_catching_up rule:
+	queue_report "Sharon catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Sharons_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old sharon, [sharons_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old sharon can barely keep up with you,'[or]I got ya, [sharons_nickname],'[at random] Sharon says, smiling.[end if]" at priority 2;
+
+[
+	Sharon in Trailer
+]
+
+This is the
+		journey_sharon_walk_end rule:
+	if time_here of journey_sharon_walk is 1:
+		Report Mary saying "'Mornin', Mary,' Sharon says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
+		rule fails;
+	else if time_here of journey_sharon_walk is 2:
+		Report Sharon saying "'Pretty good,' Sharon says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Sharon winks at you.[paragraph break]Sharon helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
+		now bucket is empty;
+		rule fails;
+	else if time_here of journey_sharon_walk is 3:
+		Report Mary saying "Your sharon gets a big glass of water from the sink and drinks it.
+		[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'";
+		now seq_mary_sandwich is in-progress;
+		rule fails;
+	else if time_here of journey_sharon_walk is 4:
+		Report Sharon saying "'I better hustle back,' Sharon says, 'before Ellie needs the bucket.' Sharon turns to you on his way out, 'See you down there, [sharons_nickname].' Sharon squeezes your shoulder and heads out the door.";
+		now sharon is in Room_Grassy_Clearing;
+		rule succeeds;
+
 
 
 Part - Lee
@@ -7747,12 +7854,12 @@ Implicit greeting response for Lee:
 	do nothing;
 
 Farewell response for Lee:
-	say "'See ya, [Lee's nickname],' Lee says.";
+	say "'See ya, [lees_nickname],' Lee says.";
 
 Implicit farewell response for Lee:
 	do nothing.
 
-To say Lee's Nickname:
+To say lees_nickname:
 	say "Jody";
 
 To say Lee stuff:
@@ -7772,7 +7879,7 @@ Default response for Lee:
 	say "'Hmm, yeah cool,' Lee says.";
 
 Default ask response for Lee:
-	say "'Well, like a lot of things, I don't know the answer to that[one of][or] either[stopping], [Lee's nickname],' Lee says.";
+	say "'Well, like a lot of things, I don't know much about that[one of][or] either[stopping], [lees_nickname],' Lee says.";
 
 Default thanks response for Lee:
 	say "'Don't mention it,' Lee says and looks away.";
@@ -7894,7 +8001,7 @@ Quote
 [paragraph break]After a moment, he continues, 'No, I didn't get any of that, man. What I got was nothing.'"
 "'I'm still so angry and hurt, I don't even know what to do with myself.' Lee looks at you. 'I don't even know why I'm telling you all this.'
 [paragraph break]He takes a long drag of his cigarette and the smoke blows around your head. Lee waves the smoke away from you and stubs his cigarette out in a coffee can. 'I got people making nice, people tiptoeing around me, nobody -- and I mean nobody -- asking about the war.'"
-"'No one asked me, [']Hey, dude, did you kill anyone?['] Or [']Hey, what were you most scared of?[']' Lee seems really angry, but for some reason you're not scared. 'Nah, nobody asked me nothin[']. Nobody asked me shit. Oh sorry pardon my language, [Lee's nickname].' Lee looks up and remembers you."
+"'No one asked me, [']Hey, dude, did you kill anyone?['] Or [']Hey, what were you most scared of?[']' Lee seems really angry, but for some reason you're not scared. 'Nah, nobody asked me nothin[']. Nobody asked me shit. Oh sorry pardon my language, [lees_nickname].' Lee looks up and remembers you."
 "Lee looks at you. 'You know what I mean? It was like I'd been down the street buying a loaf a bread. Did anyone know I was gone? I wanted to stop people and shake them. [']Hey, bud, did you know I was in southeast Asia trying not to get myself killed?[']'"
 "'Yeah, that's not my best topic, but thanks for listening to my war stories,' Lee says with a smile. 'And hey, thanks for askin[']. Really.'"
 
@@ -8016,6 +8123,93 @@ This is the seq_lee_hangout_interrupt_test rule:
 		rule succeeds;
 	rule fails.
 
+[
+	Lee on Walk
+
+	This is a journey that begins
+		* during Scene_Found
+		* when player is in Room_Willow_Trail
+
+ 	What happens on Lee's walk:
+		* beginning: Lee hugs you and says some stuff and sets off to return you home
+		* turn n: you arrive where lee is waiting, maybe he says something if it has been more than a turn
+		* turn n+1: one turn after you arrive, lee says something to you and goes one step closer
+		* turn n+m: if you take more than m turns to get to him and you are a location away, lee comes to get you and ask if you are coming
+		* end: Lee returns you to your family and tells where they found you, Sharon arrives
+]
+
+[test gw with "teleport to lees trailer / teleport to grassy clearing / teleport to willow trail".]
+
+[TODO: Create a rule that prevents us from going anywhere but toward goal during this walk]
+
+journey_lee_walk is an npc_journey.
+	The npc is Lee.
+	The origin is Room_Willow_Trail.
+	The destination is Room_Grassy_Field.
+	The wait_time is 1.
+	The max_wait is 10.
+	Waits_for_player is true.
+	The interrupt_test is the journey_lee_walk_interrupt_test rule.
+	The action_at_start is the journey_lee_walk_start rule.
+	The action_at_end is the journey_lee_walk_end rule.
+	The action_before_moving is the journey_lee_walk_before_moving rule.
+	The action_after_waiting is the journey_lee_walk_after_waiting rule.
+	The action_catching_up is the journey_lee_walk_catching_up rule.
+
+This is the journey_lee_walk_interrupt_test rule:
+	if we are speaking to Lee, rule succeeds;
+	rule fails.
+
+[
+	Lee Begins Walk
+]
+
+This is the journey_lee_walk_start rule:
+	if time_here of journey_lee_walk is 1:
+		Report Lee saying "Lee sees you as you emerge from the blackberry brambles and looks relieved. 'Oh, man, we've been looking for you everywhere.' Lee looks at your torn clothes and the leaves in your hair, 'Wow, I have to admit, I didn't think this would end well, but look at you. A little worse for wear, but still kickin'. Lee smiles and pats your back.";
+		rule fails;
+	else if time_here of journey_lee_walk is 2:
+		Report Lee saying "'I should have known. You're a little survivor.' Lee looks at you admiringly and it makes you proud of yourself, the leaf fort, the raccoons, the long night. 'I got to get you back to your family. They'll be so worried.'[line break]'Let's head back to the trailer park,' Lee says.";
+	rule succeeds;
+
+This is the
+journey_lee_walk_before_moving rule:
+	queue_report "[if a random chance of 1 in 2 succeeds][lee_urging] [run paragraph on][end if]Lee [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+
+To say lee_urging:
+	say "'[one of]We gotta hoof it, soldier'[or]Let's hustle'[or]Movin' out,'[or]Okay, let's go,'[or]We gotta double time. Your family's gonna be worried,'[or]You okay? Just a little farther,'[or]Coming up on home,'[cycling]";
+
+This is the
+journey_lee_walk_after_waiting rule:
+	Report Lee saying "[one of]Lee looks amused, 'Wanna keep me waiting, huh?'[or]Lee looks impatient, 'You want to come with me, or not?'[or]Lee looks irritated, '[lees_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Lee looks mad, 'Now, [lees_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old lee and hurry along.'[or]Lee looks mad at you for making him wait.[stopping]";
+
+This is the
+	journey_lee_walk_catching_up rule:
+	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Lees_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old lee, [lees_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old lee can barely keep up with you,'[or]I got ya, [lees_nickname],'[at random] Lee says, smiling.[end if]" at priority 2;
+
+[
+	Lee in Trailer
+]
+
+This is the
+		journey_lee_walk_end rule:
+	if time_here of journey_lee_walk is 1:
+		Report Mary saying "'Mornin', Mary,' Lee says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
+		rule fails;
+	else if time_here of journey_lee_walk is 2:
+		Report Lee saying "'Pretty good,' Lee says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Lee winks at you.[paragraph break]Lee helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
+		now bucket is empty;
+		rule fails;
+	else if time_here of journey_lee_walk is 3:
+		Report Mary saying "Your lee gets a big glass of water from the sink and drinks it.
+		[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'";
+		now seq_mary_sandwich is in-progress;
+		rule fails;
+	else if time_here of journey_lee_walk is 4:
+		Report Lee saying "'I better hustle back,' Lee says, 'before Ellie needs the bucket.' Lee turns to you on his way out, 'See you down there, [lees_nickname].' Lee squeezes your shoulder and heads out the door.";
+		now lee is in Room_Grassy_Clearing;
+		rule succeeds;
+
 
 Part - Aunt Mary
 
@@ -8104,7 +8298,7 @@ Response of Mary when asked-or-told about topic_berries:
 	say "'Every year,' she smiles. 'Every year, we pick the berries and the jam lasts until the next summer.'"
 
 Response of Honey when asked-or-told about bucket:
-	say "Your grandpa [if Scene_Bringing_Lunch is happening]will be bringing[else]brought[end if] that bucket up for me to make more jam."
+	say "Your lee [if Scene_Bringing_Lunch is happening]will be bringing[else]brought[end if] that bucket up for me to make more jam."
 
 Response of Mary when asked-or-told about topic_jam:
 	say "'That's your grandma's recipe,' she says proudly. 'No,' she looks worried, 'No. Mama is your great-grandmother. It's your great-grandma's recipe.'".
@@ -8114,9 +8308,9 @@ Response of Mary when asked-or-told about train tracks:
 
 Response of Mary when asked-or-told about topic_lunch:
 	if Scene_Bringing_Lunch is happening:
-		say "'Oh, you go and take lunch to your Honey and grandpa,' she says. 'That's hungry work.'";
+		say "'Oh, you go and take lunch to your Honey and lee,' she says. 'That's hungry work.'";
 	else:
-		say "'Later we'll make some lunch for you and your Honey and grandpa,' she says.";
+		say "'Later we'll make some lunch for you and your Honey and lee,' she says.";
 
 Response of Mary when asked about topic_life:
 	say "'I've had a pretty good life and a wonderful family,' she says.".

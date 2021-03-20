@@ -24,7 +24,7 @@
         <releases>
             <attached>
                 <release>
-                    <releasedate>2021-03-18</releasedate>
+                    <releasedate>2021-03-19</releasedate>
                     <version>2</version>
                     <compiler>Inform 7</compiler>
                     <compilerversion>6M62</compilerversion>
@@ -34,10 +34,10 @@
         <colophon>
             <generator>Inform 7</generator>
             <generatorversion>6M62</generatorversion>
-            <originated>2021-03-18</originated>
+            <originated>2021-03-19</originated>
         </colophon>
         <glulx>
-            <serial>210318</serial>
+            <serial>210319</serial>
             <release>2</release>
             <compiler>Inform 7 build 6M62</compiler>
             <coverpicture>1</coverpicture>
