@@ -329,6 +329,7 @@ Release along with an interpreter.
 Release along with the library card.
 
 Use MAX_DICT_ENTRIES of 2000.
+Use MAX_OBJ_PROP_COUNT of 80.
 
 Volume - Mechanics
 
@@ -2177,9 +2178,9 @@ When Scene_Day_Two begins:
 	now player is awake;
 	Now the right hand status line is "Morning";
 	Now Sharon is in Room_Other_Shore;
-	Now Lee is in Room_Willow_Trail;
+	Now Lee is in Room_Blackberry_Tangle;
 
-test day2 with "purloin brown paper bag / teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / purloin brown paper bag / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump/z/z/z/z/ go to tracks/go on/ z/z/z/z/z/z/ go on/ go on/ z/z/z/z/z/z/z".
+test day2 with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / purloin brown paper bag / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump/z/z/z/z/ go to tracks/go on/ z/z/z/z/z/z/ go on/ go on/ z/z/z/z/z/z/z/wake up".
 
 Chapter - Morning After
 
@@ -2214,7 +2215,7 @@ Scene_Foraging_for_Breakfast ends when Scene_Found begins.
 When Scene_Foraging_for_Breakfast begins:
 	now player is hungry.
 
-Every turn when player is hungry and Scene_Morning_After is happening:
+Every turn during Scene_Foraging_for_Breakfast:
 	if the remainder after dividing the turn count by 2 is 0:
 		queue_report "[one of]You are quite hungry[or]You didn't have dinner (or lunch!) yesterday, so you are really quite famished[or]You find you are really hungry. Perhaps you can forage something like a good Exporer Scout[cycling]." with priority 1.
 
@@ -2233,14 +2234,16 @@ Every turn during Scene_Out_of_the_Woods:
 Chapter - Scene_Found
 
 There is a scene called Scene_Found.
-Scene_Found begins when Scene_Day_Two is happening and (player is in Room_Willow_Trail or player is in Room_Other_Shore).
+Scene_Found begins when Scene_Day_Two is happening and (player is in Room_Blackberry_Tangle or player is in Room_Other_Shore).
 Scene_Found ends when player is in Room_Grassy_Field.
 
 When Scene_Found begins:
-	if player is in Room_Willow_Trail:
+	if player is in Room_Blackberry_Tangle:
 		now journey_lee_walk is in-progress;
 	else if player is in Room_Other_Shore:
 		now journey_sharon_walk is in-progress;
+	now Grandpa is in Room_Grassy_Field;
+	now Honey is in Room_Grassy_Field;
 
 
 Chapter - Scene_Reunions
@@ -2584,7 +2587,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 		increment time_here of this_journey;
 	else if waits_for_player of this_journey is true and location of npc encloses player:
 		increment time_here of this_journey;
-	[say "(DEBUG: NPC Journey of [npc] from [origin] to [destination][line break][npc] in [location of npc] for [time_here of this_journey] turns)[line break]";]
+	say "(DEBUG: NPC Journey of [npc] from [origin] to [destination][line break][npc] in [location of npc] for [time_here of this_journey] turns)[line break]";
 	[
 		if npc is still at origin
 	]
@@ -2659,7 +2662,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 	[if player is in NPC's current location]
 	if player is in this_room:
 		[if npc has waited too long]
-		if time_here of this_journey >=  wait_time of this_journey:
+		if time_here of this_journey >=  wait_time of this_journey and this_room is not origin:
 			[do grumpy waiting action]
 			follow the action_after_waiting of this_journey;
 		[we say/do our normal moving out action]
@@ -2710,6 +2713,15 @@ Does the player mean requesting for a subject: it
 	is very likely.
 Does the player mean implicit-requesting a subject:
 	it is very likely.
+
+Part - Talk to Someone
+
+Instead of saying hello to someone (called the target):
+	if the current interlocutor is target:
+	 	say "You are already talking to [target]. Perhaps you can try to ask or tell them something. Maybe 'Ask [target] about something,' or 'Tell [target] about something.'[command clarification break]" instead;
+	else:
+		continue the action;
+
 
 Part - You Talking to Me?
 
@@ -3132,7 +3144,7 @@ To eat_berries_from_pail:
 	else if pail is empty:
 		say "Your pail is empty.";
 		stop the action;
-	say "[eat_berries]. Now your pail is empty.";
+	say "[eat_berries]. Now your pail is [if pail is empty]empty[else if pail is quarter-full]quarter-full[else if pail is half-full]half-full[else if pail is three-quarter-full]mostly full[else]very full[end if].";
 
 Instead of going when pail is full and pail is held by player:
 	say "[one of]With your heaping full pail, you imagine tripping and blackberries going everywhere and getting in trouble[or]Your full pail is making you nervous[or]You are concentrating so hard on your full pail, your hands start to shake and a ripe berry tumbles off into the dirt[or]You have to stop for a minute to catch your breath and steady your hands holding your full pail[or]You walk slow steading your pail full of blackberries[stopping].";
@@ -5608,7 +5620,6 @@ Section - Navigation
 
 Outside from Room_Protected_Hollow is Room_Forest_Meadow.
 West from Room_Protected_Hollow is Room_Forest_Meadow.
-Up from Room_Protected_Hollow is Room_Sentinel_Tree.
 
 The available_exits of Room_Protected_Hollow are "You can climb back out and go back to the forest meadow."
 
@@ -6432,7 +6443,9 @@ Yourself can be tree_experienced.
 Yourself can be treetop_experienced.
 Yourself can be mika_experienced.
 Yourself can be lee_experienced.
-Yourself can be Sharon_experienced.
+Yourself can be sharon_experienced.
+Yourself can be found_by_lee.
+Yourself can be found_by_sharon.
 
 The player has a number called persistence count. Persistence count is 0.
 The player has a number called Pine Tree Tries.
@@ -7373,11 +7386,23 @@ Part - Sharon
 
 Sharon is a _female woman in Room_D_Loop.
 	The printed name is "Cat Lady".
-	The initial appearance is "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of a soap opera on her old black and white TV[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She is staring briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs."
-	The description is "[first time]She has a name, but you never can remember it, especially since both your mom and Honey call her the crazy cat lady behind her back. Is it Sharon? Shannon? And that's not all they call her. Honey says she is a crazy old B-I-T-C-H. But she's always been nice to you. [only]Her makeup is a little bit too thick and she seems to wear a bathrobe at all hours, but you can see how she used to be pretty when she was young."
+	The initial appearance is "[sharons_initial_appearance]".
+	The description is "[sharon_description]".
 	Understand "cat lady", "Sharon", "lady", "Sharon", or "Shannon" as Sharon.
 	The indefinite article is "the".
 	Include (- with articles "The" "the" "a", -) when defining Sharon.
+
+To say sharons_initial_appearance:
+	if Scene_Day_One is happening:
+		say "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of a soap opera on her old black and white TV[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She is staring briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs.";
+	else:
+		say "The Cat Lady is here.";
+
+To say sharon_description:
+	if Scene_Day_One is happening:
+		say "[first time]She has a name, but you never can remember it, especially since both your mom and Honey call her the crazy cat lady behind her back. Is it Sharon? Shannon? And that's not all they call her. Honey says she is a crazy old B-I-T-C-H. But she's always been nice to you. [only]Her makeup is a little bit too thick and she seems to wear a bathrobe at all hours, but you can see how she used to be pretty when she was young.";
+	else:
+		say "The Cat Lady is dressed for an expedition. Her hair is tucked under a ball cap. She's wearing hiking pants and boots, and a tan vest with lots of pockets. When you ask her about it, she says, 'This is my mushroom hunting gear, dearie. Didn't you know I spend a lot of time in the woods?' You have to admit you didn't.";
 
 Chapter - Properties
 
@@ -7734,7 +7759,7 @@ journey_sharon_walk is an npc_journey.
 	The npc is Sharon.
 	The origin is Room_Other_Shore.
 	The destination is Room_Grassy_Field.
-	The wait_time is 1.
+	The wait_time is 2.
 	The max_wait is 10.
 	Waits_for_player is true.
 	The interrupt_test is the journey_sharon_walk_interrupt_test rule.
@@ -7754,10 +7779,10 @@ This is the journey_sharon_walk_interrupt_test rule:
 
 This is the journey_sharon_walk_start rule:
 	if time_here of journey_sharon_walk is 1:
-		Report Sharon saying "The Cat Lady sees you as you emerge from the woods and her eyes go wide. 'Oh my,' she says clutching her breast. The Cat Lady sweeps you up in a huge hug, 'Oh my, we were so worried. Look at you.' she holds you out and takes you and looks you up and down. Instead, you look at the Cat Lady and notice she's dressed very differently.";
+		Report Sharon saying "The Cat Lady sees you as you emerge from the woods and her eyes go wide. 'Oh my,' she says clutching her breast. The Cat Lady sweeps you up in a huge hug, 'Oh my, we were so worried. Look at you.' she holds you out and looks you up and down. Instead, you look at the Cat Lady and notice she's dressed entirely differently than you are used to seeing her.";
 		rule fails;
 	else if time_here of journey_sharon_walk is 2:
-		Report Sharon saying "'Dearie, your grandparents are beside themselves with worry,' the Cat Lady says, 'I have to get you back home. We've been looking everywhere.'[line break]'Come on, dear, let's get you home,' the Cat Lady says.";
+		Report Sharon saying "'Dearie, your grandparents are beside themselves with worry,' the Cat Lady says, 'I have to get you back home. We've been looking everywhere.'";
 	rule succeeds;
 
 This is the
@@ -7765,15 +7790,15 @@ journey_sharon_walk_before_moving rule:
 	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if player is in Room_Other_Shore]crosses the river to the crossing[else if player is in Room_Crossing]carefully crosses the rocky shore toward the swimming hole[else if player is in Room_Swimming_Hole]makes her way up the steep trail to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
 
 To say sharon_urging:
-	say "'[one of]Oh dear, are you okay? We need to get you home,'[or]Your grandpa was so worried,'[or]I'm so glad we found you, [sharons_nickname],'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you back,'[cycling]";
+	say "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]";
 
 This is the
 journey_sharon_walk_after_waiting rule:
-	Report Sharon saying "[one of]Sharon looks amused, 'Wanna keep me waiting, huh?'[or]Sharon looks impatient, 'You want to come with me, or not?'[or]Sharon looks irritated, '[sharons_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Sharon looks mad, 'Now, [sharons_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old sharon and hurry along.'[or]Sharon looks mad at you for making him wait.[stopping]";
+	Report Sharon saying "[one of]'Hurry along, dear,' the Cat Lady says, 'We have to get you home.'[or]'You know, your grandparents are worried sick about you,' the Cat Lady says, 'Let's not dawdle, shall we?'[or]The Cat Lady looks irritated about having to wait, but says nothing.[or]'Now I don't mind if we spend all day out here,' the Cat Lady says, 'But I would think you'd have a little more respect and concern for your grandpa and grandma who are worries about you.'[or]The Cat Lady looks mad at you for making her wait.[stopping]";
 
 This is the
 	journey_sharon_walk_catching_up rule:
-	queue_report "Sharon catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Sharons_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old sharon, [sharons_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old sharon can barely keep up with you,'[or]I got ya, [sharons_nickname],'[at random] Sharon says, smiling.[end if]" at priority 2;
+	queue_report "Sharon catches up to you [if player is in Room_Crossing], carefully crossing the river on the floating log[else if player is in Room_Swimming_Hole]at the swimming hole[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]in the big grassy field[else if player is in Region_Dirt_Road]as you walk along the dirt road[else]is headed back to the trailer park[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 2;
 
 [
 	Sharon in Trailer
@@ -7782,22 +7807,18 @@ This is the
 This is the
 		journey_sharon_walk_end rule:
 	if time_here of journey_sharon_walk is 1:
-		Report Mary saying "'Mornin', Mary,' Sharon says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
+		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park.";
 		rule fails;
 	else if time_here of journey_sharon_walk is 2:
-		Report Sharon saying "'Pretty good,' Sharon says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Sharon winks at you.[paragraph break]Sharon helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
-		now bucket is empty;
+		Report Sharon saying "";
+		now Lee is in Room_Grassy_Field;
 		rule fails;
 	else if time_here of journey_sharon_walk is 3:
-		Report Mary saying "Your sharon gets a big glass of water from the sink and drinks it.
-		[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'";
-		now seq_mary_sandwich is in-progress;
+		Report Sharon saying "";
 		rule fails;
 	else if time_here of journey_sharon_walk is 4:
-		Report Sharon saying "'I better hustle back,' Sharon says, 'before Ellie needs the bucket.' Sharon turns to you on his way out, 'See you down there, [sharons_nickname].' Sharon squeezes your shoulder and heads out the door.";
-		now sharon is in Room_Grassy_Clearing;
+		Report Sharon saying "";
 		rule succeeds;
-
 
 
 Part - Lee
@@ -7808,10 +7829,21 @@ Part - Lee
 You are already talking to Lee]
 
 Lee is a _male man in Room_C_Loop.
-	The initial appearance is "Lee is [if Lee is in Room_C_Loop]sitting on a lawn chair in his empty carport, chain smoking[else if Lee is in Room_Lees_Trailer and lees_tv is switched on]watching TV[else]here[end if]. [first time][description of lee][only]".
-	The description is  "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long black hair pulled back in an untidy ponytail. He's wearing a tanktop and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name."
+	The initial appearance is "[lees_initial_appearance][first time] [description of lee][only]".
+	The description is "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long black hair pulled back in an untidy ponytail. He's wearing a tanktop and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name."
 	Understand "lee/veteran/vet" as Lee.
 	The scent is "cigarettes and alcohol".
+
+To say lees_initial_appearance:
+	if Scene_Day_One is happening:
+		if Lee is in Room_C_Loop:
+			say "Lee is sitting on a lawn chair in his empty carport, chain smoking.";
+		else if Lee is in Room_Lees_Trailer:
+			say "Lee is [if lees_tv is switched on]watching TV[else]here[end if].";
+	else:
+		say "Lee is here.";
+
+[TODO: Handle listing multiple people in one location]
 
 Chapter - Properties
 
@@ -8144,9 +8176,9 @@ This is the seq_lee_hangout_interrupt_test rule:
 
 journey_lee_walk is an npc_journey.
 	The npc is Lee.
-	The origin is Room_Willow_Trail.
+	The origin is Room_Blackberry_Tangle.
 	The destination is Room_Grassy_Field.
-	The wait_time is 1.
+	The wait_time is 2.
 	The max_wait is 10.
 	Waits_for_player is true.
 	The interrupt_test is the journey_lee_walk_interrupt_test rule.
@@ -8166,11 +8198,14 @@ This is the journey_lee_walk_interrupt_test rule:
 
 This is the journey_lee_walk_start rule:
 	if time_here of journey_lee_walk is 1:
-		Report Lee saying "Lee sees you as you emerge from the blackberry brambles and looks relieved. 'Oh, man, we've been looking for you everywhere.' Lee looks at your torn clothes and the leaves in your hair, 'Wow, I have to admit, I didn't think this would end well, but look at you. A little worse for wear, but still kickin'. Lee smiles and pats your back.";
+		Report Lee saying "Lee sees you as you emerge from the blackberry brambles and looks relieved. 'Oh, man, we've been looking for you everywhere. Oh man. Oh man,' he just keeps shaking his head. 'Come here, kid, lemme look at you.'";
 		rule fails;
-	else if time_here of journey_lee_walk is 2:
+	if time_here of journey_lee_walk is 2:
+		Report Lee saying "Lee looks at your torn clothes and the leaves in your hair, 'Wow, I have to admit, I didn't think this would end well, but look,' he says gesturing at you. 'A little worse for wear, but still kickin'. Lee smiles and pats your back. 'I have a million questions. First, where did you bivvy last night?'";
+		rule fails;
+	else if time_here of journey_lee_walk is 3:
 		Report Lee saying "'I should have known. You're a little survivor.' Lee looks at you admiringly and it makes you proud of yourself, the leaf fort, the raccoons, the long night. 'I got to get you back to your family. They'll be so worried.'[line break]'Let's head back to the trailer park,' Lee says.";
-	rule succeeds;
+		rule succeeds;
 
 This is the
 journey_lee_walk_before_moving rule:
@@ -8181,11 +8216,11 @@ To say lee_urging:
 
 This is the
 journey_lee_walk_after_waiting rule:
-	Report Lee saying "[one of]Lee looks amused, 'Wanna keep me waiting, huh?'[or]Lee looks impatient, 'You want to come with me, or not?'[or]Lee looks irritated, '[lees_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Lee looks mad, 'Now, [lees_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old lee and hurry along.'[or]Lee looks mad at you for making him wait.[stopping]";
+	Report Lee saying "[one of]'Your family is going to be worried, [lees_nickname],' Lee says, 'We gotta keep moving.'[or]'I know you've been through a lot,' Lee says, 'but we can't stop here.'[or]'We gotta get going, [lees_nickname],' Lee says, 'Your family is waiting.'[or]'We gotta hustle,' Lee says.[or]Lee looks impatient, but doesn't say anything.[stopping]";
 
 This is the
 	journey_lee_walk_catching_up rule:
-	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Lees_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old lee, [lees_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old lee can barely keep up with you,'[or]I got ya, [lees_nickname],'[at random] Lee says, smiling.[end if]" at priority 2;
+	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]and crosses the grassy field[else]as you head toward the trailer park[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya', [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 2;
 
 [
 	Lee in Trailer
@@ -8194,20 +8229,17 @@ This is the
 This is the
 		journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
-		Report Mary saying "'Mornin', Mary,' Lee says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
+		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park.";
 		rule fails;
 	else if time_here of journey_lee_walk is 2:
-		Report Lee saying "'Pretty good,' Lee says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Lee winks at you.[paragraph break]Lee helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
-		now bucket is empty;
+		Report Lee saying "";
+		now Sharon is in Room_Grassy_Field;
 		rule fails;
 	else if time_here of journey_lee_walk is 3:
-		Report Mary saying "Your lee gets a big glass of water from the sink and drinks it.
-		[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'";
-		now seq_mary_sandwich is in-progress;
+		Report Lee saying "";
 		rule fails;
 	else if time_here of journey_lee_walk is 4:
-		Report Lee saying "'I better hustle back,' Lee says, 'before Ellie needs the bucket.' Lee turns to you on his way out, 'See you down there, [lees_nickname].' Lee squeezes your shoulder and heads out the door.";
-		now lee is in Room_Grassy_Clearing;
+		Report Lee saying "";
 		rule succeeds;
 
 
