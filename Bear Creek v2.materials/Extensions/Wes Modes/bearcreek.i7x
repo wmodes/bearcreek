@@ -1644,56 +1644,56 @@ A turnevent is a kind of thing.
 A turnevent has a number called priority.
 A turnevent has text called description.
 10 turnevents are in Limbo.
-A turnevent can be important or trivial.
+A turnevent can be momentous or trivial.
 
-Definition: A turnevent is trivial if it has a priority that is greater than 4.
+Definition: A turnevent is trivial if it has a priority that is greater than 5.
 Definition: A turnevent is momentous if it has a priority that is less than 3.
 [note that there are events between the two that are neither trivial nor momentous]
 
-Coming_Events is a container.
-Coming_Events has a truth state called some things said.
+coming_events is a container.
+coming_events has a truth state called some things said.
 
 To queue_report (event text - text) with/at priority (event priority - a number):
 	Let new event be a random turnevent in Limbo;
 	Now the description of new event is event text;
 	Now the priority of new event is event priority;
-	Now new event is in Coming_Events;
+	Now new event is in coming_events;
 
 The show reports rule is listed last in the every turn rulebook.
 This is the show reports rule:
-	if number of turnevents in Coming_Events is not 0:
-		Let turnevent list be the list of turnevents in Coming_Events;
-		Sort turnevent list in reverse priority order;
-		let momentous count be the number of momentous turnevents in Coming_Events;
+	if number of turnevents in coming_events is not 0:
+		Let turnevent_list be the list of turnevents in coming_events;
+		Sort turnevent_list in reverse priority order;
 		[say "Turnevent list: [line break]";
-		repeat with item running through turnevent list:
+		repeat with item running through turnevent_list:
 			say " [priority of item] - [description of item].";]
-		Repeat with this event running through turnevent list:
-			let trivial_count be the number of trivial turnevents in Coming_Events;
-			let momentous_count be the number of momentous turnevents in Coming_Events;
-			let total_count be the number of turnevents in Coming_Events;
+		Repeat with this_event running through turnevent_list:
+			let trivial_count be the number of trivial turnevents in coming_events;
+			let momentous_count be the number of momentous turnevents in coming_events;
+			let total_count be the number of turnevents in coming_events;
 			[say "Total events: [total_count] / Trivial events: [trivial_count] / Momentous events: [momentous_count].";]
-			if this event is trivial and momentous_count is zero: [we don't say trivial events if we have momentous things to report]
-				if momentous_count is 0:
-					if (trivial_count is 1) and (some things said of Coming_Events is true):
-						let new text be indexed text;
-						let new text be the description of this event;
-						replace character number 1 in new text with character number 1 in new text in lower case;
-						say "And [new text] [run paragraph on]";
-					otherwise:
-						say "[description of this event] [run paragraph on]";
-					now some things said of Coming_Events is true;
-			else if this event is not trivial:
-				if some things said of Coming_Events is true:
+			[we don't say trivial events if we have momentous things to report]
+			if this_event is trivial and momentous_count is zero:
+				[We say each of the trivial events together adding 'And' to the last one.]
+				if (trivial_count is 1) and (some things said of coming_events is true):
+					let new text be indexed text;
+					let new text be the description of this_event;
+					replace character number 1 in new text with character number 1 in new text in lower case;
+					say "And [new text] [run paragraph on]";
+				otherwise:
+					say "[description of this_event] [run paragraph on]";
+				now some things said of coming_events is true;
+			else if this_event is not trivial:
+				if some things said of coming_events is true:
 					say "[line break][line break]";
-				say "[description of this event][run paragraph on]";
-				now some things said of Coming_Events is true;
-			move this event to Limbo;
-		if some things said of Coming_Events is true:
+				say "[description of this_event][run paragraph on]";
+				now some things said of coming_events is true;
+			move this_event to Limbo;
+		if some things said of coming_events is true:
 			say "[line break]";
 		[clear events]
-		now all turnevents in Coming_Events are in Limbo;
-		now some things said of Coming_Events is false;
+		now all turnevents in coming_events are in Limbo;
+		now some things said of coming_events is false;
 
 [TODO: Find a new rulebook for the above rule that triggers every turn. As it is, some every turn rules that queue_reports get shown one after another.]
 
@@ -2219,6 +2219,8 @@ Every turn during Scene_Foraging_for_Breakfast:
 	if the remainder after dividing the turn count by 2 is 0:
 		queue_report "[one of]You are quite hungry[or]You didn't have dinner (or lunch!) yesterday, so you are really quite famished[or]You find you are really hungry. Perhaps you can forage something like a good Exporer Scout[cycling]." with priority 1.
 
+[TODO: If player eats berries in pail, they should no longer be hungry.]
+
 Chapter - Scene_Out_of_the_Woods
 
 There is a scene called Scene_Out_of_the_Woods.
@@ -2242,9 +2244,8 @@ When Scene_Found begins:
 		now journey_lee_walk is in-progress;
 	else if player is in Room_Other_Shore:
 		now journey_sharon_walk is in-progress;
-	now Grandpa is in Room_Grassy_Field;
-	now Honey is in Room_Grassy_Field;
 
+Test found with "test day2 / get up / climb pine tree / d".
 
 Chapter - Scene_Reunions
 
@@ -2522,6 +2523,8 @@ Part - NPC_Journeys
 
 Chapter - The Properties
 
+[TODO: Make it so the player can simply type "follow [npc]"]
+
 An npc_journey is a kind of thing.
 
 An npc_journey can be in-progress.
@@ -2552,6 +2555,10 @@ An npc_journey has a number called max_wait.
 An npc_journey has a truth state called waits_for_player.
 	Waits_for_player is usually true.
 
+[Did we arrive?]
+An npc_journey has a truth state called arrived.
+	Arrived is usually false.
+
 An npc_journey has a rule called the interrupt_test.
 
 An npc_journey has a rule called the action_at_start.
@@ -2571,11 +2578,129 @@ Every turn:
 		take one step on this journey for this_journey;
 
 To take one step on this journey for (this_journey - an npc_journey):
-	[set some local vars to make things easier]
+	[
+		set some local vars to make things easier
+	]
 	let npc be the npc of this_journey;
 	let origin be the origin of this_journey;
 	let destination be the destination of this_journey;
 	now this_journey is run;
+	now npc of this_journey is described;
+	say "DEBUG: [npc] has been at [location of npc] for [time_here of this_journey] turns.";
+	[
+		if npc is still at origin:
+	]
+	if location of npc is origin:
+		say "DEBUG: [npc] is at the origin, [location of npc].";
+		[if player is here:]
+		if location of npc encloses player:
+			[increment the counter for this location]
+			increment time_here of this_journey;
+			[do/continue start of journey actions]
+			follow the action_at_start of this_journey;
+	[
+		Determine if player is ahead or behind
+	]
+	let npc_moves be the number of moves from the location of npc to destination;
+	let player_moves be the number of moves from the location of the player to destination;
+	[
+		if player is ahead:  // we always keep up with the player
+	]
+	if player_moves is less than npc_moves:
+		say "DEBUG: [npc] thinks you are ahead of her.";
+		[move the npc to player's location]
+		move npc to location of player;
+		say "DEBUG: [npc] is moving to player's location.";
+		[do catchup action]
+		follow the action_catching_up of this_journey;
+		[zero counter]
+		now time_here of this_journey is zero;
+		if location of player is destination:
+			say "DEBUG: [npc] has arrived at destination.";
+			now arrived of this_journey is true;
+	[
+		if player is behind:
+	]
+	else if player_moves is greater than npc_moves:
+		say "DEBUG: [npc] thinks you are behind her.";
+		[increment the counter for this location]
+		increment time_here of this_journey;
+		say "DEBUG: [npc] has been waiting [time_here of this_journey] turns at [location of npc].";
+		[if npc is not at destination:]
+		if location of npc is not destination:
+			[if npc is ready to move:]
+			if npc is ready to move on this_journey:
+				say "DEBUG: [npc] is ready to move.";
+				[if npc should wait:]
+				if waits_for_player of this_journey is true:
+					say "DEBUG: [npc] will wait for you [max_wait of this_journey] turns.";
+					[if npc has not been waiting max time:]
+					if time_here of this_journey <  max_wait of this_journey:
+						say "DEBUG: [npc] is still waiting for you.";
+						[stop the action]
+						stop the action;
+				[move npc one move ahead]
+				let heading be the best route from location of npc to destination;
+				let next_room be the room heading from location of npc;
+				try silently npc going heading;
+				say "DEBUG: [npc] is moving to [next_room].";
+				[zero counter]
+				now time_here of this_journey is zero;
+	[
+		else if player is here:
+	]
+	else if location of npc encloses player:
+		say "DEBUG: [npc] thinks you are here.";
+		[if npc has been waiting max time (and not at origin):]
+		if time_here of this_journey >= wait_time of this_journey and location of npc is not origin:
+			[do grumpy wait action]
+			say "DEBUG: [npc] is grumpy because they had to wait for you.";
+			follow the action_after_waiting of this_journey;
+		[if npc is ready to move:]
+		if npc is ready to move on this_journey:
+			[do moving action]
+			follow the action_before_moving of this_journey;
+			[move npc one step ahead]
+			let heading be the best route from location of npc to destination;
+			let next_room be the room heading from location of npc;
+			try silently npc going heading;
+			say "DEBUG: [npc] is moving to [next_room].";
+			[zero counter]
+			now time_here of this_journey is zero;
+	[
+		if npc is at destination:
+	]
+	if location of npc is destination or arrived of this_journey is true:
+		say "DEBUG: [npc] is at the destination, [location of npc].";
+		[if player is here:]
+		if location of npc encloses player:
+			[increment the counter for this location]
+			increment time_here of this_journey;
+			[do end of journey actions]
+			say "DEBUG: NPC: [npc], npc location: [location of npc]; here: [time_here of this_journey], npc at destination: [if location of npc is destination]yes[else]no[end if]; player location: [location of player]; player here: [if location of npc encloses player]yes[else]no[end if].";
+			follow the action_at_end of this_journey;
+			[if rule succeeds, stop the journey]
+			if rule succeeded:
+				[this_journey is not in-progress]
+				now this_journey is not in-progress;
+
+
+[
+	[
+		Determine if player is ahead or behind
+	]
+	let npc_moves be the number of moves from the location of npc to destination;
+	let player_moves be the number of moves from the location of the player to destination;
+	[if player is ahead, do catchup action immediately]
+	if player_moves is less than npc_moves:
+		move npc to location of player;
+		follow the action_catching_up of this_journey;
+	[if player is behind and if waits_for_player, wait]
+	else if player_moves is more than npc_moves:
+		now the player_status of this journey is behind;
+	[if here, do stuff here]
+	else:
+		now the player_status of this journey is here;
 	[
 		increment the counter (time_here)
 	]
@@ -2668,7 +2793,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 		[we say/do our normal moving out action]
 		follow the action_before_moving of this_journey;
 	[move npc]
-	[say "(DEBUG: [npc] is moving to [next_room])[line break]";]
+	say "(DEBUG: [npc] is moving to [next_room])[line break]";
 	try silently npc going heading;
 	[time_here = 0]
 	now time_here of this_journey is zero;
@@ -2676,6 +2801,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 	if player is in next_room:
 		[we say/do catchup action]
 		follow the action_catching_up of this_journey;
+]
 
 To decide if npc is interrupted on (this_journey - a npc_journey):
 	[if interrupt rule succeeds, no]
@@ -3147,7 +3273,7 @@ To eat_berries_from_pail:
 	say "[eat_berries]. Now your pail is [if pail is empty]empty[else if pail is quarter-full]quarter-full[else if pail is half-full]half-full[else if pail is three-quarter-full]mostly full[else]very full[end if].";
 
 Instead of going when pail is full and pail is held by player:
-	say "[one of]With your heaping full pail, you imagine tripping and blackberries going everywhere and getting in trouble[or]Your full pail is making you nervous[or]You are concentrating so hard on your full pail, your hands start to shake and a ripe berry tumbles off into the dirt[or]You have to stop for a minute to catch your breath and steady your hands holding your full pail[or]You walk slow steading your pail full of blackberries[stopping].";
+	say "[one of]With your heaping full pail, you imagine tripping and blackberries going everywhere and getting in trouble[or]Your full pail is making you nervous[or]You are concentrating so hard on your full pail, your hands start to shake and a ripe berry tumbles off into the dirt[or]You have to stop for a minute to catch your breath and steady your hands holding your full pail[or]You walk slowly, steading your pail full of blackberries[stopping].";
 	continue the action;
 
 [Does player mean inserting backdrop_berries into pail:
@@ -3742,7 +3868,7 @@ Section - Description
 
 Room_Lost_in_the_Brambles is a room.
 The printed name is "Lost in the Brambles".
-The description is "[one of]You were sure that this was a better spot than where you've been picking all morning. But here too, the biggest ripest berries seem to be just out of reach. You pick a few ripe berries and drop them in your pail[or]This spot, a little ways from where Honey and Grandpa are picking, has some good berries[stopping]. Under the pine trees, the air smells good.
+The description is "[one of]You were sure that this was a better spot than where you've been picking all morning. But here too, the biggest ripest berries seem just out of reach. You pick a few ripe berries and drop them in your pail[or]This spot, a little ways from where Honey and Grandpa are picking, has some good berries[stopping]. Under the pine trees, the air smells good.
 [paragraph break]Looking around: [available_exits]
 [paragraph break][description of backdrop_sunlight]".
 Understand "lost/-- in/-- the/-- brambles" as Room_Lost_in_the_Brambles.
@@ -5267,6 +5393,9 @@ Understand "other/-- shore" as Room_Other_Shore.
 
 The casual_name is "on the other shore of the creek".
 
+[TODO: >cross river
+You look around, but don't see Backdrop_creek. Last you remember, it was .]
+
 Section - Navigation
 
 West of Room_Other_Shore is Room_Crossing.
@@ -5679,7 +5808,7 @@ The printed name is "Top of the Sentinel Tree".
 The description is "This is a tall pine tree, though not as tall as the massive tree near the trailer park. From here you can see the surrounding woods, and hey! There's Bear Creek! And you can see the stone bridge a ways off and can just make out the line of the long dirt road. There are trees blocking your view of where you think the trailer park is, and your heart gives a little lurch thinking about home.
 [paragraph break][available_exits]".
 The scent is "tangy pine".
-Understand "tall/-- pine/-- tree", "sentinel tree" as Room_Sentinel_Tree.
+Understand "tall/-- pine/-- tree", "pine", "sentinel tree" as Room_Sentinel_Tree.
 
 The casual_name is "in the sentinel tree".
 
@@ -7787,7 +7916,7 @@ This is the journey_sharon_walk_start rule:
 
 This is the
 journey_sharon_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if player is in Room_Other_Shore]crosses the river to the crossing[else if player is in Room_Crossing]carefully crosses the rocky shore toward the swimming hole[else if player is in Room_Swimming_Hole]makes her way up the steep trail to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if player is in Room_Other_Shore]crosses the river to the crossing[else if player is in Room_Crossing]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if player is in Room_Swimming_Hole]makes her way up the steep trail to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
 
 To say sharon_urging:
 	say "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]";
@@ -7798,28 +7927,26 @@ journey_sharon_walk_after_waiting rule:
 
 This is the
 	journey_sharon_walk_catching_up rule:
-	queue_report "Sharon catches up to you [if player is in Room_Crossing], carefully crossing the river on the floating log[else if player is in Room_Swimming_Hole]at the swimming hole[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]in the big grassy field[else if player is in Region_Dirt_Road]as you walk along the dirt road[else]is headed back to the trailer park[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 2;
+	queue_report "Sharon catches up to you[if player is in Room_Crossing], carefully crossing the river on the floating log[else if player is in Room_Swimming_Hole] at the swimming hole[else if player is in Room_Railroad_Tracks] as you reach the railroad crossing[else if player is in Room_Grassy_Field] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 2;
 
-[
-	Sharon in Trailer
-]
-
-This is the
-		journey_sharon_walk_end rule:
+This is the journey_sharon_walk_end rule:
 	if time_here of journey_sharon_walk is 1:
-		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park.";
+		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.";
+		Now Honey is in Room_Grassy_Field;
+		Now Grandpa is in Room_Grassy_Field;
 		rule fails;
+		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
 	else if time_here of journey_sharon_walk is 2:
-		Report Sharon saying "";
+		Report Sharon saying "'He was on the other side of the creek, near the woods,' the Cat Lady says.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug.[paragraph break]Lee arrives from the crossing, starts to say, 'I looked out by...' and sees you and stops and lets out a deep breath. He looks relieved. You are suddenly aware that everyone was out looking for you and worried to death.";
 		now Lee is in Room_Grassy_Field;
 		rule fails;
+		[TODO: Make sure player cannot go anywhere at this time.]
 	else if time_here of journey_sharon_walk is 3:
-		Report Sharon saying "";
-		rule fails;
-	else if time_here of journey_sharon_walk is 4:
-		Report Sharon saying "";
+		Report Sharon saying "'I think it's time I headed home,' Sharon says looking suddenly very tired.[paragraph break]'And maybe time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' He heads back to the trailer park with the Cat Lady right behind him.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder.";
+		Now Honey is in Room_B_Loop;
+		Now Grandpa is in Room_B_Loop;
+		Move player to Room_B_Loop, without printing a room description;
 		rule succeeds;
-
 
 Part - Lee
 
@@ -8226,8 +8353,7 @@ This is the
 	Lee in Trailer
 ]
 
-This is the
-		journey_lee_walk_end rule:
+This is the journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
 		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park.";
 		rule fails;
