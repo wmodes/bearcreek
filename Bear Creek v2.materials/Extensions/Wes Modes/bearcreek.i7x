@@ -491,12 +491,12 @@ Understand
 
 Carry out lying_down:
 	if noun is a lie-able supporter:
-		silently try entering noun;
+		try silently entering noun;
 		if rule succeeded:
 			say "You make yourself comfortable on [the noun].";
 		stop the action;
 	else if noun is a sit-at-able supporter:
-		silently try entering noun;
+		try silently entering noun;
 		if rule succeeded:
 			say "You make yourself comfortable at [the noun].";
 		stop the action;
@@ -535,12 +535,12 @@ Understand
 
 Carry out standing_up:
 	if player is on a lie-able supporter (called the loungy_thing):
-		silently try exiting [loungy_thing];
+		try silently exiting [loungy_thing];
 		if rule succeeded:
 			say "You push yourself up from [the loungy_thing].";
 		stop the action;
 	else if player is on a supporter (called the loungy_thing):
-		silently try exiting [loungy_thing];
+		try silently exiting [loungy_thing];
 		if rule succeeded:
 			say "You stand up from [the loungy_thing].";
 		stop the action;
@@ -1620,7 +1620,7 @@ At 6 PM:
 	Now the current_time_period is evening;
 	Now the right hand status line is "Early Evening";
 	queue_report "Crickets are warming up for the evening symphony, but it only reminds you that you should be home. You can feel yourself starting to cry. You wish you had your mom, or your grandpa was here. Then you really do cry.
-	[paragraph break]Eventually, your tears turn to sniffles and your wipe your eyes with your dirty hands." with priority 2.
+	[paragraph break]Eventually, your tears turn to sniffles and you wipe your eyes with your dirty hands." with priority 2.
 
 At 8 PM:
 	Now the current_time_period is night;
@@ -2586,98 +2586,107 @@ To take one step on this journey for (this_journey - an npc_journey):
 	let destination be the destination of this_journey;
 	now this_journey is run;
 	now npc of this_journey is described;
+	[increment the counter for this location]
+	increment time_here of this_journey;
 	say "DEBUG: [npc] has been at [location of npc] for [time_here of this_journey] turns.";
 	[
-		if npc is still at origin:
+		If NPC is still at origin, we do origin things.
 	]
 	if location of npc is origin:
 		say "DEBUG: [npc] is at the origin, [location of npc].";
+		[if player is not here:]
+		if location of npc does not enclose player:
+			[don't increment the count.]
+			decrement time_here of this_journey;
 		[if player is here:]
-		if location of npc encloses player:
-			[increment the counter for this location]
-			increment time_here of this_journey;
+		else:
 			[do/continue start of journey actions]
 			follow the action_at_start of this_journey;
 	[
-		Determine if player is ahead or behind
+		IF NPC is on their joourney...
 	]
-	let npc_moves be the number of moves from the location of npc to destination;
-	let player_moves be the number of moves from the location of the player to destination;
-	[
-		if player is ahead:  // we always keep up with the player
-	]
-	if player_moves is less than npc_moves:
-		say "DEBUG: [npc] thinks you are ahead of her.";
-		[move the npc to player's location]
-		move npc to location of player;
-		say "DEBUG: [npc] is moving to player's location.";
-		[do catchup action]
-		follow the action_catching_up of this_journey;
-		[zero counter]
-		now time_here of this_journey is zero;
-		if location of player is destination:
-			say "DEBUG: [npc] has arrived at destination.";
-			now arrived of this_journey is true;
-	[
-		if player is behind:
-	]
-	else if player_moves is greater than npc_moves:
-		say "DEBUG: [npc] thinks you are behind her.";
-		[increment the counter for this location]
-		increment time_here of this_journey;
-		say "DEBUG: [npc] has been waiting [time_here of this_journey] turns at [location of npc].";
-		[if npc is not at destination:]
-		if location of npc is not destination:
-			[if npc is ready to move:]
+	if location of npc is not destination:
+		[
+			Determine if player is ahead or behind NPC.
+		]
+		let npc_moves be the number of moves from the location of npc to destination;
+		let player_moves be the number of moves from the location of the player to destination;
+		[
+			If player is ahead of NPC, we catch up to them.
+		]
+		if player_moves is less than npc_moves:
+			say "DEBUG: [npc] thinks you are ahead of her.";
+			[move the npc to player's location]
+			move npc to location of player;
+			say "DEBUG: [npc] is moving to player's location.";
+			[reset counter]
+			now time_here of this_journey is one;
+			[do catchup action]
+			follow the action_catching_up of this_journey;
+		[
+			If player is behind NPC, NPC waits or moves on.
+		]
+		else if player_moves is greater than npc_moves:
+			say "DEBUG: [npc] thinks you are behind them.";
+			say "DEBUG: [npc] has been waiting [time_here of this_journey] turns at [location of npc].";
+			[
+				Is the NPC ready to move?
+			]
+			[...as long as NPC is not at destination already]
+			if location of npc is not destination:
+				[If NPC is ready to move:]
+				if npc is ready to move on this_journey:
+					say "DEBUG: [npc] is ready to move.";
+					[If NPC should wait:]
+					if waits_for_player of this_journey is true:
+						say "[npc] is waiting for you [one of]up ahead[or][casual_name of location of NPC][cycling]. You should probably get going.";
+						say "DEBUG: [npc] will wait for you [max_wait of this_journey] turns.";
+						[if npc has not been waiting max time:]
+						if time_here of this_journey <  max_wait of this_journey:
+							say "DEBUG: [npc] is still waiting for you.";
+							[stop the action]
+							stop the action;
+					[Move NPC one move ahead.]
+					let heading be the best route from location of npc to destination;
+					let next_room be the room heading from location of npc;
+					try silently npc going heading;
+					say "DEBUG: [npc] is moving to [next_room].";
+					[Reset counter.]
+					now time_here of this_journey is zero;
+		[
+			Otherwise, if player is here, NPC waits or moves on.
+		]
+		else if location of npc encloses player:
+			say "DEBUG: [npc] thinks you are here.";
+			[If NPC has been waiting too long (and not at origin), NPC moves on.]
+			if time_here of this_journey > wait_time of this_journey and location of npc is not origin:
+				[do grumpy wait action]
+				say "DEBUG: [npc] is grumpy because they had to wait for you.";
+				follow the action_after_waiting of this_journey;
+			[If NPC is ready to move, NPC says something and moves on.]
 			if npc is ready to move on this_journey:
-				say "DEBUG: [npc] is ready to move.";
-				[if npc should wait:]
-				if waits_for_player of this_journey is true:
-					say "DEBUG: [npc] will wait for you [max_wait of this_journey] turns.";
-					[if npc has not been waiting max time:]
-					if time_here of this_journey <  max_wait of this_journey:
-						say "DEBUG: [npc] is still waiting for you.";
-						[stop the action]
-						stop the action;
-				[move npc one move ahead]
+				[do moving action]
+				follow the action_before_moving of this_journey;
+				[move npc one step ahead]
 				let heading be the best route from location of npc to destination;
 				let next_room be the room heading from location of npc;
 				try silently npc going heading;
 				say "DEBUG: [npc] is moving to [next_room].";
-				[zero counter]
+				[Reset counter]
 				now time_here of this_journey is zero;
 	[
-		else if player is here:
+		If NPC is at destination, we do destination things (if the player is there).
 	]
-	else if location of npc encloses player:
-		say "DEBUG: [npc] thinks you are here.";
-		[if npc has been waiting max time (and not at origin):]
-		if time_here of this_journey >= wait_time of this_journey and location of npc is not origin:
-			[do grumpy wait action]
-			say "DEBUG: [npc] is grumpy because they had to wait for you.";
-			follow the action_after_waiting of this_journey;
-		[if npc is ready to move:]
-		if npc is ready to move on this_journey:
-			[do moving action]
-			follow the action_before_moving of this_journey;
-			[move npc one step ahead]
-			let heading be the best route from location of npc to destination;
-			let next_room be the room heading from location of npc;
-			try silently npc going heading;
-			say "DEBUG: [npc] is moving to [next_room].";
-			[zero counter]
-			now time_here of this_journey is zero;
-	[
-		if npc is at destination:
-	]
-	if location of npc is destination or arrived of this_journey is true:
+	if location of npc is destination:
 		say "DEBUG: [npc] is at the destination, [location of npc].";
+		[If player is not here:]
+		if location of npc does not enclose player:
+			[Reset counter]
+			now time_here of this_journey is zero;
 		[if player is here:]
-		if location of npc encloses player:
-			[increment the counter for this location]
-			increment time_here of this_journey;
+		else:
 			[do end of journey actions]
-			say "DEBUG: NPC: [npc], npc location: [location of npc]; here: [time_here of this_journey], npc at destination: [if location of npc is destination]yes[else]no[end if]; player location: [location of player]; player here: [if location of npc encloses player]yes[else]no[end if].";
+			say "DEBUG: npc: [npc], npc location: [location of npc]; here: [time_here of this_journey], npc at destination: [if location of npc is destination]yes[else]no[end if]; player location: [location of player]; player here: [if location of npc encloses player]yes[else]no[end if].";
 			follow the action_at_end of this_journey;
 			[if rule succeeds, stop the journey]
 			if rule succeeded:
@@ -5030,7 +5039,7 @@ Section - Rules and Actions
 
 Instead of drinking teacup:
 	if player does not hold teacup:
-		silently try taking teacup;
+		try silently taking teacup;
 	if player holds teacup:
 		if teacup is filled:
 			say "You bring the tiny teacup to your lips and drain it in a sip or two. The tea is lukewarm and watery, but okay.";
@@ -7828,7 +7837,7 @@ This is the seq_sharon_teatime_handler rule:
 		if sharon is visible:
 			if player is not on Cat Lady's kitchen table:
 				queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3;
-				silently try entering the Cat Lady's kitchen table;
+				try silently entering the Cat Lady's kitchen table;
 			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharons_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
 			now your teacup is filled;
 			Now player is confident;
@@ -7919,30 +7928,32 @@ journey_sharon_walk_before_moving rule:
 	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if player is in Room_Other_Shore]crosses the river to the crossing[else if player is in Room_Crossing]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if player is in Room_Swimming_Hole]makes her way up the steep trail to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
 
 To say sharon_urging:
-	say "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]";
+	queue_report  "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]" at priority 3;
 
 This is the
 journey_sharon_walk_after_waiting rule:
-	Report Sharon saying "[one of]'Hurry along, dear,' the Cat Lady says, 'We have to get you home.'[or]'You know, your grandparents are worried sick about you,' the Cat Lady says, 'Let's not dawdle, shall we?'[or]The Cat Lady looks irritated about having to wait, but says nothing.[or]'Now I don't mind if we spend all day out here,' the Cat Lady says, 'But I would think you'd have a little more respect and concern for your grandpa and grandma who are worries about you.'[or]The Cat Lady looks mad at you for making her wait.[stopping]";
+	queue_report "[one of]'Hurry along, dear,' the Cat Lady says, 'We have to get you home.'[or]'You know, your grandparents are worried sick about you,' the Cat Lady says, 'Let's not dawdle, shall we?'[or]The Cat Lady looks irritated about having to wait, but says nothing.[or]'Now I don't mind if we spend all day out here,' the Cat Lady says, 'But I would think you'd have a little more respect and concern for your grandpa and grandma who are worries about you.'[or]The Cat Lady looks mad at you for making her wait.[stopping]" at priority 3;
 
 This is the
 	journey_sharon_walk_catching_up rule:
-	queue_report "Sharon catches up to you[if player is in Room_Crossing], carefully crossing the river on the floating log[else if player is in Room_Swimming_Hole] at the swimming hole[else if player is in Room_Railroad_Tracks] as you reach the railroad crossing[else if player is in Room_Grassy_Field] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 2;
+	queue_report "Sharon catches up to you[if player is in Room_Crossing], carefully crossing the river on the floating log[else if player is in Room_Swimming_Hole] at the swimming hole[else if player is in Room_Railroad_Tracks] as you reach the railroad crossing[else if player is in Room_Grassy_Field] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 3;
 
 This is the journey_sharon_walk_end rule:
 	if time_here of journey_sharon_walk is 1:
-		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.";
 		Now Honey is in Room_Grassy_Field;
 		Now Grandpa is in Room_Grassy_Field;
+		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.";
 		rule fails;
 		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
 	else if time_here of journey_sharon_walk is 2:
+		Now Lee is in Room_Grassy_Field;
 		Report Sharon saying "'He was on the other side of the creek, near the woods,' the Cat Lady says.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug.[paragraph break]Lee arrives from the crossing, starts to say, 'I looked out by...' and sees you and stops and lets out a deep breath. He looks relieved. You are suddenly aware that everyone was out looking for you and worried to death.";
-		now Lee is in Room_Grassy_Field;
 		rule fails;
 		[TODO: Make sure player cannot go anywhere at this time.]
 	else if time_here of journey_sharon_walk is 3:
 		Report Sharon saying "'I think it's time I headed home,' Sharon says looking suddenly very tired.[paragraph break]'And maybe time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' He heads back to the trailer park with the Cat Lady right behind him.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder.";
+		Now Sharon is in Room_Sharons_Trailer;
+		Now Lee is in Room_Lees_Trailer;
 		Now Honey is in Room_B_Loop;
 		Now Grandpa is in Room_B_Loop;
 		Move player to Room_B_Loop, without printing a room description;
@@ -8347,11 +8358,7 @@ journey_lee_walk_after_waiting rule:
 
 This is the
 	journey_lee_walk_catching_up rule:
-	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]and crosses the grassy field[else]as you head toward the trailer park[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya', [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 2;
-
-[
-	Lee in Trailer
-]
+	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]and crosses the grassy field[else]as you head toward the trailer park[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya', [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
 
 This is the journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
