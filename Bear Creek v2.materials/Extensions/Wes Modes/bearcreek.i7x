@@ -1777,7 +1777,7 @@ Chapter - Scene_Walk_With_Grandpa
 	* when player is near blackberry clearing ]
 
 There is a scene called Scene_Walk_With_Grandpa.
-Scene_Walk_With_Grandpa begins when player has been in Region_Trailer_Indoors.
+Scene_Walk_With_Grandpa begins when player has been in Region_Trailer_Indoors and player is in Room_Grassy_Clearing.
 Scene_Walk_With_Grandpa ends when Grandpa has been in Room_Grandpas_Trailer and Grandpa is not in Room_Grandpas_Trailer.
 
 When Scene_Walk_With_Grandpa begins:
@@ -2642,7 +2642,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 					[say "DEBUG: [npc] is ready to move.";]
 					[If NPC should wait:]
 					if waits_for_player of this_journey is true:
-						say "[npc] is waiting for you [one of]up ahead[or][casual_name of location of NPC][cycling]. You should probably get going.";
+						say "[npc] is waiting for you[one of][or] [casual_name of location of NPC][cycling]. You should probably get going.";
 						[say "DEBUG: [npc] will wait for you [max_wait of this_journey] turns.";]
 						[if npc has not been waiting max time:]
 						if time_here of this_journey <  max_wait of this_journey:
@@ -7499,7 +7499,7 @@ journey_gpa_walk_after_waiting rule:
 
 This is the
 	journey_gpa_walk_catching_up rule:
-	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 2;
+	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
 
 [
 	Grandpa in Trailer
@@ -7508,7 +7508,7 @@ This is the
 This is the
 		journey_gpa_walk_end rule:
 	if time_here of journey_gpa_walk is 1:
-		Report Mary saying "'Mornin', Mary,' Grandpa says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
+		Report Mary saying "'Mornin['], Mary,' Grandpa says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
 		rule fails;
 	else if time_here of journey_gpa_walk is 2:
 		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
