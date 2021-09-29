@@ -2248,6 +2248,23 @@ When Scene_Found begins:
 	else if player is in Room_Other_Shore:
 		now journey_sharon_walk is in-progress;
 
+[This will prevent player from getting re-lost after beign found!]
+Instead of room_navigating Room_Wooded_Trail when player is in Room_Other_Shore during Scene_Found:
+	say not_going_back_to_woods.
+
+Instead of going east when player is in Room_Other_Shore during Scene_Found:
+	say not_going_back_to_woods.
+
+Instead of room_navigating Room_Dappled_Forest_Path when player is in Room_Blackberry_Tangle during Scene_Found:
+	say not_going_back_to_woods.
+
+Instead of going east when player is in Room_Blackberry_Tangle during Scene_Found:
+	say not_going_back_to_woods.
+
+To say not_going_back_to_woods:
+	say "Maybe later, with your grandpa, you can go back to the woods and show him your little nest, but not now.".
+
+
 Test found with "test day2 / get up / climb pine tree / d".
 
 Chapter - Scene_Reunions
