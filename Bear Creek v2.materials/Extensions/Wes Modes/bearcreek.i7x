@@ -1788,6 +1788,9 @@ When Scene_Walk_With_Grandpa begins:
 When Scene_Walk_With_Grandpa ends:
 	now big_bucket is empty.
 
+Instead of room_navigating or going when player is in Room_Grandpas_Trailer during Scene_Walk_With_Grandpa:
+	queue_report "'Hold your horses, [grandpas_nickname],' Grandpa says. 'Stay with us for now.'" at priority 3.
+
 Chapter - Scene_Helping_Grandpa
 
 There is a scene called Scene_Helping_Grandpa.
@@ -2589,20 +2592,22 @@ To take one step on this journey for (this_journey - an npc_journey):
 	let destination be the destination of this_journey;
 	now this_journey is run;
 	now npc of this_journey is described;
-	[increment the counter for this location]
-	increment time_here of this_journey;
+	[
+		increment the counter for this location
+	]
+	if location of npc is origin or location of npc is destination:
+		if location of npc encloses player:
+			increment time_here of this_journey;
+	else:
+		increment time_here of this_journey;
 	[say "DEBUG: [npc] has been at [location of npc] for [time_here of this_journey] turns.";]
 	[
 		If NPC is still at origin, we do origin things.
 	]
 	if location of npc is origin:
 		[say "DEBUG: [npc] is at the origin, [location of npc].";]
-		[if player is not here:]
-		if location of npc does not enclose player:
-			[don't increment the count.]
-			decrement time_here of this_journey;
 		[if player is here:]
-		else:
+		if location of npc encloses player:
 			[do/continue start of journey actions]
 			follow the action_at_start of this_journey;
 	[
@@ -2682,12 +2687,8 @@ To take one step on this journey for (this_journey - an npc_journey):
 	]
 	if location of npc is destination:
 		[say "DEBUG: [npc] is at the destination, [location of npc].";]
-		[If player is not here:]
-		if location of npc does not enclose player:
-			[Reset counter]
-			now time_here of this_journey is zero;
 		[if player is here:]
-		else:
+		if location of npc encloses player:
 			[do end of journey actions]
 			[say "DEBUG: npc: [npc], npc location: [location of npc]; here: [time_here of this_journey], npc at destination: [if location of npc is destination]yes[else]no[end if]; player location: [location of player]; player here: [if location of npc encloses player]yes[else]no[end if].";]
 			follow the action_at_end of this_journey;
@@ -7508,7 +7509,7 @@ This is the
 This is the
 		journey_gpa_walk_end rule:
 	if time_here of journey_gpa_walk is 1:
-		Report Mary saying "'Mornin['], Mary,' Grandpa says as he comes in.[paragraph break]'How's the berry picking?' Mary asks.";
+		Report Mary saying "'Mornin['], Mary,' Grandpa says.[paragraph break]'How's the berry picking?' Mary asks.";
 		rule fails;
 	else if time_here of journey_gpa_walk is 2:
 		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
