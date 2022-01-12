@@ -2264,8 +2264,11 @@ Instead of going east when player is in Room_Blackberry_Tangle during Scene_Foun
 To say not_going_back_to_woods:
 	say "Maybe later, with your grandpa, you can go back to the woods and show him your little nest, but not now.".
 
-
 Test found with "test day2 / get up / climb pine tree / d".
+
+Section - Journeys
+
+
 
 Chapter - Scene_Reunions
 
@@ -2278,8 +2281,14 @@ Instead of room_navigating or going during Scene_Reunions:
 Chapter - Scene_Long_Arm_of_the_Law
 
 There is a scene called Scene_Long_Arm_of_the_Law.
-Scene_Long_Arm_of_the_Law begins when Scene_Day_Two is happening and player has been in Region_Trailer_Park_Area for 5 turns
-[scene ends when sherriff leaves]
+Scene_Long_Arm_of_the_Law begins when Scene_Day_Two is happening and player is in Room_B_Loop.
+[scene ends when sheriff leaves]
+
+When Scene_Long_Arm_of_the_Law begins:
+	now seq_long_arm_of_the_law is in-progress;
+
+Instead of room_navigating or going during Scene_Long_Arm_of_the_Law:
+	say "You don't want to go anywhere, right now.".
 
 Chapter - Scene_Parents_Arrive
 
@@ -7448,7 +7457,7 @@ Quote
 "'Your dad? Well,' Grandpa says, 'you know, he and I always got along fine. I think he's a good guy, but I don't like that he doesn't see much of you.'"
 "'Well, [grandpas_nickname], your dad is what he is, I guess,' Grandpa says, 'I think he loves you but doesn't always know how to show it.'"
 
-Chapter - Sequences
+Chapter - Journeys
 
 [
 	Grandpa on Walk
@@ -7485,10 +7494,6 @@ journey_gpa_walk is an npc_journey.
 This is the journey_gpa_walk_interrupt_test rule:
 	if we are speaking to Grandpa, rule succeeds;
 	rule fails.
-
-[
-	Grandpa Begins Walk
-]
 
 This is the journey_gpa_walk_start rule:
 	if grandpa is not visible:
@@ -7901,8 +7906,10 @@ To refill the teacups:
 	say "The Cat Lady re-fills [if a random chance of 1 in 2 succeeds]both of your cups[else]your cup[end if] with more tepid tea.";
 	now your teacup is filled;
 
+	Chapter - Sequences
+
 [
-	Sharon on Walk
+	Found by Sharon
 
 	This is a journey that begins
 		* during Scene_Found
@@ -7915,10 +7922,6 @@ To refill the teacups:
 		* turn n+m: if you take more than m turns to get to him and you are a location away, sharon comes to get you and ask if you are coming
 		* end: Sharon returns you to your family and tells where they found you, Lee arrives
 ]
-
-[test gw with "teleport to sharons trailer / teleport to grassy clearing / teleport to willow trail".]
-
-[TODO: Create a rule that prevents us from going anywhere but toward goal during this walk]
 
 journey_sharon_walk is an npc_journey.
 	The npc is Sharon.
@@ -7937,10 +7940,6 @@ journey_sharon_walk is an npc_journey.
 This is the journey_sharon_walk_interrupt_test rule:
 	if we are speaking to Sharon, rule succeeds;
 	rule fails.
-
-[
-	Sharon Begins Walk
-]
 
 This is the journey_sharon_walk_start rule:
 	if time_here of journey_sharon_walk is 1:
@@ -7986,6 +7985,7 @@ This is the journey_sharon_walk_end rule:
 		Move player to Room_B_Loop, without printing a room description;
 		queue_report "[bold type][location][roman type]" at priority 1;
 		rule succeeds;
+
 
 Part - Lee
 
@@ -8321,8 +8321,10 @@ This is the seq_lee_hangout_interrupt_test rule:
 		rule succeeds;
 	rule fails.
 
+	Chapter - Sequences
+
 [
-	Lee on Walk
+	Found by Lee
 
 	This is a journey that begins
 		* during Scene_Found
@@ -8357,10 +8359,6 @@ journey_lee_walk is an npc_journey.
 This is the journey_lee_walk_interrupt_test rule:
 	if we are speaking to Lee, rule succeeds;
 	rule fails.
-
-[
-	Lee Begins Walk
-]
 
 This is the journey_lee_walk_start rule:
 	if time_here of journey_lee_walk is 1:
@@ -8651,21 +8649,22 @@ The scent is "bacon".
 Procedural rule when doing anything to sheriff when sheriff is visible and sheriff is in sheriff's car:
 	ignore the basic accessibility rule;]
 
-
-
 test drive-by with "Go to Railroad Tracks/g/g/g/g/g/g/g/g/g/g/g/go to c loop/g/g".
 
+[TODO: Convert these times from minutes to turns]
 Instead of going during Scene_Sheriffs_Drive_By:
 	if the time since Scene_Sheriffs_Drive_By began is 1 minutes:
 		say "But you're curious what the police are here for, so you change your mind and keep listening.";
+		stop the action;
 	else if the time since Scene_Sheriffs_Drive_By began is 2 minutes:
 		say "You quietly back away while the Cat Lady and the Sheriff are still talking about something. A quick look back. Did the Cat Lady just point over toward you? Are they talking about you for some reason? You want to hear what they are saying, so you creep closer.";
+		stop the action;
 	otherwise:
 		continue the action;
 
-[Every turn when (player is in Room_C_Loop or player is in Room_B_Loop or player is in Room_Picnic_Area) during Scene_Sheriffs_Drive_By:
+Every turn when (player is in Room_C_Loop or player is in Room_B_Loop or player is in Room_Picnic_Area) during Scene_Sheriffs_Drive_By:
 	if the time since Scene_Sheriffs_Drive_By began is greater than 1 minutes:
-		queue_report "The Sheriff is still talking to the Cat Lady in D Loop." with priority 3;]
+		queue_report "The Sheriff is still talking to the Cat Lady in D Loop." with priority 3;
 
 Chapter - Responses
 
@@ -8700,7 +8699,7 @@ Chapter - Rants
 Chapter - Sequences
 
 [
-	Scene_Sheriffs_Drive_By Sequence
+	Sequence: Sheriffs_Drive_By
 
 	summary: Sheriff and Cat Lady talk about Lee
 	conditions: during explorations when player has been in trailer park region for a numer of turns
@@ -8754,6 +8753,59 @@ This is the seq_sheriffs_drive_by_handler rule:
 		now Sheriff's car is in Limbo;
 
 This is the seq_sheriffs_drive_by_interrupt_test rule:
+	if we are speaking to Sharon, rule succeeds;
+	if we are speaking to Sheriff, rule succeeds;
+	rule fails.
+
+
+[
+	Sequence: Long Arm of the Law
+
+	summary: Sheriff confronts Lee
+	conditions: during Scene_Day_Two when player has been in Room_B_Loop
+	trigger: Scene_Long_Arm_of_the_Law starts
+]
+
+seq_long_arm_of_the_law is a sequence.
+	The action_handler is the seq_long_arm_of_the_law_handler rule.
+	The interrupt_test is seq_long_arm_of_the_law_interrupt_test rule.
+	The length_of_seq is 6.
+
+This is the seq_long_arm_of_the_law_handler rule:
+	let the index be the index of seq_long_arm_of_the_law;
+	if (player is in Room_C_Loop or player is in Room_B_Loop or player is in Room_Picnic_Area) and index is greater than 1 and index is less than 6:
+		queue_report "The Sheriff is still talking to the Cat Lady in D Loop." with priority 3;
+	if index is 1:
+		[grandpa puts you down and Honey and Grandpa talk to you.]
+		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see Jody made it back home.'" at priority 2;
+		[sheriff shows up]
+		now sheriff's car is in Room_B_Loop;
+	else if index is 2:
+		now sheriff's car is in Room_C_Loop;
+		queue_report "'Yes, thank god,' grandpa says. 'Apparently, [grandpas_nickname] here,' he puts his hand on your head, 'spent a pretty cold night out in the woods. We were all out looking for this one.'[paragraph break]'Has Mr. Skarbek been in the woods?' the Sheriff asks, glancing toward C Loop.[paragraph break]'Yes,' Grandpa looks confused, 'We all were out looking. But--'[paragraph break]'That's all I need to know, thanks,' the Sheriff says grimly. He turns to you. 'You're lucky you were found,' he says quickly and speeds off toward C Loop." with priority 2;
+	else if index is 3:
+		now player is in Room_C_Loop;
+		now Lee is in Room_C_Loop;
+		now Sheriff is in Room_C_Loop;
+		queue_report "Honey and grandpa are still talking to you, but you're still thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'Lee?' you ask grandpa.[paragraph break]'Now, that's none of your business, [grandpas_nickname],' grandpa says. But you are already off and running.[bold type][location][roman type][line break]" with priority 2;
+	else if index is 4:
+		queue_report "When you " with priority 2;
+	else if index is 5:
+		if player is in Room_D_Loop:
+			queue_report "'Well what I came to ask,' the Sheriff says to the Cat Lady, 'Has he been bothering you any?' He looks back toward C Loop. 'When I drove up, I saw him over there. Has he been leaving you alone?'" with priority 1;
+	else if index is 6:
+		if player is in Room_D_Loop:
+			queue_report "'Oh, he hasn't so much as looked in my direction,' the Cat Lady says to the Sheriff.
+			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?''" with priority 1;
+	else if index is 7:
+		if player is in Room_D_Loop:
+			queue_report "'Dearie, you're a sweet man to check in on me,' the Cat Lady puts her hand on the Sheriff's arm and he almost smiles.
+			[paragraph break]He pats her hand, 'You take care of yourself Sharon, and make sure you call me if you have any problems.' He talks briefly on his radio and then drives off, a little too fast for inside the trailer park. The Cat Lady unwinds the hose and continues watering her garden." with priority 2;
+		else if player is in Region_Trailer_Park_Area:
+			queue_report "You hear the Sheriff's car drive off, a little too fast for inside the trailer park." with priority 1;
+		now Sheriff's car is in Limbo;
+
+This is the seq_long_arm_of_the_law_interrupt_test rule:
 	if we are speaking to Sharon, rule succeeds;
 	if we are speaking to Sheriff, rule succeeds;
 	rule fails.
