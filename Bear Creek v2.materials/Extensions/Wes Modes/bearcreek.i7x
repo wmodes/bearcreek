@@ -1721,6 +1721,7 @@ To report (speaker - person) saying (speech_text - text):
 
 Book - Scenes
 
+[I can't remember what effect a dramatic scene has]
 A scene can be dramatic. A scene is usually not dramatic.
 
 Part - Scene_Day_One
@@ -1813,7 +1814,7 @@ When Scene_Sheriffs_Drive_By begins:
 Chapter - Scene_Visit_With_Sharon
 
 There is a recurring scene called Scene_Visit_With_Sharon.
-Scene_Visit_With_Sharon begins when player is in Room_D_Loop.
+Scene_Visit_With_Sharon begins when player is in Room_D_Loop and Scene_Day_One is happening.
 [ The following is a workaround because the valid code
 	Scene_Visit_With_Sharon ends when Scene_Sheriffs_Drive_By begins or (player is not in Room_D_Loop and player is not in Room_Sharons_Trailer).
 does not compile - http://inform7.com/mantis/view.php?id=575]
@@ -1838,7 +1839,7 @@ When Scene_Tea_Time begins:
 Chapter - Scene_Visit_With_Lee
 
 There is a recurring scene called Scene_Visit_With_Lee.
-Scene_Visit_With_Lee begins when player is in Room_C_Loop.
+Scene_Visit_With_Lee begins when player is in Room_C_Loop and Scene_Day_One is happening.
 Scene_Visit_With_Lee ends when player is not in Room_C_Loop and player is not in Room_Lees_Trailer.
 
 When Scene_Visit_With_Lee begins:
@@ -2274,9 +2275,10 @@ Chapter - Scene_Reunions
 
 There is a scene called Scene_Reunions.
 Scene_Reunions begins when Scene_Found ends.
+Scene_Reunions ends when Scene_Long_Arm_of_the_Law begins.
 
 Instead of room_navigating or going during Scene_Reunions:
-	say "Now that you are home, you don't want to go anywhere else.".
+	say "Now that you are with your Honey and grandpa, you don't want to go anywhere else.".
 
 Chapter - Scene_Long_Arm_of_the_Law
 
@@ -2287,8 +2289,45 @@ Scene_Long_Arm_of_the_Law begins when Scene_Day_Two is happening and player is i
 When Scene_Long_Arm_of_the_Law begins:
 	now seq_long_arm_of_the_law is in-progress;
 
+[Things that make us reject supporting Lee:
+	Going elsewhere, waiting too long]
 Instead of room_navigating or going during Scene_Long_Arm_of_the_Law:
-	say "You don't want to go anywhere, right now.".
+	if index of seq_long_arm_of_the_law < 4:
+		say "You don't want to go anywhere, right now.";
+	else:
+		increment index of seq_long_arm_of_the_law;
+		now lee_support of player is _decided_no;
+		say "You feel bad leaving Lee, but you're sure he'll be okay. You let grandpa lead you back toward home.".
+
+Every turn while lee_support of player is _facing:
+	say "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]".
+
+Instead of waiting during Scene_Long_Arm_of_the_Law:
+	if index of seq_long_arm_of_the_law < 4:
+		continue the action;
+	else:
+		if wait_time of seq_long_arm_of_the_law < 2:
+			increment wait_time of seq_long_arm_of_the_law;
+			say "You're waiting, but shouldn't you do something?";
+			continue the action;
+		else:
+			[ we do this to jump past the pause in the seq ]
+			increment index of seq_long_arm_of_the_law;
+			now lee_support of player is _decided_no;
+			say "What's going to happen? You've waited too long to find out. You feel bad for Lee, but you're sure he'll be okay. You let grandpa lead you back toward home.".
+
+[Things that make us accept supporting Lee:
+	Saying no, Telling about night in woods, Yelling, Hitting Sheriff]
+Instead of telling or yelling or attacking or saying no during Scene_Long_Arm_of_the_Law:
+	if index of seq_long_arm_of_the_law < 4:
+		say "It seems that everyone is focused elsewhere";
+	else:
+		increment index of seq_long_arm_of_the_law;
+		now lee_support of player is _decided_yes;
+		say "You take a deep breath, and loudly yell, 'No, wait!'[paragraph break]Everyone turns to you. And the words tumble out of you. Quick as you can, stumbling, messing up some of the details, you tell how you wandered into the woods by yourself, about the dog who blocked your path, about the nest, about the racoons, about orienteering, every word chasing the previous word, and how you were found by Lee and the Cat Lady.[paragraph break]You stop and take a breath.".
+
+[TODO: add saying no to sheriff or telling to sheriff that results in
+	now lee_support of player is _yes;]
 
 Chapter - Scene_Parents_Arrive
 
@@ -2624,6 +2663,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 	if location of npc is origin or location of npc is destination:
 		if location of npc encloses player:
 			increment time_here of this_journey;
+			[TODO: this shouldn't advance until the action_at_start succeeds]
 	else:
 		increment time_here of this_journey;
 	[say "DEBUG: [npc] has been at [location of npc] for [time_here of this_journey] turns.";]
@@ -3552,9 +3592,10 @@ Chapter - The Radio
 
 [Instead of doing anything except object-navigating or examining or listening or smelling or quizzing or informing or implicit-quizzing or implicit-informing radio, say "[one of]Better leave it alone or Honey will kill you.[or]Seriously, you know not to touch Honey's stuff.[or]Not a good idea.[stopping]"]
 
-Every turn when location of player is in Region_Blackberry_Area or player is in Room_Stone_Bridge:
-	if time_for_a_new_song,
-		report_new_song_begins;
+Every turn during Scene_Day_One:
+ 	if location of player is in Region_Blackberry_Area or location of player is Room_Stone_Bridge:
+		if time_for_a_new_song,
+			report_new_song_begins;
 
 When play begins:
 	Sort Table of Pop Songs in random order.
@@ -3904,7 +3945,7 @@ Backdrop_creek is backdrop in Region_Blackberry_Area.
 Section - Rules and Actions
 
 Instead of listening when location of player is in Region_Blackberry_Area,
-say "[what_song_is_playing]. You can hear the creek burbling nearby.[if Grandpa is in Room_Grassy_Clearing] And Honey and Grandpa are talking nearby.[end if]";
+say "[if Scene_Day_One is happening][what_song_is_playing]. [end if]You can hear the creek burbling[if Grandpa is in Room_Grassy_Clearing], and Honey and Grandpa are talking nearby[end if].";
 
 
 Chapter - Room_Lost_in_the_Brambles
@@ -6631,6 +6672,12 @@ The player has a number called Treetop Tries.
 Yourself can be warned_by_grandma.
 Yourself can be free_to_wander.
 
+A decision is a kind of value.
+	The decisions are _unfaced, _facing, _decided_maybe, _decided_no, and _decided_yes.
+	A decision is usually _unfaced.
+Yourself has a decision called lee_support.
+Yourself has a decision called stepdad_decision.
+
 Chapter - Possessions
 
 Some tennis_shoes are an undescribed unmentionable floating thing.
@@ -7977,7 +8024,7 @@ This is the journey_sharon_walk_end rule:
 		rule fails;
 		[TODO: Make sure player cannot go anywhere at this time.]
 	else if time_here of journey_sharon_walk is 3:
-		Report Sharon saying "'I think it's time I headed home,' Sharon says looking suddenly very tired.[paragraph break]'And maybe time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' He heads back to the trailer park with Sharon right behind him.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder.";
+		Report Sharon saying "'I think it's time I headed home,' Sharon says looking suddenly very tired.[paragraph break]'And maybe time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' He heads back to the trailer park with Sharon right behind him.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. Grandpa carries you all the way to...";
 		Now Sharon is in Room_Sharons_Trailer;
 		Now Lee is in Room_Lees_Trailer;
 		Now Honey is in Room_B_Loop;
@@ -7989,14 +8036,9 @@ This is the journey_sharon_walk_end rule:
 
 Part - Lee
 
-[TODO:
-"Hey, Jody," Lee says, "How you doin'?".
->talk to lee
-You are already talking to Lee]
-
 Lee is a _male man in Room_C_Loop.
 	The initial appearance is "[lees_initial_appearance][first time] [description of lee][only]".
-	The description is "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long black hair pulled back in an untidy ponytail. He's wearing a tanktop and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name."
+	The description is "[lees_description]".
 	Understand "lee/veteran/vet" as Lee.
 	The scent is "cigarettes and alcohol".
 
@@ -8008,6 +8050,14 @@ To say lees_initial_appearance:
 			say "Lee is [if lees_tv is switched on]watching TV[else]here[end if].";
 	else:
 		say "Lee is here.";
+
+To say lees_description:
+	if Scene_Day_One is happening:
+		say "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long black hair pulled back in an untidy ponytail. He's wearing a tank top and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name.";
+	else if Scene_Long_Arm_of_the_Law is happening:
+		say "Lee looks beat up, sitting in the cruiser. Something about him says he expected nothing less.";
+	else:
+		say "Lee looks like his usual self, ready to join a platoon through the jungle.";
 
 [TODO: Handle listing multiple people in one location]
 
@@ -8399,13 +8449,12 @@ This is the journey_lee_walk_end rule:
 		rule fails;
 		[TODO: Make sure player cannot go anywhere at this time.]
 	else if time_here of journey_lee_walk is 3:
-		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder.";
 		Now Sharon is in Room_Sharons_Trailer;
 		Now Lee is in Room_Lees_Trailer;
 		Now Honey is in Room_B_Loop;
 		Now Grandpa is in Room_B_Loop;
 		Move player to Room_B_Loop, without printing a room description;
-		queue_report "[bold type][location][roman type]" at priority 1;
+		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. He carries you all the way to...[paragraph break][bold type][location][roman type]";
 		rule succeeds;
 
 
@@ -8626,7 +8675,7 @@ Part - the Sheriff
 
 The Sheriff is an undescribed _male man.
 	The printed name is "the Sheriff".
-	The description is "The sheriff is an older guy about grampa's age maybe, but who doesn't smile. He 	has big glasses that are kind of lopsided and a hat like smokey the bear.".
+	The description is "The sheriff is an older guy about grampa's age maybe, but is still a big guy. He looks like he used to be a football player. He has big glasses that are kind of lopsided and a hat like smokey the bear.".
 	Understand "sherriff/sherrif/deputy/police/officer/pig/bill/hat/glasses" as The Sheriff.
 	The scent is "fear".
 	The sheriff is in the sheriffs_car.
@@ -8642,8 +8691,8 @@ Chapter - Rules and Actions
 ]
 
 The sheriff's car is an undescribed enterable fixed in place closed locked transparent container. The sheriff's car is in Limbo. The description is "It is dark green, mostly, with white doors, and a big black and gold badge on the door that says 'Sierra County Sheriff.' It has red lights along the top. This is a big boxy car that looks kinda muscular and mean like the yellow dog."
-Understand "police/sheriff/sheriffs/sheriff's/sherriff/sherriffs/sherriff's/deputys/deputy's/squad car", "policecar", "squadcar", "car" as sheriff's car.
-The scent is "bacon".
+Understand "police/sheriff/sheriffs/sheriff's/sherriff/sherriffs/sherriff's/deputys/deputy's/squad car", "policecar", "squadcar", "cruiser", "car" as sheriff's car.
+The scent is "burnt oil".
 
 [TODO: Procedural rules are deprecated...
 Procedural rule when doing anything to sheriff when sheriff is visible and sheriff is in sheriff's car:
@@ -8728,22 +8777,22 @@ This is the seq_sheriffs_drive_by_handler rule:
 		else if player is in Region_Trailer_Indoors:
 			queue_report "You get a lurching feeling as you catch sight of a police car outside the window. It is driving slowly by. Curiosity draws you outside and along in its wake. It stops in D Loop and so do you.[line break][location heading]" with priority 2;
 			Move player to Room_D_Loop, without printing a room description;
-		queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 1;
+		queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 2;
 	else if index is 2:
 		if sharon is not in Room_D_Loop:
 			move sharon out of her trailer;
 		if player is in Room_D_Loop:
-			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing, Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 1;
+			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing, Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 2;
 	else if index is 3:
 		if player is in Room_D_Loop:
-			queue_report "'Well, pretty good, Bill. I can't complain,' the Cat Lady tells the Sheriff. Then a frown crosses her face, 'Oh except Oliver has an abscess. I have to take him to the kitty doctor next week.'" with priority 1;
+			queue_report "'Well, pretty good, Bill. I can't complain,' the Cat Lady tells the Sheriff. Then a frown crosses her face, 'Oh except Oliver has an abscess. I have to take him to the kitty doctor next week.'" with priority 2;
 	else if index is 4:
 		if player is in Room_D_Loop:
-			queue_report "'Well what I came to ask,' the Sheriff says to the Cat Lady, 'Has he been bothering you any?' He looks back toward C Loop. 'When I drove up, I saw him over there. Has he been leaving you alone?'" with priority 1;
+			queue_report "'Well what I came to ask,' the Sheriff says to the Cat Lady, 'Has he been bothering you any?' He looks back toward C Loop. 'When I drove up, I saw him over there. Has he been leaving you alone?'" with priority 2;
 	else if index is 5:
 		if player is in Room_D_Loop:
 			queue_report "'Oh, he hasn't so much as looked in my direction,' the Cat Lady says to the Sheriff.
-			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?''" with priority 1;
+			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?''" with priority 2;
 	else if index is 6:
 		if player is in Room_D_Loop:
 			queue_report "'Dearie, you're a sweet man to check in on me,' the Cat Lady puts her hand on the Sheriff's arm and he almost smiles.
@@ -8757,6 +8806,7 @@ This is the seq_sheriffs_drive_by_interrupt_test rule:
 	if we are speaking to Sheriff, rule succeeds;
 	rule fails.
 
+Test long-arm with "test day2 / get up / climb pine tree / d / w / w / go to grassy field / again / again / again / again / again / z / z / z".
 
 [
 	Sequence: Long Arm of the Law
@@ -8770,40 +8820,50 @@ seq_long_arm_of_the_law is a sequence.
 	The action_handler is the seq_long_arm_of_the_law_handler rule.
 	The interrupt_test is seq_long_arm_of_the_law_interrupt_test rule.
 	The length_of_seq is 6.
+	The seq_long_arm_of_the_law has a number called wait_time.
+	The wait_time of seq_long_arm_of_the_law is 0.
 
 This is the seq_long_arm_of_the_law_handler rule:
 	let the index be the index of seq_long_arm_of_the_law;
-	if (player is in Room_C_Loop or player is in Room_B_Loop or player is in Room_Picnic_Area) and index is greater than 1 and index is less than 6:
-		queue_report "The Sheriff is still talking to the Cat Lady in D Loop." with priority 3;
 	if index is 1:
+		now Sheriff is in Sheriff's car;
+		now Sheriff's car is in Room_B_Loop;
 		[grandpa puts you down and Honey and Grandpa talk to you.]
-		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see Jody made it back home.'" at priority 2;
+		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see they made it back home.'" at priority 2;
 		[sheriff shows up]
-		now sheriff's car is in Room_B_Loop;
 	else if index is 2:
-		now sheriff's car is in Room_C_Loop;
-		queue_report "'Yes, thank god,' grandpa says. 'Apparently, [grandpas_nickname] here,' he puts his hand on your head, 'spent a pretty cold night out in the woods. We were all out looking for this one.'[paragraph break]'Has Mr. Skarbek been in the woods?' the Sheriff asks, glancing toward C Loop.[paragraph break]'Yes,' Grandpa looks confused, 'We all were out looking. But--'[paragraph break]'That's all I need to know, thanks,' the Sheriff says grimly. He turns to you. 'You're lucky you were found,' he says quickly and speeds off toward C Loop." with priority 2;
-	else if index is 3:
-		now player is in Room_C_Loop;
 		now Lee is in Room_C_Loop;
 		now Sheriff is in Room_C_Loop;
-		queue_report "Honey and grandpa are still talking to you, but you're still thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'Lee?' you ask grandpa.[paragraph break]'Now, that's none of your business, [grandpas_nickname],' grandpa says. But you are already off and running.[bold type][location][roman type][line break]" with priority 2;
+		now Sheriff's car is in Room_C_Loop;
+		queue_report "'Yes, thank god,' grandpa says. 'Apparently, [grandpas_nickname] here,' he puts his hand on your head, 'spent a pretty cold night out in the woods. We were all out looking for this one.'[paragraph break]'Mr. Skarbek?' the Sheriff asks, glancing toward C Loop.[paragraph break]'Everyone was out looking,' Grandpa looks confused, 'But--'[paragraph break]'And Mr. Skarbek was out there while the child was missing?' the Sheriff interrupts.[paragraph break]'We were all searching everywhere we could think of,' Grandpa says, but the Sheriff appears to have stopped listening.[paragraph break]'That's all I need to know,' the Sheriff says grimly. He suddenly turns to you. 'You're lucky you were found,' he says and speeds off." with priority 2;
+	else if index is 3:
+		Move player to Room_C_Loop, without printing a room description;
+		now Lee is in Sheriff's Car;
+		now current interlocutor is Sheriff;
+		queue_report "Honey and grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][bold type][location][roman type][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee facedown into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
 	else if index is 4:
-		queue_report "When you " with priority 2;
+		[Sheriff tries to bully narator into implicating Lee]
+		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Shefiff says a little out of breath to Honey and grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
+		now lee_support of player is _facing;
 	else if index is 5:
-		if player is in Room_D_Loop:
-			queue_report "'Well what I came to ask,' the Sheriff says to the Cat Lady, 'Has he been bothering you any?' He looks back toward C Loop. 'When I drove up, I saw him over there. Has he been leaving you alone?'" with priority 1;
+	  [we hang at this step until either player talks to sheriff or leaves]
+		queue_report "The sheriff is still filling out his forms. He asks Lee an occasional question, but Lee remains silent." with priority 2;
+		if lee_support of player is _facing:
+			decrement index of seq_long_arm_of_the_law;
 	else if index is 6:
-		if player is in Room_D_Loop:
-			queue_report "'Oh, he hasn't so much as looked in my direction,' the Cat Lady says to the Sheriff.
-			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?''" with priority 1;
-	else if index is 7:
-		if player is in Room_D_Loop:
-			queue_report "'Dearie, you're a sweet man to check in on me,' the Cat Lady puts her hand on the Sheriff's arm and he almost smiles.
-			[paragraph break]He pats her hand, 'You take care of yourself Sharon, and make sure you call me if you have any problems.' He talks briefly on his radio and then drives off, a little too fast for inside the trailer park. The Cat Lady unwinds the hose and continues watering her garden." with priority 2;
-		else if player is in Region_Trailer_Park_Area:
-			queue_report "You hear the Sheriff's car drive off, a little too fast for inside the trailer park." with priority 1;
+		move player to Room_B_Loop, without printing a room description;
+		now grandpa is in Room_B_Loop;
+		now Honey is in Room_B_Loop;
+		now Sheriff is in Sheriff's Car;
 		now Sheriff's car is in Limbo;
+		if lee_support of player is _decided_no:
+			queue_report "The Sheriff closes the back door of the cruiser and goes around to the driver's side. As the car begins to roll away, you glance one more time at Lee who looks back without emotion.[paragraph break]Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a sad hug." with priority 2;
+		else:
+			now Lee is in Room_Lees_Trailer;
+			queue_report "The Sheriff takes a long moment and looks you up and down. Both Honey and grandpa tense. Honey starts to say something, stops herself, shifts, and moves behind you looking challengingly at the Sheriff. Grandpa moves to stand beside her.[paragraph break]The Sheriff looks from you to your grandparents. He hesitates, apparently making a decision.[paragraph break]'Okay, maybe you could have told me that earlier.' He opens the back door of the cruiser and guides Lee out. He spins him around and removes the cuffs. 'You're free to go, Mr. Skarbek. Stay outta trouble.' Lee rubs his wrists and wipes the blood off his nose and mouth.[paragraph break]The Sheriff gets into his car without another word and drives quickly away.[paragraph break]Lee says quietly, 'Thank you, Jody,' bows slightly, and disappears into his trailer. Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a tearful hug." with priority 2;
+			[TODO: trigger end of Scene_Long_Arm]
+
+[HERE WE ARE]
 
 This is the seq_long_arm_of_the_law_interrupt_test rule:
 	if we are speaking to Sharon, rule succeeds;
