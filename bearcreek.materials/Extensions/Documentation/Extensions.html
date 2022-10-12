@@ -1,0 +1,2999 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Extensions</title>
+    <style type="text/css">
+        <!--
+        :root {
+            color-scheme: light dark;
+            --element-banner-background-colour: #eeeeee;
+            --heading-panel-background-colour: #eeeeee;
+            --heading-panel-text-colour: #222222;
+            --heading-panel-succeeded-background-colour: #E6FFE6;
+            --heading-panel-failed-background-colour: #f69Ca6;
+
+            --heading-row-background-colour: #e0e0e0;
+            --stripe-one-background-colour: #ffffff;
+            --stripe-two-background-colour: #f3f6fa;
+
+            --index-dull-red-colour: #800000;
+            --periodic-table-sidebar-colour: #888;
+            --periodic-table-sidebar-hover-colour: #222;
+            --leaders-background-colour: white;
+            --library-card-title-colour: #803030;
+            --library-card-other-colour: #303030;
+            --index-more-box-background-colour: #e0e0e0;
+            --index-activity-contents-background-colour: #e8e0c0;
+            --registry-contents-link-colour: #202020;
+
+        }
+
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --element-banner-background-colour: #444444;
+            --heading-panel-background-colour: #444444;
+            --heading-panel-text-colour: #ffffff;
+            --heading-panel-succeeded-background-colour: #738073;
+            --heading-panel-failed-background-colour: #7b4e53;
+
+            --heading-row-background-colour: #707070;
+            --stripe-one-background-colour: #7f7f7f;
+            --stripe-two-background-colour: #797b7d;
+
+            --index-dull-red-colour: #c00000;
+            --periodic-table-sidebar-colour: #555;
+            --periodic-table-sidebar-hover-colour: #222;
+            --leaders-background-colour: black;
+            --library-card-title-colour: #a05050;
+            --library-card-other-colour: #505050;
+            --index-more-box-background-colour: #444444;
+            --index-activity-contents-background-colour: #727060;
+            --registry-contents-link-colour: #ffffff;
+            }
+        }
+
+        /* The default font (family) and size */
+
+        body, p, td {
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 12px;
+        }
+
+        /* For fixed-point material within text, such as the typing on the Library Card index page */
+
+        span.typewritten {
+            font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+            font-size: 13px;
+        }
+
+        /* For less important material: the small print */
+
+        span.smaller {
+            font-size: 80%;
+        }
+
+        /* The "heading panel" is the coloured box, high up on the page. The colours
+        vary depending on the page: for example, the style on a report of a translation
+        with no problems is "headingpanelsucceeded", usually green, but if there were
+        problems then "headingpanelfailed" is used, which is usually red. "headingpanel"
+        itself is a more neutral grey by default. "headingpanelDark" is an alternative
+        look to make the extensions index pages have some visual contrast with the others;
+        by default they are a darker grey. */
+
+        .headingpanel {
+            background: var(--heading-panel-background-colour);
+        }
+        .headingpanelsucceeded {
+            background: var(--heading-panel-succeeded-background-colour);
+        }
+        .headingpanelfailed {
+            background: var(--heading-panel-failed-background-colour);
+        }
+        .headingpanelalt {
+            background: #808080;
+        }
+
+        /* Heading panels have two lines of text: an upper one in a larger size, and a
+        lower one in a smaller. Again, the alt versions are meant to contrast.
+
+            Report on Translation: Succeeded                <-- headingpaneltext
+            Produced by Inform 10.1.0 (build 6U97)          <-- headingpanelrubric
+
+            Installed Extensions                            <-- headingpaneltextalt
+            Bundles of extra rules or phrases to...         <-- headingpanelrubricalt
+
+        */
+
+        span.headingpaneltext {
+            color: var(--heading-panel-text-colour);
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        span.headingpaneltextalt {
+            color: #ffffff;
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        span.headingpanelrubric {
+            color: var(--heading-panel-text-colour);
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        span.headingpanelrubricalt {
+            color: #ffffff;
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Horizontal rule styling */
+
+        div.hr {
+            border: 0;
+            width: 100%;
+            color: #707070;
+            background-color: #707070;
+            height: 5px;
+        }
+
+        /* This styles the (usually white) text of the example numbers written inside
+        oval blobs in the extension documentation, which mimic the look of the in-app
+        documentation. */
+
+        .oval, .oval td {
+            background-image:url('inform:/doc_images/ovoid.png');
+            color:white;
+        }
+
+        /* Styling used in the extension documentation indexes: */
+
+        /* Used for extension names in the extensions pane of the app */
+
+        span.extensioncensusentry {
+            color: #ffffff;
+        }
+
+        span.extensionindexentry {
+            color: #404040;
+        }
+
+        span.extensionindexerror {
+            color: #ff8080;
+        }
+
+        /* This is used in extension documentation, where an example is presented
+        in a slightly tinted box: */
+
+        table.extensionexample {
+        	background-color: #f0f0f0;
+        }
+
+        span.extensionexampleletter {
+        	color: #202020;
+        	font-size: 14px;
+        	font-weight: bold;
+        }
+
+        /* Seen in problem messages: */
+
+        span.problemred {
+            color: #800000;
+        }
+
+        span.problemgreen {
+            color: #008000;
+        }
+
+        span.phraseword {
+            color: #808080;
+        }
+
+        span.phrasetokentext {
+            color: #e00060;
+        }
+
+        span.phrasetokendesctext {
+            color: #4040ff;
+        }
+
+        span.phrasetokenvaluetext {
+            color: #ff4040;
+        }
+
+        /* Now we move on to styling used in the Index pages only: */
+
+        /* The periodic table display has "sidebars", usually grey and taller than they
+        are wide; they contain no text. */
+
+        div.periodictablesidebarcolour {
+            background: var(--periodic-table-sidebar-colour);
+        }
+        div.periodictablesidebar:hover {
+            background: var(--periodic-table-sidebar-hover-colour);
+        }
+
+        /* The text of the element-abbreviation, such as "Lx" or "Ph", uses: */
+
+        span.elementtext {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Similarly for the "atomic number" - a single digit - in the top left corner
+        of these boxes: */
+
+        span.elementnumbertext {
+            color: #ffffff;
+            font-size: 7pt;
+        }
+
+        /* For the text of the element title, to the right of the element box: */
+
+        span.elementtitletext {
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        /* The banner at the top of each element: */
+
+        table.elementbanner {
+            background: var(--element-banner-background-colour);
+        }
+
+        /* For the typewriting on the Library Card: */
+
+        span.librarycardtitle {
+            color: var(--library-card-title-colour);
+        }
+
+        span.librarycardother {
+            color: var(--library-card-other-colour);
+        }
+
+        /* Generically used for "more details" boxes in the index: */
+
+        table.indexmorebox {
+        	background-color: var(--index-more-box-background-colour);
+            border-radius: 8px;
+        }
+
+        /* But not for activity contents: */
+
+        table.indexactivitycontents {
+        	background-color: var(--index-activity-contents-background-colour);
+            border-radius: 8px;
+        }
+
+        /* For responses in index entries about rules: */
+
+        span.indexresponseletter {
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #8080ff;
+        }
+
+        span.indexresponsetext {
+            color: #000066;
+        }
+
+        /* Used ubiquitously throughout the index for unemphasised text: */
+
+        span.indexblack {
+        	color: #000000;
+        }
+
+        span.indexgrey {
+        	color: #808080;
+        }
+
+        span.indexdarkgrey {
+            color: #505050;
+        }
+
+        span.indexdullred {
+            color: var(--index-dull-red-colour);
+        }
+
+        span.indexdullgreen {
+            color: #008000;
+        }
+
+        span.indexdullblue {
+            color: #000080;
+        }
+
+        /* Used in the numbering of levels of the World map in the Index */
+
+        span.indexmaplevelnumbers {
+        	color: #c0c0c0;
+        }
+
+        /* Used for the room squares in the World map in the Index (which is currently
+        a table with one row of one column) */
+
+        table.indexmaproom {
+        	border-color: #000000;
+        }
+
+        /* Used in the numbering of levels of the World map in the Index */
+
+        span.indexmaplevelnumbers {
+        	color: #c0c0c0;
+        }
+
+        /* Used e.g. for title rows in the Chart of basic kinds in the Index */
+
+        tr.headingrow {
+        	background-color: var(--heading-row-background-colour);
+        }
+
+        /* Standard rows have black text on striped background colours, these being
+        the usual ones seen in Mac OS X applications such as iTunes. */
+
+        tr.stripeone {
+        	background-color: var(--stripe-one-background-colour);
+        }
+
+        tr.stripetwo {
+        	background-color: var(--stripe-two-background-colour);
+        }
+
+        tr.tintedrow {
+        	background-color: #808080;
+        }
+
+        /* In the Figures index, this is the background colour used behind images
+        (though in fact it will only be visible if the image fails to load, or uses
+        transparency): */
+
+        div.figureindexbox {
+        	background-color: #6495ed;
+        }
+
+        /* To get the book-contents-page style leaders on the Contents element of
+           the index to work, these must use the background colour of the body of
+           the page, whatever that is: */
+
+        ul.leaders li.leaded span:first-child {
+            background: var(--leaders-background-colour);
+        }
+        ul.leaders li.leaded span + span {
+            background: var(--leaders-background-colour);
+        }
+
+        /* On Registry index pages (such as the Public Library), these are used for
+        download buttons and the like: */
+
+        span.registrybuttontext {
+        	font-size: 11px;
+        	border-color: #000000;
+        }
+
+        span.registryminibuttontext {
+        	font-size: 10px;
+        	border-color: #000000;
+        }
+
+        span.registrybuttonuninstalled {
+        	color: #000000;
+        	background: #ffffdd;
+        }
+
+        span.registrybuttoninstalled {
+        	color: #000000;
+        	background: #ffffff;
+        	pointer-events: none;
+        }
+
+        span.registrybuttonbuiltin {
+        	color: #888888;
+        	background: #ffffff;
+        	pointer-events: none;
+        }
+
+        span.registrybuttonupdate {
+        	color: #000000;
+        	background: #aaddff;
+        }
+
+        span.registrybuttonrevert {
+        	color: #000000;
+        	background: #ddaaff;
+        }
+
+        span.registrybuttonrevealer {
+        	color: #ffffff;
+        	background: #444444;
+        }
+
+        /* Registry index section headings: */
+
+        span.registrysectionname {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 16px;
+        	line-height: 18px;
+        }
+        span.registrysubsectionname {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 14px;
+        	line-height: 16px;
+        }
+
+        /* These are for the "mark" for a section, usually a section-symbol and number */
+
+        span.registrysectionmark {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 16px;
+        	line-height: 18px;
+        	color: #666;
+        }
+        span.registrysubsectionmark {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 14px;
+        	line-height: 16px;
+        	color: #666;
+        }
+
+        /* Text of an item listed in a registry: */
+
+        span.registryitemtext {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 12px;
+        	line-height: 16px;
+        }
+
+        /* And how the links in a registry index page behave: */
+
+        a.registrysilentlink {
+        	text-decoration: none;
+        	color: #000;
+        }
+        a.registrybuttonlink {
+        	text-decoration: none;
+        }
+        a.registrycontentslink:link {
+        	text-decoration: none;
+        	color: var(--registry-contents-link-colour);
+        }
+        a.registrycontentslink:visited {
+        	text-decoration: none;
+        	color: var(--registry-contents-link-colour);
+        }
+        a.registrycontentslink:hover {
+        	text-decoration: none;
+        	color: #D00000;
+        }
+        a.registrycontentslink:active {
+        	text-decoration: none;
+        	color: #D00000;
+        }
+
+        -->
+    </style>
+    <style type="text/css">
+        <!--
+        /* (1) General layout material */
+
+        *, *:before, *:after {
+        	-moz-box-sizing: border-box;
+        	-webkit-box-sizing: border-box;
+        	box-sizing: border-box;
+        }
+        .headingpanellayout {
+        	position: relative;
+        	height: 56px;
+        	padding: 0px;
+        	white-space:nowrap;
+        }
+        .headingpanellayoutdeeper {
+        	position: relative;
+        	height: 117px;
+        	padding: 0px;
+        	white-space:nowrap;
+        }
+        .headingtext {
+        	position: absolute;
+        	top: -4px;
+        	left: -1px;
+        	width: 100%;
+        	padding: 14px 10px 0px 10px;
+        }
+        .headingrubric {
+        	position: absolute;
+        	top: 36px;
+        	width: 100%;
+        	padding: 0px 10px 0px 10px;
+        }
+        h3.tighter {
+        	margin-top: 0px;
+        }
+        p.hang {
+        	padding-left: 25px;
+        	text-indent: -25px;
+        	margin-top: 0px;
+        	margin-bottom: 0px;
+        }
+        p.in1 {
+        	padding-left: 0px;
+        }
+        p.tightin1 {
+        	padding-left: 0px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin1 {
+        	padding-left: 0px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin1 {
+        	padding-left: 50px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in2 {
+        	padding-left: 25px;
+        }
+        p.tightin2 {
+        	padding-left: 25px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin2 {
+        	padding-left: 25px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin2 {
+        	padding-left: 75px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in3 {
+        	padding-left: 50px;
+        }
+        p.tightin3 {
+        	padding-left: 50px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin3 {
+        	padding-left: 50px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin3 {
+        	padding-left: 100px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in4 {
+        	padding-left: 75px;
+        }
+        p.tightin4 {
+        	padding-left: 75px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin4 {
+        	padding-left: 75px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin4 {
+        	padding-left: 125px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in5 {
+        	padding-left: 100px;
+        }
+        p.tightin5 {
+        	padding-left: 100px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin5 {
+        	padding-left: 100px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin5 {
+        	padding-left: 150px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in6 {
+        	padding-left: 125px;
+        }
+        p.tightin6 {
+        	padding-left: 125px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin6 {
+        	padding-left: 125px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin6 {
+        	padding-left: 175px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in7 {
+        	padding-left: 150px;
+        }
+        p.tightin7 {
+        	padding-left: 150px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin7 {
+        	padding-left: 150px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin7 {
+        	padding-left: 200px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in8 {
+        	padding-left: 175px;
+        }
+        p.tightin8 {
+        	padding-left: 175px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin8 {
+        	padding-left: 175px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin8 {
+        	padding-left: 225px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in9 {
+        	padding-left: 200px;
+        }
+        p.tightin9 {
+        	padding-left: 200px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin9 {
+        	padding-left: 200px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin9 {
+        	padding-left: 250px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+
+        /* (2) Index page layout material */
+
+        /* The periodic table display has "sidebars", usually grey and taller than they
+        are wide; they contain no text. */
+
+        div.periodictablesidebar {
+        	height: 56px;
+        	width: 16px;
+        }
+        .periodictablesidebar a:link { text-decoration: none; }
+        .periodictablesidebar a:visited { text-decoration: none; }
+        .periodictablesidebar a:active { text-decoration: none; }
+
+        /* The "element boxes" are the cells appearing in the periodic-table display
+        on the welcome page of the index: */
+
+        .elementbox {
+        	position: relative;
+        	height: 56px;
+        	width: 56px;
+        	padding: 0px;
+        }
+
+        .elementbox a:link { text-decoration: none; }
+        .elementbox a:visited { text-decoration: none; }
+        .elementbox a:active { text-decoration: none; }
+        .elementbox a:hover { text-decoration: none; }
+        .elementbox:hover {
+        	opacity: 0.6;
+        }
+
+        /* The "small element boxes" look like those, but are smaller, and used on
+        the headings of the content which those original boxes link to: */
+
+        .smallelementbox {
+        	position: relative;
+        	height: 40px;
+        	width: 40px;
+        	padding: 0px;
+        }
+
+        .smallelementbox a:link { text-decoration: none; }
+        .smallelementbox a:visited { text-decoration: none; }
+        .smallelementbox a:active { text-decoration: none; }
+        .smallelementbox a:hover { text-decoration: none; }
+        .smallelementbox:hover {
+        	opacity: 0.6;
+        }
+
+        /* This is a class for the links formed by the element boxes: */
+
+        a.elementlink {
+        	position: absolute;
+        	top: -4px;
+        	left: -1px;
+        	width: 100%;
+        	padding: 14px 0px 14px 1px;
+        	text-align: center;
+        }
+
+        /* Similarly for the "atomic number" - a single digit - in the top left corner
+        of these boxes: */
+
+        div.elementnumber {
+        	position: absolute;
+        	top: 1px;
+        	left: 3px;
+        	text-align: left;
+        }
+
+        /* For the text of the element title, to the right of the element box: */
+
+        div.elementtitle {
+        	position: absolute;
+        	top: 35px;
+        	width: 100%;
+        	text-align: center;
+        }
+
+        /* Used for the book-contents-page style leaders on the Contents element of
+           the index: */
+
+        ul.leaders {
+        	padding: 0;
+        	margin-top: 1px;
+        	margin-bottom: 0;
+        	overflow-x: hidden;
+        	list-style: none}
+        ul.leaders li.leaded:before {
+        	float: left;
+        	width: 0;
+        	white-space: nowrap;
+        	content:
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "}
+        ul.leaders li.leaded span:first-child {
+        	padding-right: 0.33em;
+        }
+        ul.leaders li.leaded span + span {
+        	float: right;
+        	padding-left: 0.33em;
+        }
+        li.indent1 span:first-child {
+        	padding-left: 25px;
+        }
+        li.indent2 span:first-child {
+        	padding-left: 50px;
+        }
+        li.indent3 span:first-child {
+        	padding-left: 75px;
+        }
+        li.indent4 span:first-child {
+        	padding-left: 100px;
+        }
+        li.indent5 span:first-child {
+        	padding-left: 125px;
+        }
+        li.indent6 span:first-child {
+        	padding-left: 150px;
+        }
+        li.indent7 span:first-child {
+        	padding-left: 175px;
+        }
+        li.indent8 span:first-child {
+        	padding-left: 200px;
+        }
+        li.indent9 span:first-child {
+        	padding-left: 225px;
+        }
+
+        li.unleaded:before {
+        	content: "";
+        }
+
+        /* On Registry index pages (such as the Public Library), these are used for
+        download buttons and the like: */
+
+        span.registrybuttons {
+        	height: 20px;
+        	padding: 2px 8px 2px 8px;
+        	margin: 2px;
+        	border:1px solid;
+        	border-radius: 5px;
+        }
+
+        span.registryminibuttons {
+        	height: 14px;
+        	padding: 2px 5px 2px 5px;
+        	margin: 2px;
+        	border:1px solid;
+        	border-radius: 4px;
+        }
+
+        /* Used to hide or display sections in the Registry pages: */
+
+        div.registrysectionitemsopen {
+        	display: block;
+        }
+
+        div.registrysectionitemsclosed {
+        	display: none;
+        }
+
+        /* Hanging indentation for Registry item paragraphs: */
+
+        p.registryitem {
+        	padding-left: 80px;
+        	text-indent: -40px;
+        }
+
+        p.registryaddition {
+        	padding-left: 40px;
+        	text-indent: -40px;
+        }
+
+        -->
+    </style>
+    <script type="text/javascript">
+        function project() {
+            return window.Project;
+        }
+        function showExtra(id, imid) {
+        	if (document.getElementById(id).style.display == 'block') {
+        		document.getElementById(id).style.display = 'none';
+        		document.getElementById(imid).src = 'inform:/doc_images/extrarboff.png';
+        	} else {
+        		document.getElementById(id).style.display = 'block';
+        		document.getElementById(imid).src = 'inform:/doc_images/extrarbon.png';
+        	}
+        }
+        function openExtra(id, imid) {
+        	document.getElementById(id).style.display = 'block';
+        	document.getElementById(imid).src = 'inform:/doc_images/extrarbon.png';
+        }
+        function closeExtra(id, imid) {
+        	document.getElementById(id).style.display = 'none';
+        	document.getElementById(imid).src = 'inform:/doc_images/extrarboff.png';
+        }
+
+    </script>
+</head>
+<body>
+    <!--CONTENT BEGINS-->
+    <table border="0" cellspacing="4" cellpadding="0" width=100%>
+        <tr>
+            <td align="left" valign="top">
+                <img src='inform:/doc_images/extensions@2x.png' border=0 width=150 height=150>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+            <td align="left" valign="top">
+                <div class="headingpanellayout headingpanelalt">
+                    <div class="headingtext">
+                        <span class="headingpaneltextalt">Installed Extensions</span></div>
+                    <div class="headingrubric">
+                        <span class="headingpanelrubricalt">Bundles of extra rules or phrases to extend what Inform can do</span></div>
+                </div>
+                <p><img src='inform:/doc_images/builtin_ext.png' border=0>&nbsp;You have 19 extensions built-in to this copy of Inform, marked with a grey folder icon in the catalogue below.</p>
+                <p><img src='inform:/doc_images/folder4.png' border=0>&nbsp;You have no other extensions installed at present.</p>
+                <p><a href='javascript:project().openFile("/Users/wmodes/dev/inform/inform7/Internal/Extensions")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;You have 10 extensions in the .materials folder for the current project. (Click the purple folder icon to show the location.) These are not available to other projects.</p>
+
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <p>Sort catalogue: <a href="#" style="text-decoration: none" onclick="openExtra('disp1', 'plus1'); closeExtra('disp2', 'plus2'); closeExtra('disp3', 'plus3'); closeExtra('disp4', 'plus4'); closeExtra('disp5', 'plus5'); return false;"><img border=0 id="plus1" src=inform:/doc_images/extrarboff.png>&nbsp;By title</a> | <a href="#" style="text-decoration: none" onclick="closeExtra('disp1', 'plus1'); openExtra('disp2', 'plus2'); closeExtra('disp3', 'plus3'); closeExtra('disp4', 'plus4'); closeExtra('disp5', 'plus5'); return false;"><img border=0 id="plus2" src=inform:/doc_images/extrarbon.png>&nbsp;By author</a> | <a href="#" style="text-decoration: none" onclick="closeExtra('disp1', 'plus1'); closeExtra('disp2', 'plus2'); openExtra('disp3', 'plus3'); closeExtra('disp4', 'plus4'); closeExtra('disp5', 'plus5'); return false;"><img border=0 id="plus3" src=inform:/doc_images/extrarboff.png>&nbsp;By installation</a> | <a href="#" style="text-decoration: none" onclick="closeExtra('disp1', 'plus1'); closeExtra('disp2', 'plus2'); closeExtra('disp3', 'plus3'); openExtra('disp4', 'plus4'); closeExtra('disp5', 'plus5'); return false;"><img border=0 id="plus4" src=inform:/doc_images/extrarboff.png>&nbsp;By date used</a> | <a href="#" style="text-decoration: none" onclick="closeExtra('disp1', 'plus1'); closeExtra('disp2', 'plus2'); closeExtra('disp3', 'plus3'); closeExtra('disp4', 'plus4'); openExtra('disp5', 'plus5'); return false;"><img border=0 id="plus5" src=inform:/doc_images/extrarboff.png>&nbsp;By word count</a></p>
+    <div id="disp1" style="display: none;">
+        <table border="0" cellspacing="0" cellpadding="2" class="stripeone" width=100%>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="3">
+                    <span class="extensioncensusentry">&nbsp;Extensions in alphabetical order</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Approximate%20Metric%20Units.html' title="Scientific kinds of value for simulations. Use Metric Units instead for better accuracy." style="text-decoration: none"><span class="extensionindexentry">Approximate Metric Units by Graham Nelson</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Scientific kinds of value for simulations. Use Metric Units instead for better accuracy.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Help%20Menu.html' title="Provides a HELP command which brings up a menu giving standard instructions about IF." style="text-decoration: none"><span class="extensionindexentry">Basic Help Menu by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a HELP command which brings up a menu giving standard instructions about IF.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Basic%20Inform.html' title="Basic Inform, included in every project, defines the basic framework
+                    of Inform as a programming language." style="text-decoration: none"><span class="extensionindexentry">Basic Inform by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Basic Inform, included in every project, defines the basic framework
+                    of Inform as a programming language.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Screen%20Effects.html' title="Waiting for a keypress; clearing the screen. Also provides facilities for
+                    changing the foreground and background colors of text, when using the z-machine.
+                    These abilities will not function under Glulx." style="text-decoration: none"><span class="extensionindexentry">Basic Screen Effects by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Waiting for a keypress; clearing the screen. Also provides facilities for
+                    changing the foreground and background colors of text, when using the z-machine.
+                    These abilities will not function under Glulx.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek by Wes Modes</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek by Wes Modes</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Complex%20Listing.html' title="Complex Listing provides more sophisticated listing options: the ability to impose special ordering instructions on a list, and also the ability to change the delimiters of the list to produce different styles and effects." style="text-decoration: none"><span class="extensionindexentry">Complex Listing by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Complex Listing provides more sophisticated listing options: the ability to impose special ordering instructions on a list, and also the ability to change the delimiters of the list to produce different styles and effects.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/English%20Language.html' title="To make English the language of play." style="text-decoration: none"><span class="extensionindexentry">English Language by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">To make English the language of play.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Epistemology.html' title="Keeping track of what the player character knows and sees." style="text-decoration: none"><span class="extensionindexentry">Epistemology by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Keeping track of what the player character knows and sees.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Image%20Centering.html' title="Glulx Image Centering adds the ability to display an image that is centered (left/right) on the screen." style="text-decoration: none"><span class="extensionindexentry">Glulx Image Centering by Emily Short</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Glulx Image Centering adds the ability to display an image that is centered (left/right) on the screen.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Text%20Effects.html' title="Gives control over text formatting in Glulx." style="text-decoration: none"><span class="extensionindexentry">Glulx Text Effects by Emily Short</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Gives control over text formatting in Glulx.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Inanimate%20Listeners.html' title="Allows the player to address inanimate objects such as a talking computer, microphone, or telephone in a form such as ASK COMPUTER ABOUT COORDINATES." style="text-decoration: none"><span class="extensionindexentry">Inanimate Listeners by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Allows the player to address inanimate objects such as a talking computer, microphone, or telephone in a form such as ASK COMPUTER ABOUT COORDINATES.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Locksmith.html' title="Implicit handling of doors and containers so that lock manipulation is automatic if the player has the necessary keys." style="text-decoration: none"><span class="extensionindexentry">Locksmith by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Implicit handling of doors and containers so that lock manipulation is automatic if the player has the necessary keys.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Menus.html' title="A table-based way to display full-screen menus to the player." style="text-decoration: none"><span class="extensionindexentry">Menus by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">A table-based way to display full-screen menus to the player.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Metric%20Units.html' title="Scientific kinds of value for simulations." style="text-decoration: none"><span class="extensionindexentry">Metric Units by Graham Nelson</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Scientific kinds of value for simulations.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Punctuation%20Removal.html' title="Punctuation Removal by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Punctuation Removal by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Rideable%20Vehicles.html' title="Vehicles which one sits on top of, rather than inside, such as elephants or motorcycles." style="text-decoration: none"><span class="extensionindexentry">Rideable Vehicles by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Vehicles which one sits on top of, rather than inside, such as elephants or motorcycles.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Skeleton%20Keys.html' title="Skeleton Keys by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Skeleton Keys by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser by Aaron Reed</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Understands a broader range of input than the standard parser, and can direct new players towards proper syntax.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser by Aaron Reed</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Understands a broader range of input than the standard parser, and can direct new players towards proper syntax.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Standard%20Rules.html' title="The Standard Rules, included in every project, define phrases, actions and
+                    activities for interactive fiction." style="text-decoration: none"><span class="extensionindexentry">Standard Rules by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">The Standard Rules, included in every project, define phrases, actions and
+                    activities for interactive fiction.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Character%20Names.html' title="Defines 2909 names like [unicode Greek small letter gamma] for Latin, Cyrillic, Greek and Hebrew letters, along with currency and other symbols." style="text-decoration: none"><span class="extensionindexentry">Unicode Character Names by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Defines 2909 names like [unicode Greek small letter gamma] for Latin, Cyrillic, Greek and Hebrew letters, along with currency and other symbols.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Full%20Character%20Names.html' title="Defines 12997 names like [unicode Arabic letter hah with three dots above] for the full range of characters named in the Unicode 4.1 standard." style="text-decoration: none"><span class="extensionindexentry">Unicode Full Character Names by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Defines 12997 names like [unicode Arabic letter hah with three dots above] for the full range of characters named in the Unicode 4.1 standard.</span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="3">
+                    <span class="extensioncensusentry">&nbsp;<span class="smaller">29 extensions installed</span></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="disp2" style="display: block;">
+        <table border="0" cellspacing="0" cellpadding="2" class="stripeone" width=100%>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;Aaron Reed&nbsp;&nbsp;<span class="smaller">(2 extensions, both used)</span></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;16.1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Understands a broader range of input than the standard parser, and can direct new players towards proper syntax.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;16.1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Understands a broader range of input than the standard parser, and can direct new players towards proper syntax.</span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;Emily Short&nbsp;&nbsp;<span class="smaller">(10 extensions, 2 used, 8 unused)</span></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Skeleton%20Keys.html' title="Skeleton Keys by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Skeleton Keys</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Punctuation%20Removal.html' title="Punctuation Removal by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Punctuation Removal</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;5</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Menus.html' title="A table-based way to display full-screen menus to the player." style="text-decoration: none"><span class="extensionindexentry">Menus</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">A table-based way to display full-screen menus to the player.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Locksmith.html' title="Implicit handling of doors and containers so that lock manipulation is automatic if the player has the necessary keys." style="text-decoration: none"><span class="extensionindexentry">Locksmith</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;13</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Implicit handling of doors and containers so that lock manipulation is automatic if the player has the necessary keys.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Inanimate%20Listeners.html' title="Allows the player to address inanimate objects such as a talking computer, microphone, or telephone in a form such as ASK COMPUTER ABOUT COORDINATES." style="text-decoration: none"><span class="extensionindexentry">Inanimate Listeners</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Allows the player to address inanimate objects such as a talking computer, microphone, or telephone in a form such as ASK COMPUTER ABOUT COORDINATES.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Text%20Effects.html' title="Gives control over text formatting in Glulx." style="text-decoration: none"><span class="extensionindexentry">Glulx Text Effects</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;6</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Gives control over text formatting in Glulx.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Image%20Centering.html' title="Glulx Image Centering adds the ability to display an image that is centered (left/right) on the screen." style="text-decoration: none"><span class="extensionindexentry">Glulx Image Centering</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;4</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Glulx Image Centering adds the ability to display an image that is centered (left/right) on the screen.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Complex%20Listing.html' title="Complex Listing provides more sophisticated listing options: the ability to impose special ordering instructions on a list, and also the ability to change the delimiters of the list to produce different styles and effects." style="text-decoration: none"><span class="extensionindexentry">Complex Listing</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;9</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Complex Listing provides more sophisticated listing options: the ability to impose special ordering instructions on a list, and also the ability to change the delimiters of the list to produce different styles and effects.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Screen%20Effects.html' title="Waiting for a keypress; clearing the screen. Also provides facilities for
+                    changing the foreground and background colors of text, when using the z-machine.
+                    These abilities will not function under Glulx." style="text-decoration: none"><span class="extensionindexentry">Basic Screen Effects</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;8</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Waiting for a keypress; clearing the screen. Also provides facilities for
+                    changing the foreground and background colors of text, when using the z-machine.
+                    These abilities will not function under Glulx.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Help%20Menu.html' title="Provides a HELP command which brings up a menu giving standard instructions about IF." style="text-decoration: none"><span class="extensionindexentry">Basic Help Menu</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a HELP command which brings up a menu giving standard instructions about IF.</span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;Eric Eve&nbsp;&nbsp;<span class="smaller">(7 extensions, all used)</span></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Epistemology.html' title="Keeping track of what the player character knows and sees." style="text-decoration: none"><span class="extensionindexentry">Epistemology</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;9</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Keeping track of what the player character knows and sees.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;7</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;7</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;12</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;12</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics.</span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;Graham Nelson&nbsp;&nbsp;<span class="smaller">(8 extensions, 3 used, 5 unused)</span></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Full%20Character%20Names.html' title="Defines 12997 names like [unicode Arabic letter hah with three dots above] for the full range of characters named in the Unicode 4.1 standard." style="text-decoration: none"><span class="extensionindexentry">Unicode Full Character Names</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Defines 12997 names like [unicode Arabic letter hah with three dots above] for the full range of characters named in the Unicode 4.1 standard.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Character%20Names.html' title="Defines 2909 names like [unicode Greek small letter gamma] for Latin, Cyrillic, Greek and Hebrew letters, along with currency and other symbols." style="text-decoration: none"><span class="extensionindexentry">Unicode Character Names</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Defines 2909 names like [unicode Greek small letter gamma] for Latin, Cyrillic, Greek and Hebrew letters, along with currency and other symbols.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Standard%20Rules.html' title="The Standard Rules, included in every project, define phrases, actions and
+                    activities for interactive fiction." style="text-decoration: none"><span class="extensionindexentry">Standard Rules</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;6</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">The Standard Rules, included in every project, define phrases, actions and
+                    activities for interactive fiction.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Rideable%20Vehicles.html' title="Vehicles which one sits on top of, rather than inside, such as elephants or motorcycles." style="text-decoration: none"><span class="extensionindexentry">Rideable Vehicles</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Vehicles which one sits on top of, rather than inside, such as elephants or motorcycles.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Metric%20Units.html' title="Scientific kinds of value for simulations." style="text-decoration: none"><span class="extensionindexentry">Metric Units</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;2</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Scientific kinds of value for simulations.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/English%20Language.html' title="To make English the language of play." style="text-decoration: none"><span class="extensionindexentry">English Language</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">To make English the language of play.</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Basic%20Inform.html' title="Basic Inform, included in every project, defines the basic framework
+                    of Inform as a programming language." style="text-decoration: none"><span class="extensionindexentry">Basic Inform</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Basic Inform, included in every project, defines the basic framework
+                    of Inform as a programming language.</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Approximate%20Metric%20Units.html' title="Scientific kinds of value for simulations. Use Metric Units instead for better accuracy." style="text-decoration: none"><span class="extensionindexentry">Approximate Metric Units</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Scientific kinds of value for simulations. Use Metric Units instead for better accuracy.</span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;Wes Modes&nbsp;&nbsp;<span class="smaller">(2 extensions, both unused)</span></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">--</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">--</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;<span class="smaller">29 extensions installed</span></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="disp3" style="display: none;">
+        <table border="0" cellspacing="0" cellpadding="2" class="stripeone" width=100%>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;Supplied in the .materials folder&nbsp;&nbsp;<span class="smaller">/Users/wmodes/dev/inform/inform7/Internal/Extensions</span></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser by Aaron Reed</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;16.1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser by Aaron Reed</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;16.1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;12</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;12</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;7</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;7</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek by Wes Modes</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">--</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek by Wes Modes</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">--</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;Built in to Inform</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Help%20Menu.html' title="Provides a HELP command which brings up a menu giving standard instructions about IF." style="text-decoration: none"><span class="extensionindexentry">Basic Help Menu by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Screen%20Effects.html' title="Waiting for a keypress; clearing the screen. Also provides facilities for
+                    changing the foreground and background colors of text, when using the z-machine.
+                    These abilities will not function under Glulx." style="text-decoration: none"><span class="extensionindexentry">Basic Screen Effects by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;8</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Complex%20Listing.html' title="Complex Listing provides more sophisticated listing options: the ability to impose special ordering instructions on a list, and also the ability to change the delimiters of the list to produce different styles and effects." style="text-decoration: none"><span class="extensionindexentry">Complex Listing by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;9</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Image%20Centering.html' title="Glulx Image Centering adds the ability to display an image that is centered (left/right) on the screen." style="text-decoration: none"><span class="extensionindexentry">Glulx Image Centering by Emily Short</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;4</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Text%20Effects.html' title="Gives control over text formatting in Glulx." style="text-decoration: none"><span class="extensionindexentry">Glulx Text Effects by Emily Short</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;6</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Inanimate%20Listeners.html' title="Allows the player to address inanimate objects such as a talking computer, microphone, or telephone in a form such as ASK COMPUTER ABOUT COORDINATES." style="text-decoration: none"><span class="extensionindexentry">Inanimate Listeners by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Locksmith.html' title="Implicit handling of doors and containers so that lock manipulation is automatic if the player has the necessary keys." style="text-decoration: none"><span class="extensionindexentry">Locksmith by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;13</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Menus.html' title="A table-based way to display full-screen menus to the player." style="text-decoration: none"><span class="extensionindexentry">Menus by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Punctuation%20Removal.html' title="Punctuation Removal by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Punctuation Removal by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;5</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Skeleton%20Keys.html' title="Skeleton Keys by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Skeleton Keys by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Epistemology.html' title="Keeping track of what the player character knows and sees." style="text-decoration: none"><span class="extensionindexentry">Epistemology by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;9</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Approximate%20Metric%20Units.html' title="Scientific kinds of value for simulations. Use Metric Units instead for better accuracy." style="text-decoration: none"><span class="extensionindexentry">Approximate Metric Units by Graham Nelson</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Basic%20Inform.html' title="Basic Inform, included in every project, defines the basic framework
+                    of Inform as a programming language." style="text-decoration: none"><span class="extensionindexentry">Basic Inform by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/English%20Language.html' title="To make English the language of play." style="text-decoration: none"><span class="extensionindexentry">English Language by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Metric%20Units.html' title="Scientific kinds of value for simulations." style="text-decoration: none"><span class="extensionindexentry">Metric Units by Graham Nelson</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;2</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Rideable%20Vehicles.html' title="Vehicles which one sits on top of, rather than inside, such as elephants or motorcycles." style="text-decoration: none"><span class="extensionindexentry">Rideable Vehicles by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Standard%20Rules.html' title="The Standard Rules, included in every project, define phrases, actions and
+                    activities for interactive fiction." style="text-decoration: none"><span class="extensionindexentry">Standard Rules by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;6</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Character%20Names.html' title="Defines 2909 names like [unicode Greek small letter gamma] for Latin, Cyrillic, Greek and Hebrew letters, along with currency and other symbols." style="text-decoration: none"><span class="extensionindexentry">Unicode Character Names by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Full%20Character%20Names.html' title="Defines 12997 names like [unicode Arabic letter hah with three dots above] for the full range of characters named in the Unicode 4.1 standard." style="text-decoration: none"><span class="extensionindexentry">Unicode Full Character Names by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;<span class="smaller">29 extensions installed</span></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="disp4" style="display: none;">
+        <table border="0" cellspacing="0" cellpadding="2" class="stripeone" width=100%>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;Extensions in order of date used (most recent first)</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser by Aaron Reed</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;16.1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser by Aaron Reed</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;16.1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Screen%20Effects.html' title="Waiting for a keypress; clearing the screen. Also provides facilities for
+                    changing the foreground and background colors of text, when using the z-machine.
+                    These abilities will not function under Glulx." style="text-decoration: none"><span class="extensionindexentry">Basic Screen Effects by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;8</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Text%20Effects.html' title="Gives control over text formatting in Glulx." style="text-decoration: none"><span class="extensionindexentry">Glulx Text Effects by Emily Short</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;6</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;12</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;12</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;7</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;7</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Epistemology.html' title="Keeping track of what the player character knows and sees." style="text-decoration: none"><span class="extensionindexentry">Epistemology by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;9</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Basic%20Inform.html' title="Basic Inform, included in every project, defines the basic framework
+                    of Inform as a programming language." style="text-decoration: none"><span class="extensionindexentry">Basic Inform by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/English%20Language.html' title="To make English the language of play." style="text-decoration: none"><span class="extensionindexentry">English Language by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Standard%20Rules.html' title="The Standard Rules, included in every project, define phrases, actions and
+                    activities for interactive fiction." style="text-decoration: none"><span class="extensionindexentry">Standard Rules by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;6</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">Mon 26 September 2022 0956</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Help%20Menu.html' title="Provides a HELP command which brings up a menu giving standard instructions about IF." style="text-decoration: none"><span class="extensionindexentry">Basic Help Menu by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Complex%20Listing.html' title="Complex Listing provides more sophisticated listing options: the ability to impose special ordering instructions on a list, and also the ability to change the delimiters of the list to produce different styles and effects." style="text-decoration: none"><span class="extensionindexentry">Complex Listing by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;9</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Image%20Centering.html' title="Glulx Image Centering adds the ability to display an image that is centered (left/right) on the screen." style="text-decoration: none"><span class="extensionindexentry">Glulx Image Centering by Emily Short</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;4</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Inanimate%20Listeners.html' title="Allows the player to address inanimate objects such as a talking computer, microphone, or telephone in a form such as ASK COMPUTER ABOUT COORDINATES." style="text-decoration: none"><span class="extensionindexentry">Inanimate Listeners by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Locksmith.html' title="Implicit handling of doors and containers so that lock manipulation is automatic if the player has the necessary keys." style="text-decoration: none"><span class="extensionindexentry">Locksmith by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;13</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Menus.html' title="A table-based way to display full-screen menus to the player." style="text-decoration: none"><span class="extensionindexentry">Menus by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Punctuation%20Removal.html' title="Punctuation Removal by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Punctuation Removal by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;5</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Skeleton%20Keys.html' title="Skeleton Keys by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Skeleton Keys by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Approximate%20Metric%20Units.html' title="Scientific kinds of value for simulations. Use Metric Units instead for better accuracy." style="text-decoration: none"><span class="extensionindexentry">Approximate Metric Units by Graham Nelson</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Metric%20Units.html' title="Scientific kinds of value for simulations." style="text-decoration: none"><span class="extensionindexentry">Metric Units by Graham Nelson</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;2</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Rideable%20Vehicles.html' title="Vehicles which one sits on top of, rather than inside, such as elephants or motorcycles." style="text-decoration: none"><span class="extensionindexentry">Rideable Vehicles by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Character%20Names.html' title="Defines 2909 names like [unicode Greek small letter gamma] for Latin, Cyrillic, Greek and Hebrew letters, along with currency and other symbols." style="text-decoration: none"><span class="extensionindexentry">Unicode Character Names by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Full%20Character%20Names.html' title="Defines 12997 names like [unicode Arabic letter hah with three dots above] for the full range of characters named in the Unicode 4.1 standard." style="text-decoration: none"><span class="extensionindexentry">Unicode Full Character Names by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek by Wes Modes</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">--</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek by Wes Modes</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">--</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller"></span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;<span class="smaller">29 extensions installed</span></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="disp5" style="display: none;">
+        <table border="0" cellspacing="0" cellpadding="2" class="stripeone" width=100%>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;Extensions in order of word count (longest first)</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Standard%20Rules.html' title="The Standard Rules, included in every project, define phrases, actions and
+                    activities for interactive fiction." style="text-decoration: none"><span class="extensionindexentry">Standard Rules by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;6</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">33020 words</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser by Aaron Reed</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;16.1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">11353 words</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Aaron%20Reed/Smarter%20Parser.html' title="Understands a broader range of input than the standard parser, and can direct new players towards proper syntax." style="text-decoration: none"><span class="extensionindexentry">Smarter Parser by Aaron Reed</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;16.1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Aaron Reed")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">11353 words</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Basic%20Inform.html' title="Basic Inform, included in every project, defines the basic framework
+                    of Inform as a programming language." style="text-decoration: none"><span class="extensionindexentry">Basic Inform by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">7691 words</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;12</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">5190 words</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Framework.html' title="A framework for conversations that allows saying hello and goodbye, abbreviated forms of ask and tell commands for conversing with the current interlocutor, and asking and telling about things as well as topics." style="text-decoration: none"><span class="extensionindexentry">Conversation Framework by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;12</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">5190 words</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/English%20Language.html' title="To make English the language of play." style="text-decoration: none"><span class="extensionindexentry">English Language by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">2328 words</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">2247 words</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversational%20Defaults.html' title="Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework." style="text-decoration: none"><span class="extensionindexentry">Conversational Defaults by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">2247 words</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Screen%20Effects.html' title="Waiting for a keypress; clearing the screen. Also provides facilities for
+                    changing the foreground and background colors of text, when using the z-machine.
+                    These abilities will not function under Glulx." style="text-decoration: none"><span class="extensionindexentry">Basic Screen Effects by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;8</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">2223 words</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Text%20Effects.html' title="Gives control over text formatting in Glulx." style="text-decoration: none"><span class="extensionindexentry">Glulx Text Effects by Emily Short</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;6</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">2182 words</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;7</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">1855 words</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Conversation%20Responses.html' title="Provides a meaning for defining responses to conversational commands (such as ASK FRED ABOUT GARDEN) as a series of rules." style="text-decoration: none"><span class="extensionindexentry">Conversation Responses by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;7</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Eric Eve")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">1855 words</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/indexed_bullet.png"><a href='inform://Extensions/Extensions/Eric%20Eve/Epistemology.html' title="Keeping track of what the player character knows and sees." style="text-decoration: none"><span class="extensionindexentry">Epistemology by Eric Eve</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;9</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">1500 words</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Basic%20Help%20Menu.html' title="Provides a HELP command which brings up a menu giving standard instructions about IF." style="text-decoration: none"><span class="extensionindexentry">Basic Help Menu by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Complex%20Listing.html' title="Complex Listing provides more sophisticated listing options: the ability to impose special ordering instructions on a list, and also the ability to change the delimiters of the list to produce different styles and effects." style="text-decoration: none"><span class="extensionindexentry">Complex Listing by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;9</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Glulx%20Image%20Centering.html' title="Glulx Image Centering adds the ability to display an image that is centered (left/right) on the screen." style="text-decoration: none"><span class="extensionindexentry">Glulx Image Centering by Emily Short</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;4</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Inanimate%20Listeners.html' title="Allows the player to address inanimate objects such as a talking computer, microphone, or telephone in a form such as ASK COMPUTER ABOUT COORDINATES." style="text-decoration: none"><span class="extensionindexentry">Inanimate Listeners by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Locksmith.html' title="Implicit handling of doors and containers so that lock manipulation is automatic if the player has the necessary keys." style="text-decoration: none"><span class="extensionindexentry">Locksmith by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;13</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Menus.html' title="A table-based way to display full-screen menus to the player." style="text-decoration: none"><span class="extensionindexentry">Menus by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Punctuation%20Removal.html' title="Punctuation Removal by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Punctuation Removal by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;5</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Emily%20Short/Skeleton%20Keys.html' title="Skeleton Keys by Emily Short" style="text-decoration: none"><span class="extensionindexentry">Skeleton Keys by Emily Short</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Approximate%20Metric%20Units.html' title="Scientific kinds of value for simulations. Use Metric Units instead for better accuracy." style="text-decoration: none"><span class="extensionindexentry">Approximate Metric Units by Graham Nelson</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Metric%20Units.html' title="Scientific kinds of value for simulations." style="text-decoration: none"><span class="extensionindexentry">Metric Units by Graham Nelson</span></a>&nbsp;(For Glulx Only) <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;2</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Rideable%20Vehicles.html' title="Vehicles which one sits on top of, rather than inside, such as elephants or motorcycles." style="text-decoration: none"><span class="extensionindexentry">Rideable Vehicles by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;3</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Character%20Names.html' title="Defines 2909 names like [unicode Greek small letter gamma] for Latin, Cyrillic, Greek and Hebrew letters, along with currency and other symbols." style="text-decoration: none"><span class="extensionindexentry">Unicode Character Names by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Graham%20Nelson/Unicode%20Full%20Character%20Names.html' title="Defines 12997 names like [unicode Arabic letter hah with three dots above] for the full range of characters named in the Unicode 4.1 standard." style="text-decoration: none"><span class="extensionindexentry">Unicode Full Character Names by Graham Nelson</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">v&nbsp;1</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <img border="0" src="inform:/doc_images/builtin_ext.png">&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripetwo">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek by Wes Modes</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">--</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="stripeone">
+                <td nowrap="nowrap" align="left" valign="top">
+                    &nbsp;<img border="0" src="inform:/doc_images/unindexed_bullet.png"><a href='inform://Extensions/Extensions/Wes%20Modes/Bearcreek.html' title="Bearcreek by Wes Modes" style="text-decoration: none"><span class="extensionindexentry">Bearcreek by Wes Modes</span></a>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <span class="smaller">--</span>&nbsp;
+                </td>
+                <td nowrap="nowrap" align="left" valign="top">
+                    <a href='javascript:project().openFile("/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Wes Modes")'><img border="0" src="inform:/doc_images/pspec_ext.png"></a>&nbsp;
+                </td>
+                <td align="left" valign="top">
+                    <span class="smaller">--</span>
+                </td>
+            </tr>
+            <tr class="tintedrow">
+                <td nowrap="nowrap" align="left" valign="top" colspan="4">
+                    <span class="extensioncensusentry">&nbsp;<span class="smaller">29 extensions installed</span></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <p>Key: <img border="0" src="inform:/doc_images/indexed_bullet.png"> Used&nbsp;<img border="0" src="inform:/doc_images/builtin_ext.png"> Built in&nbsp;<img border="0" src="inform:/doc_images/pspec_ext.png"> Project specific&nbsp;<br>
+    Extensions compatible with specific story file formats only: <img border=0 src=inform:/doc_images/vm_z8.png>&nbsp;Inform6/16/v5, <img border=0 src=inform:/doc_images/vm_z8.png>&nbsp;Inform6/16/v8, <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;Inform6/32/v3.1.2, <img border=0 src=inform:/doc_images/vm_z8.png>&nbsp;Binary/16/v1, <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;Binary/32/v1, <img border=0 src=inform:/doc_images/vm_z8.png>&nbsp;Text/16/v1, <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;Text/32/v1, <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;C/32/v1, <img border=0 src=inform:/doc_images/vm_z8.png>&nbsp;Inventory/16/v1, <img border=0 src=inform:/doc_images/vm_glulx.png>&nbsp;Inventory/32/v1</p>
+
+    <!--CONTENT ENDS-->
+</body>
+</html>

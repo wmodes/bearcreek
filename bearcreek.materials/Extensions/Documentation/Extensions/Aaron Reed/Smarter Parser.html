@@ -1,0 +1,1678 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Extension</title>
+    <style type="text/css">
+        <!--
+        :root {
+            color-scheme: light dark;
+            --element-banner-background-colour: #eeeeee;
+            --heading-panel-background-colour: #eeeeee;
+            --heading-panel-text-colour: #222222;
+            --heading-panel-succeeded-background-colour: #E6FFE6;
+            --heading-panel-failed-background-colour: #f69Ca6;
+
+            --heading-row-background-colour: #e0e0e0;
+            --stripe-one-background-colour: #ffffff;
+            --stripe-two-background-colour: #f3f6fa;
+
+            --index-dull-red-colour: #800000;
+            --periodic-table-sidebar-colour: #888;
+            --periodic-table-sidebar-hover-colour: #222;
+            --leaders-background-colour: white;
+            --library-card-title-colour: #803030;
+            --library-card-other-colour: #303030;
+            --index-more-box-background-colour: #e0e0e0;
+            --index-activity-contents-background-colour: #e8e0c0;
+            --registry-contents-link-colour: #202020;
+
+        }
+
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --element-banner-background-colour: #444444;
+            --heading-panel-background-colour: #444444;
+            --heading-panel-text-colour: #ffffff;
+            --heading-panel-succeeded-background-colour: #738073;
+            --heading-panel-failed-background-colour: #7b4e53;
+
+            --heading-row-background-colour: #707070;
+            --stripe-one-background-colour: #7f7f7f;
+            --stripe-two-background-colour: #797b7d;
+
+            --index-dull-red-colour: #c00000;
+            --periodic-table-sidebar-colour: #555;
+            --periodic-table-sidebar-hover-colour: #222;
+            --leaders-background-colour: black;
+            --library-card-title-colour: #a05050;
+            --library-card-other-colour: #505050;
+            --index-more-box-background-colour: #444444;
+            --index-activity-contents-background-colour: #727060;
+            --registry-contents-link-colour: #ffffff;
+            }
+        }
+
+        /* The default font (family) and size */
+
+        body, p, td {
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 12px;
+        }
+
+        /* For fixed-point material within text, such as the typing on the Library Card index page */
+
+        span.typewritten {
+            font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+            font-size: 13px;
+        }
+
+        /* For less important material: the small print */
+
+        span.smaller {
+            font-size: 80%;
+        }
+
+        /* The "heading panel" is the coloured box, high up on the page. The colours
+        vary depending on the page: for example, the style on a report of a translation
+        with no problems is "headingpanelsucceeded", usually green, but if there were
+        problems then "headingpanelfailed" is used, which is usually red. "headingpanel"
+        itself is a more neutral grey by default. "headingpanelDark" is an alternative
+        look to make the extensions index pages have some visual contrast with the others;
+        by default they are a darker grey. */
+
+        .headingpanel {
+            background: var(--heading-panel-background-colour);
+        }
+        .headingpanelsucceeded {
+            background: var(--heading-panel-succeeded-background-colour);
+        }
+        .headingpanelfailed {
+            background: var(--heading-panel-failed-background-colour);
+        }
+        .headingpanelalt {
+            background: #808080;
+        }
+
+        /* Heading panels have two lines of text: an upper one in a larger size, and a
+        lower one in a smaller. Again, the alt versions are meant to contrast.
+
+            Report on Translation: Succeeded                <-- headingpaneltext
+            Produced by Inform 10.1.0 (build 6U97)          <-- headingpanelrubric
+
+            Installed Extensions                            <-- headingpaneltextalt
+            Bundles of extra rules or phrases to...         <-- headingpanelrubricalt
+
+        */
+
+        span.headingpaneltext {
+            color: var(--heading-panel-text-colour);
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        span.headingpaneltextalt {
+            color: #ffffff;
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        span.headingpanelrubric {
+            color: var(--heading-panel-text-colour);
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        span.headingpanelrubricalt {
+            color: #ffffff;
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Horizontal rule styling */
+
+        div.hr {
+            border: 0;
+            width: 100%;
+            color: #707070;
+            background-color: #707070;
+            height: 5px;
+        }
+
+        /* This styles the (usually white) text of the example numbers written inside
+        oval blobs in the extension documentation, which mimic the look of the in-app
+        documentation. */
+
+        .oval, .oval td {
+            background-image:url('inform:/doc_images/ovoid.png');
+            color:white;
+        }
+
+        /* Styling used in the extension documentation indexes: */
+
+        /* Used for extension names in the extensions pane of the app */
+
+        span.extensioncensusentry {
+            color: #ffffff;
+        }
+
+        span.extensionindexentry {
+            color: #404040;
+        }
+
+        span.extensionindexerror {
+            color: #ff8080;
+        }
+
+        /* This is used in extension documentation, where an example is presented
+        in a slightly tinted box: */
+
+        table.extensionexample {
+        	background-color: #f0f0f0;
+        }
+
+        span.extensionexampleletter {
+        	color: #202020;
+        	font-size: 14px;
+        	font-weight: bold;
+        }
+
+        /* Seen in problem messages: */
+
+        span.problemred {
+            color: #800000;
+        }
+
+        span.problemgreen {
+            color: #008000;
+        }
+
+        span.phraseword {
+            color: #808080;
+        }
+
+        span.phrasetokentext {
+            color: #e00060;
+        }
+
+        span.phrasetokendesctext {
+            color: #4040ff;
+        }
+
+        span.phrasetokenvaluetext {
+            color: #ff4040;
+        }
+
+        /* Now we move on to styling used in the Index pages only: */
+
+        /* The periodic table display has "sidebars", usually grey and taller than they
+        are wide; they contain no text. */
+
+        div.periodictablesidebarcolour {
+            background: var(--periodic-table-sidebar-colour);
+        }
+        div.periodictablesidebar:hover {
+            background: var(--periodic-table-sidebar-hover-colour);
+        }
+
+        /* The text of the element-abbreviation, such as "Lx" or "Ph", uses: */
+
+        span.elementtext {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Similarly for the "atomic number" - a single digit - in the top left corner
+        of these boxes: */
+
+        span.elementnumbertext {
+            color: #ffffff;
+            font-size: 7pt;
+        }
+
+        /* For the text of the element title, to the right of the element box: */
+
+        span.elementtitletext {
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        /* The banner at the top of each element: */
+
+        table.elementbanner {
+            background: var(--element-banner-background-colour);
+        }
+
+        /* For the typewriting on the Library Card: */
+
+        span.librarycardtitle {
+            color: var(--library-card-title-colour);
+        }
+
+        span.librarycardother {
+            color: var(--library-card-other-colour);
+        }
+
+        /* Generically used for "more details" boxes in the index: */
+
+        table.indexmorebox {
+        	background-color: var(--index-more-box-background-colour);
+            border-radius: 8px;
+        }
+
+        /* But not for activity contents: */
+
+        table.indexactivitycontents {
+        	background-color: var(--index-activity-contents-background-colour);
+            border-radius: 8px;
+        }
+
+        /* For responses in index entries about rules: */
+
+        span.indexresponseletter {
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #8080ff;
+        }
+
+        span.indexresponsetext {
+            color: #000066;
+        }
+
+        /* Used ubiquitously throughout the index for unemphasised text: */
+
+        span.indexblack {
+        	color: #000000;
+        }
+
+        span.indexgrey {
+        	color: #808080;
+        }
+
+        span.indexdarkgrey {
+            color: #505050;
+        }
+
+        span.indexdullred {
+            color: var(--index-dull-red-colour);
+        }
+
+        span.indexdullgreen {
+            color: #008000;
+        }
+
+        span.indexdullblue {
+            color: #000080;
+        }
+
+        /* Used in the numbering of levels of the World map in the Index */
+
+        span.indexmaplevelnumbers {
+        	color: #c0c0c0;
+        }
+
+        /* Used for the room squares in the World map in the Index (which is currently
+        a table with one row of one column) */
+
+        table.indexmaproom {
+        	border-color: #000000;
+        }
+
+        /* Used in the numbering of levels of the World map in the Index */
+
+        span.indexmaplevelnumbers {
+        	color: #c0c0c0;
+        }
+
+        /* Used e.g. for title rows in the Chart of basic kinds in the Index */
+
+        tr.headingrow {
+        	background-color: var(--heading-row-background-colour);
+        }
+
+        /* Standard rows have black text on striped background colours, these being
+        the usual ones seen in Mac OS X applications such as iTunes. */
+
+        tr.stripeone {
+        	background-color: var(--stripe-one-background-colour);
+        }
+
+        tr.stripetwo {
+        	background-color: var(--stripe-two-background-colour);
+        }
+
+        tr.tintedrow {
+        	background-color: #808080;
+        }
+
+        /* In the Figures index, this is the background colour used behind images
+        (though in fact it will only be visible if the image fails to load, or uses
+        transparency): */
+
+        div.figureindexbox {
+        	background-color: #6495ed;
+        }
+
+        /* To get the book-contents-page style leaders on the Contents element of
+           the index to work, these must use the background colour of the body of
+           the page, whatever that is: */
+
+        ul.leaders li.leaded span:first-child {
+            background: var(--leaders-background-colour);
+        }
+        ul.leaders li.leaded span + span {
+            background: var(--leaders-background-colour);
+        }
+
+        /* On Registry index pages (such as the Public Library), these are used for
+        download buttons and the like: */
+
+        span.registrybuttontext {
+        	font-size: 11px;
+        	border-color: #000000;
+        }
+
+        span.registryminibuttontext {
+        	font-size: 10px;
+        	border-color: #000000;
+        }
+
+        span.registrybuttonuninstalled {
+        	color: #000000;
+        	background: #ffffdd;
+        }
+
+        span.registrybuttoninstalled {
+        	color: #000000;
+        	background: #ffffff;
+        	pointer-events: none;
+        }
+
+        span.registrybuttonbuiltin {
+        	color: #888888;
+        	background: #ffffff;
+        	pointer-events: none;
+        }
+
+        span.registrybuttonupdate {
+        	color: #000000;
+        	background: #aaddff;
+        }
+
+        span.registrybuttonrevert {
+        	color: #000000;
+        	background: #ddaaff;
+        }
+
+        span.registrybuttonrevealer {
+        	color: #ffffff;
+        	background: #444444;
+        }
+
+        /* Registry index section headings: */
+
+        span.registrysectionname {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 16px;
+        	line-height: 18px;
+        }
+        span.registrysubsectionname {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 14px;
+        	line-height: 16px;
+        }
+
+        /* These are for the "mark" for a section, usually a section-symbol and number */
+
+        span.registrysectionmark {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 16px;
+        	line-height: 18px;
+        	color: #666;
+        }
+        span.registrysubsectionmark {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 14px;
+        	line-height: 16px;
+        	color: #666;
+        }
+
+        /* Text of an item listed in a registry: */
+
+        span.registryitemtext {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 12px;
+        	line-height: 16px;
+        }
+
+        /* And how the links in a registry index page behave: */
+
+        a.registrysilentlink {
+        	text-decoration: none;
+        	color: #000;
+        }
+        a.registrybuttonlink {
+        	text-decoration: none;
+        }
+        a.registrycontentslink:link {
+        	text-decoration: none;
+        	color: var(--registry-contents-link-colour);
+        }
+        a.registrycontentslink:visited {
+        	text-decoration: none;
+        	color: var(--registry-contents-link-colour);
+        }
+        a.registrycontentslink:hover {
+        	text-decoration: none;
+        	color: #D00000;
+        }
+        a.registrycontentslink:active {
+        	text-decoration: none;
+        	color: #D00000;
+        }
+
+        -->
+    </style>
+    <style type="text/css">
+        <!--
+        /* (1) General layout material */
+
+        *, *:before, *:after {
+        	-moz-box-sizing: border-box;
+        	-webkit-box-sizing: border-box;
+        	box-sizing: border-box;
+        }
+        .headingpanellayout {
+        	position: relative;
+        	height: 56px;
+        	padding: 0px;
+        	white-space:nowrap;
+        }
+        .headingpanellayoutdeeper {
+        	position: relative;
+        	height: 117px;
+        	padding: 0px;
+        	white-space:nowrap;
+        }
+        .headingtext {
+        	position: absolute;
+        	top: -4px;
+        	left: -1px;
+        	width: 100%;
+        	padding: 14px 10px 0px 10px;
+        }
+        .headingrubric {
+        	position: absolute;
+        	top: 36px;
+        	width: 100%;
+        	padding: 0px 10px 0px 10px;
+        }
+        h3.tighter {
+        	margin-top: 0px;
+        }
+        p.hang {
+        	padding-left: 25px;
+        	text-indent: -25px;
+        	margin-top: 0px;
+        	margin-bottom: 0px;
+        }
+        p.in1 {
+        	padding-left: 0px;
+        }
+        p.tightin1 {
+        	padding-left: 0px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin1 {
+        	padding-left: 0px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin1 {
+        	padding-left: 50px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in2 {
+        	padding-left: 25px;
+        }
+        p.tightin2 {
+        	padding-left: 25px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin2 {
+        	padding-left: 25px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin2 {
+        	padding-left: 75px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in3 {
+        	padding-left: 50px;
+        }
+        p.tightin3 {
+        	padding-left: 50px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin3 {
+        	padding-left: 50px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin3 {
+        	padding-left: 100px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in4 {
+        	padding-left: 75px;
+        }
+        p.tightin4 {
+        	padding-left: 75px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin4 {
+        	padding-left: 75px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin4 {
+        	padding-left: 125px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in5 {
+        	padding-left: 100px;
+        }
+        p.tightin5 {
+        	padding-left: 100px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin5 {
+        	padding-left: 100px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin5 {
+        	padding-left: 150px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in6 {
+        	padding-left: 125px;
+        }
+        p.tightin6 {
+        	padding-left: 125px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin6 {
+        	padding-left: 125px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin6 {
+        	padding-left: 175px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in7 {
+        	padding-left: 150px;
+        }
+        p.tightin7 {
+        	padding-left: 150px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin7 {
+        	padding-left: 150px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin7 {
+        	padding-left: 200px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in8 {
+        	padding-left: 175px;
+        }
+        p.tightin8 {
+        	padding-left: 175px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin8 {
+        	padding-left: 175px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin8 {
+        	padding-left: 225px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in9 {
+        	padding-left: 200px;
+        }
+        p.tightin9 {
+        	padding-left: 200px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin9 {
+        	padding-left: 200px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin9 {
+        	padding-left: 250px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+
+        /* (2) Index page layout material */
+
+        /* The periodic table display has "sidebars", usually grey and taller than they
+        are wide; they contain no text. */
+
+        div.periodictablesidebar {
+        	height: 56px;
+        	width: 16px;
+        }
+        .periodictablesidebar a:link { text-decoration: none; }
+        .periodictablesidebar a:visited { text-decoration: none; }
+        .periodictablesidebar a:active { text-decoration: none; }
+
+        /* The "element boxes" are the cells appearing in the periodic-table display
+        on the welcome page of the index: */
+
+        .elementbox {
+        	position: relative;
+        	height: 56px;
+        	width: 56px;
+        	padding: 0px;
+        }
+
+        .elementbox a:link { text-decoration: none; }
+        .elementbox a:visited { text-decoration: none; }
+        .elementbox a:active { text-decoration: none; }
+        .elementbox a:hover { text-decoration: none; }
+        .elementbox:hover {
+        	opacity: 0.6;
+        }
+
+        /* The "small element boxes" look like those, but are smaller, and used on
+        the headings of the content which those original boxes link to: */
+
+        .smallelementbox {
+        	position: relative;
+        	height: 40px;
+        	width: 40px;
+        	padding: 0px;
+        }
+
+        .smallelementbox a:link { text-decoration: none; }
+        .smallelementbox a:visited { text-decoration: none; }
+        .smallelementbox a:active { text-decoration: none; }
+        .smallelementbox a:hover { text-decoration: none; }
+        .smallelementbox:hover {
+        	opacity: 0.6;
+        }
+
+        /* This is a class for the links formed by the element boxes: */
+
+        a.elementlink {
+        	position: absolute;
+        	top: -4px;
+        	left: -1px;
+        	width: 100%;
+        	padding: 14px 0px 14px 1px;
+        	text-align: center;
+        }
+
+        /* Similarly for the "atomic number" - a single digit - in the top left corner
+        of these boxes: */
+
+        div.elementnumber {
+        	position: absolute;
+        	top: 1px;
+        	left: 3px;
+        	text-align: left;
+        }
+
+        /* For the text of the element title, to the right of the element box: */
+
+        div.elementtitle {
+        	position: absolute;
+        	top: 35px;
+        	width: 100%;
+        	text-align: center;
+        }
+
+        /* Used for the book-contents-page style leaders on the Contents element of
+           the index: */
+
+        ul.leaders {
+        	padding: 0;
+        	margin-top: 1px;
+        	margin-bottom: 0;
+        	overflow-x: hidden;
+        	list-style: none}
+        ul.leaders li.leaded:before {
+        	float: left;
+        	width: 0;
+        	white-space: nowrap;
+        	content:
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "}
+        ul.leaders li.leaded span:first-child {
+        	padding-right: 0.33em;
+        }
+        ul.leaders li.leaded span + span {
+        	float: right;
+        	padding-left: 0.33em;
+        }
+        li.indent1 span:first-child {
+        	padding-left: 25px;
+        }
+        li.indent2 span:first-child {
+        	padding-left: 50px;
+        }
+        li.indent3 span:first-child {
+        	padding-left: 75px;
+        }
+        li.indent4 span:first-child {
+        	padding-left: 100px;
+        }
+        li.indent5 span:first-child {
+        	padding-left: 125px;
+        }
+        li.indent6 span:first-child {
+        	padding-left: 150px;
+        }
+        li.indent7 span:first-child {
+        	padding-left: 175px;
+        }
+        li.indent8 span:first-child {
+        	padding-left: 200px;
+        }
+        li.indent9 span:first-child {
+        	padding-left: 225px;
+        }
+
+        li.unleaded:before {
+        	content: "";
+        }
+
+        /* On Registry index pages (such as the Public Library), these are used for
+        download buttons and the like: */
+
+        span.registrybuttons {
+        	height: 20px;
+        	padding: 2px 8px 2px 8px;
+        	margin: 2px;
+        	border:1px solid;
+        	border-radius: 5px;
+        }
+
+        span.registryminibuttons {
+        	height: 14px;
+        	padding: 2px 5px 2px 5px;
+        	margin: 2px;
+        	border:1px solid;
+        	border-radius: 4px;
+        }
+
+        /* Used to hide or display sections in the Registry pages: */
+
+        div.registrysectionitemsopen {
+        	display: block;
+        }
+
+        div.registrysectionitemsclosed {
+        	display: none;
+        }
+
+        /* Hanging indentation for Registry item paragraphs: */
+
+        p.registryitem {
+        	padding-left: 80px;
+        	text-indent: -40px;
+        }
+
+        p.registryaddition {
+        	padding-left: 40px;
+        	text-indent: -40px;
+        }
+
+        -->
+    </style>
+    <script type="text/javascript">
+        function project() {
+            return window.Project;
+        }
+        function showExtra(id, imid) {
+        	if (document.getElementById(id).style.display == 'block') {
+        		document.getElementById(id).style.display = 'none';
+        		document.getElementById(imid).src = 'inform:/extra.png';
+        	} else {
+        		document.getElementById(id).style.display = 'block';
+        		document.getElementById(imid).src = 'inform:/extraclose.png';
+        	}
+        }
+        function openExtra(id, imid) {
+        	document.getElementById(id).style.display = 'block';
+        	document.getElementById(imid).src = 'inform:/extraclose.png';
+        }
+        function closeExtra(id, imid) {
+        	document.getElementById(id).style.display = 'none';
+        	document.getElementById(imid).src = 'inform:/extra.png';
+        }
+        function pasteCode(code) {
+            var myProject = project();
+
+            myProject.selectView('source');
+            myProject.pasteCode(code);
+        }
+
+    </script>
+</head>
+<body>
+    <!--CONTENT BEGINS-->
+    <table CELLPADDING=0 CELLSPACING=0 width="100%" bgcolor="#000000"><tr><TD width=38px height=26px align="center" valign="center"><a href="inform://Extensions/Extensions.html" border=0><img border=0 src="inform:/doc_images/Hookindex.png" border=0></a></td><TD width=38px height=26px align="center" valign="center"></td><td halign="left" valign="center" CELLPADDING=0 CELLSPACING=0><font color="#FFFFFF" size=2>Extensions</font></a></td><TD width=56px height=26px align="right" valign="center"><a href="inform:/index.html" border=0><img border=0 src="inform:/doc_images/Hookup.png" border=0></a></td></tr></table>
+
+    <p><a href="javascript:pasteCode('Include Smarter Parser by Aaron Reed.[=0x000A=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a>&nbsp;<b>Smarter Parser<span class="extensionindexentry"> by </span>Aaron Reed</b></p>
+    <p><span class="smaller">Version 16.1</span></p>
+    <p>Understands a broader range of input than the standard parser, and can direct new players towards proper syntax.</p>
+    <p></p>
+    <hr>
+    <p><span class="indexblack"><b><a style="text-decoration: none" href=#docsec1>Chapter 1: </a></b></span>Introduction<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec2>Section 1.1: </a></span>Installation and Use<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec3>Section 1.2: </a></span>Quick Tips<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec4>Section 1.3: </a></span>Testing<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec5>Section 1.4: </a></span>Configuration<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec6>Section 1.5: </a></span>Style<br>
+    <br>
+    <span class="indexblack"><b><a style="text-decoration: none" href=#docsec7>Chapter 2: </a></b></span>The Rules<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec8>Section 2.1: </a></span>Blank Lines<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec9>Section 2.2: </a></span>Lonely Nouns<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec10>Section 2.3: </a></span>the stripping punctuation rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec11>Section 2.4: </a></span>the simplify contractions rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec12>Section 2.5: </a></span>the Standardize can verbs rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec13>Section 2.6: </a></span>the where can I go rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec14>Section 2.7: </a></span>the signs of confusion rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec15>Section 2.8: </a></span>The stripping niceties rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec16>Section 2.9: </a></span>The stripping interjections rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec17>Section 2.10: </a></span>The standardize be verbs rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec18>Section 2.11: </a></span>the asking who are you rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec19>Section 2.12: </a></span>the asking who am I rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec20>Section 2.13: </a></span>the asking where am I rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec21>Section 2.14: </a></span>the stripping verbose intro rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec22>Section 2.15: </a></span>the asking unparseable questions rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec23>Section 2.16: </a></span>the stripping adverbs rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec24>Section 2.17: </a></span>the making assertions rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec25>Section 2.18: </a></span>the unnecessary movement rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec26>Section 2.19: </a></span>the stripping vague words rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec27>Section 2.20: </a></span>the stripping pointless words rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec28>Section 2.21: </a></span>the stripping failed with rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec29>Section 2.22: </a></span>the gerunds rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec30>Section 2.23: </a></span>the unnecessary possessives rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec31>Section 2.24: </a></span>the understood as far as rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec32>Section 2.25: </a></span>the failed communication attempts rule<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec33>Section 2.26: </a></span>the too many words rule<br>
+    <br>
+    <span class="indexblack"><b><a style="text-decoration: none" href=#docsec34>Chapter 3: </a></b></span>Advanced Features<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec35>Section 3.1: </a></span>Changing how reparsing is presented to the player<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec36>Section 3.2: </a></span>Default Examples<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec37>Section 3.3: </a></span>Making your own rules<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec38>Section 3.4: </a></span>Shortcuts for new rules<br>
+    <br>
+    <span class="indexblack"><b><a style="text-decoration: none" href=#docsec39>Chapter 4: </a></b></span>Miscellany<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec40>Section 4.1: </a></span>No default rules<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec41>Section 4.2: </a></span>Overriding player preferences<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec42>Section 4.3: </a></span>Compatibility<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec43>Section 4.4: </a></span>revert to simple blank lines (in place of Section - Nothing Entered Advanced Version in Smarter Parser by Aaron Reed)<br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href=#docsec44>Section 4.5: </a></span>Bugs<br>
+    <br>
+    <b>Examples</b><br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href="Smarter Parser-eg1.html#eg1">A &mdash; Caverns and Kobolds</a></span><br>
+    &nbsp;&nbsp;&nbsp;<span class="indexblack"><a style="text-decoration: none" href="Smarter Parser-eg2.html#eg2">B &mdash; Stress test</a></span><br>
+    </p>
+    <hr>
+    <p></p>
+    <p>Values that vary: <b>rejected command</b>, <b>reborn command</b>, <b>Suppress parser error</b>, <b>sp reparse flag</b>, <b>Novice mode enabled</b>, <b>Notified about novice mode</b>, <b>Corrections enabled</b>, <b>Notified about corrections</b>, <b>saved Smarter Parser error</b>, <b>default noun example</b>, <b>default person example</b>, <b>default direction example</b>, <b>default help command</b>, <b>standard directions list</b>, <b>SP-debug</b>, <b>blank line replacement</b></p>
+    <p>Values: <b>File of Smarter Parser Config</b></p>
+    <p>Actions: <b>Novice mode toggling</b>, <b>Corrections toggling</b>, <b>Parser-debugging</b></p>
+    <p>Adjectives: <b>verb-related</b>, <b>sp_alive</b>, <b>probably_visible</b>, <b>probably_not_visible</b>, <b>appropriate for taking</b>, <b>bestial</b>, <b>sp_standard</b>, <b>sp_viable</b></p>
+    <p>Use options: <b>empty Smarter Parser rulebook</b>, <b>normal blank lines</b>, <b>normal lonely noun behavior</b></p>
+    </p>
+
+    <p><p><span class="indexdullred"><b><span id=docsec1>Chapter 1: Introduction</span></b></span></p>
+    </p>
+
+    <p> Newcomers to IF can be frustrated by the standard parser, which offers little instruction and is fairly rigid about the type of input it will accept. After one or two confusing errors, many new players will just give up. This extension responds to various common forms of misunderstood input tried by new players, as seen in hundreds of example transcripts collected by many IF authors over the years, and both offers more helpful responses as well as retrying some commands in a more standard form, teaching the player correct syntax as it goes.</p>
+
+    <p><p><span class="indexblack"><b><span id=docsec2>Section 1.1: Installation and Use</span></b></span></p>
+    </p>
+
+    <p> Smarter Parser is triggered only when a parser error is about to be printed; that is, when the parser has given up trying to understand the player's command. After standardizing the misunderstood input to simplify pattern matching, it looks through all the rules in a new rulebook, the Smarter Parser rules. Depending on the result of a rule, a command can be rejected with a better error message, or changed into a better form and re-parsed.</p>
+
+    <p> Since Smarter Parser only interferes when parsing has failed, you shouldn't normally have to worry about it interfering with your own nouns or verbs. For instance, while Smarter Parser will respond helpfully to &gt;HINT, if you create your own &quot;hint&quot; command, it will take precedence over Smarter Parser. However, since Smarter Parser will still fire if the player misuses your command in a way that causes it not to be parsed (by typing &gt;HINT CASTLE, for instance, if your command expects only HINT) you should review the Smarter Parser rules below and modify the output or delist rules that could hinder rather than help your own implementation.</p>
+
+    <p><p><span class="indexblack"><b><span id=docsec3>Section 1.2: Quick Tips</span></b></span></p>
+    </p>
+
+    <p> If your story includes any of the following, you'll probably want to take a look at the listed rules as a starting point:</p>
+
+    <p><blockquote><span class="indexdullblue"> conversation<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; the failed communication attempts rule</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> nonstandard movement or an &quot;exits&quot; command<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; the where can i go rule<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; the where am i rule<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; the unnecessary movement rule</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> new verbs requiring you to do something &quot;with&quot; something else<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; the stripping failed with rule</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> a characterized narrator or parser<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; the asking who are you rule (at a minimum)</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> any questions-based commands (who, what, where, etc)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; the asking unparseable questions rule</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> nouns involving possessives, like &quot;Bob's nose&quot;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; the unnecessary possessives rule</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec4>Section 1.3: Testing</span></b></span></p>
+    </p>
+
+    <p> In an unreleased story, you can type PARSER to start showing the names of matched Smarter Parser rules. You can look up a rule in this documentation to see how to change or remove it.</p>
+
+    <p><p><span class="indexblack"><b><span id=docsec5>Section 1.4: Configuration</span></b></span></p>
+    </p>
+
+    <p> Experienced players can type NOVICE OFF to disable Smarter Parser completely, which will improve speed on slower platforms, or CORRECT OFF to turn off automatic reparsing of commands (instead, the extension recommends a correction but does not actually submit it). These commands (along with UNDO) are introduced the first time the extension kicks in. If the target platform supports file i/o, this configuration is saved to disk and will be honored across projects using version 15 of Smarter Parser or newer if they're run locally from the same directory.</p>
+
+    <p> Authors can also disable corrections or Smarter Parsing entirely, perhaps temporarily for a certain sequence or permanently after the player has advanced past an introductory sequence, with the following phrases:</p>
+
+    <p><blockquote><span class="indexdullblue"> now corrections enabled is false<br>
+     now novice mode enabled is false</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec6>Section 1.5: Style</span></b></span></p>
+    </p>
+
+    <p> Smarter Parser messages can easily be styled differently than normal messages by adding before and after formatting instructions to the &quot;as the parser&quot; and &quot;as normal&quot; say phrases. For instance, to make Smarter Parser messages appear in italics:</p>
+
+    <p><blockquote><span class="indexdullblue"> To say as the parser: say italic type.<br>
+     To say as normal: say roman type.</span></blockquote>
+
+    <p><hr>
+    <p><span class="indexdullred"><b><span id=docsec7>Chapter 2: The Rules</span></b></span></p>
+    </p>
+
+    <p><p><span class="indexblack"><b><span id=docsec8>Section 2.1: Blank Lines</span></b></span></p>
+    </p>
+
+    <p> Novice players often press enter at a blank prompt, which normally shows the message &quot;I beg your pardon?&quot; Under the theory that players probably do this when they're not sure what to do next, Smarter Parser maps blank lines to LOOK, to get a fresh description of the surroundings. You can change the command to any string:</p>
+
+    <p><blockquote><span class="indexdullblue"> The blank line replacement is &quot;wait&quot;.</span></blockquote>
+
+    <p>... or restore the default behavior:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Use normal blank lines.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Use normal blank lines.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec9>Section 2.2: Lonely Nouns</span></b></span></p>
+    </p>
+
+    <p> If a player types just a noun, as in &gt;SWORD, we treat this like &gt;EXAMINE SWORD.</p>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Use normal lonely noun behavior.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Use normal lonely noun behavior.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec10>Section 2.3: the stripping punctuation rule</span></b></span></p>
+    </p>
+
+    <p> This rule tries to remove extraneous punctuation marks from the player's input, successfully parsing commands like &gt;WAIT? or &gt; (LISTEN). It prints no message.</p>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The stripping punctuation rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The stripping punctuation rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec11>Section 2.4: the simplify contractions rule</span></b></span></p>
+    </p>
+
+    <p> To make pattern matching simpler in later rules, this changes things like I'LL to I WILL. It prints no message.</p>
+
+    <p> To remove (although note that this will cause some later rules to not recognize contractions):</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The simplify contractions rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The simplify contractions rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec12>Section 2.5: the Standardize can verbs rule</span></b></span></p>
+    </p>
+
+    <p> Similarly, this replaces CAN, WOULD, WILL, SHOULD, MAY, DO, and LIKE TO with _CAN. This special word simplifies later pattern matching. It prints no message.</p>
+
+    <p> To remove (although note that this will break several later rules):</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The standardize can verbs rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The standardize can verbs rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec13>Section 2.6: the where can I go rule</span></b></span></p>
+    </p>
+
+    <p> Tries to help players who seem to be trying to find where the exits are, matching commands like &gt;WHICH WAY IS OUT or &gt;CAN I LEAVE. To change the message it prints, paste the code block below and adjust the quoted text accordingly.</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]where can I go rule[=0x0009=][=0x0022=][as the parser]Movement is usually by compass direction. Typing LOOK is a good way to get oriented.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     where can I go rule &quot;[as the parser]Movement is usually by compass direction. Typing LOOK is a good way to get oriented.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The where can I go rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The where can I go rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec14>Section 2.7: the signs of confusion rule</span></b></span></p>
+    </p>
+
+    <p> Looks for patterns indicating player confusion or frustration, including &gt;I DON'T KNOW..., &gt;WTF, &gt;SO CONFUSED, &gt;HUH??, &gt;INFO, &gt;HOW DO I..., &gt;ACTIONS, and several others. To change the parser message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]signs of confusion rule[=0x0009=][=0x0022=][as the parser]Try typing LOOK for a description of your surroundings. Any directions indicate exits which you can use by typing [get direction example]. Some of the objects mentioned in the description might be worth a closer look with a command like EXAMINE [get noun example]. You can also TAKE or DROP some things, type INVENTORY to see a list of what you[=0x0027=]re carrying already, OPEN or CLOSE containers or doors, and so on.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     signs of confusion rule &quot;[as the parser]Try typing LOOK for a description of your surroundings. Any directions indicate exits which you can use by typing [get direction example]. Some of the objects mentioned in the description might be worth a closer look with a command like EXAMINE [get noun example]. You can also TAKE or DROP some things, type INVENTORY to see a list of what you're carrying already, OPEN or CLOSE containers or doors, and so on.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The signs of confusion rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The signs of confusion rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec15>Section 2.8: The stripping niceties rule</span></b></span></p>
+    </p>
+
+    <p> Removes the phrases PLEASE or CAN I (and variants) and reparses the command. To change the parser message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]stripping niceties rule[=0x0009=][=0x0022=][as the parser]You can just state your commands directly.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     stripping niceties rule &quot;[as the parser]You can just state your commands directly.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The stripping niceties rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The stripping niceties rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec16>Section 2.9: The stripping interjections rule</span></b></span></p>
+    </p>
+
+    <p> Removes interjections to successfully parse colorful commands like &gt;GET THE DAMN JAR or &gt;WHERE IN THE HELL AM I and reparses without showing an error message. If this reduces the command to one or no words, don't reparse and show the message below. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]stripping interjections rule[=0x0009=][=0x0022=][as the parser]I think your command included an interjection, but I couldn[=0x0027=]t understand it. Try stating your intention more directly.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     stripping interjections rule &quot;[as the parser]I think your command included an interjection, but I couldn't understand it. Try stating your intention more directly.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The stripping interjections rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The stripping interjections rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec17>Section 2.10: The standardize be verbs rule</span></b></span></p>
+    </p>
+
+    <p> Replaces words like AM, WAS, WERE, HAVE BEEN with _BE, to simplify later pattern matching.</p>
+
+    <p> To remove (although note that this will break several later rules):</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The standardize be verbs rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The standardize be verbs rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec18>Section 2.11: the asking who are you rule</span></b></span></p>
+    </p>
+
+    <p> Responds to players trying to address the parser or narrator with commands like &gt;WHO ARE YOU, &gt;WHO'S SPEAKING, &gt;WHO AM I TALKING TO, and so on. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]asking who are you rule[=0x0009=][=0x0022=][as the parser]I[=0x0027=]m the parser-- I translate what you type into actions your character takes in the story world. Use imperative commands like LOOK, GET [get noun example], or GO [get direction example] to advance the story. Try typing [default help command in upper case] for more information.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     asking who are you rule &quot;[as the parser]I'm the parser-- I translate what you type into actions your character takes in the story world. Use imperative commands like LOOK, GET [get noun example], or GO [get direction example] to advance the story. Try typing [default help command in upper case] for more information.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The asking who are you rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The asking who are you rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec19>Section 2.12: the asking who am I rule</span></b></span></p>
+    </p>
+
+    <p> Answers the question &gt;WHO AM I? with an explanation and a reparsing as &gt;EXAMINE ME. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]asking who am i rule[=0x0009=][=0x0022=][as the parser]You are a character in this story. Normally, you[=0x0027=]ll want to phrase your input as commands, not questions.[if corrections enabled is true] I[=0x0027=]ve taken the liberty of demonstrating below.[end if][as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     asking who am i rule &quot;[as the parser]You are a character in this story. Normally, you'll want to phrase your input as commands, not questions.[if corrections enabled is true] I've taken the liberty of demonstrating below.[end if][as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The asking who am I rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The asking who am I rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec20>Section 2.13: the asking where am I rule</span></b></span></p>
+    </p>
+
+    <p> Answers the question &gt;WHERE AM I or attempts to examine the location (&gt;LOOK AROUND, &gt;EXAMINE ROOM, &gt;SEARCH LOCATION, &gt;WHAT'S IN THE AREA) with a pointer towards &gt;LOOK. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]asking where am i rule[=0x0009=][=0x0022=][as the parser]To get a description of your surroundings, try typing LOOK.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     asking where am i rule &quot;[as the parser]To get a description of your surroundings, try typing LOOK.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The asking where am I rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The asking where am I rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec21>Section 2.14: the stripping verbose intro rule</span></b></span></p>
+    </p>
+
+    <p> Reparses commands that contain an unnecessary introduction, such as &gt;I GO NORTH, &gt;CAN WE TAKE THE BALL, &gt;LET'S WAIT, &gt;I WANT TO ATTACK, and so on. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]stripping verbose intro rule[=0x0009=][=0x0022=][as the parser]You can just begin your command with the verb.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     stripping verbose intro rule &quot;[as the parser]You can just begin your command with the verb.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The stripping verbose intro rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The stripping verbose intro rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec22>Section 2.15: the asking unparseable questions rule</span></b></span></p>
+    </p>
+
+    <p> Rejects commands that look like questions: anything starting with WHO, WHAT, WHERE, WHY, WHICH, HOW, or variants on CAN I. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]asking unparseable questions rule[=0x0009=][=0x0022=][as the parser]You can[=0x0027=]t ask direct questions to the game. Type a verb - noun command like EXAMINE [get noun example] to interact with the story world, or LOOK to get a description of your surroundings.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     asking unparseable questions rule &quot;[as the parser]You can't ask direct questions to the game. Type a verb - noun command like EXAMINE [get noun example] to interact with the story world, or LOOK to get a description of your surroundings.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The asking unparseable questions rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The asking unparseable questions rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec23>Section 2.16: the stripping adverbs rule</span></b></span></p>
+    </p>
+
+    <p> Reparses the player's command after removing some of the most commonly tried adverbs, including SLOWLY, CAREFULLY, QUICKLY, QUIETLY, and LOUDLY. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]stripping adverbs rule[=0x0009=][=0x0022=][as the parser]Adverbs are not usually necessary in interactive fiction.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     stripping adverbs rule &quot;[as the parser]Adverbs are not usually necessary in interactive fiction.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The stripping adverbs rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The stripping adverbs rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec24>Section 2.17: the making assertions rule</span></b></span></p>
+    </p>
+
+    <p> Rejects commands that look like assertion statements, such as anything starting with I, HE, SHE, IT, THIS, YOU, or YOUR. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]making assertions rule[=0x0009=][=0x0022=][as the parser]Please rephrase your command to start with an imperative verb, like LOOK.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     making assertions rule &quot;[as the parser]Please rephrase your command to start with an imperative verb, like LOOK.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The making assertions rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The making assertions rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec25>Section 2.18: the unnecessary movement rule</span></b></span></p>
+    </p>
+
+    <p> Rejects a wide variety of commands that look like attempts to move within a single room, one of the most common newbie moves in IF, with a mini-tutorial message. Commands matched include those starting with phrases like &gt;GO OVER TO, &gt;MOVE AWAY FROM, &gt;STAND NEXT TO, &gt;GET IN FRONT OF, &gt;WALK UP TO, etcetera. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]unnecessary movement rule[=0x0009=][=0x0022=][as the parser]If you can see an object, you can usually just interact with it directly without worrying about your position[if player is enclosed by something] (although since you[=0x0027=]re in or on something, you may need to type EXIT first)[end if]. Try a command like EXAMINE [get noun example] for a closer look at something[if the number of sp_viable directions is at least 1], LOOK to get a new description of this location, or a direction like [get direction example] to move to a different location.[otherwise], or LOOK to show the description of this location again.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     unnecessary movement rule &quot;[as the parser]If you can see an object, you can usually just interact with it directly without worrying about your position[if player is enclosed by something] (although since you're in or on something, you may need to type EXIT first)[end if]. Try a command like EXAMINE [get noun example] for a closer look at something[if the number of sp_viable directions is at least 1], LOOK to get a new description of this location, or a direction like [get direction example] to move to a different location.[otherwise], or LOOK to show the description of this location again.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The unnecessary movement rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The unnecessary movement rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec26>Section 2.19: the stripping vague words rule</span></b></span></p>
+    </p>
+
+    <p> Rejects commands containing vague words like SOMEONE, ANYWHERE, NOBODY, or EVERYTHING. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]stripping vague words rule[=0x0009=][=0x0022=][as the parser]You will need to be more specific. Try typing LOOK to get a description of your surroundings.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     stripping vague words rule &quot;[as the parser]You will need to be more specific. Try typing LOOK to get a description of your surroundings.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The stripping vague words rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The stripping vague words rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec27>Section 2.20: the stripping pointless words rule</span></b></span></p>
+    </p>
+
+    <p> Rejects commands containing hedges like ANYWAY, ALMOST, SO, or JUST, as well as generally meaningless sequential or quantitative words like NOW, NEXT, or MORE, and reparses the command if any words remain, otherwise rejecting it. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]stripping pointless words rule[=0x0009=][=0x0022=][as the parser]Most connecting and comparative words are not necessary.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     stripping pointless words rule &quot;[as the parser]Most connecting and comparative words are not necessary.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The stripping pointless words rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The stripping pointless words rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec28>Section 2.21: the stripping failed with rule</span></b></span></p>
+    </p>
+
+    <p> Reparses commands that contain unnecessary addenda like &gt;ATTACK MONSTER WITH MY SWORD, &gt;GO NORTH BY THE PATH, &gt;TOUCH ROCK USING MY FINGERTIP, and so on. (Everything from the &quot;with&quot; word on is stripped.) If your story includes a command that legitimately uses &quot;with,&quot; you may want to change the message to account for this, or remove this rule altogether. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]stripping failed with rule[=0x0009=][=0x0022=][as the parser]You don[=0x0027=]t always need to specify what you[=0x0027=]re doing something with.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     stripping failed with rule &quot;[as the parser]You don't always need to specify what you're doing something with.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The stripping failed with rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The stripping failed with rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec29>Section 2.22: the gerunds rule</span></b></span></p>
+    </p>
+
+    <p> If the input contains the gerund form of several common IF commands, such as LOOKING, GOING, PUSHING, etc., strips the &quot;ing&quot; and reparses. Most useful in conjunction with other rules; i.e. along with &quot;stripping pointless words&quot; allows a command like &gt;TRY WAITING to be successfully understood. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]no gerunds rule[=0x0009=][=0x0022=][as the parser]Use verbs in present tense command form.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     no gerunds rule &quot;[as the parser]Use verbs in present tense command form.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The gerunds rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The gerunds rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec30>Section 2.23: the unnecessary possessives rule</span></b></span></p>
+    </p>
+
+    <p> If the player's command includes an interior unrecognized word that ends with an apostrophe s, strip the word and reparse. This works because the interior word is most likely to be a possessive in a command like &gt;GET BOB'S JACKET; if the story doesn't recognize the word BOB'S, we can assume this isn't going to be a helpful disambiguation word and try just &gt;GET JACKET instead. We limit our search to interior words to exclude different contexts like &gt;BOB'S A JERK or &gt;GET APPLE'S. This rule prints no message.</p>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The unnecessary possessives rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The unnecessary possessives rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec31>Section 2.24: the understood as far as rule</span></b></span></p>
+    </p>
+
+    <p> If the parser understood the player's command up to a certain point, and the words before that point look like a standard IF command, try stripping the excess and reparsing. This lets commands like &gt;TAKE BALL I SUPPOSE, &gt;LOOK AROUND THE ROOM, or &gt;KILL THE TROLL IN TERROR work. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]stripping unnecessary addendum rule[=0x0009=][=0x0022=][as the parser]I only understood the first part of that[if corrections enabled is true]-- trying anyway[end if].[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     stripping unnecessary addendum rule &quot;[as the parser]I only understood the first part of that[if corrections enabled is true]-- trying anyway[end if].[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The understood as far as rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The understood as far as rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec32>Section 2.25: the failed communication attempts rule</span></b></span></p>
+    </p>
+
+    <p> If a person is near the player and they typed one of several common greeting words, including HELLO, HI, GREET, SPEAK..., etc., reject the command and print a message pointing towards correct conversation commands. Note that if your story includes a conversation system, you will almost certainly want to replace this message with something customized for your game, or remove the rule entirely. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]failed communication attempts rule[=0x0009=][=0x0022=][as the parser]If you[=0x0027=]re trying to talk to someone, you might try ASK [get person example] ABOUT something, the traditional conversation syntax. Type [default help command in upper case] to see if this story offers more detailed instructions for conversation.[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     failed communication attempts rule &quot;[as the parser]If you're trying to talk to someone, you might try ASK [get person example] ABOUT something, the traditional conversation syntax. Type [default help command in upper case] to see if this story offers more detailed instructions for conversation.[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The failed communication attempts rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The failed communication attempts rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec33>Section 2.26: the too many words rule</span></b></span></p>
+    </p>
+
+    <p> If none of the previous rules have matched and the player's command has more than six words, reject it with a tip to try shorter commands. To change the message:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('Table of Smarter Parser Messages (continued)[=0x000A=]rule name[=0x0009=]message[=0x000A=]too many words rule[=0x0009=][=0x0022=][as the parser]You typed a rather long command and I didn[=0x0027=]t understand it. It[=0x0027=]s better to stick to simpler things like TAKE [get noun example].[as normal][=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> Table of Smarter Parser Messages (continued)<br>
+     rule name message<br>
+     too many words rule &quot;[as the parser]You typed a rather long command and I didn't understand it. It's better to stick to simpler things like TAKE [get noun example].[as normal]&quot;</span></blockquote>
+
+    <p> To remove:</p>
+
+    <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('The too many words rule is not listed in the Smarter Parser rulebook.[=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> The too many words rule is not listed in the Smarter Parser rulebook.</span></blockquote>
+
+    <p><hr>
+    <p><span class="indexdullred"><b><span id=docsec34>Chapter 3: Advanced Features</span></b></span></p>
+    </p>
+
+    <p><p><span class="indexblack"><b><span id=docsec35>Section 3.1: Changing how reparsing is presented to the player</span></b></span></p>
+    </p>
+
+    <p> To change the text used to frame reparsed commands, and the notifications the first time auto-corrections and a smarter parser message are seen, just redefine one of the following phrases in your own source (the text shown here is the default behavior):</p>
+
+    <p><blockquote><span class="indexdullblue"> To display the active corrections introduction:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; say &quot;[line break][as the parser]Retrying as:[as normal][line break]&quot;;</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> To display the inactive corrections introduction:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; say &quot;[as the parser]You might try:[as normal] &quot;.</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> To display the corrections instructions:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; say &quot;[paragraph break][as the parser]Type UNDO if this isn't what you wanted to do, or CORRECT OFF to stop automatically correcting commands.[as normal]&quot;;</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> To display the novice instructions:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; say &quot;[line break][as the parser]To stop these messages entirely, type NOVICE OFF.[as normal]&quot;.</span></blockquote>
+
+    <p> More utilitarian but also available to be replaced if necessary:</p>
+
+    <p><blockquote><span class="indexdullblue"> To display the rule explanation (explanation - a text):<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; say &quot;[explanation][command clarification break]&quot;.</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> To display the reborn command:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; say &quot;&gt;[reborn command in upper case]&quot;.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec36>Section 3.2: Default Examples</span></b></span></p>
+    </p>
+
+    <p> A number of the built-in messages need examples of things, people, or directions. Some effort is made to find sensible options from the nearby environment, but if nothing matches, the extension uses default fallbacks, which can be changed thusly (again, the defaults are below):</p>
+
+    <p><blockquote><span class="indexdullblue"> The default noun example is &quot;flower&quot;.<br>
+     The default person example is &quot;John&quot;.<br>
+     The default direction example is north.</span></blockquote>
+
+    <p> Several instructional messages encourage the player to type the standard ABOUT to get more help or information about the game. (If your game doesn't have an ABOUT command, Smarter Parser will print some generic instructional text if the player tries it.) You can change the referenced command if your game provides something different:</p>
+
+    <p><blockquote><span class="indexdullblue"> The default help command is &quot;hint&quot;.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec37>Section 3.3: Making your own rules</span></b></span></p>
+    </p>
+
+    <p> You can add new Smarter Parser rules to match additional patterns of misunderstood input. Smarter Parser uses regular expressions on the indexed text variable &quot;the rejected command&quot; to match patterns. The &quot;Advanced Text&quot; chapter of the Inform docs has a good primer on how to use regular expressions if you're not familiar with them.</p>
+
+    <p> Smarter Parser rules can optionally modify a second indexed text, &quot;the reborn command,&quot; and can have one of four outcomes:</p>
+
+    <p><blockquote><span class="indexdullblue"> reparse the command (success)<br>
+     reparse the command without an explanation (success)<br>
+     reject the command (failure)<br>
+     no match (default)</span></blockquote>
+
+    <p> If there is no match, the next rule in the rulebook will be checked, and so on. If no Smarter Parser rules match, responsibility for printing an error returns to the default parser, as if Smarter Parser hadn't run.</p>
+
+    <p> For any of the non-default outcomes, however, the rule must first call the phrase:</p>
+
+    <p><blockquote><span class="indexdullblue"> identify error as (the name of the matching rule)</span></blockquote>
+
+    <p> In all cases except &quot;without an explanation,&quot; the extension looks up the identified rule in the Table of Smarter Parser Messages, which has two columns, &quot;rule name&quot; and &quot;message,&quot; and display the associated text to explain the nature of the problem. Stylistically, Smarter Parser messages should not just explain what went wrong, but try to suggest a better command or explain something about the IF world model that will lead the player towards more helpful input in the future. It's legal to have no matching error message, in which case nothing is printed.</p>
+
+    <p> With the two &quot;reparse the command&quot; outcomes, and if &quot;corrections enabled&quot; is true, the extension next takes the value of &quot;the reborn command&quot; and starts parsing over again as if the player had typed that command. The &quot;without an explanation&quot; variant will do so without printing an explanation, which is useful for very straightforward or obvious corrections such as misplaced punctuation.</p>
+
+    <p> Here's an example of a Smarter Parser rule that rejects a command:</p>
+
+    <p><blockquote><span class="indexdullblue"> A smarter parser rule (this is the signs of frustration rule):<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; if the rejected command matches the regular expression &quot;(stupid|hate|dumb|boring|wtf)&quot;:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; identify error as signs of frustration rule;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reject the command.</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> Table of Smarter Parser Messages (continued)</span><br>
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="left" valign="top">
+                <span class="indexdullblue"> rule name</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+            <td align="left" valign="top">
+                <span class="indexdullblue"> message
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top">
+                <span class="indexdullblue"> signs of frustration rule</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+            <td align="left" valign="top">
+                <span class="indexdullblue"> &quot;[as the parser]You know, there's a HINT command available...[as normal]&quot;</span>
+            </td>
+        </tr>
+    </table>
+    </blockquote>
+
+    <p> And here's one that reparses:</p>
+
+    <p><blockquote><span class="indexdullblue"> A smarter parser rule (this is the stripping formal address rule):<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; if the rejected command matches the regular expression &quot;(sir|ma'am)&quot;:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; replace the regular expression text matching subexpression 1 in the reborn command with &quot;&quot;;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; identify error as stripping formal address rule;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reparse the command.</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> Table of Smarter Parser Messages (continued)</span><br>
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="left" valign="top">
+                <span class="indexdullblue"> rule name</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+            <td align="left" valign="top">
+                <span class="indexdullblue"> message
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top">
+                <span class="indexdullblue"> stripping formal address rule</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+            <td align="left" valign="top">
+                <span class="indexdullblue"> &quot;[as the parser]There's no need to be overly polite.[as normal]&quot;</span>
+            </td>
+        </tr>
+    </table>
+    </blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec38>Section 3.4: Shortcuts for new rules</span></b></span></p>
+    </p>
+
+    <p> There are a few built-in phrases to streamline common patterns in making Smarter Parser rules. One of these is checking whether a pattern matches, and if so, removing it from the player's command. This can be done with the &quot;stripping (regex) is fruitful&quot; phrase. The &quot;stripping formal address rule&quot; example above could be rewritten like this:</p>
+
+    <p><blockquote><span class="indexdullblue"> A smarter parser rule (this is the stripping formal address rule):<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; if stripping &quot;(sir|ma'am)&quot; is fruitful:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; identify error as stripping formal address rule;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reparse the command.</span></blockquote>
+
+    <p> By default these phrases all stop at word boundaries, so the above would not match on the word &quot;sirrah.&quot; We can override this, or restrict the search to only match the beginning of the rejected command, with these two phrase variants:</p>
+
+    <p><blockquote><span class="indexdullblue"> if stripping &quot;regex&quot; is fruitful, even within words<br>
+     if stripping &quot;regex&quot; is fruitful, only from the beginning</span></blockquote>
+
+    <p> Similarly, we can check if the rejected command contains a certain regular expression (without modifying the command) with this shortcut phrase and variants:</p>
+
+    <p><blockquote><span class="indexdullblue"> if input contains &quot;regex&quot;<br>
+     if input starts with &quot;regex&quot;<br>
+     if input ends with &quot;regex&quot;</span></blockquote>
+
+    <p> We can also add the &quot;, even within words&quot; suffix to any of these three phrases to search across word boundaries.</p>
+
+    <p> Finally, there's a much faster alternate version of the &quot;input starts with&quot; phrase that works if you're just looking to match individual words at the start of a command and don't need any complex regular expression handling. This is:</p>
+
+    <p><blockquote><span class="indexdullblue"> if input simple starts with &quot;word&quot;<br>
+     if input simple starts with &quot;(one|of|these|words)&quot;</span></blockquote>
+
+    <p> Smarter Parser rules are checked in the order defined in the source, meaning any new ones you define will come at the end of the built-in set. You can use the standard rule reordering syntax to adjust this:</p>
+
+    <p><blockquote><span class="indexdullblue"> The stripping formal address rule is listed before the stripping pointless words rule in the Smarter Parser rules.</span></blockquote>
+
+    <p> A final note: checking regular expressions is slow, so adding rules ad infinitum is not necessarily a good idea. The slowdown only happens when the player types misunderstood input, but keep in mind this might be rather frequent for new players, many of whom may be playing your story on a slow interpreter such as a Javascript-based web environment.</p>
+
+    <p><hr>
+    <p><span class="indexdullred"><b><span id=docsec39>Chapter 4: Miscellany</span></b></span></p>
+    </p>
+
+    <p><p><span class="indexblack"><b><span id=docsec40>Section 4.1: No default rules</span></b></span></p>
+    </p>
+
+    <p> You can remove all of the built-in rules by adding the use option:</p>
+
+    <p><blockquote><span class="indexdullblue"> Use empty Smarter Parser rulebook.</span></blockquote>
+
+    <p><p><span class="indexblack"><b><span id=docsec41>Section 4.2: Overriding player preferences</span></b></span></p>
+    </p>
+
+    <p> If an author is doing something unique with Smarter Parser and wants to override player preferences saved in an external file, she can simply use a &quot;when play begins&quot; rule to set &quot;corrections enabled&quot; or &quot;novice mode enabled&quot; to the desired boolean value.</p>
+
+    <p><p><span class="indexblack"><b><span id=docsec42>Section 4.3: Compatibility</span></b></span></p>
+    </p>
+
+    <p> Smarter Parser replaces the I6 Keyboard routine to allow for blank line replacement, which may create compatibility issues with other extensions that replace this routine (such as Undo Output Control by Erik Temple). If you don't want to replace Keyboard, you can fall back on a simpler implementation for dealing with blank lines by adding an empty section replacing the relevant code:</p>
+
+    <p><p><span class="indexblack"><b><span id=docsec43>Section 4.4: revert to simple blank lines (in place of Section - Nothing Entered Advanced Version in Smarter Parser by Aaron Reed)</span></b></span></p>
+    </p>
+
+    <p> The simpler version can't have a custom verb (it always LOOKs) and acts like an out-of-world command (time doesn't pass).</p>
+
+    <p><p><span class="indexblack"><b><span id=docsec44>Section 4.5: Bugs</span></b></span></p>
+    </p>
+
+    <p> The author is constantly striving to improve this extension. If you have any problems with Smarter Parser or suggestions for future improvement, please contact me at my gmail account, aareed, or on the intfiction.org forum.</p>
+
+    <p><hr>
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td halign="left" valign="top" cellpadding=0 cellspacing=0 width=38px>
+                <span id=eg1><table border="0" cellspacing="0" cellpadding="0">
+                    <tr class="oval">
+                        <td width=38px height=30px align="left" valign="center">
+                            <a href="Smarter Parser-eg1.html#eg1" style="text-decoration: none"><div class="paragraph Body" style="line-height: 1px; margin-bottom: 0px; margin-top: 0px; padding-bottom: 0pt; padding-top: 0px; text-align: center;">
+                                <span class="extensionexampleletter">A</span></div>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+                </span>
+            </td>
+            <td cellpadding=0 cellspacing=0 halign="left" valign="top">
+                <a href="Smarter Parser-eg1.html#eg1" style="text-decoration: none"><img border="0" src='inform:/doc_images/asterisk.png'><b><span class="indexdarkgrey">&nbsp;Example&nbsp;</span><span class="indexblack">Caverns and Kobolds</span></b></a><br>
+                <p>A tiny scenario to test misunderstood input with.</p>
+
+            </td>
+        </tr>
+    </table>
+    </p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p><hr>
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td halign="left" valign="top" cellpadding=0 cellspacing=0 width=38px>
+                <span id=eg2><table border="0" cellspacing="0" cellpadding="0">
+                    <tr class="oval">
+                        <td width=38px height=30px align="left" valign="center">
+                            <a href="Smarter Parser-eg2.html#eg2" style="text-decoration: none"><div class="paragraph Body" style="line-height: 1px; margin-bottom: 0px; margin-top: 0px; padding-bottom: 0pt; padding-top: 0px; text-align: center;">
+                                <span class="extensionexampleletter">B</span></div>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+                </span>
+            </td>
+            <td cellpadding=0 cellspacing=0 halign="left" valign="top">
+                <a href="Smarter Parser-eg2.html#eg2" style="text-decoration: none"><img border="0" src='inform:/doc_images/asterisk.png'><b><span class="indexdarkgrey">&nbsp;Example&nbsp;</span><span class="indexblack">Stress test</span></b></a><br>
+                <p>A large archive of edge cases and actual misunderstood newbie inputs. Not all of these are caught by Smarter Parser, but are included to help ensure the extension is not making things less clear (or for speed profiling thousands of regular expression calls).</p>
+
+            </td>
+        </tr>
+    </table>
+    </p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p>
+    <!--CONTENT ENDS-->
+</body>
+</html>

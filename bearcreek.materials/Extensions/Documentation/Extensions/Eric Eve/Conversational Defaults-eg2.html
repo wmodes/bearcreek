@@ -1,0 +1,1114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Extension</title>
+    <style type="text/css">
+        <!--
+        :root {
+            color-scheme: light dark;
+            --element-banner-background-colour: #eeeeee;
+            --heading-panel-background-colour: #eeeeee;
+            --heading-panel-text-colour: #222222;
+            --heading-panel-succeeded-background-colour: #E6FFE6;
+            --heading-panel-failed-background-colour: #f69Ca6;
+
+            --heading-row-background-colour: #e0e0e0;
+            --stripe-one-background-colour: #ffffff;
+            --stripe-two-background-colour: #f3f6fa;
+
+            --index-dull-red-colour: #800000;
+            --periodic-table-sidebar-colour: #888;
+            --periodic-table-sidebar-hover-colour: #222;
+            --leaders-background-colour: white;
+            --library-card-title-colour: #803030;
+            --library-card-other-colour: #303030;
+            --index-more-box-background-colour: #e0e0e0;
+            --index-activity-contents-background-colour: #e8e0c0;
+            --registry-contents-link-colour: #202020;
+
+        }
+
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --element-banner-background-colour: #444444;
+            --heading-panel-background-colour: #444444;
+            --heading-panel-text-colour: #ffffff;
+            --heading-panel-succeeded-background-colour: #738073;
+            --heading-panel-failed-background-colour: #7b4e53;
+
+            --heading-row-background-colour: #707070;
+            --stripe-one-background-colour: #7f7f7f;
+            --stripe-two-background-colour: #797b7d;
+
+            --index-dull-red-colour: #c00000;
+            --periodic-table-sidebar-colour: #555;
+            --periodic-table-sidebar-hover-colour: #222;
+            --leaders-background-colour: black;
+            --library-card-title-colour: #a05050;
+            --library-card-other-colour: #505050;
+            --index-more-box-background-colour: #444444;
+            --index-activity-contents-background-colour: #727060;
+            --registry-contents-link-colour: #ffffff;
+            }
+        }
+
+        /* The default font (family) and size */
+
+        body, p, td {
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 12px;
+        }
+
+        /* For fixed-point material within text, such as the typing on the Library Card index page */
+
+        span.typewritten {
+            font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+            font-size: 13px;
+        }
+
+        /* For less important material: the small print */
+
+        span.smaller {
+            font-size: 80%;
+        }
+
+        /* The "heading panel" is the coloured box, high up on the page. The colours
+        vary depending on the page: for example, the style on a report of a translation
+        with no problems is "headingpanelsucceeded", usually green, but if there were
+        problems then "headingpanelfailed" is used, which is usually red. "headingpanel"
+        itself is a more neutral grey by default. "headingpanelDark" is an alternative
+        look to make the extensions index pages have some visual contrast with the others;
+        by default they are a darker grey. */
+
+        .headingpanel {
+            background: var(--heading-panel-background-colour);
+        }
+        .headingpanelsucceeded {
+            background: var(--heading-panel-succeeded-background-colour);
+        }
+        .headingpanelfailed {
+            background: var(--heading-panel-failed-background-colour);
+        }
+        .headingpanelalt {
+            background: #808080;
+        }
+
+        /* Heading panels have two lines of text: an upper one in a larger size, and a
+        lower one in a smaller. Again, the alt versions are meant to contrast.
+
+            Report on Translation: Succeeded                <-- headingpaneltext
+            Produced by Inform 10.1.0 (build 6U97)          <-- headingpanelrubric
+
+            Installed Extensions                            <-- headingpaneltextalt
+            Bundles of extra rules or phrases to...         <-- headingpanelrubricalt
+
+        */
+
+        span.headingpaneltext {
+            color: var(--heading-panel-text-colour);
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        span.headingpaneltextalt {
+            color: #ffffff;
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        span.headingpanelrubric {
+            color: var(--heading-panel-text-colour);
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        span.headingpanelrubricalt {
+            color: #ffffff;
+            font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Horizontal rule styling */
+
+        div.hr {
+            border: 0;
+            width: 100%;
+            color: #707070;
+            background-color: #707070;
+            height: 5px;
+        }
+
+        /* This styles the (usually white) text of the example numbers written inside
+        oval blobs in the extension documentation, which mimic the look of the in-app
+        documentation. */
+
+        .oval, .oval td {
+            background-image:url('inform:/doc_images/ovoid.png');
+            color:white;
+        }
+
+        /* Styling used in the extension documentation indexes: */
+
+        /* Used for extension names in the extensions pane of the app */
+
+        span.extensioncensusentry {
+            color: #ffffff;
+        }
+
+        span.extensionindexentry {
+            color: #404040;
+        }
+
+        span.extensionindexerror {
+            color: #ff8080;
+        }
+
+        /* This is used in extension documentation, where an example is presented
+        in a slightly tinted box: */
+
+        table.extensionexample {
+        	background-color: #f0f0f0;
+        }
+
+        span.extensionexampleletter {
+        	color: #202020;
+        	font-size: 14px;
+        	font-weight: bold;
+        }
+
+        /* Seen in problem messages: */
+
+        span.problemred {
+            color: #800000;
+        }
+
+        span.problemgreen {
+            color: #008000;
+        }
+
+        span.phraseword {
+            color: #808080;
+        }
+
+        span.phrasetokentext {
+            color: #e00060;
+        }
+
+        span.phrasetokendesctext {
+            color: #4040ff;
+        }
+
+        span.phrasetokenvaluetext {
+            color: #ff4040;
+        }
+
+        /* Now we move on to styling used in the Index pages only: */
+
+        /* The periodic table display has "sidebars", usually grey and taller than they
+        are wide; they contain no text. */
+
+        div.periodictablesidebarcolour {
+            background: var(--periodic-table-sidebar-colour);
+        }
+        div.periodictablesidebar:hover {
+            background: var(--periodic-table-sidebar-hover-colour);
+        }
+
+        /* The text of the element-abbreviation, such as "Lx" or "Ph", uses: */
+
+        span.elementtext {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Similarly for the "atomic number" - a single digit - in the top left corner
+        of these boxes: */
+
+        span.elementnumbertext {
+            color: #ffffff;
+            font-size: 7pt;
+        }
+
+        /* For the text of the element title, to the right of the element box: */
+
+        span.elementtitletext {
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        /* The banner at the top of each element: */
+
+        table.elementbanner {
+            background: var(--element-banner-background-colour);
+        }
+
+        /* For the typewriting on the Library Card: */
+
+        span.librarycardtitle {
+            color: var(--library-card-title-colour);
+        }
+
+        span.librarycardother {
+            color: var(--library-card-other-colour);
+        }
+
+        /* Generically used for "more details" boxes in the index: */
+
+        table.indexmorebox {
+        	background-color: var(--index-more-box-background-colour);
+            border-radius: 8px;
+        }
+
+        /* But not for activity contents: */
+
+        table.indexactivitycontents {
+        	background-color: var(--index-activity-contents-background-colour);
+            border-radius: 8px;
+        }
+
+        /* For responses in index entries about rules: */
+
+        span.indexresponseletter {
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #8080ff;
+        }
+
+        span.indexresponsetext {
+            color: #000066;
+        }
+
+        /* Used ubiquitously throughout the index for unemphasised text: */
+
+        span.indexblack {
+        	color: #000000;
+        }
+
+        span.indexgrey {
+        	color: #808080;
+        }
+
+        span.indexdarkgrey {
+            color: #505050;
+        }
+
+        span.indexdullred {
+            color: var(--index-dull-red-colour);
+        }
+
+        span.indexdullgreen {
+            color: #008000;
+        }
+
+        span.indexdullblue {
+            color: #000080;
+        }
+
+        /* Used in the numbering of levels of the World map in the Index */
+
+        span.indexmaplevelnumbers {
+        	color: #c0c0c0;
+        }
+
+        /* Used for the room squares in the World map in the Index (which is currently
+        a table with one row of one column) */
+
+        table.indexmaproom {
+        	border-color: #000000;
+        }
+
+        /* Used in the numbering of levels of the World map in the Index */
+
+        span.indexmaplevelnumbers {
+        	color: #c0c0c0;
+        }
+
+        /* Used e.g. for title rows in the Chart of basic kinds in the Index */
+
+        tr.headingrow {
+        	background-color: var(--heading-row-background-colour);
+        }
+
+        /* Standard rows have black text on striped background colours, these being
+        the usual ones seen in Mac OS X applications such as iTunes. */
+
+        tr.stripeone {
+        	background-color: var(--stripe-one-background-colour);
+        }
+
+        tr.stripetwo {
+        	background-color: var(--stripe-two-background-colour);
+        }
+
+        tr.tintedrow {
+        	background-color: #808080;
+        }
+
+        /* In the Figures index, this is the background colour used behind images
+        (though in fact it will only be visible if the image fails to load, or uses
+        transparency): */
+
+        div.figureindexbox {
+        	background-color: #6495ed;
+        }
+
+        /* To get the book-contents-page style leaders on the Contents element of
+           the index to work, these must use the background colour of the body of
+           the page, whatever that is: */
+
+        ul.leaders li.leaded span:first-child {
+            background: var(--leaders-background-colour);
+        }
+        ul.leaders li.leaded span + span {
+            background: var(--leaders-background-colour);
+        }
+
+        /* On Registry index pages (such as the Public Library), these are used for
+        download buttons and the like: */
+
+        span.registrybuttontext {
+        	font-size: 11px;
+        	border-color: #000000;
+        }
+
+        span.registryminibuttontext {
+        	font-size: 10px;
+        	border-color: #000000;
+        }
+
+        span.registrybuttonuninstalled {
+        	color: #000000;
+        	background: #ffffdd;
+        }
+
+        span.registrybuttoninstalled {
+        	color: #000000;
+        	background: #ffffff;
+        	pointer-events: none;
+        }
+
+        span.registrybuttonbuiltin {
+        	color: #888888;
+        	background: #ffffff;
+        	pointer-events: none;
+        }
+
+        span.registrybuttonupdate {
+        	color: #000000;
+        	background: #aaddff;
+        }
+
+        span.registrybuttonrevert {
+        	color: #000000;
+        	background: #ddaaff;
+        }
+
+        span.registrybuttonrevealer {
+        	color: #ffffff;
+        	background: #444444;
+        }
+
+        /* Registry index section headings: */
+
+        span.registrysectionname {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 16px;
+        	line-height: 18px;
+        }
+        span.registrysubsectionname {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 14px;
+        	line-height: 16px;
+        }
+
+        /* These are for the "mark" for a section, usually a section-symbol and number */
+
+        span.registrysectionmark {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 16px;
+        	line-height: 18px;
+        	color: #666;
+        }
+        span.registrysubsectionmark {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 14px;
+        	line-height: 16px;
+        	color: #666;
+        }
+
+        /* Text of an item listed in a registry: */
+
+        span.registryitemtext {
+        	font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+        	-webkit-font-smoothing: antialiased;
+        	font-size: 12px;
+        	line-height: 16px;
+        }
+
+        /* And how the links in a registry index page behave: */
+
+        a.registrysilentlink {
+        	text-decoration: none;
+        	color: #000;
+        }
+        a.registrybuttonlink {
+        	text-decoration: none;
+        }
+        a.registrycontentslink:link {
+        	text-decoration: none;
+        	color: var(--registry-contents-link-colour);
+        }
+        a.registrycontentslink:visited {
+        	text-decoration: none;
+        	color: var(--registry-contents-link-colour);
+        }
+        a.registrycontentslink:hover {
+        	text-decoration: none;
+        	color: #D00000;
+        }
+        a.registrycontentslink:active {
+        	text-decoration: none;
+        	color: #D00000;
+        }
+
+        -->
+    </style>
+    <style type="text/css">
+        <!--
+        /* (1) General layout material */
+
+        *, *:before, *:after {
+        	-moz-box-sizing: border-box;
+        	-webkit-box-sizing: border-box;
+        	box-sizing: border-box;
+        }
+        .headingpanellayout {
+        	position: relative;
+        	height: 56px;
+        	padding: 0px;
+        	white-space:nowrap;
+        }
+        .headingpanellayoutdeeper {
+        	position: relative;
+        	height: 117px;
+        	padding: 0px;
+        	white-space:nowrap;
+        }
+        .headingtext {
+        	position: absolute;
+        	top: -4px;
+        	left: -1px;
+        	width: 100%;
+        	padding: 14px 10px 0px 10px;
+        }
+        .headingrubric {
+        	position: absolute;
+        	top: 36px;
+        	width: 100%;
+        	padding: 0px 10px 0px 10px;
+        }
+        h3.tighter {
+        	margin-top: 0px;
+        }
+        p.hang {
+        	padding-left: 25px;
+        	text-indent: -25px;
+        	margin-top: 0px;
+        	margin-bottom: 0px;
+        }
+        p.in1 {
+        	padding-left: 0px;
+        }
+        p.tightin1 {
+        	padding-left: 0px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin1 {
+        	padding-left: 0px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin1 {
+        	padding-left: 50px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in2 {
+        	padding-left: 25px;
+        }
+        p.tightin2 {
+        	padding-left: 25px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin2 {
+        	padding-left: 25px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin2 {
+        	padding-left: 75px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in3 {
+        	padding-left: 50px;
+        }
+        p.tightin3 {
+        	padding-left: 50px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin3 {
+        	padding-left: 50px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin3 {
+        	padding-left: 100px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in4 {
+        	padding-left: 75px;
+        }
+        p.tightin4 {
+        	padding-left: 75px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin4 {
+        	padding-left: 75px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin4 {
+        	padding-left: 125px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in5 {
+        	padding-left: 100px;
+        }
+        p.tightin5 {
+        	padding-left: 100px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin5 {
+        	padding-left: 100px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin5 {
+        	padding-left: 150px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in6 {
+        	padding-left: 125px;
+        }
+        p.tightin6 {
+        	padding-left: 125px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin6 {
+        	padding-left: 125px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin6 {
+        	padding-left: 175px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in7 {
+        	padding-left: 150px;
+        }
+        p.tightin7 {
+        	padding-left: 150px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin7 {
+        	padding-left: 150px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin7 {
+        	padding-left: 200px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in8 {
+        	padding-left: 175px;
+        }
+        p.tightin8 {
+        	padding-left: 175px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin8 {
+        	padding-left: 175px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin8 {
+        	padding-left: 225px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+        p.in9 {
+        	padding-left: 200px;
+        }
+        p.tightin9 {
+        	padding-left: 200px;
+        	margin-top: 2px;
+        	margin-bottom: 2px;
+        }
+        p.halftightin9 {
+        	padding-left: 200px;
+        	margin-bottom: 2px;
+        }
+        p.hangingin9 {
+        	padding-left: 250px;
+        	text-indent: -50px;
+        	margin-top: 0px;
+        	margin-bottom: 1px;
+        }
+
+        /* (2) Index page layout material */
+
+        /* The periodic table display has "sidebars", usually grey and taller than they
+        are wide; they contain no text. */
+
+        div.periodictablesidebar {
+        	height: 56px;
+        	width: 16px;
+        }
+        .periodictablesidebar a:link { text-decoration: none; }
+        .periodictablesidebar a:visited { text-decoration: none; }
+        .periodictablesidebar a:active { text-decoration: none; }
+
+        /* The "element boxes" are the cells appearing in the periodic-table display
+        on the welcome page of the index: */
+
+        .elementbox {
+        	position: relative;
+        	height: 56px;
+        	width: 56px;
+        	padding: 0px;
+        }
+
+        .elementbox a:link { text-decoration: none; }
+        .elementbox a:visited { text-decoration: none; }
+        .elementbox a:active { text-decoration: none; }
+        .elementbox a:hover { text-decoration: none; }
+        .elementbox:hover {
+        	opacity: 0.6;
+        }
+
+        /* The "small element boxes" look like those, but are smaller, and used on
+        the headings of the content which those original boxes link to: */
+
+        .smallelementbox {
+        	position: relative;
+        	height: 40px;
+        	width: 40px;
+        	padding: 0px;
+        }
+
+        .smallelementbox a:link { text-decoration: none; }
+        .smallelementbox a:visited { text-decoration: none; }
+        .smallelementbox a:active { text-decoration: none; }
+        .smallelementbox a:hover { text-decoration: none; }
+        .smallelementbox:hover {
+        	opacity: 0.6;
+        }
+
+        /* This is a class for the links formed by the element boxes: */
+
+        a.elementlink {
+        	position: absolute;
+        	top: -4px;
+        	left: -1px;
+        	width: 100%;
+        	padding: 14px 0px 14px 1px;
+        	text-align: center;
+        }
+
+        /* Similarly for the "atomic number" - a single digit - in the top left corner
+        of these boxes: */
+
+        div.elementnumber {
+        	position: absolute;
+        	top: 1px;
+        	left: 3px;
+        	text-align: left;
+        }
+
+        /* For the text of the element title, to the right of the element box: */
+
+        div.elementtitle {
+        	position: absolute;
+        	top: 35px;
+        	width: 100%;
+        	text-align: center;
+        }
+
+        /* Used for the book-contents-page style leaders on the Contents element of
+           the index: */
+
+        ul.leaders {
+        	padding: 0;
+        	margin-top: 1px;
+        	margin-bottom: 0;
+        	overflow-x: hidden;
+        	list-style: none}
+        ul.leaders li.leaded:before {
+        	float: left;
+        	width: 0;
+        	white-space: nowrap;
+        	content:
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "
+        	".  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  "}
+        ul.leaders li.leaded span:first-child {
+        	padding-right: 0.33em;
+        }
+        ul.leaders li.leaded span + span {
+        	float: right;
+        	padding-left: 0.33em;
+        }
+        li.indent1 span:first-child {
+        	padding-left: 25px;
+        }
+        li.indent2 span:first-child {
+        	padding-left: 50px;
+        }
+        li.indent3 span:first-child {
+        	padding-left: 75px;
+        }
+        li.indent4 span:first-child {
+        	padding-left: 100px;
+        }
+        li.indent5 span:first-child {
+        	padding-left: 125px;
+        }
+        li.indent6 span:first-child {
+        	padding-left: 150px;
+        }
+        li.indent7 span:first-child {
+        	padding-left: 175px;
+        }
+        li.indent8 span:first-child {
+        	padding-left: 200px;
+        }
+        li.indent9 span:first-child {
+        	padding-left: 225px;
+        }
+
+        li.unleaded:before {
+        	content: "";
+        }
+
+        /* On Registry index pages (such as the Public Library), these are used for
+        download buttons and the like: */
+
+        span.registrybuttons {
+        	height: 20px;
+        	padding: 2px 8px 2px 8px;
+        	margin: 2px;
+        	border:1px solid;
+        	border-radius: 5px;
+        }
+
+        span.registryminibuttons {
+        	height: 14px;
+        	padding: 2px 5px 2px 5px;
+        	margin: 2px;
+        	border:1px solid;
+        	border-radius: 4px;
+        }
+
+        /* Used to hide or display sections in the Registry pages: */
+
+        div.registrysectionitemsopen {
+        	display: block;
+        }
+
+        div.registrysectionitemsclosed {
+        	display: none;
+        }
+
+        /* Hanging indentation for Registry item paragraphs: */
+
+        p.registryitem {
+        	padding-left: 80px;
+        	text-indent: -40px;
+        }
+
+        p.registryaddition {
+        	padding-left: 40px;
+        	text-indent: -40px;
+        }
+
+        -->
+    </style>
+    <script type="text/javascript">
+        function project() {
+            return window.Project;
+        }
+        function showExtra(id, imid) {
+        	if (document.getElementById(id).style.display == 'block') {
+        		document.getElementById(id).style.display = 'none';
+        		document.getElementById(imid).src = 'inform:/extra.png';
+        	} else {
+        		document.getElementById(id).style.display = 'block';
+        		document.getElementById(imid).src = 'inform:/extraclose.png';
+        	}
+        }
+        function openExtra(id, imid) {
+        	document.getElementById(id).style.display = 'block';
+        	document.getElementById(imid).src = 'inform:/extraclose.png';
+        }
+        function closeExtra(id, imid) {
+        	document.getElementById(id).style.display = 'none';
+        	document.getElementById(imid).src = 'inform:/extra.png';
+        }
+        function pasteCode(code) {
+            var myProject = project();
+
+            myProject.selectView('source');
+            myProject.pasteCode(code);
+        }
+
+    </script>
+</head>
+<body>
+    <!--CONTENT BEGINS-->
+    <table CELLPADDING=0 CELLSPACING=0 width="100%" bgcolor="#000000"><tr><TD width=38px height=26px align="center" valign="center"><a href="inform://Extensions/Extensions.html" border=0><img border=0 src="inform:/doc_images/Hookindex.png" border=0></a></td><TD width=38px height=26px align="center" valign="center"></td><td halign="left" valign="center" CELLPADDING=0 CELLSPACING=0><font color="#FFFFFF" size=2>Extensions</font></a></td><TD width=56px height=26px align="right" valign="center"><a href="inform:/index.html" border=0><img border=0 src="inform:/doc_images/Hookup.png" border=0></a></td></tr></table>
+
+    <p><a href="javascript:pasteCode('Include Conversational Defaults by Eric Eve.[=0x000A=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a>&nbsp;<b>Conversational Defaults<span class="extensionindexentry"> by </span>Eric Eve</b></p>
+    <p><span class="smaller">Version 3</span></p>
+    <p>Provides a set of rules to facilitate defining default conversational responses for different conversational commands targeted at various NPCs. This extension requires Conversation Framework.</p>
+    <p></p>
+    </p>
+
+    <p> However assiduous we are in providing conversational responses for things the player may try to tell or ask our NPCs about, we cannot possibly cover them all. Even if one of our NPCs is a banker, it's unlikely that we'll have provided responses to ASK BANKER ABOUT NORTHEN ROCK and ASK BANKER ABOUT LATEST INTEREST RATE CUT and ASK BANKER ABOUT DETAILS OF INTERNET SAVINGS ACCOUNTS. In such cases we need to provide default responses, responses which in practice mean &quot;I have not be programmed to respond to that input&quot; without making our NPCs look too robotic. This extension defines a number of rules and rulebooks to ease the process of defining such default responses. These enable us to write rules of the form:</p>
+
+    <p><blockquote><span class="indexdullblue"> default ask response for the banker:<br>
+     default answer response for the banker:<br>
+     default tell response for the banker:<br>
+     default ask-tell response for the banker:</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> defaullt give response for the banker:<br>
+     default show response for the banker:<br>
+     default give-show response for the banker:</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> default ask-for response for the banker:<br>
+     default yes-no response for the banker:</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> default response for the banker:</span></blockquote>
+
+    <p> Note that there's a hierarchy here. If we define a default ask response and a default tell response for the banker, we don't need a default ask-tell response since it would then never be reached. Either we define separate a default ask response and default tell response (if we want to handle them differently) or we define a default ask-tell response if we want to use the same default response whether the player typed ASK or TELL. Similarly, we can define separate default give and default show responses for an NPC if we want to handle them differently, or a single default give-show response to handle both GIVE and SHOW.</p>
+
+    <p> A slightly subtler point: if we don't define a default answer response for an NPC, a command like ANSWER BANKER THAT FOO or SAY FOO TO BANKER, will first be handled by our default tell response rule (if we've defined one), or failing that by our default ask-tell response rule (if we've defined one), or failing that by a default response rule.</p>
+
+    <p> The default response rule is a catch-all for all the other cases we haven't explicitly defined. If we liked, we could just define a single &quot;default response for banker&quot; rule that handled all conversational commands addressed to the banker for which we haven't defined particular responses.</p>
+
+    <p> Note also that these rules effectively kick in at the report stage. This allows us to define our particular responses at the after stage, e.g.:</p>
+
+    <p><blockquote><span class="indexdullblue"> after asking banker about &quot;savings accounts&quot;:<br>
+     &quot;'We offer a very attractive range of savings accounts,' he assures you, 'indeed, we boast the highest interest rates of any bank in the country. Of course, you understand that [italic type]we[roman type] charge [italic type]you[roman type] the interest for looking after your money.'&quot;</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> after quizzing banker about Pluto Crat:<br>
+     &quot;'You know very well I can't discuss my other clients with you,' he replies sternly, 'bankers have a rigorous code of ethics, you know.'&quot;</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> default ask response for the banker:<br>
+     &quot;'[one of]This really isn't the best time to discuss that[or]I'd rather not talk about that right now[or]You'll need to make another appointment to discuss that[or]I hardly think that's an appropriate question to ask your bank manager[in random order],' he replies.&quot;</span></blockquote>
+
+    <p> An alternative would be to use Conversational Defaults alongside Conversation Responses. Then instead of the above we could write:</p>
+
+    <p><blockquote><span class="indexdullblue"> response of banker when asked about &quot;savings accounts&quot;:<br>
+     &quot;'We offer a very attractive range of savings accounts,' he assures you, 'indeed, we boast the highest interest rates of any bank in the country. Of course, you understand that [italic type]we[roman type] charge [italic type]you[roman type] the interest for looking after your money.'&quot;</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> response of banker when asked about Pluto Crat:<br>
+     &quot;'You know very well I can't discuss my other clients with you,' he replies sternly, 'bankers have a rigorous code of ethics, you know.'&quot;</span></blockquote>
+
+    <p><blockquote><span class="indexdullblue"> default ask response for the banker:<br>
+     &quot;'[one of]This really isn't the best time to discuss that[or]I'd rather not talk about that right now[or]You'll need to make another appointment to discuss that[or]I hardly think that's an appropriate question to ask your bank manager[in random order],' he replies.&quot;</span></blockquote>
+
+    <p> The two examples illustrate these two methods further.</p>
+
+    <p> One other thing to note: our default answer response for the banker would be reached whenever the player enters the command ASK BANKER ABOUT FOO, when we haven't implemented a response for foo, whether the parser matches &quot;ASK BANKER ABOUT FOO&quot; to the asking it about action or the quizzing it about action. Similarly a default tell response is triggered whether we TELL BANKER ABOUT THING or TELL BANKER ABOUT &quot;TOPIC&quot;, and a default ask-for response whether we ASK BANKER FOR THING or ASK BANKER FOR &quot;TOPIC&quot;.</p>
+
+    <p><hr>
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td halign="left" valign="top" cellpadding=0 cellspacing=0 width=38px>
+                <span id=eg1><table border="0" cellspacing="0" cellpadding="0">
+                    <tr class="oval">
+                        <td width=38px height=30px align="left" valign="center">
+                            <a href="Conversational Defaults-eg1.html#eg1" style="text-decoration: none"><div class="paragraph Body" style="line-height: 1px; margin-bottom: 0px; margin-top: 0px; padding-bottom: 0pt; padding-top: 0px; text-align: center;">
+                                <span class="extensionexampleletter">A</span></div>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+                </span>
+            </td>
+            <td cellpadding=0 cellspacing=0 halign="left" valign="top">
+                <a href="Conversational Defaults-eg1.html#eg1" style="text-decoration: none"><img border="0" src='inform:/doc_images/asterisk.png'><b><span class="indexdarkgrey">&nbsp;Example&nbsp;</span><span class="indexblack">Sisko's Briefing</span></b></a><br>
+                <p>A brief conversation with defaults.</p>
+
+            </td>
+        </tr>
+    </table>
+    </p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p></p>
+
+    <p><hr>
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td halign="left" valign="top" cellpadding=0 cellspacing=0 width=38px>
+                <span id=eg2><table border="0" cellspacing="0" cellpadding="0">
+                    <tr class="oval">
+                        <td width=38px height=30px align="left" valign="center">
+                            <a href="Conversational Defaults.html#eg2" style="text-decoration: none"><div class="paragraph Body" style="line-height: 1px; margin-bottom: 0px; margin-top: 0px; padding-bottom: 0pt; padding-top: 0px; text-align: center;">
+                                <span class="extensionexampleletter">B</span></div>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+                </span>
+            </td>
+            <td cellpadding=0 cellspacing=0 halign="left" valign="top">
+                <a href="Conversational Defaults.html#eg2" style="text-decoration: none"><img border="0" src='inform:/doc_images/asterisk.png'><b><span class="indexdarkgrey">&nbsp;Example&nbsp;</span><span class="indexblack">Sisko's Extended Briefing</span></b></a><br>
+                <p>A longer version of the first example, using the Conversation Responses extension as well.</p>
+
+            </td>
+        </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" class="extensionexample" width=100%>
+        <tr>
+            <td align="left" valign="top">
+                <p></p>
+
+                <p><blockquote><span class="indexdullblue"><a href="javascript:pasteCode('[=0x0022=]Sisko[=0x0027=]s Extended Briefing[=0x0022=][=0x000A=][=0x000A=][=0x000A=]Include Conversation Responses by Eric Eve.[=0x000A=]Include Conversational Defaults by Eric Eve.[=0x000A=][=0x000A=][=0x000A=]Captain Sisko[=0x0027=]s Office is a Room.[=0x000A=][=0x0022=]Behind the desk a pair of large windows overlook the stars that seem to surround the wormhole.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]The large desk is a scenery supporter in Captain Sisko[=0x0027=]s Office.[=0x000A=]A ball is on the large desk.[=0x000A=][=0x000A=][=0x000A=]Benjamin Sisko is a man in Captain Sisko[=0x0027=]s Office. [=0x0022=]Captain Sisko is seated behind his desk.[=0x0022=][=0x000A=]Understand [=0x0022=]ben[=0x0022=] or [=0x0022=]captain[=0x0022=] as Benjamin Sisko.[=0x000A=][=0x000A=][=0x000A=]response of Sisko when asked about the dominion war:[=0x000A=]say [=0x0022=][=0x0027=]It[=0x0027=]s not going as well as I[=0x0027=]d like; we[=0x0027=]re taking far too many casualties,[=0x0027=] he tells you.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]response of Sisko when asked about Gul Dukat:[=0x000A=]say [=0x0022=][=0x0027=]He[=0x0027=]s a very evil man,[=0x0027=] Sisko opines.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]response of Sisko when asked about Sisko:[=0x000A=]say [=0x0022=][=0x0027=]I am quite well, thank you,[=0x0027=] he assures you.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]response of Sisko when asked-or-told about Quark:[=0x000A=]say [=0x0022=][=0x0027=]Up to his usual tricks, no doubt,[=0x0027=] he nods.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]response of Sisko when asked for [=0x0022=]advice[=0x0022=]:[=0x000A=]say [=0x0022=][=0x0027=]I think you should make up your own mind,[=0x0027=] he tells you.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]response of Sisko when asked about [=0x0022=]bajor[=0x0022=]:[=0x000A=]say [=0x0022=][=0x0027=]I think it[=0x0027=]s a fascinating planet,[=0x0027=] he beams.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]default ask response for Sisko:[=0x000A=]say [=0x0022=][=0x0027=][one of]Let[=0x0027=]s talk about that some other time,[=0x0027=] he suggests[or]I don[=0x0027=]t think I want to tell you about that right now,[=0x0027=] he replies[or][=0x0027=]It would take too long to explain,[=0x0027=] he tells you[in random order].[=0x0022=][=0x000A=][=0x000A=][=0x000A=]default tell response for Sisko:[=0x000A=]say [=0x0022=][=0x0027=][one of]That[=0x0027=]s very interesting, I[=0x0027=]m sure,[=0x0027=] he remarks[or]Perhaps you should tell me more about that on another occasion,[=0x0027=] he suggests[or]I don[=0x0027=]t think I want to hear about that right now,[=0x0027=] he complains[in random order].[=0x0022=][=0x000A=][=0x000A=][=0x000A=]default ask-for response for Sisko:[=0x000A=]say [=0x0022=][=0x0027=]I[=0x0027=]m afraid I can[=0x0027=]t help you with that just now,[=0x0027=] he tells you.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]default yes-no response for Sisko:[=0x000A=]say [=0x0022=][=0x0027=]I wasn[=0x0027=]t aware I had just asked you something,[=0x0027=] Sisko remarks.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]default give-show response for Sisko:[=0x000A=]now the noun is on the large desk;[=0x000A=]say [=0x0022=][=0x0027=]I[=0x0027=]ll take that, thank you very much,[=0x0027=] he says, putting [the noun] [if the noun is the ball]back [end if]on the desk.[=0x0022=][=0x000A=][=0x000A=][=0x000A=]The player is carrying a status report.[=0x000A=][=0x000A=][=0x000A=]The dominion war is a familiar thing.[=0x000A=]Gul Dukat is a familiar man.[=0x000A=]Quark is a familiar man.[=0x000A=][=0x000A=][=0x000A=]Test me with [=0x0022=]a sisko/a war/a quark/t quark/ask for advice/ask for money/a dukat/a bashir/t dax/a bajor/t emissary/no/show Sisko the ball/show report[=0x0022=][=0x000A=][=0x000A=]')"><img border=0 src=inform:/doc_images/paste.png></a> &quot;Sisko's Extended Briefing&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> Include Conversation Responses by Eric Eve.<br>
+                 Include Conversational Defaults by Eric Eve.</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> Captain Sisko's Office is a Room.<br>
+                 &quot;Behind the desk a pair of large windows overlook the stars that seem to surround the wormhole.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> The large desk is a scenery supporter in Captain Sisko's Office.<br>
+                 A ball is on the large desk.</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> Benjamin Sisko is a man in Captain Sisko's Office. &quot;Captain Sisko is seated behind his desk.&quot;<br>
+                 Understand &quot;ben&quot; or &quot;captain&quot; as Benjamin Sisko.</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> response of Sisko when asked about the dominion war:<br>
+                 say &quot;'It's not going as well as I'd like; we're taking far too many casualties,' he tells you.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> response of Sisko when asked about Gul Dukat:<br>
+                 say &quot;'He's a very evil man,' Sisko opines.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> response of Sisko when asked about Sisko:<br>
+                 say &quot;'I am quite well, thank you,' he assures you.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> response of Sisko when asked-or-told about Quark:<br>
+                 say &quot;'Up to his usual tricks, no doubt,' he nods.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> response of Sisko when asked for &quot;advice&quot;:<br>
+                 say &quot;'I think you should make up your own mind,' he tells you.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> response of Sisko when asked about &quot;bajor&quot;:<br>
+                 say &quot;'I think it's a fascinating planet,' he beams.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> default ask response for Sisko:<br>
+                 say &quot;'[one of]Let's talk about that some other time,' he suggests[or]I don't think I want to tell you about that right now,' he replies[or]'It would take too long to explain,' he tells you[in random order].&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> default tell response for Sisko:<br>
+                 say &quot;'[one of]That's very interesting, I'm sure,' he remarks[or]Perhaps you should tell me more about that on another occasion,' he suggests[or]I don't think I want to hear about that right now,' he complains[in random order].&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> default ask-for response for Sisko:<br>
+                 say &quot;'I'm afraid I can't help you with that just now,' he tells you.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> default yes-no response for Sisko:<br>
+                 say &quot;'I wasn't aware I had just asked you something,' Sisko remarks.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> default give-show response for Sisko:<br>
+                 now the noun is on the large desk;<br>
+                 say &quot;'I'll take that, thank you very much,' he says, putting [the noun] [if the noun is the ball]back [end if]on the desk.&quot;</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> The player is carrying a status report.</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> The dominion war is a familiar thing.<br>
+                 Gul Dukat is a familiar man.<br>
+                 Quark is a familiar man.</span></blockquote>
+
+                <p><blockquote><span class="indexdullblue"> Test me with &quot;a sisko/a war/a quark/t quark/ask for advice/ask for money/a dukat/a bashir/t dax/a bajor/t emissary/no/show Sisko the ball/show report&quot;</span></blockquote>
+
+                <p></p>
+
+            </td>
+        </tr>
+    </table>
+    </p>
+
+    <p>
+    <!--CONTENT ENDS-->
+</body>
+</html>

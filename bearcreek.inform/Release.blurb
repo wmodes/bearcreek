@@ -1,0 +1,59 @@
+! Blurb file created by Inform Inform 10.2.0 (build 6V71)
+
+status "/Users/wmodes/dev/inform/inform7/Internal/HTML/CblorbModel.html" "/Users/wmodes/dev/bearcreek/bearcreek.inform/Build/StatusCblorb.html"
+
+
+! Identification
+
+project folder "/Users/wmodes/dev/bearcreek/bearcreek.inform"
+release to "/Users/wmodes/dev/bearcreek/bearcreek.materials/Release"
+
+! Blorb instructions
+
+storyfile leafname "Bear Creek.gblorb"
+storyfile "/Users/wmodes/dev/bearcreek/bearcreek.inform/Build/output.ulx" include
+ifiction "/Users/wmodes/dev/bearcreek/bearcreek.inform/Metadata.iFiction" include
+cover "/Users/wmodes/dev/bearcreek/bearcreek.materials/Cover.jpg"
+picture 1 "/Users/wmodes/dev/bearcreek/bearcreek.materials/Cover.jpg"
+
+! Placeholder variables
+
+placeholder [IFID] = "8AD605CF-A890-4D31-A319-5E5D246F9D5F"
+placeholder [RELEASE] = "2"
+placeholder [YEAR] = "2020"
+placeholder [TITLE] = "Bear Creek"
+placeholder [AUTHOR] = "Wes Modes"
+placeholder [BLURB] = "Bear Creek, August 1975.<br/>Looking back, it was that summer, or maybe just that one day that changed everything. KC and the Sunshine Band was on the radio and you were eight years old. A curious daydreamer, on the verge of learning what lay beyond the boundaries of your own little world, and nothing was certain about whether you'd survive the journey."
+
+! Other material to release
+
+ifiction
+
+! Website instructions
+
+placeholder [ENCODEDSTORYFILE] = "Bear Creek.gblorb.js"
+template path "/Users/wmodes/dev/bearcreek/bearcreek.materials/Templates"
+template path "/Users/wmodes/dev/bearcreek/bearcreek.materials/Templates"
+template path "/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Templates"
+template path "/Users/wmodes/dev/inform/inform7/Internal/Templates"
+placeholder [INTERPRETERSCRIPTS] = " "
+interpreter "Quixe" "g"
+base64 "/Users/wmodes/dev/bearcreek/bearcreek.inform/Build/output.ulx" to "/Users/wmodes/dev/bearcreek/bearcreek.materials/Release/interpreter/Bear Creek.gblorb.js"
+
+! Website instructions
+
+template path "/Users/wmodes/dev/bearcreek/bearcreek.materials/Templates"
+template path "/Users/wmodes/dev/bearcreek/bearcreek.materials/Templates"
+template path "/Users/wmodes/dev/bearcreek/bearcreek.materials/Extensions/Templates"
+template path "/Users/wmodes/dev/inform/inform7/Internal/Templates"
+css
+website "Standard"
+status instruction ||&nbsp;<a href="source:story.ni#line329"><img border=0 src=inform:/doc_images/Reveal.png></a>||
+status instruction ||&nbsp;<a href="source:story.ni#line330"><img border=0 src=inform:/doc_images/Reveal.png></a>||
+status instruction ||&nbsp;<a href="source:story.ni#line331"><img border=0 src=inform:/doc_images/Reveal.png></a>||
+status instruction ||&nbsp;<a href="source:story.ni#line332"><img border=0 src=inform:/doc_images/Reveal.png></a>||
+status alternative ||Using 'Release along with a file of "Such-and-Such" called "whatever.pdf"', perhaps to add a manual, or a welcoming note&nbsp;<a href=inform:/doc399.html><img border=0 src=inform:/doc_images/help.png></a>||
+status alternative ||Using 'Release along with the source text'&nbsp;<a href=inform:/doc410.html><img border=0 src=inform:/doc_images/help.png></a>||
+status alternative ||Using 'Release along with a solution'&nbsp;<a href=inform:/doc409.html><img border=0 src=inform:/doc_images/help.png></a>||
+status alternative ||Using 'Release along with the introductory booklet'&nbsp;<a href=inform:/doc402.html><img border=0 src=inform:/doc_images/help.png></a>||
+status alternative ||Using 'Release along with the introductory postcard'&nbsp;<a href=inform:/doc402.html><img border=0 src=inform:/doc_images/help.png></a>||
