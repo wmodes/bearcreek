@@ -13,7 +13,7 @@ Here you can play the story online, super convenient, but not my recommendation.
 
 [Click here to experience part 1 of Bear Creek online.](https://modes.io/bear-creek/)
 
-**Version 2 is a work in progress, expected to be released within the next several months.**
+**Version 2.0, the complete story in three parts, is a work in progress, expected to be released within the next several months.**
 
 While playing in a browser is certainly convenient, it is typographically painful to this author.  A better alternative is to download software that presents interactive fictions on your desktop.  I highly recommend the typographically beautiful Lectrote which can play a whole host of different format IF games. This is a bit more complicated, but in my opinion, well worth it.
 
