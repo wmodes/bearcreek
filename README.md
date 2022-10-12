@@ -33,4 +33,4 @@ Also, here's a handy cheat sheet:
 
 ![IF Cheat Card](https://github.com/wmodes/bearcreek/blob/main/Extras/play-if-card.png?raw=true)
 
-Traditionally, in parser-based fiction there are puzzles that occasionally challenge your progress through the narrative. Mostly, I think puzzles get in the way of the narrative.  That said, Bear Creek has some features that may be considered very very light puzzles. My best suggestion is this: Try your best to inhabit the world and the player character, forgetting best you can that this is a “game.”
+Traditionally, in parser-based fiction there are puzzles that occasionally challenge your progress through the narrative. Many IF authors (including this one) think puzzles can get in the way of the narrative.  That said, Bear Creek has some features that may be considered very very light puzzles. My best suggestion is this: Try your best to inhabit the world and the player character, forgetting best you can that this is a “game.”
