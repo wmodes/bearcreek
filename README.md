@@ -1,7 +1,7 @@
 # Bear Creek
 *Version 2.0.1*
 
-Bear Creek is interactive fiction, a coming-of-age story from a child’s point-of-view.
+Bear Creek is interactive fiction, a coming-of-age story from a unique point-of-view.
 
 > *Bear Creek, August 1975.*
 >
