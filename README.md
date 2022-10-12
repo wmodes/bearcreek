@@ -3,9 +3,9 @@
 
 Bear Creek is interactive fiction, a coming-of-age story from a child’s point-of-view.
 
-> *Bear Creek, August 1975.
+> *Bear Creek, August 1975.*
 >
-> Looking back, it was that summer, or maybe just that one day that changed everything. KC and the Sunshine Band was on the radio and you were eight years old. A curious daydreamer, on the verge of learning what lay beyond the boundaries of your own little world, and nothing was certain about whether you’d survive the journey.*
+> *Looking back, it was that summer, or maybe just that one day that changed everything. KC and the Sunshine Band was on the radio and you were eight years old. A curious daydreamer, on the verge of learning what lay beyond the boundaries of your own little world, and nothing was certain about whether you’d survive the journey.*
 
 ## The Game
 
