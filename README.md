@@ -13,7 +13,7 @@ Here you can play the story online, super convenient, but not my recommendation.
 
 [Click here to experience part 1 of Bear Creek online.](https://modes.io/bear-creek/)
 
-While playing in a browser is certainly convenient, it is typographically painful to this author.  A better alternative is to download software that presents interactive fictions on your desktop.  I highly recommend the typographically beautiful Gargoyle which can play a whole host of different format IF games.. This is more complicated, but in my opinion, well worth it.
+While playing in a browser is certainly convenient, it is typographically painful to this author.  A better alternative is to download software that presents interactive fictions on your desktop.  I highly recommend the typographically beautiful Lectrote which can play a whole host of different format IF games. This is a bit more complicated, but in my opinion, well worth it.
 
 1. Download and install [Lectrote](https://github.com/erkyrath/lectrote/releases), available for Linux, Mac and PC.
 2. Download the Bear Creek story file (available soon)
