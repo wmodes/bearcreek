@@ -29,6 +29,6 @@ If you are new to parser-based interactive fiction, you may be challenged in int
 
 Also, here's a handy cheat sheet:
 
-![IF Cheat Card](https://github.com/wmodes/bearcreek/blob/main/bearcreek.materials/play-if-card.png?raw=true)
+![IF Cheat Card](https://github.com/wmodes/bearcreek/blob/main/Extras/play-if-card.png?raw=true)
 
 Traditionally, in parser-based fiction there are puzzles that occasionally challenge your progress through the narrative. Mostly, I think puzzles get in the way of the narrative.  That said, Bear Creek has some features that may be considered very very light puzzles. My best suggestion is this: Try your best to inhabit the world and the player character, forgetting best you can that this is a “game.”
