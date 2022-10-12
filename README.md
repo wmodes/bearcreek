@@ -21,6 +21,8 @@ While playing a browser is certainly convenient, it is typographically painful t
 
 ## Soundtrack
 
+Feel free to listen to this four hour soundtrack created especially for Bear Creek while you play.
+
 [![Screenshot of Spotify soundtrack playlist](https://github.com/wmodes/bearcreek/blob/main/Extras/spotify-playlist.png?raw=true)](https://open.spotify.com/playlist/6aYofBvKeIRwJUNq7CiJVG?si=b75792acb6f04ef0)
 
 ## A Word for Newbies
