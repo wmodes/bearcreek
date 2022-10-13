@@ -106,6 +106,14 @@ Part - Smarter Parser
 
 Include Smarter Parser by Aaron Reed.
 
+Part - Response Assistant
+
+Include Response Assistant by Aaron Reed.
+
+[Type "track responses" to append each response seen with a numbered tag. 
+You can then type "response 1" (and so on) to see details about the current form of the message, and a template you can copy and paste in your source text to change it. 
+Type "track off" to stop tracking responses.]
+
 Chapter - Configuration
 
 Corrections enabled is true.
@@ -320,6 +328,18 @@ To display the reborn command:
 	[say ">[reborn command in upper case]".]
 	do nothing.
 
+Chapter - Smarter Messages
+
+The parser error internal rule response (E) is "Oh? Do you see that here?".
+
+The can't go that way rule response (A) is "Which direction is that? You might want to use landmarks to navigate".
+
+The can't eat unless edible rule response (A) is "[one of]Blecch[or]Ugh[or]Bleurgh[or]Ew[at random].".
+
+The examine undescribed things rule response (A) is "[one of]It is what it is[or]Eh, nothing specialfo[at random]."
+
+The can't reach inside rooms rule response (A) is "You can't get there from here."
+
 
 
 Book - Bibliographical information
@@ -381,10 +401,8 @@ Chapter - Can't See That
 
 [Remove all the messages that clarify the parser's choice of something]
 Include (-
-Replace PrintInferredCommand;
-
 [ PrintInferredCommand; ];
--) before "Parser.i6t".
+-) replacing "PrintInferredCommand".
 
 
 
@@ -1385,6 +1403,8 @@ Understand
 
 Carry out fail_person_navigating:
 	say cant_find_that;
+	
+The can't reach inside rooms rule does nothing if person_navigating.
 
 
 Part - Landmarks and Navpoints
@@ -2361,9 +2381,9 @@ Instead of room_navigating or going during Scene_Long_Arm_of_the_Law:
 	else:
 		increment index of seq_long_arm_of_the_law;
 		now lee_support of player is _decided_no;
-		say "You feel bad leaving Lee, but you're sure he'll be okay. You let grandpa lead you back toward home.".
+		say "You feel bad leaving Lee, but you're hope he'll be okay. You let grandpa lead you back toward home.".
 
-Every turn while lee_support of player is _facing:
+Every turn while lee_support of player is _uncertain:
 	say "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]".
 
 Instead of waiting during Scene_Long_Arm_of_the_Law:
@@ -2382,9 +2402,9 @@ Instead of waiting during Scene_Long_Arm_of_the_Law:
 
 [Things that make us decide to support Lee:
 	Saying no, telling about night in woods, yelling, attacking Sheriff]
-Instead of telling or yelling or saying no during Scene_Long_Arm_of_the_Law:
+Instead of informing or telling or yelling or saying no during Scene_Long_Arm_of_the_Law:
 	decide_to_support_lee.
-Instead of attacking Sheriff when lee_support of player is _facing:
+Instead of attacking Sheriff when lee_support of player is _uncertain:
   say "You're not sure violence is the answer, though it might make you feel better. But you would probably end up worse than Lee.";
 	decide_to_support_lee.
 
@@ -2834,125 +2854,6 @@ To take one step on this journey for (this_journey - an npc_journey):
 			if rule succeeded:
 				[this_journey is not in-progress]
 				now this_journey is not in-progress;
-
-
-[
-	[
-		Determine if player is ahead or behind
-	]
-	let npc_moves be the number of moves from the location of npc to destination;
-	let player_moves be the number of moves from the location of the player to destination;
-	[if player is ahead, do catchup action immediately]
-	if player_moves is less than npc_moves:
-		move npc to location of player;
-		follow the action_catching_up of this_journey;
-	[if player is behind and if waits_for_player, wait]
-	else if player_moves is more than npc_moves:
-		now the player_status of this journey is behind;
-	[if here, do stuff here]
-	else:
-		now the player_status of this journey is here;
-	[
-		increment the counter (time_here)
-	]
-	[we increment time_here if:
-		npc doesn't wait for player, or
-		npc is not at the origin, or
-		npc waits for player and they are there]
-	if waits_for_player of this_journey is false or location of npc is not origin:
-		increment time_here of this_journey;
-	else if waits_for_player of this_journey is true and location of npc encloses player:
-		increment time_here of this_journey;
-	say "(DEBUG: NPC Journey of [npc] from [origin] to [destination][line break][npc] in [location of npc] for [time_here of this_journey] turns)[line break]";
-	[
-		if npc is still at origin
-	]
-	if location of npc is origin:
-		[do action_at_start (which may include action before player arrives)]
-		follow the action_at_start of this_journey;
-		[if rule succeeds continue]
-		if rule failed:
-			stop the action;
-	[
-		if npc arrives at destination
-	]
-	if location of npc is destination:
-		[do action_at_end]
-		follow the action_at_end of this_journey;
-		[if rule succeeds, stop the journey]
-		if rule succeeded:
-			[this_journey is not in-progress]
-			now this_journey is not in-progress;
-		stop the action;
-	[make sure npc shows up in room descriptions]
-	now npc of this_journey is described;
-	[if NPC is interrupted]
-	if npc is interrupted on this_journey:
-		if time_here of this_journey >=	 wait_time of this_journey:
-			[let's not increment time_here]
-			now time_here of this_journey is wait_time of this_journey minus one;
-		[don't move NPC]
-		stop the action;
-	[if we are not ready to move]
-	if not npc is ready to move on this_journey:
-		[don't move NPC]
-		stop the action;
-	[
-		npc is ready to move
-	]
-	[remember where we are for later]
-	let this_room be the location of npc;
-	[get the heading to the destination]
-	let heading be the best route from location of npc to destination;
-	let next_room be the room heading from location of npc;
-	[if player is not here]
-	if player is not in this_room:
-		[should NPC wait for player]
-		if waits_for_player of this_journey is true:
-			[if player is behind NPC we wait]
-			[lets find out if they are ahead or behind NPC]
-			[determine if player is in direction of destination]
-			let player_heading be the best route from location of npc to location of player;
-			let next_room_to_player be the room player_heading from location of npc;
-			[if player is behind npc]
-			if next_room is not next_room_to_player:
-				[and NPC has not waited TOO long]
-				if time_here of this_journey is less than max_wait of this_journey:
-					[don't move NPC]
-					[say "(DEBUG: [npc] is waiting for you and will wait for [max_wait of this_journey] turns)[line break]";]
-					stop the action;
-				[else:
-					say "(DEBUG: [npc] is tired of waiting for you)[line break]";]
-			[else:
-				say "(DEBUG: [npc] thinks you are up ahead)[line break]";]
-		[else:
-			say "(DEBUG: [npc] is not waiting for you)[line break]";]
-	[
-		when we get here, NPC is ready to move and either:
-			a) player is visible, or
-			b) NPC doesn't wait, or
-			c) player is ahead of NPC, or
-			d) NPC has waited long enough
-		so we move the NPC
-	]
-	[if player is in NPC's current location]
-	if player is in this_room:
-		[if npc has waited too long]
-		if time_here of this_journey >=  wait_time of this_journey and this_room is not origin:
-			[do grumpy waiting action]
-			follow the action_after_waiting of this_journey;
-		[we say/do our normal moving out action]
-		follow the action_before_moving of this_journey;
-	[move npc]
-	say "(DEBUG: [npc] is moving to [next_room])[line break]";
-	try silently npc going heading;
-	[time_here = 0]
-	now time_here of this_journey is zero;
-	[if player is in new location, we say/do catchup action]
-	if player is in next_room:
-		[we say/do catchup action]
-		follow the action_catching_up of this_journey;
-]
 
 To decide if npc is interrupted on (this_journey - a npc_journey):
 	[if interrupt rule succeeds, no]
@@ -6803,7 +6704,7 @@ Yourself can be warned_by_grandma.
 Yourself can be free_to_wander.
 
 A decision is a kind of value.
-	The decisions are _unfaced, _facing, _decided_maybe, _decided_no, and _decided_yes.
+	The decisions are _unfaced, _uncertain, _decided_maybe, _decided_no, and _decided_yes.
 	A decision is usually _unfaced.
 Yourself has a decision called lee_support.
 Yourself has a decision called stepdad_decision.
@@ -8157,12 +8058,12 @@ This is the journey_sharon_walk_end rule:
 	if time_here of journey_sharon_walk is 1:
 		Now Honey is in Room_Grassy_Field;
 		Now Grandpa is in Room_Grassy_Field;
-		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your surprise, you start to cry.";
+		Report Grandpa saying "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops and lets out a deep breath. He looks relieved. He looks at the Cat Lady for a long moment, 'You did it, Sharon. You have my gratitude.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your surprise, you start to cry.";
 		rule fails;
 		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
 	else if time_here of journey_sharon_walk is 2:
 		Now Lee is in Room_Grassy_Field;
-		Report Sharon saying "'He was on the other side of the creek, near the woods,' Sharon says.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug.[paragraph break]Lee arrives from the crossing, starts to say, 'I looked out by...' and sees you and stops and lets out a deep breath. He looks relieved. You are suddenly aware that everyone was out looking for you and worried to death.";
+		Report Sharon saying "'He was on the other side of the creek, near the woods,' Sharon says.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
 		rule fails;
 	else if time_here of journey_sharon_walk is 3:
 		Report Sharon saying "'I think it's time I headed home,' Sharon says looking suddenly very tired.[paragraph break]'And maybe time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' He heads back to the trailer park with Sharon right behind him.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. Grandpa carries you all the way to...";
@@ -8580,20 +8481,20 @@ This is the journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
 		Now Honey is in Room_Grassy_Field;
 		Now Grandpa is in Room_Grassy_Field;
-		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Lee: 'I found him out in the blackberry brambles.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your embarrassment, you start to cry.";
+		Report Grandpa saying "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutchs her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more queitly looking at Lee, 'Thank you.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Lee: 'I found him out in the blackberry brambles.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your embarrassment, you start to cry.";
 		rule fails;
 		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
 	else if time_here of journey_lee_walk is 2:
 		Now Sharon is in Room_Grassy_Field;
-		Report Lee saying "'He was down on the other side of the creek, by the willows,' Lee says, carefully not looking at your tears.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug.[paragraph break]The Cat Lady arrives from near the tracks. She's dressed differently, like for an expedition. She starts to say, 'I went through the woods...' and sees you and clutchs her chest. She looks woozy and says 'Oh my.' You are suddenly aware that everyone was out looking for you and worried to death.";
+		Report Lee saying "'He was down on the other side of the creek, by the willows,' Lee says, carefully not looking at your tears.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
 		rule fails;
 	else if time_here of journey_lee_walk is 3:
+		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. He carries you all the way to...[paragraph break][bold type][location][roman type]";
 		Now Sharon is in Room_Sharons_Trailer;
-		Now Lee is in Room_Lees_Trailer;
 		Now Honey is in Room_B_Loop;
 		Now Grandpa is in Room_B_Loop;
 		Move player to Room_B_Loop, without printing a room description;
-		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. He carries you all the way to...[paragraph break][bold type][location][roman type]";
+		Now Lee is in Room_Lees_Trailer;
 		rule succeeds;
 
 
@@ -8826,7 +8727,7 @@ This is the seq_mary_sandwich_interrupt_test rule:
 Part - the Sheriff
 
 The Sheriff is an undescribed _male man.
-	The printed name is "the Sheriff".
+	The printed name is "The Sheriff".
 	The description is "The sheriff is an older guy about grampa's age maybe, but is still a big guy. He looks like he used to be a football player. He has big glasses that are kind of lopsided and a hat like smokey the bear.".
 	Understand "sherriff/sherrif/deputy/police/officer/pig/bill/hat/glasses" as The Sheriff.
 	The scent is "fear".
@@ -8982,7 +8883,7 @@ This is the seq_long_arm_of_the_law_handler rule:
 		now Sheriff is in Sheriff's car;
 		now Sheriff's car is in Room_B_Loop;
 		[grandpa puts you down and Honey and Grandpa talk to you.]
-		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see they made it back home.'" at priority 2;
+		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see you made it back home.'" at priority 2;
 		[sheriff shows up]
 	else if index is 2:
 		now Lee is in Room_C_Loop;
@@ -8992,16 +8893,18 @@ This is the seq_long_arm_of_the_law_handler rule:
 	else if index is 3:
 		Move player to Room_C_Loop, without printing a room description;
 		now Lee is in Sheriff's Car;
+		now honey is in Room_C_Loop;
+		now grandpa is in Room_C_Loop;
 		now current interlocutor is Sheriff;
 		queue_report "Honey and grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][bold type][location][roman type][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
 	else if index is 4:
 		[Sheriff tries to bully narator into implicating Lee]
 		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Shefiff says a little out of breath to Honey and grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
-		now lee_support of player is _facing;
+		now lee_support of player is _uncertain;
 	else if index is 5:
 	  [we hang at this step until either player talks to sheriff or leaves]
 		queue_report "The sheriff is still filling out his forms. He asks Lee an occasional question, but Lee remains silent." with priority 2;
-		if lee_support of player is _facing:
+		if lee_support of player is _uncertain:
 			decrement index of seq_long_arm_of_the_law;
 	else if index is 6:
 		move player to Room_B_Loop, without printing a room description;
@@ -9043,7 +8946,7 @@ This is the seq_parents_arrive_handler rule:
 		now stepdad is in Room_B_Loop;
 		queue_report "You are still holding grandpa when mom's Camaro pulls into B Loop. Normally, you would run to your mom for comfort, but something's changed. You dry your eyes, pull away from grandpa, and strand up straight. Mom and your stepdad get out of the car and run up to you. Your mom gives you a huge hug and when she lets go, she looks at grandpa and says, 'Oh dad.' There are tears in her eyes when grandpa hugs her. You realize in this moment that that your mom is usually strong for you, and this is your chance to be strong for her. You start to tell her about your adventures.[paragraph break]Mark is standing around looking uncomfortable. 'Do you know how much you worried your mom,' he says to you. [paragraph break]'Oh, Mark, give it a rest,' mom says. Mark shoots her a look. 'We drove all night to get here,' mom tells your grandparents. 'We're shot. Do you have coffee?' [paragraph break]Aunt Mary, who's been hovering anxiously in the background, says 'I'll go make some coffee,' and goes inside." with priority 2;
 	else if index is 2:
-		queue_report "'Honey, we were so worried,' your mom says hugging you again. She straightens up looking you up and down. Your mom looks from Honey to Grandpa as if to ask, 'What happened?'[paragraph break]'It seems Jo wandered away and got lost in the woods and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was discovered with the help of Sharon and Lee.'" with priority 2;
+		queue_report "'Honey, we were so worried,' your mom says hugging you again. She straightens up looking you up and down. Your mom looks from Honey to Grandpa as if to ask, 'What happened?'[paragraph break]'It seems Jo wandered away, got lost, and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was found by Sharon and Lee.'" with priority 2;
 	else if index is 3:
 		queue_report "sdjfasdjfadsjfjafsdjfsfsksf" with priority 2;
 	else if index is 4:
