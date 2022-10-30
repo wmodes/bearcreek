@@ -6349,14 +6349,19 @@ The available_exits of Room_Dream_Grassy_Field are "The gate to the trailer park
 
 Section - Objects and People
 
+[replace dream_sharon with real sharon]
 Dream_sharon is a undescribed _female woman in Room_Dream_Grassy_Field.
 The description of the dream_sharon is "This is the Cat Lady alright, though none of her cats are here at the moment. She's definitely not wearing a bathrobe now, but a fancy dress that swishes around her legs and high heels. Her hair is in tight curls and her makeup is elegant. She looks beautiful. She stares in to Lee's eyes[if dream_sheriff is not visible]. What's going to happen?[else] as they dance.[end if]".
 Understand "cat lady", "sharon/curls/makeup", "high heels", "evening/-- dress" as dream_sharon.
 
+[replace dream_lee with real lee]
 Dream_lee is a undescribed _male man in Room_Dream_Grassy_Field.
 The description of the dream_lee is "Lee has his long black hair pulled back in a neat ponytail. He's not wearing his army pants, but a fancy tuxedo and a bowtie. He looks quite handsome. He's staring intensely at the Cat Lady[if dream_sheriff is not visible]. What is happening?[else] as they Tango.[end if]".
 Understand "lee/ponytail/tuxedo/tie/bowtie" as dream_lee.
 
+[TODO: Replace dream_sheriff with real sheriff - prevents 
+>follow sherrif
+Who do you mean, The Sheriff or The Sheriff]
 Dream_sheriff is an undescribed _male man.
 THe printed name is "The Sheriff".
 The description of dream_sheriff is "The sheriff sits on the hood of his car with his big smokey the bear hat looking serious, and playing the accordion with gusto."
@@ -6443,7 +6448,7 @@ The available_exits of Room_Dream_Railroad_Tracks is "The grassy field and the t
 
 Section - Objects
 
-Some dream_train_tracks are an enterable supporter in Room_Dream_Railroad_Tracks.
+Some dream_train_tracks are an enterable supporter in Room_ Railroad_Tracks.
 	The printed name is "train tracks".
 	The description of train tracks is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock."
 	Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as dream_train_tracks.
@@ -8955,6 +8960,8 @@ This is the seq_parents_arrive_handler rule:
 		do nothing;
 	else if index is 6:
 		do nothing;
+
+[ START HERE ]
 
 This is the seq_parents_arrive_interrupt_test rule:
 	[ Nothing stops this rule. ]
