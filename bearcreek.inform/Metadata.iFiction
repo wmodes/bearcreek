@@ -24,22 +24,22 @@
         <releases>
             <attached>
                 <release>
-                    <releasedate>2022-10-12</releasedate>
+                    <releasedate>2022-10-31</releasedate>
                     <version>2</version>
                     <compiler>Inform 7</compiler>
-                    <compilerversion>Inform 10.1.0 (build )</compilerversion>
+                    <compilerversion>6M62</compilerversion>
                 </release>
             </attached>
         </releases>
         <colophon>
             <generator>Inform 7</generator>
-            <generatorversion>Inform 10.1.0 (build )</generatorversion>
-            <originated>2022-10-12</originated>
+            <generatorversion>6M62</generatorversion>
+            <originated>2022-10-31</originated>
         </colophon>
         <glulx>
-            <serial>221012</serial>
+            <serial>221031</serial>
             <release>2</release>
-            <compiler>Inform Inform 10.1.0 (build )</compiler>
+            <compiler>Inform 7 build 6M62</compiler>
             <coverpicture>1</coverpicture>
         </glulx>
     </story>

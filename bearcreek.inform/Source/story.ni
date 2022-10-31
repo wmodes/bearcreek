@@ -79,6 +79,7 @@ Book - Extensions
 Part - Screen Effects
 
 Include Basic Screen Effects by Emily Short.
+[ Include Vorple Screen Effects by Juhana Leinonen.  ]
 
 Include Glulx Text Effects by Emily Short.
 
@@ -400,10 +401,14 @@ Chapter - Can't See That
 [The parser error internal rule response (E) is "[We] look around, but don't see that anywhere around here."]
 
 [Remove all the messages that clarify the parser's choice of something]
-Include (-
+[ Include (-
 [ PrintInferredCommand; ];
--) replacing "PrintInferredCommand".
+-) instead of "PrintInferredCommand". ]
+Include (-
+Replace PrintInferredCommand;
 
+[ PrintInferredCommand; ];
+-) before "Parser.i6t".
 
 
 Chapter - Printing Descriptions
@@ -1432,10 +1437,19 @@ Understand
 Carry out going_on:
 	long_range_navigate to forward_dest of the map region of the location of the player.
 
+[TODO: "go" or "x" without a noun causes this:
+You must supply a noun.
+regardless of what we do with the "block vaguely going rule]
+
+[ The block vaguely going rule is not listed in the for supplying a missing noun rules. ]
 The new vaguely going rule is listed instead of the block vaguely going rule in the for supplying a missing noun rules.
 
 This is the new vaguely going rule:
-  try going_on;
+	if examining:
+		try looking;
+		continue the action;
+	else:
+  		try going_on;
 
 Going_upstream is an action applying to nothing.
 Understand
@@ -2196,14 +2210,17 @@ When Scene_Dream_About_the_Tango begins:
 	sheriff_plays_music in 2 turn from now;
 	[we do this so whatever action is in progress doesn't mess up the reporting rules because sheriff is already there]
 	sheriff_goes_to_field in 3 turn from now;
+	now lee is in Room_Dream_Grassy_Field;
+	now sharon is in Room_Dream_Grassy_Field;
 
 At the time when sheriff_plays_music:
 	queue_report "Suddenly, the sheriff rolls up in his car. Neither the Cat Lady nor Lee look at him. The sheriff pops out of his car with a big box, no an accordion! and begins playing music. It's a funny tune and somehow you know it's an Argentine Tango. The Cat Lady and Lee begin to dance." with priority 2;
-	now the sheriff is in Limbo;
-	now the sheriffs_car is in Room_Dream_Grassy_Field;
 
 At the time when sheriff_goes_to_field:
-	now the dream_sheriff is in Room_Dream_Grassy_Field.
+	now sheriff is in Room_Dream_Grassy_Field;
+	now the sheriffs_car is in Room_Dream_Grassy_Field;
+
+test tango with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump".
 
 Chapter - Scene_Dream_Tracks
 
@@ -2367,7 +2384,10 @@ Instead of room_navigating or going during Scene_Reunions:
 Chapter - Scene_Long_Arm_of_the_Law
 
 There is a scene called Scene_Long_Arm_of_the_Law.
-Scene_Long_Arm_of_the_Law begins when Scene_Day_Two is happening and player is in Room_B_Loop.
+
+Scene_Long_Arm_of_the_Law begins when 
+Scene_Day_Two is happening and player is in Room_B_Loop.
+
 Scene_Long_Arm_of_the_Law ends when seq_long_arm_of_the_law is run and seq_long_arm_of_the_law is not in-progress.
 
 When Scene_Long_Arm_of_the_Law begins:
@@ -2384,7 +2404,7 @@ Instead of room_navigating or going during Scene_Long_Arm_of_the_Law:
 		say "You feel bad leaving Lee, but you're hope he'll be okay. You let grandpa lead you back toward home.".
 
 Every turn while lee_support of player is _uncertain:
-	say "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]".
+	queue_report "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]" with priority 1.
 
 Instead of waiting during Scene_Long_Arm_of_the_Law:
 	if index of seq_long_arm_of_the_law < 4:
@@ -2392,7 +2412,7 @@ Instead of waiting during Scene_Long_Arm_of_the_Law:
 	else:
 		if wait_time of seq_long_arm_of_the_law < 2:
 			increment wait_time of seq_long_arm_of_the_law;
-			say "[one of]You're waiting to see what happens, but should you do something?[or]You're waiting, but shouldn't you do something?[cycling]";
+			say "[one of]You're waiting to see what happens, but should you do something?[or]You're waiting, but shouldn't you do something?[in random order]";
 			continue the action;
 		else:
 			[ we do this to jump past the pause in the seq ]
@@ -2416,15 +2436,62 @@ To decide_to_support_lee:
 		now lee_support of player is _decided_yes;
 		say "You take a deep breath, and yell, 'No, wait!'[paragraph break]Everyone turns to you. And the words tumble out. Quick as you can, stumbling, messing up some of the details, you tell how you wandered into the woods by yourself, about the dog, about the nest, about the raccoons, about orienteering, every word chasing the previous word, and how you were found by Lee and the Cat Lady.[paragraph break]You stop and take a breath.".
 
-[ TODO: Have Lee or Cat Lady join the parade back to grassy ffield. ]
 
 Chapter - Scene_Parents_Arrive
 
 There is a scene called Scene_Parents_Arrive.
+
 Scene_Parents_Arrive begins when Scene_Long_Arm_of_the_Law ends.
+
+Scene_Parents_Arrive ends when seq_parents_arrive is run and seq_parents_arrive is not in-progress.
 
 When Scene_Parents_Arrive begins:
 	now seq_parents_arrive is in-progress.
+
+Every turn while going_home_decision of player is _uncertain:
+	queue_report "[one of]Mom says it's time to go.[or]You feel terrible. You think maybe this is all your fault and now it's time to face the consequences[or]Mom's ready to go home, but what do you want?[or]Maybe you can just be quiet in the car and things will simmer down.[or]What if Mark hurts your mom and you're not there to stop him?[or]Can you just stay here with Honey and grandpa?[cycling]" with priority 1.
+
+Instead of waiting during Scene_Parents_Arrive:
+	say "[one of]The moment seems to balance on a knife's edge.[or]Seconds tick by.[or]The world holds its breath.[in random order]".
+
+Instead of room_navigating or going during Scene_Parents_Arrive:
+	if index of seq_parents_arrive < 3:
+		say "There's no way you are leaving now that your mom's here.";
+	else:
+		say "If you don't want to go home with mom, you're probably going to have to say something.".
+
+[Things that make us decide to go home:
+	getting in car, saying yes]
+Instead of saying yes during Scene_Parents_Arrive:
+	decide_to_go_home.
+Instead of entering moms_camaro during Scene_Parents_Arrive:
+	decide_to_go_home.
+
+To decide_to_go_home:
+	if index of seq_parents_arrive < 3:
+		say "It seems that everyone is focused elsewhere";
+	else:
+		increment index of seq_parents_arrive;
+		now going_home_decision of player is _decided_yes;
+		say "You don't want to go, but you want to keep your mom safe. You turn to hug grandpa who then lets you go. Honey looks sad and worried. You slowly get in the back of the Camaro.".
+
+[Things that make us decide not to go home:
+	Saying no, yelling, attacking Mark]
+Instead of yelling or saying no during Scene_Parents_Arrive:
+	decide_not_to_go_home.
+Instead of attacking stepdad when going_home_decision of player is _uncertain:
+  say "Oh, how you want to hurt him. But you are sure it would give him an excuse to hurt you back worse. You decide to use words instead.";
+	decide_not_to_go_home.
+
+To decide_not_to_go_home:
+	if index of seq_parents_arrive < 3:
+		say "It seems that everyone is focused elsewhere";
+	else:
+		increment index of seq_parents_arrive;
+		now going_home_decision of player is _decided_no;
+		say "You stand up straight. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]going[roman type] to stay here,' you say firmly. You can feel grandpa's arms tighten around you.".
+
+test parents with "test long-arm / z/z/z/yell/z"
 
 Chapter - Scene_Fallout
 
@@ -2454,45 +2521,43 @@ To say story_intro:
 To say Title_Card_Part_1:
 	clear the screen;
 	say paragraph break;
-	say "[first custom style]Part 1[line break]";
-	say "[second custom style]A Fateful Day[line break]";
+	center "[bold type]Part 1   ";
+	say roman type;
+	center "[italic type]A Fateful Day";
 	say paragraph break;
 	say line break;
-	say italic type;
-	say "[second custom style]Memories may be beautiful and yet[line break][second custom style]What's too painful to remember[line break]
-	[second custom style]We simply choose to forget[line break]
-	[second custom style]-- Gladys Knight And The Pips, 1975";
-	say roman type;
+	center "[italic type]Memories may be beautiful and yet        ";
+	center "[italic type]What's too painful to remember           ";
+	center "[italic type]We simply choose to forget               ";
+	center "[italic type]      -- Gladys Knight And The Pips, 1975";
 	say paragraph break;
 	pause the game;
 
 To say Title_Card_Part_2:
 	clear the screen;
 	say paragraph break;
-	say "[first custom style]Part 2[line break]";
-	say "[second custom style]Lost[line break]";
+	center "[bold type]Part 2      ";
+	center "[italic type]Lost     ";
 	say paragraph break;
 	say line break;
-	say "[second custom style]Now my old world is gone for dead[line break]
-	[second custom style]Cos I can't get it out of my head.[line break]
-	[second custom style]-- Electric Light Orchestra, 1975";
-	say roman type;
+	center "[italic type]Now my old world is gone for dead    ";
+	center "[italic type]Cos I can't get it out of my head.    ";
+	center "[italic type]      -- Electric Light Orchestra, 1975";
 	say paragraph break;
 	pause the game;
 
 To say Title_Card_Part_3:
 	clear the screen;
 	say paragraph break;
-	say "[first custom style]Part 3[line break]";
-	say "[second custom style]Fallout[line break]";
+	center "[bold type]Part 3 ";
+	center "[italic type]Fallout";
 	say paragraph break;
 	say line break;
-	say "[second custom style]Butterflies are free to fly [line break]
-	[second custom style]Fly away[line break]
-	[second custom style]high away[line break]
-	[second custom style]bye bye [line break]
-	[second custom style]-- Elton John, 1975";
-	say roman type;
+	center "[italic type]Butterflies are free to fly    ";
+	center "[italic type]Fly away                       ";
+	center "[italic type]High away                      ";
+	center "[italic type]Bye bye                        ";
+	center "[italic type]         -- Elton John, 1975";
 	say paragraph break;
 	pause the game;
 
@@ -3955,7 +4020,7 @@ Section - Description
 
 The Room_Grassy_Clearing is a room.
 The printed name is "Grassy Clearing".
-The description is "[if turn count is 1][bold type][location][roman type][line break][end if][one of]The water churgles in the nearby creek but you can't see it through the forest of blackberry brambles all around you. Every summer since you were little, you pick blackberries with your Honey and Grandpa down along Bear Creak[or]You are near the creek, but it can't be seen through the blackberry brambles[stopping]. This is a pleasant clearing carpeted with stubbly grass under a sycamore tree. There are paths and clearings beaten down among the brambles that allow you to squeeze in to get the ripest berries. [if big_bucket is visible]There is a big bucket in the middle of the clearing. [end if][if grandpas_shirt is in location]Grandpa's shirt and Honey's portable transistor radio are[else]Honey's portable transistor radio is[end if] on the bank under the tree playing music.
+The description is "[one of]The water churgles in the nearby creek but you can't see it through the forest of blackberry brambles all around you. Every summer since you were little, you pick blackberries with your Honey and Grandpa down along Bear Creak[or]You are near the creek, but it can't be seen through the blackberry brambles[stopping]. This is a pleasant clearing carpeted with stubbly grass under a sycamore tree. There are paths and clearings beaten down among the brambles that allow you to squeeze in to get the ripest berries. [if big_bucket is visible]There is a big bucket in the middle of the clearing. [end if][if grandpas_shirt is in location]Grandpa's shirt and Honey's portable transistor radio are[else]Honey's portable transistor radio is[end if] on the bank under the tree playing music.
 [paragraph break][first time]Looking around, you see places you can go: [only][available_exits]".
 Understand "grassy/-- clearing" as Room_Grassy_Clearing.
 
@@ -5178,7 +5243,7 @@ Section - Description
 
 The Room_C_Loop is a room.
 The printed name is "C Loop".
-The description is "C Loop is pretty much like B and D Loops. Rows of trailers on either side, all different colors[one of], though the one's across from Lee's trailer go red, brown, green, red, brown, green, which is weird. Did they do that on purpose?[run paragraph on][or].[run paragraph on][stopping] [if Scene_Long_Arm_of_the_Law is not happening]The most noteworthy thing on this loop for you is Lee's trailer, though it looks pretty much like every other one[paragraph break][available_exits][else]Lee is sitting in the backseat of the Sheriff's car with a bloody nose and lip[end if].".
+The description is "C Loop is pretty much like B and D Loops. [if Scene_Long_Arm_of_the_Law is not happening]Rows of trailers on either side, all different colors, though the one's across from Lee's trailer go red, brown, green, red, brown, green, which is weird. Did they do that on purpose? The most noteworthy thing on this loop for you is Lee's trailer, though it looks pretty much like every other one.[paragraph break][available_exits][else]Lee is sitting in the backseat of the Sheriff's car with a bloody nose and lip.[end if]".
 The scent is "Lee's cigarette smoke lingering in the air".
 Understand "C Loop", "loop c" as Room_C_Loop.
 The casual_name is "in C loop of the trailer park".
@@ -6334,7 +6399,7 @@ Section - Description
 
 Room_Dream_Grassy_Field is a room.
 The printed name is "Grassy Field".
-The description is "This is the grassy field behind the trailer park. On either side of the rutted dirt road, golden grasses rise to your waist. [if dream_sheriff is not visible]The Cat Lady and Lee are here standing face-to-face. They look intense. Are they going to fight? Kiss? [else]The sheriff is playing a tango on the accordion -- somehow you know the loping rhythm is a tango - and Lee and the Cat Lady are dancing cheek to cheek, doing a series of tight turns and spins. You didn't even think they even liked each other.[end if]
+The description is "This is the grassy field behind the trailer park. On either side of the rutted dirt road, golden grasses rise to your waist. [if sheriff is not visible]The Cat Lady and Lee are here standing face-to-face. They look intense. Are they going to fight? Kiss? [else]The sheriff is playing a tango on the accordion -- somehow you know the loping rhythm is a tango - and Lee and the Cat Lady are dancing cheek to cheek, doing a series of tight turns and spins. You didn't even think they even liked each other.[end if]
 [paragraph break][available_exits]".
 The scent is "the sweet smell of dried hay".
 Understand "Dream grassy/-- field" as Room_Dream_Grassy_Field.
@@ -6345,27 +6410,10 @@ Section - Navigation
 
 Room_Dream_Grassy_Field is east of Room_Camaro_With_Stepdad.
 
-The available_exits of Room_Dream_Grassy_Field are "The gate to the trailer park seems fuzzy and out of focus. The railroad crossing is a little clearer.[if dream_sheriff is visible] The only way from here is to go on.[end if]";
+The available_exits of Room_Dream_Grassy_Field are "The gate to the trailer park seems fuzzy and out of focus. The railroad crossing is a little clearer.[if sheriff is visible] The only way from here is to go on.[end if]";
 
 Section - Objects and People
 
-[replace dream_sharon with real sharon]
-Dream_sharon is a undescribed _female woman in Room_Dream_Grassy_Field.
-The description of the dream_sharon is "This is the Cat Lady alright, though none of her cats are here at the moment. She's definitely not wearing a bathrobe now, but a fancy dress that swishes around her legs and high heels. Her hair is in tight curls and her makeup is elegant. She looks beautiful. She stares in to Lee's eyes[if dream_sheriff is not visible]. What's going to happen?[else] as they dance.[end if]".
-Understand "cat lady", "sharon/curls/makeup", "high heels", "evening/-- dress" as dream_sharon.
-
-[replace dream_lee with real lee]
-Dream_lee is a undescribed _male man in Room_Dream_Grassy_Field.
-The description of the dream_lee is "Lee has his long black hair pulled back in a neat ponytail. He's not wearing his army pants, but a fancy tuxedo and a bowtie. He looks quite handsome. He's staring intensely at the Cat Lady[if dream_sheriff is not visible]. What is happening?[else] as they Tango.[end if]".
-Understand "lee/ponytail/tuxedo/tie/bowtie" as dream_lee.
-
-[TODO: Replace dream_sheriff with real sheriff - prevents 
->follow sherrif
-Who do you mean, The Sheriff or The Sheriff]
-Dream_sheriff is an undescribed _male man.
-THe printed name is "The Sheriff".
-The description of dream_sheriff is "The sheriff sits on the hood of his car with his big smokey the bear hat looking serious, and playing the accordion with gusto."
-Understand "sheriff/sherif/sherriff/sherrif/deputy/police/officer/pig/bill/hat/glasses" as dream_sheriff.
 
 Section - Backdrops & Scenery
 
@@ -6389,39 +6437,39 @@ Instead of going to Room_Dream_Grassy_Field when player is in Room_Camaro_With_S
 	continue the action.
 
 Every turn when player is in Room_Dream_Grassy_Field:
-	if dream_sheriff is visible:
+	if sheriff is visible:
 		report_on_the_dance;
 
 To report_on_the_dance:
 		queue_report "[one of]As you watch the dancers, [or]As you watch, [or]Now, [stopping][one of]Lee spins the Cat Lady while her dress swishes around her, then lowers her into an elegant dip with her hand extended[or]they step together, first forward, then to the side, then back as if they are one person[or]Lee swishes the Cat Lady first right than left, their feet moving like magic in elegant slides beneath them, churning up puffs of dust[or]Lee and the Cat Lady step slow, slow, quick, quick, drag in a beautiful rhythm to the sheriff's accordion tango[or]the Cat Lady slowly lifts her knee and wraps her leg around Lee as he turns her quickly than slowly in an embrace[in random order]." at priority 1.
 
-Instead of doing anything to dream_sharon when player is in Room_Dream_Grassy_Field:
-	if examining dream_sharon:
+Instead of doing anything to sharon when player is in Room_Dream_Grassy_Field:
+	if examining sharon:
 		continue the action;
 	else:
-		if dream_sheriff is not visible:
+		if sheriff is not visible:
 			say "She looks intense. Better not bother them.";
 		else:
 			say "She's busy dancing the tango.";
 
-Instead of doing anything to dream_lee when player is in Room_Dream_Grassy_Field:
-	if examining dream_lee:
+Instead of doing anything to lee when player is in Room_Dream_Grassy_Field:
+	if examining lee:
 		continue the action;
 	else:
-		if dream_sheriff is not visible:
+		if sheriff is not visible:
 			say "He looks intense. Better not bother them.";
 		else:
 			say "He's too busy dancing."
 
-Instead of doing anything to dream_sheriff when player is in Room_Dream_Grassy_Field:
-	if examining dream_sheriff:
+Instead of doing anything to sheriff when player is in Room_Dream_Grassy_Field:
+	if examining sheriff:
 		continue the action;
 	else:
 		say "He's busy playing accordion."
 
 [keep player here until they observe the dance]
 Instead of going to Room_Dream_Railroad_Tracks when Scene_Dream_About_the_Tango is happening:
-	if dream_sheriff has been in Room_Dream_Grassy_Field for less than two turn:
+	if sheriff has been in Room_Dream_Grassy_Field for less than two turn:
 		say "Wait, you want to see what will happen.";
 	else:
 		continue the action.
@@ -6448,7 +6496,7 @@ The available_exits of Room_Dream_Railroad_Tracks is "The grassy field and the t
 
 Section - Objects
 
-Some dream_train_tracks are an enterable supporter in Room_ Railroad_Tracks.
+Some dream_train_tracks are an enterable supporter in Room_Railroad_Tracks.
 	The printed name is "train tracks".
 	The description of train tracks is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock."
 	Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as dream_train_tracks.
@@ -6712,7 +6760,7 @@ A decision is a kind of value.
 	The decisions are _unfaced, _uncertain, _decided_maybe, _decided_no, and _decided_yes.
 	A decision is usually _unfaced.
 Yourself has a decision called lee_support.
-Yourself has a decision called stepdad_decision.
+Yourself has a decision called going_home_decision.
 
 Chapter - Possessions
 
@@ -7395,7 +7443,7 @@ Response of Grandpa when asked-or-told about Grandpa:
 	say "'Well, what can I tell ya, [grandpas_nickname]? I yam wat I yam.' Grandpa gives you his best Popeye squint and makes a muscle with his real-life Popeye arms covered with his real-life sailor tattoos.".
 
 Response of Grandpa when asked-or-told about Honey:
-	say "[if player is in Region_Blackberry_Area]Grandpa looks over toward where she's picking berries[else]Grandpa looks back toward the creek[end if], 'She's your Grandma Honey[one of]. Don't worry about her[or]. Her bark's worse than her bite[or]. She loves the heck out of you[in random order], [grandpas_nickname].'".
+	say "[if honey is visible]Grandpa looks over toward Honey[end if], 'She's your Grandma Honey[one of]. Don't worry about her[or]. Her bark's worse than her bite[or]. She loves the heck out of you[in random order], [grandpas_nickname].'".
 
 Response of Grandpa when asked-or-told about Aunt Mary:
 	say "'She's your Honey's older sister. Did you know your Honey had twelve brothers and sisters. Let's see, you know Uncle Charley and Aunt Ethel and Aunt Mary,' Grandpa says counting on his fingers. 'Mary has grandkids that are your mom's age.'".
@@ -7523,7 +7571,7 @@ gpa_cat_lady_rant is a rant.
 
 Table of gpa_cat_lady_rant
 Quote
-"'Oh, Sharon?' Grandpa laughs, 'You call her the Cat Lady? You got that from your Honey and your mom. They're bad influences on you and I can't wait to tell them,' he says with a smile.[paragraph break]'I hope you don't call her that to her face,' he says seriously. 'Though she's a nice old lady and probably wouldn't even care.'"
+"'Oh, Sharon?' Grandpa laughs, 'You call her the Cat Lady? You got that from your Honey and your mom. They're bad influences on you and I can't wait to tell them,' he says with a smile[if honey is visible]. Honey slugs your grandpa on the arm. You can tell they are playing[end if].[paragraph break]'I hope you don't call her that to her face,' he says seriously. 'Though she's a nice old lady and probably wouldn't even care.'"
 "'Sharon's a nice old lady who's had a hard life. You be nice to her, [grandpas_nickname],' Grandpa says."
 
 Response of Grandpa when asked-or-told about Mom:
@@ -7648,23 +7696,25 @@ Part - Sharon
 
 Sharon is a _female woman in Room_D_Loop.
 	The printed name is "Cat Lady".
-	The initial appearance is "[sharons_initial_appearance]".
-	The description is "[sharon_description]".
-	Understand "cat lady", "Sharon", "lady", "Sharon", or "Shannon" as Sharon.
+	The initial appearance is "[sharons_initial_appearance]. ".
+	The description is "[sharon_description].".
+	Understand "cat lady", "Sharon", "lady", "Sharon", "Shannon", "curls/makeup", "high heels", "evening/-- dress" as Sharon.
 	The indefinite article is "the".
 	Include (- with articles "The" "the" "a", -) when defining Sharon.
 
 To say sharons_initial_appearance:
 	if Scene_Day_One is happening:
-		say "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of a soap opera on her old black and white TV[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She is staring briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs.";
+		say "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of a soap opera on her old black and white TV[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She is staring briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs";
 	else:
-		say "The Cat Lady is here.";
+		say "The Cat Lady is here";
 
 To say sharon_description:
 	if Scene_Day_One is happening:
-		say "[first time]She has a name, but you never can remember it, especially since both your mom and Honey call her the crazy cat lady behind her back. Is it Sharon? Shannon? And that's not all they call her. Honey says she is a crazy old B-I-T-C-H. But she's always been nice to you. [only]Her makeup is a little bit too thick and she seems to wear a bathrobe at all hours, but you can see how she used to be pretty when she was young.";
+		say "[first time]She has a name, but you never can remember it, especially since both your mom and Honey call her the crazy cat lady behind her back. Is it Sharon? Shannon? And that's not all they call her. Honey says she is a crazy old B-I-T-C-H. But she's always been nice to you. [only]Her makeup is a little bit too thick and she seems to wear a bathrobe at all hours, but you can see how she used to be pretty when she was young";
+	else if Scene_Dreams is happening:
+		say "This is the Cat Lady alright, though none of her cats are here at the moment. She's definitely not wearing a bathrobe now, but a fancy dress that swishes around her legs and high heels. Her hair is in tight curls and her makeup is elegant. She looks beautiful. She stares into Lee's eyes[if sheriff is not visible]. What's going to happen? You keep watching[else] as they dance[end if]";
 	else:
-		say "The Cat Lady is dressed for an expedition. Her hair is tucked under a ball cap. She's wearing hiking pants and boots, and a tan vest with lots of pockets. When you ask her about it, she says, 'This is my mushroom hunting gear, dearie. Didn't you know I spend a lot of time in the woods?' You have to admit you didn't.";
+		say "The Cat Lady is dressed for an expedition. Her hair is tucked under a ball cap. She's wearing hiking pants and boots, and a tan vest with lots of pockets. When you ask her about it, she says, 'This is my mushroom hunting gear, dearie. Didn't you know I spend a lot of time in the woods?' You have to admit you didn't";
 
 Chapter - Properties
 
@@ -8038,7 +8088,7 @@ This is the journey_sharon_walk_interrupt_test rule:
 
 This is the journey_sharon_walk_start rule:
 	if time_here of journey_sharon_walk is 1:
-		Report Sharon saying "The Cat Lady, you suddenly remember her name is Sharon, sees you as you emerge from the woods and her eyes go wide. 'Oh my,' she says clutching her breast. Sharon sweeps you up in a huge hug, 'Oh my, we were so worried. Look at you.' she holds you out and looks you up and down. Instead, you look at Sharon and notice she's dressed entirely differently than you are used to seeing her.";
+		Report Sharon saying "The Cat Lady, you suddenly remember her name is Sharon, sees you as you emerge from the woods and her eyes go wide. 'Oh my,' she says clutching her breast. Sharon sweeps you up in a huge hug, 'Oh my, we were so worried. Look at you.' she holds you out and looks at you carefully. Instead, you look at Sharon and notice she's dressed entirely differently than you are used to seeing her.";
 		rule fails;
 	else if time_here of journey_sharon_walk is 2:
 		Report Sharon saying "'Dearie, your grandparents are beside themselves with worry,' Sharon says, 'I have to get you back home. We've been looking everywhere.'";
@@ -8084,9 +8134,9 @@ This is the journey_sharon_walk_end rule:
 Part - Lee
 
 Lee is a _male man in Room_C_Loop.
-	The initial appearance is "[lees_initial_appearance][first time].  [description of lee][only].".
+	The initial appearance is "[lees_initial_appearance][first time]. [description of lee][only]".
 	The description is "[lees_description].".
-	Understand "lee/veteran/vet" as Lee.
+	Understand "lee/veteran/vet/ponytail/tuxedo/tie/bowtie", "Mr/Mister Skarbek", "Skarbek" as Lee.
 	The scent is "cigarettes and alcohol".
 
 To say lees_initial_appearance:
@@ -8101,6 +8151,8 @@ To say lees_initial_appearance:
 To say lees_description:
 	if Scene_Day_One is happening:
 		say "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long black hair pulled back in an untidy ponytail. He's wearing a tank top and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name";
+	else if Scene_Dreams is happening:
+		say "Lee has his long black hair pulled back in a neat ponytail. He's not wearing his army pants, but a fancy tuxedo and a bowtie. He looks quite handsome. He's staring intensely at the Cat Lady[if sheriff is not visible]. What is happening? You keep watching[else] as they tango[end if]";
 	else if Scene_Long_Arm_of_the_Law is happening:
 		say "Lee looks beat up, sitting in the cruiser. Something about him says he expected nothing less";
 	else:
@@ -8733,7 +8785,7 @@ Part - the Sheriff
 
 The Sheriff is an undescribed _male man.
 	The printed name is "The Sheriff".
-	The description is "The sheriff is an older guy about grampa's age maybe, but is still a big guy. He looks like he used to be a football player. He has big glasses that are kind of lopsided and a hat like smokey the bear.".
+	The description is "[if Scene_Dreams is not happening]The sheriff is an older guy about grampa's age maybe, but is still a big guy. He looks like he used to be a football player. He has big glasses that are kind of lopsided and a hat like smokey the bear[else]The sheriff sits on the hood of his car with his big smokey the bear hat looking serious, and playing the accordion with gusto[end if].".
 	Understand "sherriff/sherrif/deputy/police/officer/pig/bill/hat/glasses" as The Sheriff.
 	The scent is "fear".
 	The sheriff is in the sheriffs_car.
@@ -8938,9 +8990,7 @@ This is the seq_long_arm_of_the_law_interrupt_test rule:
 seq_parents_arrive is a sequence.
 	The action_handler is the seq_parents_arrive_handler rule.
 	The interrupt_test is seq_parents_arrive_interrupt_test rule.
-	The length_of_seq is 6.
-	The seq_parents_arrive has a number called wait_time.
-	The wait_time of seq_parents_arrive is 0.
+	The length_of_seq is 5.
 
 This is the seq_parents_arrive_handler rule:
 	let the index be the index of seq_parents_arrive;
@@ -8949,19 +8999,25 @@ This is the seq_parents_arrive_handler rule:
 		now moms_camaro is in Room_B_Loop;
 		now mom is in Room_B_Loop;
 		now stepdad is in Room_B_Loop;
-		queue_report "You are still holding grandpa when mom's Camaro pulls into B Loop. Normally, you would run to your mom for comfort, but something's changed. You dry your eyes, pull away from grandpa, and strand up straight. Mom and your stepdad get out of the car and run up to you. Your mom gives you a huge hug and when she lets go, she looks at grandpa and says, 'Oh dad.' There are tears in her eyes when grandpa hugs her. You realize in this moment that that your mom is usually strong for you, and this is your chance to be strong for her. You start to tell her about your adventures.[paragraph break]Mark is standing around looking uncomfortable. 'Do you know how much you worried your mom,' he says to you. [paragraph break]'Oh, Mark, give it a rest,' mom says. Mark shoots her a look. 'We drove all night to get here,' mom tells your grandparents. 'We're shot. Do you have coffee?' [paragraph break]Aunt Mary, who's been hovering anxiously in the background, says 'I'll go make some coffee,' and goes inside." with priority 2;
+		queue_report "You are still holding grandpa when mom's Camaro pulls into B Loop. Normally, you would run to your mom for comfort, but something's changed. You dry your eyes, pull away from grandpa, and strand up straight. Mom and your stepdad get out of the car. Your mom runs and gives you a huge hug and when she lets go, she looks at grandpa and says, 'Oh dad.' There are tears in her eyes when grandpa hugs her. You realize in this moment that that your mom is usually strong for you, and this is your chance to be strong for her. You start to tell her about your adventures.[paragraph break]Mark is standing around looking uncomfortable. 'Do you know how much you worried your mom?' he demands. [paragraph break]'Oh, Mark, give it a rest,' mom says. Mark shoots her a look. 'We drove all night to get here,' mom tells your grandparents. 'We're shot. Do you have any coffee?' [paragraph break]Aunt Mary, who's been hovering anxiously in the background, wipes away her tears and says 'I'll go make some,' and goes inside." with priority 2;
 	else if index is 2:
-		queue_report "'Honey, we were so worried,' your mom says hugging you again. She straightens up looking you up and down. Your mom looks from Honey to Grandpa as if to ask, 'What happened?'[paragraph break]'It seems Jo wandered away, got lost, and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was found by Sharon and Lee.'" with priority 2;
+		queue_report "Your stepdad remains quietly simmering. Your mom hugs you again, 'Honey, we were so worried.' She straightens up looking you up and down. Your mom looks from Honey to Grandpa.[paragraph break]'It seems Jo wandered away, got lost, and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was found by Sharon and Lee.'" with priority 2;
 	else if index is 3:
-		queue_report "sdjfasdjfadsjfjafsdjfsfsksf" with priority 2;
+		queue_report "Mark can't stay quiet any longer. 'Jody, if I had my way, I'd paddle your behind,' he says advancing on you.[paragraph break]'Mark, I told you. This is not--'[paragraph break]
+		'You spoil this kid and are surprised when Jody acts out,' he says as he grabs your arm.[paragraph break]Both grandpa and Honey take a step forward. Your mom stands up tall, looking like she is suddenly twice her height, 'Let go. Now. Mark.' she says fiercely. 'Are you going to hit 'em again?'[paragraph break]Mark instinctively lets go of your arm and stands with his feet apart, arms out, fists clenched ready to fight. You back away from him toward your grandpa who puts his arms protectively around you. Mark makes an angry hissing sound and yanks the car keys out of his pocket. 'We'll talk about this at home. We're leaving,' he says, going around to the driver's door of the Camaro. 'Both of you, get in the car. Now.'[paragraph break]Your mom looks helplessly at her parents. 'Sorry, mom,' she says. 'We better go. I'll call you later and let you know we're okay.'[paragraph break]Honey looks grim and Grandpa starts to say, 'Rachel.'[paragraph break]'Dad, I know,' she says and sighs. She turns to you and smiles thinly, 'Okay Jody, it's best we get going.' She opens the car door and puts the seat back so you can get in." with priority 2;
+		now stepdad is in moms_camaro;
+		now current interlocutor is mom;
+		now going_home_decision of player is _uncertain;
 	else if index is 4:
-		do nothing;
+		[we hang at this step until either player talks to sheriff or leaves]
+		queue_report "[one of]'I'm sorry, hon, we have to go,' your mom says[or]'We better go, love,' mom says sadly[or]Mom sighs and gestures for you to get in the car[in random order]." with priority 2;
+		if going_home_decision of player is _uncertain:
+			decrement index of seq_parents_arrive;
 	else if index is 5:
-		do nothing;
-	else if index is 6:
-		do nothing;
-
-[ START HERE ]
+		if going_home_decision of player is _decided_yes:
+			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and grandpa and raise a hand goodbye." with priority 2;
+		else:
+			queue_report "'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you. Mark's door starts to open and grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath as she puts her hand on Mark's arm. Mark shoves her away, but after a clear moment, he doesn't get out of the car.[paragraph break]'We better go, mom,' Rachel says to Honey. To Mark she says, 'Let's go.'[paragraph break]As the car pulls out of B Loop, you can see your mom look at Honey, grandpa and you in turn and mouth, 'I love you.'" with priority 2;
 
 This is the seq_parents_arrive_interrupt_test rule:
 	[ Nothing stops this rule. ]
