@@ -1390,7 +1390,7 @@ Carry out person_navigating:
 	let initial location be the location;
 	let the destination be the location of the noun;
 	if the initial location is the destination,
-		say "." instead;
+		say "They're already here." instead;
 	let heading be the best route from the initial location to the destination;
 	[say "(DEBUG: heading toward [noun] is [heading])[line break]";]
 	if heading is nothing:
@@ -3067,8 +3067,11 @@ Part - Topics
 
 Chapter - Characters
 
-Dad is a familiar _male man. Understand "dad/father/Nick/Nicolas/papa" as dad.
-Joseph is a familiar _male man. Understand "joe/joseph", "cat lady's husband", "Sharon's husband" as joseph.
+Dad is a familiar _male man. 
+Understand "dad/father/Nick/Nicolas/papa" as dad.
+
+Joseph is a familiar _male man. 
+Understand "joe/joseph", "cat lady's husband", "Sharon's husband" as joseph.
 
 Grandpa, Honey, Aunt Mary, Sharon, Lee, Sheriff, stepdad, Mom, Joseph are familiar.
 
@@ -3612,7 +3615,7 @@ Chapter - Tuning
 
 Understand "watch [something]", "play [something]", "turn on [something]" as switching on.
 
-Understand "tune [something]", "tune station/channel/dial on [something]", "adjust [something]", "change station/channel/dial on [something]", "turn station/channel/dial on [something]" as tuning_this.
+Understand "tune [something]", "tune station/channel/dial on [something]", "adjust [something]", "change the/-- station/channel/dial on [something]", "turn the/-- station/channel/dial on [something]" as tuning_this.
 tuning_this is an action applying to one thing.
 
 Check tuning_this:
@@ -3624,12 +3627,12 @@ Carry out tuning_this:
 
 [TODO: reverse these two verbs, i.e., make the one with no noun make assumptions and the one with a noun can do the action - this will make the article work properly. ]
 
-Understand "tune radio/tv/station/stations/channel/channels/dial/dials",
-"adjust radio/tv/station/stations/channel/channels/dial/dials",
-"change station/stations/channel/channels/dial/dials",
-"turn station/stations/channel/channels/dial/dials",
-"change tv/radio station/stations/channel/channels/dial/dials",
-"turn tv/radio station/stations/channel/channels/dial/dials" as tuning.
+Understand 
+	"tune the/-- radio/tv/-- station/stations/channel/channels/dial/dials/--", 
+	"adjust the/-- radio/tv/-- station/stations/channel/channels/dial/dials/--", 
+	"change the/-- radio/tv/-- station/stations/channel/channels/dial/dials/--", 
+	"turn the/-- radio/tv/-- station/stations/channel/channels/dial/dials/--" 
+	as tuning.
 Tuning is an action applying to nothing.
 
 Check tuning:
@@ -3642,12 +3645,14 @@ Check tuning:
 	else if lees_tv is visible:
 		if lees_tv is not switched on:
 			say "You'll have to turn the set on first." instead;
-	else if portable transistor radio is not visible:
+	else if honeys_radio is visible:
+		try taking honeys_radio instead;
+	else:
 		say "Hmm. There's nothing to tune here." instead;
 
 Carry out tuning:
-	if portable transistor radio is visible:
-		try taking portable transistor radio;
+	if honeys_radio is visible:
+		try taking honeys_radio;
 	else if lees_tv is visible:
 		change_TV_channel;
 
@@ -4054,15 +4059,19 @@ The big_bucket is scenery unopenable open container in Room_Grassy_Clearing.
 	The big_bucket is quarter-full.
 	The scent is "the delicious smell of ripe berries".
 
-The portable transistor radio is scenery.
+The honeys_radio is scenery.
 	It is in Room_Grassy_Clearing.
 	It is a familiar device.
-	The printed name is "portable transistor radio".
+	Honeys_radio is switched on.
+	The printed name is "radio".
 	The description of the radio is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
-	Understand "knob", "cube", "woodgrain", "plastic", "wax", "music", "finish" as the portable transistor radio.
+	Understand "honey's/honeys/grandma's/grandmas/-- portable/-- transistor/-- radio", "knob/cube/woodgrain/plastic/wax", "music" as the honeys_radio.
 	The scent is "ozone".
 	The indefinite article is "Honey's".
-	Include (- with articles "Honey's" "the" "a", -) when defining portable transistor radio.
+	Include (- with articles "Honey's" "the" "a", -) when defining honeys_radio.
+
+Instead of doing anything to honeys_radio:
+	say "[one of]Honey will kill you if you mess with it.[or]You better leave that alone.[or]Honey gives you a [italic type]look[roman type], and you leave it alone.[cycling]".
 
 Grandpas_shirt is an undescribed thing in Room_Grassy_Clearing.
 	The printed name is "Grandpa's shirt".
@@ -8865,7 +8874,7 @@ Chapter - Rules and Actions
 	Scene_Sheriffs_Drive_By
 ]
 
-The sheriffs_car is an undescribed unopenable closed vehicle in Limbo. 
+The sheriffs_car is an undescribed unopenable open vehicle in Limbo. 
 The printed name is "Sheriff's patrol car".
 The description is "It is dark green, mostly, with white doors, and a big black and gold badge on the door that says 'Sierra County Sheriff.' It has red lights along the top. This is a big boxy car that looks kinda muscular and mean like the yellow dog."
 Understand "police/sheriff/sheriffs/sheriff's/sherriff/sherriffs/sherriff's/deputys/deputy's/-- patrol/squad/-- car", "policecar/patrolccar/squadcar", "cruiser", "car" as sheriffs_car.
