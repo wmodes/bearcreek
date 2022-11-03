@@ -3846,8 +3846,6 @@ Show	Channel	Index	Reaction
 
 Chapter - The Train
 
-[TODO: Match these up with scenes - possibly replace all time-based things with random during appropriate scene]
-
 The distant_train is scenery. 
 The printed name is "distant train".
 It is in Limbo.
@@ -4689,8 +4687,6 @@ The printed name is "penny".
 The initial appearance is "Hey, there's the penny you lost when you came here with Grandpa to make train pennies!".
 The description is "Ah, this is a wheat penny. Its tiny numbers say 1956. The tiny S means it was minted in Sacramento.".
 Understand "penny/coin" as lost_penny.
-
-[TODO: The train no longer flattens the penny, fix that.]
 
 A flattened_penny is a described thing in Limbo.
 The printed name is "flattened train penny."
