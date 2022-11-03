@@ -1737,7 +1737,7 @@ A turnevent has text called description.
 10 turnevents are in Limbo.
 A turnevent can be momentous or trivial.
 
-Definition: A turnevent is trivial if it has a priority that is greater than 5.
+Definition: A turnevent is trivial if it has a priority that is greater than 6.
 Definition: A turnevent is momentous if it has a priority that is less than 3.
 [note that there are events between the two that are neither trivial nor momentous]
 
@@ -2139,6 +2139,7 @@ When Scene_Dreams begins:
 	Now grandpa is in Room_Dream_Railroad_Tracks;
 	store_all_your_stuff;
 	Now flattened_penny is in Room_Dream_Railroad_Tracks;
+	[TODO: Check to make sure flattened_penny didn't get removed from stuff storage]
 	Now player is asleep;
 	Move the player to Room_Car_With_Mom;
 
@@ -3101,7 +3102,7 @@ topic_bridge is a subject.
 
 Grandpa's-Virtual-Trailer is familiar.
 
-train_tracks are familiar.
+train_track are familiar.
 
 topic_tree is a subject.
 	The printed name is "tall Doug fir".
@@ -3527,13 +3528,15 @@ To throw_berries_back:
 Chapter - Rocks
 
 A loose_rock is a kind of thing.
-	The printed name is "rock".
-	The printed plural name is "rocks".
-	Loose_rocks are always undescribed and sinking.
-	10 loose_rocks are in Room_Railroad_Tracks.
-	Understand "rock" as loose_rock.
+Loose_rock are undescribed.
+The printed name is "rock".
+The printed plural name is "rocks".
+The description is "Grandpa called these ballast, rocks that line the railroad tracks.".
+10 loose_rocks are in Room_Railroad_Tracks.
+The loose_rocks are not marked for listing.
+Understand "mound of rock/rocks", "mound", "rock/rocks/stone/stones/ballast" as loose_rock.
 
-Instead of taking the mound_of_rock:
+Instead of taking the loose_rock:
 	let chosen rock be a random loose_rock in Room_Railroad_Tracks;
 	if chosen rock is nothing: [That is, there were no rocks remaining]
 		say "[rock_refusal]";
@@ -3544,13 +3547,13 @@ Instead of taking the mound_of_rock:
 Does the player mean taking loose_rock:
 	it is very unlikely.
 
-Does the player mean taking mound_of_rock:
-	it is very likely.
+[ Does the player mean taking mound_of_rock:
+	it is very likely. ]
 
 To say rock_refusal:
 	say "That's plenty. Are you building your own railroad?"
 
-Rule for implicitly taking the mound_of_rock:
+Rule for implicitly taking the loose_rock:
 	let chosen rock be a random loose_rock in Room_Railroad_Tracks;
 	if chosen rock is nothing: [That is, there were no rocks remaining]
 		say "[rock_refusal]";
@@ -3559,7 +3562,7 @@ Rule for implicitly taking the mound_of_rock:
 		say "(picking up one of the rocks)";
 		now the noun is the chosen rock.
 
-Rule for clarifying the parser's choice of the mound_of_rock while taking:
+Rule for clarifying the parser's choice of the loose_rock while taking:
 	say "(from the rocks that line the track)[line break]".
 
 [Every turn when the number of loose_rocks is greater than 0:
@@ -3572,15 +3575,15 @@ Rule for clarifying the parser's choice of the mound_of_rock while taking:
 [still a host of problems: throwing, confusion with the mound_of_rock etc]
 
 Instead of dropping loose_rock when player is in Room_Railroad_Tracks:
-	throw rock back.
+	throw_rock_back.
 
-Instead of putting the loose_rock on train_tracks:
-	throw rock back.
+[ Instead of putting a loose_rock on train_track:
+	throw_rock_back. ]
 
-Instead of putting the loose_rock on mound_of_rock:
-	throw rock back.
+[ Instead of putting the loose_rock on mound_of_rock:
+	throw_rock_back. ]
 
-To throw rock back:
+To throw_rock_back:
 	say "You throw the rock back into the mound of ballast.";
 	move the noun to Room_Railroad_Tracks.
 
@@ -3588,7 +3591,7 @@ Instead of dropping the loose_rock:
 	if player is in Region_Trailer_Indoors:
 		say "Maybe not such a good idea, indoors.";
 	else:
-		throw rock away;
+		throw_rock_away;
 
 Instead of throwing the loose_rock at someone (called the target):
 	if target is dog:
@@ -3600,7 +3603,7 @@ Instead of throwing the loose_rock at someone (called the target):
 Instead of throwing the loose_rock at something:
 	try dropping the noun.
 
-To throw rock away:
+To throw_rock_away:
 	if player is in Room_Halfway_Up or
 	player is in Room_Top_of_Pine_Tree or
 	player is in Room_Sentinel_Tree:
@@ -3889,12 +3892,12 @@ At the time when train_is_nearby:
 
 At the time when train_hits_crossing:
 	if current_time_period is not evening and current_time_period is not night:
-		queue_report "[one of]You hear the train whistle, loud and close, as it hits the crossing[or]The train whistle screams as it hits the crossing[in random order]." with priority 3;
+		queue_report "[one of]You hear the train whistle, loud and close, as it hits the crossing[or]The train whistle screams as it hits the crossing[in random order]." with priority 6;
 	else:
-		queue_report "You hear the train at the crossing as it goes by your house. You think for a moment of Honey and Grandpa and how worried they will be and how much you miss them." with priority 3;
-	if penny is on train_tracks:
-		now penny is in Limbo;
-		now flattened_penny is on train_tracks;
+		queue_report "You hear the train at the crossing as it goes by your house. You think for a moment of Honey and Grandpa and how worried they will be and how much you miss them." with priority 6;
+	if lost_penny is on train_track:
+		now lost_penny is in Limbo;
+		now flattened_penny is in train_track;
 		now the flattened_penny is marked for listing;
 	show_train_crossing;
 	[ ready for next train]
@@ -3903,24 +3906,29 @@ At the time when train_hits_crossing:
 	[ say "The train comes in [next_train_interval] turns from now."; ]
 
 To show_train_crossing:
-	if player is in Room_Railroad_Tracks:
+	if player is in Room_Railroad_Tracks or player is on train_track:
 		if player is not train_experienced:
 			queue_report "The train arrives!
-			[paragraph break]You see the single light of the locomotive as it comes around the bend while it is still a ways away. The track begins to hum and you hear the squeal of the wheels on the curve. There's a moment where it just kind of hangs there in space[if player is on the train_tracks]. The engineer sees you standing on the tracks and blows the whistle LOUD and long! It very nearly scares the pee out of you. You leap off to safety, tripping on the rail![otherwise].[end if]
-			[paragraph break]The train is suddenly very close and moving very fast. You can feel hot air the train pushes ahead of it. The locomotive roars past you with a terrifying racket. Then car after car is swooshing past you, clanking and clattering.
-			[paragraph break]It isn't until half the train goes by that you remember to count cars and then it's too late. With the sound of the train still ringing in your ears, you are suddenly aware of the smell of dust and grease in the air[if player is on the train_tracks]. You pick yourself up and dust yourself off[end if]." at priority 2;
+			[paragraph break]You see the single light of the locomotive as it comes around the bend while it is still a ways away. The track begins to hum and you hear the squeal of the wheels on the curve. There's a moment where it just kind of hangs there in space." with priority 5;
+			if player is on train_track:
+				queue_report "The engineer sees you standing on the rail and blows the whistle LOUD and long! It very nearly scares the pee out of you. You leap off to safety, tripping on the rail!"
+				with priority 4;
+			queue_report "The train is suddenly very close and moving very fast. You can feel hot air the train pushes ahead of it. The locomotive roars past you with a terrifying racket. Then car after car is swooshing past you, clanking and clattering.
+			[paragraph break]It isn't until half the train goes by that you remember to count cars and then it's too late. With the sound of the train still ringing in your ears, you are suddenly aware of the smell of dust and grease in the air." with priority 3;
+			if player is on train_track:
+				queue_report "You pick yourself up and dust yourself off" with priority 2;
 		otherwise:
 			queue_report "The train arrives!
-			[paragraph break]When the train comes around the bend and you see the headlight, y[if player is on the train_tracks]ou immediately feel like you have to pee and without even thinking step off the rails. Y[end if]ou watch it wavering in the heat waves coming off the rails. This time you are not going to let it sneak up on you, so you concentrate on the moment when it changes from far away to close. It's in the distance. It's in the distance. It's in the distance.
+			[paragraph break]When the train comes around the bend and you see the headlight, you immediately feel like you have to pee and without even thinking step off the rails. You watch it wavering in the heat waves coming off the rails. This time you are not going to let it sneak up on you, so you concentrate on the moment when it changes from far away to close. It's in the distance. It's in the distance. It's in the distance.
 			[paragraph break]And then wham! It's right here and LOUD! WAHHHHHHH! Whoosh! Clang! Bang! Clackity clack! Clackity clack!
-			[paragraph break]This time you remember to count the cars, but you forget the number as soon as the last car goes by with a final clatter." at priority 2;
-		if player is on train_tracks:
+			[paragraph break]This time you remember to count the cars, but you forget the number as soon as the last car goes by with a final clatter." with priority 3;
+		if player is on train_track:
 			now player is intrepid;
-			queue_report "Though your close call with the train scared you, you also feel tremendously brave." at priority 1;
-			try silently getting off train_tracks;
+			queue_report "Though your close call with the train scared you, you also feel tremendously brave." with priority 1;
+			try silently getting off train_track;
 		now player is train_experienced;
 	else if location of player is Room_Top_of_Pine_Tree:
-		queue_report "The train is approaching the dirt road near the trailer park, passing almost directly beneath you. It sounds it's whistle for the crossing. Still loud, even up here! For a moment, you can see the whole train, end to end. It's going fast, and before you know it, the train is past the crossing, past the trailer park, and around the next bend and out of sight." at priority 2;
+		queue_report "The train is approaching the dirt road near the trailer park, passing almost directly beneath you. It sounds it's whistle for the crossing. Still loud, even up here! For a moment, you can see the whole train, end to end. It's going fast, and before you know it, the train is past the crossing, past the trailer park, and around the next bend and out of sight." with priority 2;
 		move distant_train to Limbo.
 
 
@@ -4060,10 +4068,10 @@ The big_bucket is scenery unopenable open container in Room_Grassy_Clearing.
 	The scent is "the delicious smell of ripe berries".
 
 The honeys_radio is scenery.
+	The printed name is "transitor radio".
 	It is in Room_Grassy_Clearing.
 	It is a familiar device.
 	Honeys_radio is switched on.
-	The printed name is "radio".
 	The description of the radio is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
 	Understand "honey's/honeys/grandma's/grandmas/-- portable/-- transistor/-- radio", "knob/cube/woodgrain/plastic/wax", "music" as the honeys_radio.
 	The scent is "ozone".
@@ -4671,15 +4679,16 @@ The available_exits of Room_Railroad_Tracks is "Across the tracks is a grassy fi
 
 Section - Objects
 
-Some train_tracks are an undescribed fixed in place enterable supporter in Room_Railroad_Tracks.
+Train_track is an undescribed fixed in place enterable supporter in Room_Railroad_Tracks.
 The printed name is "train tracks".
 The description is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock.".
-Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as train_tracks.
+Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as train_track.
 
-A penny is in Room_Railroad_Tracks.
+A lost_penny is in Room_Railroad_Tracks.
+The printed name is "penny".
 The initial appearance is "Hey, there's the penny you lost when you came here with Grandpa to make train pennies!".
-The description of penny is "Ah, this is a wheat penny. Its tiny numbers say 1956. The tiny S means it was minted in Sacramento.".
-Understand "coin" as penny.
+The description is "Ah, this is a wheat penny. Its tiny numbers say 1956. The tiny S means it was minted in Sacramento.".
+Understand "penny/coin" as lost_penny.
 
 [TODO: The train no longer flattens the penny, fix that.]
 
@@ -4689,10 +4698,10 @@ The initial appearance is "[if player is not in Room_Dream_Railroad_Tracks]Hey, 
 The description is "The train rolled over your penny and turned it into a flattened oval. You can't read it anymore, but you can see a very faint image of Lincoln with a stretched head.".
 Understand "lucky/flattened/flat/train/-- penny/coin" as flattened_penny.
 
-A mound_of_rock is a undescribed fixed in place supporter in Room_Railroad_Tracks.
+[ A mound_of_rock is a undescribed fixed in place supporter in Room_Railroad_Tracks.
 The printed name is "mound of rock".
 The description is "Grandpa called these ballast, rocks that line the railroad tracks."
-Understand "mound of rock/rocks", "rock/-- mound", "rock/rocks/stone/stones" as mound_of_rock.
+Understand "mound of rock/rocks", "rock/-- mound", "rock/rocks/stone/stones" as mound_of_rock. ]
 
 A green_tunnel is undescribed fixed in place enterable container in Room_Railroad_Tracks.
 The printed name is "green tunnel".
@@ -4706,22 +4715,22 @@ The description is "The sign is posted on the trailer park side of the tracks on
 
 Section - Rules and Actions
 
-After entering train_tracks:
+After entering train_track:
 	say "Was that a train? Mom tells you not to play anywhere near the railroad tracks. You nervously step between the tracks, experimentally trying to balance on one rail. Be careful."
 
 To say penny_status:
-	if penny is on train_tracks:
+	if lost_penny is on train_track:
 		say "[paragraph break]Your penny is still balanced on the rails.[run paragraph on]";
-	else if flattened_penny is on train_tracks:
+	else if flattened_penny is on train_track:
 		say "[paragraph break]The train ran over your penny and it's flattened on the tracks! You jump up and down in excitement.[run paragraph on]";
 
-Instead of putting the penny on the train_tracks:
+Instead of putting lost_penny on train_track:
 	say "You carefully place the penny on one of the rails.";
-	now penny is on train_tracks.
+	now lost_penny is on train_track.
 
-Instead of dropping penny when player is on train_tracks:
+Instead of dropping lost_penny when player is on train_track:
 	say "You carefully place the penny on one of the rails.";
-	now penny is on train_tracks.
+	now lost_penny is on train_track.
 
 Instead of room_navigating Room_Railroad_Tracks when player is in Room_Railroad_Tracks:
 	try follow_tracks.
@@ -4945,7 +4954,7 @@ The description is "The forest rolls out dark and endless over the hills that su
 Understand "distant forest", "forest/woods/trees/hills/around/mountains" as distant_forest.
 
 The distant_tracks is scenery in Room_Top_of_Pine_Tree.
-The printed name is "railroad tracks".
+The printed name is "distant railroad tracks".
 The description is "The tracks wind below you from beyond town out past the trailer park and the highway."
 Understand "train/railroad/-- track/tracks/crossing" as distant_tracks.
 
@@ -6549,15 +6558,15 @@ The available_exits of Room_Dream_Railroad_Tracks is "The grassy field and the t
 
 Section - Objects
 
-Some dream_train_tracks are an enterable supporter in Room_Railroad_Tracks.
+Some dream_train_track are an enterable supporter in Room_Dream_Railroad_Tracks.
 	The printed name is "train tracks".
 	The description is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock."
-	Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as dream_train_tracks.
+	Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as dream_train_track.
 
 A dream_mound_of_rock is an undescribed fixed in place supporter in Room_Dream_Railroad_Tracks.
-	The printed name is "a mound_of_rock".
-	The description is "Grandpa called these ballast, rocks that line the railroad tracks."
-	Understand "rock/rocks/stone/stones" as dream_mound_of_rock.
+The printed name is "ballast rock".
+The description is "Grandpa called these ballast, rocks that line the railroad tracks."
+Understand "rock/rocks/stone/stones" as dream_mound_of_rock.
 
 A dream_green_tunnel is an undescribed fixed in place enterable container in Room_Dream_Railroad_Tracks.
 	The printed name is "green tunnel".
@@ -6572,8 +6581,11 @@ A dream_sign is scenery in Room_Dream_Railroad_Tracks.
 
 Section - Rules and Actions
 
-Instead of putting anything on dream_train_tracks:
-	say "You are pretty sure no trains are coming here.".
+Instead of putting something on dream_train_track:
+	if object is lost_penny:
+		continue the action;
+	else:
+		say "Grandpa told you if you put things on the tracks, you might derail the train. You think better of the idea.".
 
 Instead of room_navigating Room_Railroad_Tracks when player is in Room_Dream_Railroad_Tracks:
 	try follow_tracks.
@@ -7182,9 +7194,9 @@ Response of Honey when asked-or-told about cigarettes:
 Response of Honey when asked-or-told about topic_trailer:
 	say "'You wanting to go back? If you head back to the house, you try and help your Aunt Mary out,' Honey says.".
 
-Response of Honey when asked about train_tracks:
+Response of Honey when asked about train_track:
 	say "'Don't you let me catch you playing anywhere near those tracks, or I'll paddle your bottom,' Honey says.".
-Response of Honey when told about train_tracks:
+Response of Honey when told about train_track:
 	if player is not train_experienced:
 		say "'Don't you let me catch you playing anywhere near those tracks, or I'll paddle your bottom,' Honey says.";
 	else:
@@ -7568,10 +7580,10 @@ Response of Grandpa when asked-or-told about cigarettes:
 Response of Grandpa when asked-or-told about topic_trailer:
 	say "Our house? We've been living there since you were knee-high to a grasshopper. Do you remember when the big truck moved our trailer into place? No, you wouldn't remember that. You were a babe in your mama's arms.".
 
-Response of Grandpa when asked about train_tracks:
+Response of Grandpa when asked about train_track:
 	say "'You be careful around those train tracks, a train could roll right over you and not even blink,' Grandpa says.".
 
-Response of Grandpa when told about train_tracks:
+Response of Grandpa when told about train_track:
 	if player is not train_experienced:
 		say "'Yeah? The one that runs by the trailer park? You can hear it going by if you listen,' Grandpa says. 'Maybe later we can put pennies on the track again.'";
 	else:
@@ -7580,7 +7592,7 @@ Response of Grandpa when told about train_tracks:
 To say Grandpa's train response:
 	say "[one of]'Holy smoke! You are one lucky little [grandpas_nickname]!' Grandpa lowers his voice, 'You better hope your Honey doesn't find out about this or she'd paddle your be-hind. But I'm just glad you are okay.'[or]'You be careful around those train tracks. A train could roll right over you, easy as pie,' Grandpa says. 'I don't want to hear any more about you playing by the tracks.'[stopping]";
 
-Response of Grandpa when given-or-shown penny:
+Response of Grandpa when given-or-shown lost_penny:
 	say "'Maybe later we can put that on the tracks. Hold on to that and don't lose it.' Grandpa says and [grandpa_stuff].".
 
 Response of Grandpa when asked-or-told about flattened_penny or given-or-shown flattened_penny:
@@ -8365,7 +8377,7 @@ Response of Lee when asked-or-told about dog:
 Response of Lee when asked-or-told about flattened_penny or given-or-shown flattened_penny:
 	say "'Oh, hey that's neat,' Lee says with authentic wonder. 'I used to do that. Train pennies, we called [']em.'".
 
-Response of Lee when asked-or-told about train_tracks:
+Response of Lee when asked-or-told about train_track:
 	say "'Oh hey, you be careful, man,' Lee says seriously.".
 
 Response of Lee when asked about topic_work:
@@ -8722,7 +8734,7 @@ Response of Honey when asked-or-told about bucket:
 Response of Mary when asked-or-told about topic_jam:
 	say "'That's your grandma's recipe,' she says proudly. 'No,' she looks worried, 'No. Mama is your great-grandmother. It's your great-grandma's recipe.'".
 
-Response of Mary when asked-or-told about train_tracks:
+Response of Mary when asked-or-told about train_track:
 	say "'I can hear that old train,' she says. 'Reminds me before any of us had cars - if you wanted to get somewhere, you rode a train.'".
 
 Response of Mary when asked-or-told about topic_lunch:
@@ -9235,13 +9247,13 @@ Response of mom when asked-or-told about topic_berries:
 Response of mom when asked-or-told about topic_trailer:
 	say "'Honey and grandpa's house? I love that trailer. Your grandpa has worked so hard to make that place beautiful for us,' mom says.".
 
-Response of mom when asked about train_tracks:
+Response of mom when asked about train_track:
 	say "[moms_train_ask_response].";
 
 To say moms_train_ask_response:
 	say "'Your grandpa used to work on the railroad and when they bought their house, he was happy that there was a train that passed nearby', mom says".
 
-Response of mom when told about train_tracks:
+Response of mom when told about train_track:
 	if player is not train_experienced:
 		say "[moms_train_ask_response].";
 	else:
