@@ -403,12 +403,12 @@ Chapter - Can't See That
 [Remove all the messages that clarify the parser's choice of something]
 [ Include (-
 [ PrintInferredCommand; ];
--) instead of "PrintInferredCommand". ]
+-) replacing "PrintInferredCommand". ]
+
 Include (-
 Replace PrintInferredCommand;
-
 [ PrintInferredCommand; ];
--) before "Parser.i6t".
+-) before “Parser.i6t”.
 
 
 Chapter - Printing Descriptions
@@ -5599,7 +5599,7 @@ Understand "other/-- shore" as Room_Other_Shore.
 
 
 [TODO: >cross river
-You look around, but don't see Backdrop_creek. Last you remember, it was .]
+You look around, but don't see Bear Creek. Last you remember, it was .]
 
 Section - Navigation
 
@@ -5672,6 +5672,9 @@ Instead of doing_some_swimming in Room_Other_Shore:
 test shore with "teleport to other shore /abstract bridge west to crossing";
 
 Chapter - Room_Wooded_Trail
+
+[TODO: >follow wooded trail
+That noun did not make sense in this context.]
 
 Section - Description
 
@@ -5797,8 +5800,6 @@ A giant fern is an elusive_landmark in Limbo.
 	Understand "giant/huge/big/-- fern", "nav-landmark"  as giant fern.
 
 Section - Rules and Actions
-
-[TODO: Test dropping stuff in dark woods]
 
 Instead of listening to the sound_of_the_creek:
 	try examining noun;
@@ -8888,13 +8889,8 @@ The description is "It is dark green, mostly, with white doors, and a big black 
 Understand "police/sheriff/sheriffs/sheriff's/sherriff/sherriffs/sherriff's/deputys/deputy's/-- patrol/squad/-- car", "policecar/patrolccar/squadcar", "cruiser", "car" as sheriffs_car.
 The scent is "burnt oil".
 
-[TODO: Procedural rules are deprecated...
-Procedural rule when doing anything to sheriff when sheriff is visible and sheriff is in sheriffs_car:
-	ignore the basic accessibility rule;]
-
 test drive-by with "teleport to stone bridge/ go to b loop/g/g/g/g/g/g/g/z/z/z/z/z".
 
-[TODO: Convert these times from minutes to turns]
 Instead of going during Scene_Sheriffs_Drive_By:
 	if Scene_Sheriffs_Drive_By has been happening for less than 2 turns:
 		say "But you're curious what the police are here for, so you change your mind and keep listening.";
