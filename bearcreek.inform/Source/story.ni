@@ -2779,8 +2779,6 @@ Part - NPC_Journeys
 
 Chapter - The Properties
 
-[TODO: Make it so the player can simply type "follow [npc]"]
-
 An npc_journey is a kind of thing.
 
 An npc_journey can be in-progress.
@@ -4689,7 +4687,7 @@ The description is "Ah, this is a wheat penny. Its tiny numbers say 1956. The ti
 Understand "penny/coin" as lost_penny.
 
 A flattened_penny is a described thing in Limbo.
-The printed name is "flattened train penny."
+The printed name is "flattened train penny".
 The initial appearance is "[if player is not in Room_Dream_Railroad_Tracks]Hey, the train flattened the wheat penny! You made a lucky coin![else]Your lucky penny is here.[end if]".
 The description is "The train rolled over your penny and turned it into a flattened oval. You can't read it anymore, but you can see a very faint image of Lincoln with a stretched head.".
 Understand "lucky/flattened/flat/train/-- penny/coin" as flattened_penny.
@@ -5721,10 +5719,6 @@ To say day2_woods_desc:
 	say "These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night: a madrone tree, a huge stump";
 
 
-[TODO: pick random elusive_landmarks and place in Room_Dark_Woods_North and Room_Dark_Woods_South - maybe two in each]
-
-[TODO: Make sure all the things dropped in Room_Dark_Woods_South are scattered in Room_Dark_Woods_North and Room_Dark_Woods_South on day2]
-
 Section - Navigation
 
 North of Room_Dark_Woods_South is Room_Dark_Woods_North.
@@ -6359,7 +6353,7 @@ Instead of doing anything to counter lady when player is in Room_Snack_Bar:
 
 Instead of going to Room_Camaro_With_Stepdad when player is in Room_Drive_In:
 	if Scene_Dream_About_Drive_In is happening:
-		say "Before you get in the car, you remember there's something you have to do.";
+		say "[one of]Before you get in the car, you remember there's something you have to do.[or]The dollar in your pocket reminds you that you still want to visit the snack bar.[stopping]";
 		stop the action;
 	else:
 		continue the action;
@@ -6493,6 +6487,7 @@ Instead of doing anything to dream_back_gate:
 Instead of going to Room_Dream_Grassy_Field when player is in Room_Camaro_With_Stepdad:
 	say "You open the car door and look at the surface of the road speeding by. You gather your courage and prepare to jump. Mark's hand shoots out to stop you. You duck the hand, glancing back at Mark's startled face, and jump.
 	[paragraph break][line break][line break]...And land surprisingly softly, with no more force than if you had fallen down from a standstill. You pick yourself up to familiar surroundings.";
+	Now player is courageous;
 	continue the action.
 
 Every turn when player is in Room_Dream_Grassy_Field:
@@ -6782,6 +6777,7 @@ Yourself can be resourceful.
 Yourself can be affectionate.
 Yourself can be tenacious.
 Yourself can be compassionate.
+Yourself can be courageous.
 
 [ Temporary qualities ]
 
@@ -6809,6 +6805,7 @@ Yourself can be lee_experienced.
 Yourself can be sharon_experienced.
 Yourself can be found_by_lee.
 Yourself can be found_by_sharon.
+Yourself can be formerly_in_possession_of_lucky_penny.
 
 The player has a number called persistence count. Persistence count is 0.
 The player has a number called pinetree_tries_count.
@@ -6941,6 +6938,8 @@ To say permanent_attributes:
 		add "tenacious (that means you don't give up)" to list_of_attributes;
 	if player is compassionate:
 		add "compassionate" to list_of_attributes;
+	if player is courageous:
+		add "courageous" to list_of_attributes;
 	if the number of entries of list_of_attributes is greater than 0:
 		say ". Thinking about it a bit, you conclude you are [list_of_attributes]";
 	
@@ -6975,10 +6974,16 @@ Stuff_storage is a container in Limbo.
 	The printed name is "stuff storage".
 
 To store_all_your_stuff:
+	[we'd put this in storage, but we have to borrow it for this dream]
+	if player holds flattened_penny:
+		now player is formerly_in_possession_of_lucky_penny;
 	now everything carried by player is in stuff_storage;
 
 To unstore_all_your_stuff:
 	now everything carried by player is in Limbo;
+	[okay, now you can have your lucky penny back]
+	if player is formerly_in_possession_of_lucky_penny:
+		now player holds flattened_penny;
 	now everything in stuff_storage is carried by player;
 
 test get-stuff with "purloin bucket, mika, radio, cigarettes, shirt, train penny".
@@ -9680,16 +9685,19 @@ Response of dream_dog when saying no:
 
 Response of dream_dog when saying sorry:
 	say "[if dog is rock-aware]'For throwing rocks at me?' the dog says, 'It's alright. You aren't the first one to do that.'[else]'Don't worry about it, kid,' the dog says.[end if]";
+	now dream_dog is friendly.
 
 [
 	Responses
 ]
 
 Response of dream_dog when asked-or-told about player:
-	say "'I don't know you, kid, but you seem okay. Not the worst person I've met,' the dog says, 'At least you didn't tease me like some of these brats who make it their mission to make me miserable.'".
+	say "'I don't know you, kid, but you seem okay. Not the worst person I've met,' the dog says, 'At least you didn't tease me like some of these brats who make it their mission to make me miserable.'";
+	now dream_dog is friendly.		
 
 Response of dream_dog when asked-or-told about dream_dog:
-	say "'I'm a good dog. Or I try to be,' the dog says, 'Sometimes I still make my people angry, but that's my fault.'".
+	say "'I'm a good dog. Or I try to be,' the dog says, 'Sometimes I still make my people angry, but that's my fault.'";
+	now dream_dog is friendly.
 
 [telling about my people]
 
@@ -9697,7 +9705,8 @@ Response of dream_dog when asked-or-told about honey:
 	say_dog_people_response;
 
 Response of dream_dog when asked-or-told about grandpa:
-	say "'I think one time when I got out of that goddamn fence I tried to bite him,' the dog laughs.".
+	say "'I think one time when I got out of that goddamn fence I tried to bite him,' the dog laughs.";
+	now dream_dog is friendly.
 
 Response of dream_dog when asked-or-told about lee:
 	say_dog_people_response;
@@ -9719,6 +9728,7 @@ Response of dream_dog when asked-or-told about topic_dreams:
 
 Response of dream_dog when asked-or-told about topic_creek:
 	say "'Sometimes on hot days, if I can get out of that terrible fence,' the dog says, 'I run through the forest until I'm panting and hot, then I lie down in the cool water of the creek and watch the little swimmers.'";
+	now dream_dog is friendly.
 
 Chapter - Rants
 
@@ -9728,7 +9738,8 @@ Response of dream_dog when asked-or-told about topic_work:
 
 Response of dream_dog when asked-or-told about dream_dog:
 	now dog_self_rant is in-progress;
-	now dream_dog is friendly.
+	now dream_dog is friendly;
+	now player is compassionate.
 
 dog_self_rant is a rant.
 	The quote_table is the Table of dog_self_rant.
@@ -9746,7 +9757,8 @@ Response of dream_dog when asked about mom or asked about dad:
 
 Response of dream_dog when asked-or-told about topic_family:
 	now dog_family_rant is in-progress;
-	now dream_dog is friendly.
+	now dream_dog is friendly;
+	now player is compassionate.
 
 dog_family_rant is a rant.
 	The quote_table is the Table of dog_family_rant.
