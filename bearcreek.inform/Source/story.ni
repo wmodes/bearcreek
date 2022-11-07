@@ -1810,721 +1810,6 @@ To report (speaker - person) saying (speech_text - text):
 		queue_report speech_text at priority 2;
 		now current interlocutor is speaker;
 
-Book - Scenes
-
-[I can't remember what effect a dramatic scene has]
-A scene can be dramatic. A scene is usually not dramatic.
-
-Part - Scene_Day_One
-
-There is a scene called Scene_Day_One.
-Scene_Day_One begins when play begins.
-Scene_Day_One ends when Scene_Night_In_The_Woods begins.
-
-[ Now the time of day is 9:15 AM. ]
-When Scene_Day_One begins:
-	[turn this on when beta-testing]
-	[start_transcript;]
-	say story_intro;
-	pause the game;
-	say Title_Card_Part_1;
-	say "[line break]You've wandered away from Honey and Grandpa picking blackberries.";
-	set_the_time_to late_morning.
-
-Chapter - Scene_Picking_Berries
-
-Scene_Picking_Berries is a scene.
-Scene_Picking_Berries begins when play begins.
-Scene_Picking_Berries ends when Scene_Explorations begins.
-
-Chapter - Scene_Grandparents_Conversation
-
-There is a scene called Scene_Grandparents_Conversation.
-Scene_Grandparents_Conversation begins when player is in Room_Grassy_Clearing for the first time.
-Scene_Grandparents_Conversation ends when Scene_Explorations begins.
-
-When Scene_Grandparents_Conversation begins:
-	try saying hello to Grandpa;
-	now current interlocutor is Grandpa;
-	start_seq_grandparents_chat in one turn from now;
-	continue the action.
-
-At the time when start_seq_grandparents_chat:
-	now seq_grandparents_chat is in-progress;
-
-Chapter - Scene_Explorations
-
-Scene_Explorations is a scene.
-Scene_Explorations begins when player is free_to_wander.
-Scene_Explorations ends when Scene_Walk_With_Grandpa begins.
-
-[ Now the time of day is 11:30 AM. ]
-When Scene_Explorations begins:
-	set_the_time_to midday.
-
-Chapter - Scene_Walk_With_Grandpa
-
-[ This is a scene that begins
-	* after Scene_Explorations
-	* after player has been to dirt road and seen dog
-	* when player is near blackberry clearing ]
-
-There is a scene called Scene_Walk_With_Grandpa.
-Scene_Walk_With_Grandpa begins when player has been in Region_Trailer_Indoors and player is in Room_Grassy_Clearing.
-Scene_Walk_With_Grandpa ends when Grandpa has been in Room_Grandpas_Trailer and Grandpa is not in Room_Grandpas_Trailer.
-
-When Scene_Walk_With_Grandpa begins:
-		now big_bucket is full;
-		now seq_grandparents_chat is not in-progress;
-		now journey_gpa_walk is in-progress;
-
-When Scene_Walk_With_Grandpa ends:
-	now big_bucket is empty.
-
-Instead of room_navigating or going when player is in Room_Grandpas_Trailer during Scene_Walk_With_Grandpa:
-	queue_report "'Hold your horses, [grandpas_nickname],' Grandpa says. 'Stay with us for now.'" at priority 3.
-
-Chapter - Scene_Helping_Grandpa
-
-There is a scene called Scene_Helping_Grandpa.
-
-Chapter - Scene_Helping_the_Cat_Lady
-
-There is a scene called Scene_Helping_the_Cat_Lady.
-
-[TODO: Implement helping Cat Lady get cat off roof.]
-
-Chapter - Scene_Sheriffs_Drive_By
-
-Scene_Sheriffs_Drive_By is a dramatic scene.
-Scene_Sheriffs_Drive_By begins when player has been in Region_Trailer_Park_Area for eight turns and Scene_Day_One is happening and Scene_Tea_Time is not happening and Scene_Hangout_With_Lee is not happening and Scene_Making_Sandwiches is not happening and grandpa is not in Region_Trailer_Park_Area.
-Scene_Sheriffs_Drive_By ends when seq_sheriffs_drive_by is run and seq_sheriffs_drive_by is not in-progress.
-
-When Scene_Sheriffs_Drive_By begins:
-	now sheriff is in sheriffs_car;
-	now sheriffs_car is in Room_D_Loop;
-	now seq_sheriffs_drive_by is in-progress;
-
-Chapter - Scene_Visit_With_Sharon
-
-There is a recurring scene called Scene_Visit_With_Sharon.
-Scene_Visit_With_Sharon begins when player is in Room_D_Loop and Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening.
-Scene_Visit_With_Sharon ends when Scene_Sheriffs_Drive_By begins.
-Scene_Visit_With_Sharon ends when player is not in Room_D_Loop and player is not in Room_Sharons_Trailer.
-
-When Scene_Visit_With_Sharon begins:
-	try saying hello to Sharon;
-	if Scene_Tea_Time has not happened:
-		now seq_sharon_invite is in-progress.
-
-Chapter - Scene_Tea_Time
-
-Scene_Tea_Time is a dramatic scene.
-Scene_Tea_Time begins when player has been in Room_Sharons_Trailer for two turns and Scene_Sheriffs_Drive_By is not happening.
-Scene_Tea_Time ends when seq_sharon_teatime is run and seq_sharon_teatime is not in-progress.
-
-When Scene_Tea_Time begins:
-	now seq_sharon_teatime is in-progress;
-	now Sharon is ready-for-tea-time;
-
-Chapter - Scene_Visit_With_Lee
-
-There is a recurring scene called Scene_Visit_With_Lee.
-Scene_Visit_With_Lee begins when player is in Room_C_Loop and Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening.
-Scene_Visit_With_Lee ends when player is not in Room_C_Loop and player is not in Room_Lees_Trailer.
-
-When Scene_Visit_With_Lee begins:
-	try saying hello to Lee;
-	if Scene_Hangout_With_Lee has not happened:
-		now seq_lee_invite is in-progress.
-
-Chapter - Scene_Hangout_With_Lee
-
-Scene_Hangout_With_Lee is a dramatic scene.
-Scene_Hangout_With_Lee begins when player has been in Room_Lees_Trailer for one turn and Scene_Sheriffs_Drive_By is not happening.
-Scene_Hangout_With_Lee ends when seq_lee_hangout is run and seq_lee_hangout is not in-progress.
-
-When Scene_Hangout_With_Lee begins:
-	now seq_lee_hangout is in-progress;
-
-Chapter - Scene_Visit_With_Mary
-
-There is a scene called Scene_Visit_With_Mary.
-Scene_Visit_With_Mary begins when player is in Room_Grandpas_Trailer.
-Scene_Visit_With_Mary ends when player is not in Room_Grandpas_Trailer.
-
-When Scene_Visit_With_Mary begins:
-	try saying hello to Aunt Mary;
-	now current interlocutor is Mary.
-
-Chapter - Scene_Mary_Suggestion
-
-Scene_Mary_Suggestion is a dramatic scene.
-Scene_Mary_Suggestion begins when Scene_Walk_With_Grandpa is happening and player has been in Room_Grandpas_Trailer for two turns and Grandpa has not been in Room_Grandpas_Trailer.
-[Scene_Mary_Suggestion is ended by the seq_mary_suggestion sequence]
-Scene_Mary_Suggestion ends when seq_mary_suggestion is run and seq_mary_suggestion is not in-progress.
-
-[ now the time of day is 1:55 PM. ]
-When Scene_Mary_Suggestion begins:
-	now seq_mary_suggestion is in-progress;
-	set_the_time_to early_afternoon.
-
-Chapter - Scene_Making_Sandwiches
-
-Scene_Making_Sandwiches is a dramatic scene.
-Scene_Making_Sandwiches begins when Scene_Walk_With_Grandpa ends.
-[Scene_Making_Sandwiches is ended by the seq_mary_sandwich sequence]
-Scene_Making_Sandwiches ends when seq_mary_sandwich is run and seq_mary_sandwich is not in-progress.
-
-When Scene_Making_Sandwiches begins:
-	now seq_mary_sandwich is in-progress.
-
-Chapter - Scene_Bringing_Lunch
-
-There is a scene called Scene_Bringing_Lunch.
-Scene_Bringing_Lunch begins when Scene_Making_Sandwiches ends.
-Scene_Bringing_Lunch ends when Scene_Across_the_Creek begins.
-
-When Scene_Bringing_Lunch begins:
-	now dog is loose;
-	[now Grandpa is navbiguous;]
-	the log_bridge_forms in 10 turns from now.
-
-At the time when the log_bridge_forms:
-	now bridge_log_west is in Room_Crossing;
-	now pool_log is in Limbo
-
-
-Chapter - Scene_Across_the_Creek
-
-There is a scene called Scene_Across_the_Creek.
-Scene_Across_the_Creek begins when player has been in Room_Wooded_Trail.
-Scene_Across_the_Creek ends when Scene_Night_In_The_Woods begins.
-
-[ Now the time of day is 4:10 AM. ]
-When Scene_Across_the_Creek begins:
-	set_the_time_to late_afternoon.
-
-
-Part - Scene_Night_In_The_Woods
-
-There is a scene called Scene_Night_In_The_Woods.
-Scene_Night_In_The_Woods begins when landmark_nav_counter is 3.
-[Scene_Night_In_The_Woods begins when player is in Room_Forest_Meadow.]
-Scene_Night_In_The_Woods ends when Scene_Dreams begins.
-
-When Scene_Night_In_The_Woods begins:
-	now landmark_nav_counter is 0;
-	say "[lost_in_the_woods_payoff]";
-	pause the game;
-	say Title_Card_Part_2;
-	Now the right hand status line is "Evening";
-	[ move our elusive_landmark to the new location ]
-	Let this_thing be random elusive_landmark in Room_Dark_Woods_South;
-	Now this_thing is in Room_Dark_Woods_North;
-	Now player is in Room_Dark_Woods_North;
-	set_the_time_to evening.
-
-
-Chapter - Scene_STOP
-
-There is a scene called Scene_STOP.
-Scene_STOP begins when player is in Room_Forest_Meadow for first time.
-Scene_STOP ends when player is in Room_Protected_Hollow.
-
-When Scene_STOP begins:
-	now seq_jody_stop is in-progress.
-
-When Scene_STOP ends:
-	now seq_jody_stop is not in-progress;
-	set_the_time_to night.
-
-[S.T.O.P.
-S stands for SIT DOWN.
-T is for THINK.
-O is for OBSERVE.
-P stands for PLAN.
-
-Survival priorities: In extreme conditions…
-
-1. You can live 3 hours without shelter.
-2. You can live 3 days without water.
-3. You can live 3 weeks without food.
-]
-
-Chapter - Scene_Make_Shelter
-
-There is a scene called Scene_Make_Shelter.
-Scene_Make_Shelter begins when Scene_STOP ends.
-Scene_Make_Shelter ends when Room_Protected_Hollow is made_cozy.
-[scene ends when player has stacked sticks and moved leaves into fort]
-
-
-Chapter - Scene_Sleep_One
-
-There is a scene called Scene_Sleep_One.
-Scene_Sleep_One begins when
-	player is in Room_Protected_Hollow and
-	Scene_Defend_the_Fort has not happened and
-	Scene_Dreams has not happened.
-Scene_Sleep_One ends when
-	Scene_Defend_the_Fort begins.
-
-When Scene_Sleep_One begins:
-	Now the right hand status line is "Night";
-	say "Now you have shelter, but can you sleep?";
-
-Instead of sleeping during Scene_Sleep_One:
-	if Room_Protected_Hollow is not made_cozy:
-		say "You are too cold to sleep.";
-	else:
-		now player is asleep;
-		say Sleep_Card;
-		say "...and are awakened what seems like seconds later. You heard a noise very nearby.";
-		try looking;
-
-When Scene_Sleep_One ends:
-	now player is awake;
-
-Chapter - Scene_Defend_the_Fort
-
-There is a scene called Scene_Defend_the_Fort.
-Scene_Defend_the_Fort begins when
-	Scene_Sleep_One is happening and
-	player is asleep.
-Scene_Defend_the_Fort ends when raccoons are not in Region_Woods_Area.
-
-When Scene_Defend_the_Fort begins:
-	now raccoons are in Room_Forest_Meadow;
-	now virtual_raccoons are in Room_Protected_Hollow;
-	now seq_raccoon_visit is in-progress;
-
-Instead of sleeping during Scene_Defend_the_Fort:
-	say "There is no way you are sleeping while wolves or bears are trying to eat you.";
-
-
-Chapter - Scene_Sleep_Two
-
-There is a scene called Scene_Sleep_Two.
-Scene_Sleep_Two begins when
-	player is in Room_Protected_Hollow and
-	Scene_Defend_the_Fort has ended and
-	Scene_Dreams has not happened.
-Scene_Sleep_Two ends when
-	Scene_Dreams begins.
-
-When Scene_Sleep_Two begins:
-	say "Will you be able to sleep after that? It's been a long day and you realize you are really tired.";
-
-Instead of sleeping during Scene_Sleep_Two:
-	if Room_Protected_Hollow is not made_cozy:
-		say "Again, you are too cold to sleep.";
-	else:
-		now player is asleep;
-		say Sleep_Card;
-
-Chapter - Scene_Dreams
-
-There is a scene called Scene_Dreams.
-Scene_Dreams begins when
-	Scene_Sleep_Two is happening and
-	player is asleep.
-Scene_Dreams ends when Scene_Dog_Dream has happened and player is awake.
-
-[ Now the time of day is 9:15 PM; ]
-When Scene_Dreams begins:
-	set_the_time_to night;
-	Now the right hand status line is "";
-	Now Honey is in Room_Dream_Railroad_Tracks;
-	Now grandpa is in Room_Dream_Railroad_Tracks;
-	store_all_your_stuff;
-	Now flattened_penny is in Room_Dream_Railroad_Tracks;
-	[TODO: Check to make sure flattened_penny didn't get removed from stuff storage]
-	Now player is asleep;
-	Move the player to Room_Car_With_Mom;
-
-When Scene_Dreams ends:
-	now seq_dog_convo is not in-progress;
-	say "[line break]The dog wags its tail and fades. You slowly shake off the cobwebs of an altogether strange night.";
-	pause the game;
-	say Title_Card_Part_3;
-
-test dreams with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep"
-
-[During Scene_Dreams player cannot move to next location until the scene for that location is finished]
-
-Chapter - Scene_Dream_About_Drive_In
-
-There is a scene called Scene_Dream_About_Drive_In.
-Scene_Dream_About_Drive_In begins when Scene_Dreams begins.
-Scene_Dream_About_Drive_In ends when player has been in Room_Drive_In
-	and (player holds popcorn or player holds Milk Duds).
-
-Chapter - Scene_Dream_about_Mom
-
-There is a scene called Scene_Dream_about_Mom.
-Scene_Dream_about_Mom begins when Scene_Dreams begins.
-Scene_Dream_about_Mom ends when player is in Room_Drive_In.
-
-Mom_free_to_go is truth state that varies.
-	Mom_free_to_go is false.
-
-When Scene_Dream_about_Mom begins:
-	now seq_mom_watching_movie is in-progress
-
-When Scene_Dream_about_Mom ends:
-		now seq_mom_watching_movie is not in-progress
-
-Chapter - Scene_Dream_Have_To_Pee
-
-There is a scene called Scene_Dream_Have_To_Pee.
-Scene_Dream_Have_To_Pee begins when Scene_Dream_About_Drive_In is happening and the index of seq_mom_watching_movie is 5.
-Scene_Dream_Have_To_Pee ends when player has been in Room_Restroom.
-
-[Reminder that you have to pee every few turns]
-Every turn during Scene_Dream_Have_To_Pee:
-	queue_report "[one of]You suddenly realize that you've been holding it, and you really have to pee[or][one of]You really have to go[or]You do a little dance, your body reminding you that you really have to go[or]Your really really really don't want to wet yourself[cycling][stopping]." with priority 1.
-
-Chapter - Scene_Dream_About_Stepdad
-
-There is a scene called Scene_Dream_About_Stepdad.
-Scene_Dream_About_Stepdad begins when player is in Room_Camaro_With_Stepdad.
-Scene_Dream_About_Stepdad ends when player is in Room_Dream_Grassy_Field.
-
-stepdad_free_to_go is a truth state that varies.
-	stepdad_free_to_go is false.
-
-When Scene_Dream_About_Stepdad begins:
-	now seq_stepdad_in_car is in-progress.
-
-When Scene_Dream_About_Stepdad ends:
-	now seq_stepdad_in_car is not in-progress.
-
-
-Chapter - Scene_Dream_About_the_Tango
-
-[
-	a scene that triggers tango reports,
-	but does not keep player in location (that restriction will be cleared when sheriff arrives)
-]
-
-There is a scene called Scene_Dream_About_the_Tango.
-Scene_Dream_About_the_Tango begins when player is in Room_Dream_Grassy_Field.
-Scene_Dream_About_the_Tango ends when player is in Room_Dream_Railroad_Tracks.
-
-When Scene_Dream_About_the_Tango begins:
-	sheriff_plays_music in 2 turn from now;
-	[we do this so whatever action is in progress doesn't mess up the reporting rules because sheriff is already there]
-	sheriff_goes_to_field in 3 turn from now;
-	now lee is in Room_Dream_Grassy_Field;
-	now sharon is in Room_Dream_Grassy_Field;
-
-At the time when sheriff_plays_music:
-	queue_report "Suddenly, the sheriff rolls up in his car. Neither the Cat Lady nor Lee look at him. The sheriff pops out of his car with a big box, no an accordion! and begins playing music. It's a funny tune and somehow you know it's an Argentine Tango. The Cat Lady and Lee begin to dance." with priority 2;
-
-At the time when sheriff_goes_to_field:
-	now sheriff is in Room_Dream_Grassy_Field;
-	now the sheriffs_car is in Room_Dream_Grassy_Field;
-
-test tango with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump".
-
-Chapter - Scene_Dream_Tracks
-
-There is a scene called Scene_Dream_Tracks.
-Scene_Dream_Tracks begins when player is in Room_Dream_Railroad_Tracks.
-Scene_Dream_Tracks ends when player is in Room_Mars.
-
-Grandparents_track_done is truth state that varies. Grandparents_track_done is false.
-
-When Scene_Dream_Tracks begins:
- 	now seq_grandparents_tracks is in-progress;
-	now Honey is in Room_Dream_Railroad_Tracks;
-	now Grandpa is in Room_Dream_Railroad_Tracks;
-
-When Scene_Dream_Tracks ends:
- 	now seq_grandparents_tracks is not in-progress;
-	now Honey is in Room_Mars;
-	now Grandpa is in Room_Mars;
-
-Chapter - Scene_Dream_Bouncing
-
-There is a scene called Scene_Dream_Bouncing.
-Scene_Dream_Bouncing begins when player is in Room_Mars.
-Scene_Dream_Bouncing ends when mars_free_to_go is true.
-
-mars_free_to_go is truth state that varies. mars_free_to_go is false.
-
-When Scene_Dream_Bouncing begins:
- 	now seq_grandparents_bounce is in-progress.
-
-Chapter - Scene_Mars_Dream
-
-There is a scene called Scene_Mars_Dream.
-Scene_Mars_Dream begins when player is in Room_Mars.
-Scene_Mars_Dream ends when player is in Room_Dream_Dirt_Road.
-
-Chapter - Scene_Dog_Dream
-
-Scene_Dog_Dream is a dramatic scene.
-Scene_Dog_Dream begins when player is in Room_Dream_Dirt_Road.
-Scene_Dog_Dream ends when dog_free_to_go is true.
-
-dog_free_to_go is truth state that varies. dog_free_to_go is false.
-
-When Scene_Dog_Dream begins:
-	now seq_dog_convo is in-progress;
-
-Part - Scene_Day_Two
-
-There is a scene called Scene_Day_Two.
-Scene_Day_Two begins when Scene_Dreams has ended.
-
-When Scene_Day_Two begins:
-	unstore_all_your_stuff;
-	scatter_lost_stuff;
-	now player is in Room_Protected_Hollow;
-	now player is awake;
-	Now the right hand status line is "Morning";
-	Now Sharon is in Room_Other_Shore;
-	Now Lee is in Room_Blackberry_Tangle;
-
-test day2 with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump/z/z/z/z/ go to tracks/go on/ z/z/z/z/z/z/ go on/ go on/ z/z/z/z/z/z/z/wake up".
-
-Chapter - Morning After
-
-There is a scene called Scene_Morning_After.
-Scene_Morning_After begins when Scene_Day_Two is happening and player is in Room_Forest_Meadow.
-
-Chapter - Scene_Orienteering
-
-There is a scene called Scene_Orienteering.
-Scene_Orienteering begins when Scene_Morning_After begins.
-Scene_Orienteering ends when player is in Room_Sentinel_Tree.
-
-When Scene_Orienteering begins:
-	Change up exit of Room_Forest_Meadow to Room_Sentinel_Tree;
-	queue_report "It's time to figure out where you are. Perhaps if you could get a view of the surrounding area." with priority 2;
-
-When Scene_Orienteering ends:
-	Change south exit of Room_Forest_Meadow to Room_Dark_Woods_North;
-	Change west exit of Room_Forest_Meadow to Room_Dappled_Forest_Path;
-	Change south exit of Room_Dark_Woods_North to Room_Dark_Woods_South;
-	Change south exit of Room_Dark_Woods_South to Room_Wooded_Trail;
-	Change northwest exit of Room_Dark_Woods_North to Room_Dappled_Forest_Path;
-	now player is aware_of_compass_directions;
-	now player is not discouraged_from_compass_navigating;
-
-Chapter - Scene_Foraging_for_Breakfast
-
-There is a scene called Scene_Foraging_for_Breakfast.
-Scene_Foraging_for_Breakfast begins when Scene_Morning_After begins.
-Scene_Foraging_for_Breakfast ends when Scene_Found begins.
-Scene_Foraging_for_Breakfast ends when Scene_Foraging_for_Breakfast is happening and player is not hungry.
-
-When Scene_Foraging_for_Breakfast begins:
-	now player is hungry.
-
-Every turn during Scene_Foraging_for_Breakfast:
-	if the remainder after dividing the turn count by 2 is 0:
-		queue_report "[one of]You are quite hungry[or]You didn't have dinner (or lunch!) yesterday, so you are really quite famished[or]You find you are really hungry. Perhaps you can forage something like a good Exporer Scout[cycling]." with priority 1.
-
-[ If player eats berries on brambles or in pail, they should no longer be hungry. ]
-After eating during Scene_Foraging_for_Breakfast:
-	now player is not hungry.
-
-Chapter - Scene_Out_of_the_Woods
-
-There is a scene called Scene_Out_of_the_Woods.
-Scene_Out_of_the_Woods begins when Scene_Day_Two is happening and (player is in Room_Dappled_Forest_Path or player is in Room_Dark_Woods_South).
-Scene_Out_of_the_Woods ends when Scene_Found begins.
-
-Every turn during Scene_Out_of_the_Woods:
-	if player is in Room_Wooded_Trail:
-		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that the Cat Lady calling you?[or]Someone is calling you.[at random]" at priority 1;
-	else if player is in Room_Dappled_Forest_Path:
-		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that Lee calling you?[or]Someone is calling you.[at random]" at priority 1;
-
-Chapter - Scene_Found
-
-There is a scene called Scene_Found.
-Scene_Found begins when Scene_Day_Two is happening and (player is in Room_Blackberry_Tangle or player is in Room_Other_Shore).
-Scene_Found ends when player is in Room_Grassy_Field.
-
-When Scene_Found begins:
-	if player is in Room_Blackberry_Tangle:
-		now journey_lee_walk is in-progress;
-	else if player is in Room_Other_Shore:
-		now journey_sharon_walk is in-progress;
-
-[This will prevent player from getting re-lost after beign found!]
-Instead of room_navigating Room_Wooded_Trail when player is in Room_Other_Shore during Scene_Found:
-	say not_going_back_to_woods.
-
-Instead of going east when player is in Room_Other_Shore during Scene_Found:
-	say not_going_back_to_woods.
-
-Instead of room_navigating Room_Dappled_Forest_Path when player is in Room_Blackberry_Tangle during Scene_Found:
-	say not_going_back_to_woods.
-
-Instead of going east when player is in Room_Blackberry_Tangle during Scene_Found:
-	say not_going_back_to_woods.
-
-To say not_going_back_to_woods:
-	say "Maybe later, with your grandpa, you can go back to the woods and show him your little nest, but not now.".
-
-Test found with "test day2 / get up / climb pine tree / d".
-
-Section - Journeys
-
-
-
-Chapter - Scene_Reunions
-
-There is a scene called Scene_Reunions.
-Scene_Reunions begins when Scene_Found ends.
-Scene_Reunions ends when Scene_Long_Arm_of_the_Law begins.
-
-Instead of room_navigating or going during Scene_Reunions:
-	say "Now that you are with your Honey and grandpa, you don't want to go anywhere else.".
-
-Chapter - Scene_Long_Arm_of_the_Law
-
-There is a scene called Scene_Long_Arm_of_the_Law.
-
-Scene_Long_Arm_of_the_Law begins when 
-Scene_Day_Two is happening and player is in Room_B_Loop.
-
-Scene_Long_Arm_of_the_Law ends when seq_long_arm_of_the_law is run and seq_long_arm_of_the_law is not in-progress.
-
-When Scene_Long_Arm_of_the_Law begins:
-	now seq_long_arm_of_the_law is in-progress;
-
-[Things that make us decide NOT to support Lee:
-	Going elsewhere, waiting too long]
-Instead of room_navigating or going during Scene_Long_Arm_of_the_Law:
-	if index of seq_long_arm_of_the_law < 4:
-		say "You don't want to go anywhere, right now.";
-	else:
-		increment index of seq_long_arm_of_the_law;
-		now lee_support of player is _decided_no;
-		say "You feel bad leaving Lee, but you're hope he'll be okay. You let grandpa lead you back toward home.".
-
-Every turn while lee_support of player is _uncertain:
-	queue_report "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]" with priority 1.
-
-Instead of waiting during Scene_Long_Arm_of_the_Law:
-	if index of seq_long_arm_of_the_law < 4:
-		continue the action;
-	else:
-		if wait_time of seq_long_arm_of_the_law < 2:
-			increment wait_time of seq_long_arm_of_the_law;
-			say "[one of]You're waiting to see what happens, but should you do something?[or]You're waiting, but shouldn't you do something?[in random order]";
-			continue the action;
-		else:
-			[ we do this to jump past the pause in the seq ]
-			increment index of seq_long_arm_of_the_law;
-			now lee_support of player is _decided_no;
-			say "Well now you've waited too long, and whatever's going to happen is going to happen. You feel bad for Lee, but you're sure he'll be okay. You let grandpa lead you back toward home.".
-
-[Things that make us decide to support Lee:
-	Saying no, telling about night in woods, yelling, attacking Sheriff]
-Instead of informing or telling or yelling or saying no during Scene_Long_Arm_of_the_Law:
-	decide_to_support_lee.
-Instead of attacking Sheriff when lee_support of player is _uncertain:
-  say "You're not sure violence is the answer, though it might make you feel better. But you would probably end up worse than Lee.";
-	decide_to_support_lee.
-
-To decide_to_support_lee:
-	if index of seq_long_arm_of_the_law < 4:
-		say "It seems that everyone is focused elsewhere";
-	else:
-		increment index of seq_long_arm_of_the_law;
-		now lee_support of player is _decided_yes;
-		now player is compassionate;
-		now player is intrepid;
-		say "You take a deep breath, and yell, 'No, wait!'[paragraph break]Everyone turns to you. And the words tumble out. Quick as you can, stumbling, messing up some of the details, you tell how you wandered into the woods by yourself, about the dog, about the nest, about the raccoons, about orienteering, every word chasing the previous word, and how you were found by Lee and the Cat Lady.[paragraph break]You stop and take a breath.".
-
-
-Chapter - Scene_Parents_Arrive
-
-There is a scene called Scene_Parents_Arrive.
-
-Scene_Parents_Arrive begins when Scene_Long_Arm_of_the_Law ends.
-
-Scene_Parents_Arrive ends when seq_parents_arrive is run and seq_parents_arrive is not in-progress.
-
-When Scene_Parents_Arrive begins:
-	now seq_parents_arrive is in-progress.
-
-Every turn while going_home_decision of player is _uncertain:
-	queue_report "[one of]Mom says it's time to go.[or]You feel terrible. You think maybe this is all your fault and now it's time to face the consequences[or]Mom's ready to go home, but what do you want?[or]Maybe you can just be quiet in the car and things will simmer down.[or]What if Mark hurts your mom and you're not there to stop him?[or]Can you just stay here with Honey and grandpa?[cycling]" with priority 1.
-
-Instead of waiting during Scene_Parents_Arrive:
-	say "[one of]The moment seems to balance on a knife's edge.[or]Seconds tick by.[or]The world holds its breath.[in random order]".
-
-Instead of room_navigating or going during Scene_Parents_Arrive:
-	if index of seq_parents_arrive < 3:
-		say "There's no way you are leaving now that your mom's here.";
-	else:
-		say "If you don't want to go home with mom, you're probably going to have to say something.".
-
-[Things that make us decide to go home:
-	getting in car, saying yes]
-Instead of saying yes during Scene_Parents_Arrive:
-	decide_to_go_home.
-Instead of entering moms_camaro during Scene_Parents_Arrive:
-	decide_to_go_home.
-
-To decide_to_go_home:
-	if index of seq_parents_arrive < 3:
-		say "It seems that everyone is focused elsewhere";
-	else:
-		increment index of seq_parents_arrive;
-		now going_home_decision of player is _decided_yes;
-		say "You don't want to go, but you want to keep your mom safe. You turn to hug grandpa who then lets you go. Honey looks sad and worried. You slowly get in the back of the Camaro.".
-
-[Things that make us decide not to go home:
-	Saying no, yelling, attacking Mark]
-Instead of yelling or saying no during Scene_Parents_Arrive:
-	decide_not_to_go_home.
-Instead of attacking stepdad when going_home_decision of player is _uncertain:
-  say "Oh, how you want to hurt him. But you are sure it would give him an excuse to hurt you back worse. You decide to use words instead.";
-	decide_not_to_go_home.
-
-To decide_not_to_go_home:
-	if index of seq_parents_arrive < 3:
-		say "It seems that everyone is focused elsewhere";
-	else:
-		increment index of seq_parents_arrive;
-		now going_home_decision of player is _decided_no;
-		say "You stand up straight. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]going[roman type] to stay here,' you say firmly. You can feel grandpa's arms tighten around you.".
-
-test parents with "test long-arm / z/z/z/yell/z"
-
-Chapter - Scene_Fallout
-
-There is a scene called Scene_Fallout.
-
-Scene_Fallout begins when 
-Scene_Parents_Arrive ends.
-
-When Scene_Fallout begins:
-	say paragraph break;
-	say line break;
-	center "[italic type]***   ";
-	say paragraph break;
-	say line break;
-	say story_endings;
-	say "";
-	end the story;
-
-to say story_endings:
-	if going_home_decision of player is _decided_no:
-		say "";
-	else:
-		say "";
-
-[TODO: Should this be exposition or a scene in which the player as an older person pours over a box in which there are photos and keepsakes (the Mika figurine, the purple heart, the lucky penny, the pet rock? ]
 
 Book - Storytelling Elements
 
@@ -3927,8 +3212,1778 @@ To show_train_crossing:
 		queue_report "The train is approaching the dirt road near the trailer park, passing almost directly beneath you. It sounds it's whistle for the crossing. Still loud, even up here! For a moment, you can see the whole train, end to end. It's going fast, and before you know it, the train is past the crossing, past the trailer park, and around the next bend and out of sight." with priority 2;
 		move distant_train to Limbo.
 
+Volume - The World
 
-Volume - World
+Book - Scenes
+
+[I can't remember what effect a dramatic scene has]
+A scene can be dramatic. A scene is usually not dramatic.
+
+Part - Scene_Day_One
+
+There is a scene called Scene_Day_One.
+Scene_Day_One begins when play begins.
+Scene_Day_One ends when Scene_Night_In_The_Woods begins.
+
+[ Now the time of day is 9:15 AM. ]
+When Scene_Day_One begins:
+	[turn this on when beta-testing]
+	[start_transcript;]
+	say story_intro;
+	pause the game;
+	say Title_Card_Part_1;
+	say "[line break]You've wandered away from Honey and Grandpa picking blackberries.";
+	set_the_time_to late_morning.
+
+Chapter - Scene_Picking_Berries
+
+Scene_Picking_Berries is a scene.
+Scene_Picking_Berries begins when play begins.
+Scene_Picking_Berries ends when Scene_Explorations begins.
+
+Chapter - Scene_Grandparents_Conversation
+
+There is a scene called Scene_Grandparents_Conversation.
+Scene_Grandparents_Conversation begins when player is in Room_Grassy_Clearing for the first time.
+Scene_Grandparents_Conversation ends when Scene_Explorations begins.
+
+When Scene_Grandparents_Conversation begins:
+	try saying hello to Grandpa;
+	now current interlocutor is Grandpa;
+	start_seq_grandparents_chat in one turn from now;
+	continue the action.
+
+At the time when start_seq_grandparents_chat:
+	now seq_grandparents_chat is in-progress;
+
+Chapter - Sequences
+
+[ seq_grandparents_chat sequence
+summary: Honey and Grandpa talk about other characters
+conditions: during Picking Blackberries when player is in or near blackberry clearing.
+trigger: the player is in blackberry clearing for two turns ]
+
+seq_grandparents_chat is a sequence.
+	The action_handler is the seq_grandparents_chat_handler rule.
+	The interrupt_test is seq_grandparents_chat_interrupt_test rule.
+	The length_of_seq is 13.
+
+This is the seq_grandparents_chat_handler rule:
+	let index be index of seq_grandparents_chat;
+	if a random chance of 1 in 2 succeeds:
+		rule fails;
+	else:
+		if player is in Room_Lost_in_the_Brambles or player is in Room_Blackberry_Tangle:
+			queue_report "You hear Honey and Grandpa talking and you perk up your ears." at priority 1;
+		else if player is in Room_Grassy_Clearing:
+			if index is 1:
+				Report Honey saying "Honey and Grandpa continue their conversation: 'Have you heard from Nick about this summer? Is he planning a visit or are we just left guessing?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says.";
+			else if index is 2:
+				queue_report "[grandparent_random]" at priority 2;
+			else if index is 3:
+				Report Honey saying "'Did you call Rachel?' Honey asks Grandpa. 'Sounded like she wanted to talk to her dad.'";
+			else if index is 4:
+				Report Grandpa saying "'I'll call her tonight, see how she is,' Grandpa says to Honey.";
+			else if index is 5:
+				Report Honey saying "'You're not worried about her?' Honey asks Grandpa in a low voice glancing your way, 'With Mark?' You keep your head down and try to look like you are concentrating on picking berries.";
+			else if index is 6:
+				Report Grandpa saying "'Well, you know Rach, she can take care of herself,' Grandpa says to Honey, 'She's a big girl.' And after a moment, 'But I'll tell ya...'";
+			else if index is 7:
+				Report Grandpa saying "You wander a little distance away, but close enough that you can still hear. 'I do not like the way he treats, ah, the little one. At all.' Grampa says.";
+			else if index is 8:
+				queue_report "[grandparent_random]" at priority 1;
+			else if index is 9:
+				Report Honey saying "'I don't know,' Honey says quietly. 'I trust Rachel too, but still. I'm not happy how it's turning out with this guy. Maybe it happened too quickly.";
+			else if index is 10:
+				Report Honey saying "'Did you ask about the arm?' Honey asks Grandpa, glancing in your direction.";
+				now player is aware_of_arm_injury;
+			else if index is 11:
+				Report Grandpa saying "'I did ask about the arm, but I didn't find out anything,' Grandpa says, looking over at you. 'To think that asshole, pardon my French, might have...' Grandpa just shakes his head.";
+			else if index is 12:
+				Report Honey saying "'I wouldn't put anything past him when he's been drinking,' Honey says to Grandpa. 'Yeah, he's a charmer. What was Rachel thinking?'";
+			else if index is 13:
+				queue_report "[grandparent_random]" at priority 1;
+				[We do the following, because we want this step to repeat]
+				decrease index of seq_grandparents_chat by one;
+				[we make sure this ends when Scene_Walk_With_Grandpa begins]
+
+This is the seq_grandparents_chat_interrupt_test rule:
+	[ We don't worry about interrupting seq if NPCs are not visible because seq accounts for this. ]
+	if we are speaking to Grandpa, rule succeeds;
+	if we are speaking to Honey, rule succeeds;
+	rule fails.
+
+
+Chapter - Scene_Explorations
+
+Scene_Explorations is a scene.
+Scene_Explorations begins when player is free_to_wander.
+Scene_Explorations ends when Scene_Walk_With_Grandpa begins.
+
+[ Now the time of day is 11:30 AM. ]
+When Scene_Explorations begins:
+	set_the_time_to midday.
+
+Chapter - Scene_Walk_With_Grandpa
+
+[ This is a scene that begins
+	* after Scene_Explorations
+	* after player has been to dirt road and seen dog
+	* when player is near blackberry clearing ]
+
+There is a scene called Scene_Walk_With_Grandpa.
+Scene_Walk_With_Grandpa begins when player has been in Region_Trailer_Indoors and player is in Room_Grassy_Clearing.
+Scene_Walk_With_Grandpa ends when Grandpa has been in Room_Grandpas_Trailer and Grandpa is not in Room_Grandpas_Trailer.
+
+When Scene_Walk_With_Grandpa begins:
+		now big_bucket is full;
+		now seq_grandparents_chat is not in-progress;
+		now journey_gpa_walk is in-progress;
+
+When Scene_Walk_With_Grandpa ends:
+	now big_bucket is empty.
+
+Chapter - Journeys
+
+journey_gpa_walk is an npc_journey.
+	The npc is Grandpa.
+	The origin is Room_Grassy_Clearing.
+	The destination is Room_Grandpas_Trailer.
+	The wait_time is 2.
+	The max_wait is 8.
+	Waits_for_player is true.
+	The interrupt_test is the journey_gpa_walk_interrupt_test rule.
+	The action_at_start is the journey_gpa_walk_start rule.
+	The action_at_end is the journey_gpa_walk_end rule.
+	The action_before_moving is the journey_gpa_walk_before_moving rule.
+	The action_after_waiting is the journey_gpa_walk_after_waiting rule.
+	The action_catching_up is the journey_gpa_walk_catching_up rule.
+
+This is the journey_gpa_walk_interrupt_test rule:
+	if we are speaking to Grandpa, rule succeeds;
+	rule fails.
+
+This is the journey_gpa_walk_start rule:
+	if grandpa is not visible:
+		if player is in Region_Blackberry_Area:
+			queue_report "[one of]You hear grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
+		else if player is in Region_River_Area or player is in Region_Dirt_Road:
+			if a random chance of 1 in 2 succeeds:
+				queue_report "[one of]You think you hear your Grandpa calling you[or]Is that grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think grandpa's calling.[at random]" at priority 1;
+		rule fails;
+	else:
+		if time_here of journey_gpa_walk is 1:
+			Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old grandpa?'";
+			rule fails;
+		else if time_here of journey_gpa_walk is 2:
+			Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge.";
+			now Grandpa holds bucket;
+		rule succeeds;
+
+This is the
+journey_gpa_walk_before_moving rule:
+	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Room_Stone_Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]heads for the grassy field[else if player is in Room_Grassy_Field]goes through the back gate into the trailer park[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Room_B_Loop]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 1;
+
+This is the
+journey_gpa_walk_after_waiting rule:
+	Report Grandpa saying "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]";
+
+This is the
+	journey_gpa_walk_catching_up rule:
+	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
+
+This is the
+		journey_gpa_walk_end rule:
+	if time_here of journey_gpa_walk is 1:
+		Report Mary saying "'Mornin['], Mary,' Grandpa says.[paragraph break]'How's the berry picking?' Mary asks.";
+		rule fails;
+	else if time_here of journey_gpa_walk is 2:
+		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
+		now bucket is empty;
+		rule fails;
+	else if time_here of journey_gpa_walk is 3:
+		Report Mary saying "Your grandpa gets a big glass of water from the sink and drinks it.
+		[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'";
+		now seq_mary_sandwich is in-progress;
+		rule fails;
+	else if time_here of journey_gpa_walk is 4:
+		Report Grandpa saying "'I better hustle back,' Grandpa says, 'before Ellie needs the bucket.' Grandpa turns to you on his way out, 'See you down there, [grandpas_nickname].' Grandpa squeezes your shoulder and heads out the door.";
+		now grandpa is in Room_Grassy_Clearing;
+		rule succeeds;
+
+Chapter - Actions
+
+Instead of room_navigating or going when player is in Room_Grandpas_Trailer during Scene_Walk_With_Grandpa:
+	queue_report "'Hold your horses, [grandpas_nickname],' Grandpa says. 'Stay with us for now.'" at priority 3.
+
+Chapter - Scene_Helping_Grandpa
+
+There is a scene called Scene_Helping_Grandpa.
+
+Chapter - Scene_Helping_the_Cat_Lady
+
+There is a scene called Scene_Helping_the_Cat_Lady.
+
+[TODO: Implement helping Cat Lady get cat off roof.]
+
+Chapter - Scene_Sheriffs_Drive_By
+
+Scene_Sheriffs_Drive_By is a dramatic scene.
+Scene_Sheriffs_Drive_By begins when player has been in Region_Trailer_Park_Area for eight turns and Scene_Day_One is happening and Scene_Tea_Time is not happening and Scene_Hangout_With_Lee is not happening and Scene_Making_Sandwiches is not happening and grandpa is not in Region_Trailer_Park_Area.
+Scene_Sheriffs_Drive_By ends when seq_sheriffs_drive_by is run and seq_sheriffs_drive_by is not in-progress.
+
+When Scene_Sheriffs_Drive_By begins:
+	now sheriff is in sheriffs_car;
+	now sheriffs_car is in Room_D_Loop;
+	now seq_sheriffs_drive_by is in-progress;
+
+Section - Sequences
+
+[ Sequence: Sheriffs_Drive_By
+
+	summary: Sheriff and Cat Lady talk about Lee
+	conditions: during explorations when player has been in trailer park region for a numer of turns
+	trigger: the scene Scene_Sheriffs_Drive_By starts
+]
+
+seq_sheriffs_drive_by is a sequence.
+	The action_handler is the seq_sheriffs_drive_by_handler rule.
+	The interrupt_test is seq_sheriffs_drive_by_interrupt_test rule.
+	The length_of_seq is 6.
+
+This is the seq_sheriffs_drive_by_handler rule:
+	let the index be the index of seq_sheriffs_drive_by;
+	if (player is in Room_C_Loop or player is in Room_B_Loop or player is in Room_Picnic_Area) and index is greater than 1 and index is less than 6:
+		queue_report "The Sheriff is still talking to the Cat Lady in D Loop." with priority 3;
+	if index is 1:
+		if player is in Room_D_Loop:
+			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. As it drives through C Loop and passes Lee, the car slows way down but doesn't stop. It's coming straight toward where you stand in D Loop." with priority 2;
+		else if player is in Room_C_Loop:
+			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park, headed toward D Loop. As the car passes [if Lee was visible]Lee who is out in front of his trailer smoking, you see the policeman slow down and give him a Look[else]Lee's trailer, you see the policeman looking carefully at his trailer[end if]. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
+			Move player to Room_D_Loop, without printing a room description;
+		else if player is in Region_Trailer_Outdoors:
+			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
+			Move player to Room_D_Loop, without printing a room description;
+		else if player is in Region_Trailer_Indoors:
+			queue_report "You get a lurching feeling as you catch sight of a police car outside the window. It is driving slowly by. Curiosity draws you outside and along in its wake. It stops in D Loop and so do you.[line break][location heading]" with priority 2;
+			Move player to Room_D_Loop, without printing a room description;
+		queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 1;
+	else if index is 2:
+		if sharon is not in Room_D_Loop:
+			move sharon out of her trailer;
+		if player is in Room_D_Loop:
+			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing, Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 2;
+	else if index is 3:
+		if player is in Room_D_Loop:
+			queue_report "'Well, pretty good, Bill. I can't complain,' the Cat Lady tells the Sheriff. Then a frown crosses her face, 'Oh except Oliver has an abscess. I have to take him to the kitty doctor next week.'" with priority 2;
+	else if index is 4:
+		if player is in Room_D_Loop:
+			queue_report "'Well what I came to ask,' the Sheriff says to the Cat Lady, 'Has he been bothering you any?' He looks back toward C Loop. 'When I drove up, I saw him over there. Has he been leaving you alone?'" with priority 2;
+	else if index is 5:
+		if player is in Room_D_Loop:
+			queue_report "'Oh, he hasn't so much as looked in my direction,' the Cat Lady says to the Sheriff.
+			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?''" with priority 2;
+	else if index is 6:
+		if player is in Room_D_Loop:
+			queue_report "'Dearie, you're a sweet man to check in on me,' the Cat Lady puts her hand on the Sheriff's arm and he almost smiles.
+			[paragraph break]He pats her hand, 'You take care of yourself Sharon, and make sure you call me if you have any problems.' He talks briefly on his radio and then drives off, a little too fast for inside the trailer park. The Cat Lady unwinds the hose and continues watering her garden." with priority 2;
+		else if player is in Region_Trailer_Park_Area:
+			queue_report "You hear the Sheriff's car drive off, a little too fast for inside the trailer park." with priority 1;
+		now sheriffs_car is in Limbo;
+
+This is the seq_sheriffs_drive_by_interrupt_test rule:
+	[ We don't worry about interrupting seq if NPCs are not visible because the seq accounts for that. ]
+	if we are speaking to Sharon, rule succeeds;
+	if we are speaking to Sheriff, rule succeeds;
+	rule fails.
+
+Test long-arm with "test day2 / get up / climb pine tree / d / w / w / go to grassy field / again / again / again / again / again / z / z / z".
+
+
+Chapter - Scene_Visit_With_Sharon
+
+There is a recurring scene called Scene_Visit_With_Sharon.
+Scene_Visit_With_Sharon begins when player is in Room_D_Loop and Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening.
+Scene_Visit_With_Sharon ends when Scene_Sheriffs_Drive_By begins.
+Scene_Visit_With_Sharon ends when player is not in Room_D_Loop and player is not in Room_Sharons_Trailer.
+
+When Scene_Visit_With_Sharon begins:
+	try saying hello to Sharon;
+	if Scene_Tea_Time has not happened:
+		now seq_sharon_invite is in-progress.
+
+Section - Sequences
+
+[
+	Invite Sequence
+]
+
+seq_sharon_invite is a sequence.
+	The action_handler is the seq_sharon_invite_handler rule.
+	The interrupt_test is seq_sharon_invite_interrupt_test rule.
+	The length_of_seq is 2.
+
+This is the seq_sharon_invite_handler rule:
+	let index be index of seq_sharon_invite;
+	if Sharon is visible:
+		now current interlocutor is Sharon;
+	if index is 2:
+		Report Sharon saying "'Won't you come in for a moment?' the Cat Lady gestures at her trailer, 'I just love guests. And I do so enjoy talking to you.'";
+
+This is the seq_sharon_invite_interrupt_test rule:
+	[ If player walks away, pause the seq. ]
+	if player is not in Room_D_Loop or Sharon is not visible:
+		rule succeeds;
+	if we are speaking to sharon:
+		rule succeeds;
+	if Scene_Sheriffs_Drive_By is happening:
+		rule succeeds;
+	rule fails.
+
+
+Chapter - Scene_Tea_Time
+
+Scene_Tea_Time is a dramatic scene.
+Scene_Tea_Time begins when player has been in Room_Sharons_Trailer for two turns and Scene_Sheriffs_Drive_By is not happening.
+Scene_Tea_Time ends when seq_sharon_teatime is run and seq_sharon_teatime is not in-progress.
+
+When Scene_Tea_Time begins:
+	now seq_sharon_teatime is in-progress;
+	now Sharon is ready-for-tea-time;
+
+Section - Sequences
+
+[
+	Tea Time Sequence
+]
+
+seq_sharon_teatime is a sequence.
+	The action_handler is the seq_sharon_teatime_handler rule.
+	The interrupt_test is seq_sharon_teatime_interrupt_test rule.
+	The length_of_seq is 6.
+
+This is the seq_sharon_teatime_handler rule:
+	let index be index of seq_sharon_teatime;
+	if Sharon is visible:
+		now current interlocutor is Sharon;
+	if index is 1:
+		if sharon is not in Room_Sharons_Trailer:
+			Move Sharon into her trailer;
+		now sharon is ready-for-tea-time;
+		Report Sharon saying "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest.";
+	else if index is 2:
+		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Oh, [sharons_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
+		do Sharon_Teatime_Premonition;
+	else if index is 3:
+		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Please, [sharons_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharons_nickname]. What adventures have you had since we talked last?'";
+	else if index is 4:
+		if sharon is visible:
+			if player is not on Cat Lady's kitchen table:
+				queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3;
+				try silently entering the Cat Lady's kitchen table;
+			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharons_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
+			now your teacup is filled;
+			Now player is sharon_experienced;
+	else if index is 5:
+		if turns_so_far of seq_sharon_teatime is less than 40 and player is on Cat Lady's kitchen table:
+			decrease index of seq_sharon_teatime by one;
+			if sharon is visible:
+				if your teacup is unfilled and a random chance of 2 in 3 succeeds:
+					refill the teacups;
+				queue_report "[cat lady prattle]" at priority 2;
+		else:
+			now index of seq_sharon_teatime is 6;
+			now index is 6;
+	if index is 6:
+		Report Sharon saying "'Oh [sharons_nickname], it's been so nice talking to you. I can see you have to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you.";
+		if player holds your teacup:
+			queue_report "You return your teacup to the table." at priority 1;
+			now your teacup is on the Cat Lady's kitchen table;
+		Sharon resumes gardening in two turns from now;
+		Now player is compassionate;
+
+This is the seq_sharon_teatime_interrupt_test rule:
+	[ If player walks away, pause the seq. ]
+	if player is not in Room_Sharons_Trailer and player is not on Cat Lady's kitchen table:
+		[a condition so if player leaves, the cat lady doesn't get stuck waiting]
+		[TODO: Add a similar condition to other seq? ]
+		if turns_so_far of seq_sharon_teatime is greater than 40:
+			rule fails;
+		else:
+			rule succeeds;
+	if we are speaking to sharon, rule succeeds;
+	rule fails.
+
+Section - Actions
+
+To refill the teacups:
+	say "The Cat Lady re-fills [if a random chance of 1 in 2 succeeds]both of your cups[else]your cup[end if] with more tepid tea.";
+	now your teacup is filled;
+
+Chapter - Scene_Visit_With_Lee
+
+There is a recurring scene called Scene_Visit_With_Lee.
+Scene_Visit_With_Lee begins when player is in Room_C_Loop and Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening.
+Scene_Visit_With_Lee ends when player is not in Room_C_Loop and player is not in Room_Lees_Trailer.
+
+When Scene_Visit_With_Lee begins:
+	try saying hello to Lee;
+	if Scene_Hangout_With_Lee has not happened:
+		now seq_lee_invite is in-progress.
+
+Section - Sequences
+
+[TODO: All seq should stop if rant is in progress]
+
+seq_lee_invite is a sequence.
+	The action_handler is the seq_lee_invite_handler rule.
+	The interrupt_test is seq_lee_invite_interrupt_test rule.
+	The length_of_seq is 5.
+
+This is the seq_lee_invite_handler rule:
+	let index be index of seq_lee_invite;
+	if Lee is visible:
+		now current interlocutor is Lee;
+	if index is 2:
+		Report Lee saying "Lee looks you over. 'What happened to your arm?' he asks with what seems like genuine concern.[if player is injured] 'I see you're looking a little rough around the edges. You okay?' You notice you've been holding your side where you bashed it on the big pine tree.[end if]";
+		now player is aware_of_arm_injury;
+	else if index is 4:
+		queue_report "Lee looks like he is thinking about something. Finally, he nods to himself." at priority 2;
+	else if index is 5:
+		Report Lee saying "'I think I have something for you. You're welcome to come in, if you want,' Lee shrugs.[first time]
+		[paragraph break][Lee_Invite_Premonition].[only]";
+
+[TODO: Add visibility rule to interrupt tests and eliminate stuff like "if player is in Room_C_Loop and lee is visible" from the individual sequence steps, making sure they only apply within Day One or Day Two as appropriate]
+
+This is the seq_lee_invite_interrupt_test rule:
+	[End seq if still in-progress but scene has ended]
+	if Scene_Day_One is not happening or Scene_Hangout_With_Lee has happened:
+		now seq_lee_invite is not in-progress;
+		rule succeeds;
+	[Pause seq if we walk away]
+	if Lee is not visible or player is not in Room_C_Loop:
+		rule succeeds;
+	[if we are speaking to lee:
+		rule succeeds;]
+	if Scene_Sheriffs_Drive_By is happening:
+		rule succeeds;
+	rule fails.
+
+
+Chapter - Scene_Hangout_With_Lee
+
+Scene_Hangout_With_Lee is a dramatic scene.
+Scene_Hangout_With_Lee begins when player has been in Room_Lees_Trailer for one turn and Scene_Sheriffs_Drive_By is not happening.
+Scene_Hangout_With_Lee ends when seq_lee_hangout is run and seq_lee_hangout is not in-progress.
+
+When Scene_Hangout_With_Lee begins:
+	now seq_lee_hangout is in-progress;
+
+Section - Sequences
+
+seq_lee_hangout is a sequence.
+	The action_handler is the seq_lee_hangout_handler rule.
+	The interrupt_test is seq_lee_hangout_interrupt_test rule.
+	The length_of_seq is 8.
+
+This is the seq_lee_hangout_handler rule:
+	let index be index of seq_lee_hangout;
+	if Lee is visible:
+		now current interlocutor is Lee;
+	if index is 1:
+		if Lee is not in Room_Lees_Trailer:
+			move_lee_into_his_trailer;
+		Report Lee saying "'So what's up in your world?' Lee asks. 'Anything good?' He pauses for a moment. 'I have something here for you.'
+			[paragraph break]Lee is fumbling around in a drawer.";
+	if index is 2:
+		Report Lee saying "'Hey, make yourself comfortable,' Lee says. 'Mi casa, es su casa. That means [']My home is your home.['] Do you want anything? A drink or anything?' It makes you [nervous] to think of drinking or eating in Lee's trailer. You can smell a little alcohol on his breath like your step-dad.
+		[paragraph break]Lee is fumbling around in a drawer.";
+	if index is 3:
+		Report Lee saying "'I got this when I got hurt in Da Nang,' Lee says. 'And now I think it's time to pass it on to you.'
+		[paragraph break]Lee is still looking for something.";
+	else if index is 4:
+		Report Lee saying "'They gave it to me just for being in the wrong place at the wrong time,' Lee is still fumbling in a drawer.
+		[paragraph break]'And I didn't even want to be there. So I always felt weird about it. Like it wasn't really mine. Like I didn't deserve it,' Lee says, 'But you're full of spirit and should have this.' Lee seems to find what he's looking for and puts it behind his back. 'This is for you.'
+		[paragraph break]He holds out a purple medal. It has a purple ribbon and a gold heart-shaped medalion, purple around a gold figure in the middle. You want to hold it in your hand and feel its weight. You put out your hand and, for a moment, are scared Lee is going to snatch it back.
+		[paragraph break]But Lee puts the medal in your hand with a smile. It's heavier even than it appears.";
+		now player holds purple_heart;
+	else if index is 5:
+		Report Lee saying "You start to thank Lee, but he looks embarrassed even before you say it and cuts you off. 'I wonder what's on the tube,' He turns to the television and starts fiddling with the rabbit ears.";
+	else if index is 6:
+		if lee is visible:
+			try Lee switching on lees_tv;
+			say what_show_is_playing;
+			say line break;
+			Report Lee saying "'There's never anything really on. Don't know why I bother,' Lee says. 'Feel free to find something that you like.'";
+	else if index is 7:
+		if turns_so_far of seq_lee_hangout is less than 40:
+			decrease index of seq_lee_hangout by one;
+	else if index is greater than 7:
+		Report Lee saying "'Okay, I'm heading out. You can stay here long as you want. Drop by any time, Jody,' Lee says. 'You take care of yourself. And don't let the assholes get you down,' he adds with a wink.";
+		lee_resumes_smoking in one turn from now;
+
+This is the seq_lee_hangout_interrupt_test rule:
+	if we are speaking to Lee:
+		rule succeeds;
+	[ If player walks away, pause the seq. ]
+	if player is not enclosed by Room_Lees_Trailer:
+		[a condition so if player leaves, Lee doesn't get stuck waiting]
+		if turns_so_far of seq_lee_hangout is greater than 40:
+			rule fails;
+		else:
+			rule succeeds;
+	rule fails.
+
+Section - Actions
+
+[transition text]
+Instead of going from Room_Lees_Trailer during Scene_Hangout_With_Lee:
+	say "You give a wave to Lee as you go.[paragraph break]'Alright, drop by any time, Jody,' Lee says. 'You take care of yourself. And don't let the assholes get you down,' he adds with a wink.";
+	if index of seq_lee_hangout is greater than 4:
+		now seq_lee_hangout is not in-progress;
+		lee_resumes_smoking in four turns from now;
+	continue the action.
+
+Chapter - Scene_Visit_With_Mary
+
+There is a scene called Scene_Visit_With_Mary.
+Scene_Visit_With_Mary begins when player is in Room_Grandpas_Trailer.
+Scene_Visit_With_Mary ends when player is not in Room_Grandpas_Trailer.
+
+When Scene_Visit_With_Mary begins:
+	try saying hello to Aunt Mary;
+	now current interlocutor is Mary.
+
+Chapter - Scene_Mary_Suggestion
+
+Scene_Mary_Suggestion is a dramatic scene.
+Scene_Mary_Suggestion begins when Scene_Walk_With_Grandpa is happening and player has been in Room_Grandpas_Trailer for two turns and Grandpa has not been in Room_Grandpas_Trailer.
+[Scene_Mary_Suggestion is ended by the seq_mary_suggestion sequence]
+Scene_Mary_Suggestion ends when seq_mary_suggestion is run and seq_mary_suggestion is not in-progress.
+
+[ now the time of day is 1:55 PM. ]
+When Scene_Mary_Suggestion begins:
+	now seq_mary_suggestion is in-progress;
+	set_the_time_to early_afternoon.
+
+Section - Sequences
+
+[ Mary Suggestion Sequence
+
+	summary: Mary suggests we go back to blackberry clearing to help grandpa bring bucket back and get lunch
+	conditions: during explorations, hasn't happened already, in Room_Grandpas_Trailer for some number of turns
+	trigger: the scene Mary Suggestion starts
+]
+
+seq_mary_suggestion is a sequence.
+	The action_handler is the seq_mary_suggestion_handler rule.
+	The interrupt_test is seq_mary_suggestion_interrupt_test rule.
+	The length_of_seq is 3.
+
+This is the seq_mary_suggestion_handler rule:
+	let index be index of seq_mary_suggestion;
+	if index is 1:
+		Report Mary saying "Aunt Mary pauses for a moment from her jam making to talk to you, 'You know your grandpa may need some company if he's bringing that bucket up here.'";
+	else if index is 2:
+		Report Mary saying "'Also, when you go down to the creek, ask your Grandpa and Grandma about lunch,' Aunt Mary says. 'I can make some sandwiches to send down with you.'";
+	else if index is 3:
+		Report Mary saying "'Why don't you hustle down to the creek and help your grandpa,' Aunt Mary says and goes back to stirring the jam.";
+
+This is the seq_mary_suggestion_interrupt_test rule:
+	if Scene_Explorations has ended, rule fails; [if no longer applicable, run out the sequence]
+	if we are speaking to Mary, rule succeeds;
+	[ If player walked away, pause the seq. ]
+	if Mary is not visible, rule succeeds;
+	rule fails.
+
+
+Chapter - Scene_Making_Sandwiches
+
+Scene_Making_Sandwiches is a dramatic scene.
+Scene_Making_Sandwiches begins when Scene_Walk_With_Grandpa ends.
+[Scene_Making_Sandwiches is ended by the seq_mary_sandwich sequence]
+Scene_Making_Sandwiches ends when seq_mary_sandwich is run and seq_mary_sandwich is not in-progress.
+
+When Scene_Making_Sandwiches begins:
+	now seq_mary_sandwich is in-progress.
+
+Section - Sequences
+
+
+[
+	Mary Sandwich Sequence
+
+	summary: Mary makes player stay and help make sandwiches
+	conditions: after Scene_Walk_With_Grandpa, player in trailer
+	trigger: the scene Mary Sandwich starts
+]
+
+Some sandwich_ingredients are a fixed in place thing.
+	The printed name is "sandwich makin's".
+	The initial appearance is "Aunt Mary has gotten out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread for making tuna sandwiches.". The description is "Several cans of Chicken of the Sea, Miracle Whip, and Wonder Bread are out for making tuna sandwiches."
+	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonnaise/whip/can/cans/bags", "sandwich bags" as sandwich_ingredients.
+
+The brown paper bag is a unopenable open container.
+	The printed name is "[if brown paper bag is torn]torn up [end if]brown paper bag".
+	The description is "A plain brown paper bag[if brown paper bag is torn] now pretty torn up[end if]".
+The brown paper bag can be torn.
+
+[Originally I thought to simplify this model, but it came in handy during Scene_Defend_the_Fort]
+A tuna sandwich is a kind of thing.
+	A tuna sandwiches is edible.
+	[It is singular-named "tuna sandwich".]
+	Three tuna sandwiches are in brown paper bag.
+	The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
+	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spead/mayonaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna sandwiches.
+
+Instead of dropping tuna sandwich during Scene_Day_One:
+	if raccoons are in Region_Woods_Area:
+		say "Maybe they want the tuna sandwiches.";
+		continue the action;
+	else:
+		say "No way. That's lunch for Honey and grandpa.";
+
+Instead of dropping brown paper bag during Scene_Day_One:
+	if raccoons are in Region_Woods_Area:
+		say "Maybe they want the tuna sandwiches.";
+		continue the action;
+	else:
+		say "No way. That's lunch for Honey and grandpa.";
+
+Instead of eating tuna sandwich during Scene_Day_One:
+	say "Not yet. You want to eat lunch with Honey and grandpa.";
+
+seq_mary_sandwich is a sequence.
+	The action_handler is the seq_mary_sandwich_handler rule.
+	The interrupt_test is seq_mary_sandwich_interrupt_test rule.
+	The length_of_seq is 3.
+
+Instead of going when seq_mary_sandwich is in-progress:
+	say "'I want you to stay and help make sandwiches,' Aunt Mary says. 'It will just take a minute. Then you can go join your grandpa and bring them lunch.'";
+
+Understand "make sandwiches/sandwich/lunch", "help with/make sandwiches/sandwich/lunch" as a mistake ("Aunt Mary already has you working on the assembly line making tuna sandwiches.").
+
+This is the seq_mary_sandwich_handler rule:
+	let index be index of seq_mary_sandwich;
+	if index is 1:
+		if mary is visible:
+			Report Mary saying "Your Aunt Mary recruits you to help make lunch, getting out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread.";
+			now sandwich_ingredients are in Room_Grandpas_Trailer;
+	else if index is 2:
+		Report Mary saying "Your Aunt Mary has you on the assembly line constructing tuna fish sandwiches and putting them in sandwich bags.";
+	else if index is 3:
+		Report Mary saying "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makin's. 'Okay, you take those sandwiches down to your grandparents. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles.";
+		now all tuna sandwiches are in brown paper bag;
+		now brown paper bag is held by player;
+		now sandwich_ingredients are off-stage;
+
+This is the seq_mary_sandwich_interrupt_test rule:
+	if we are speaking to Mary, rule succeeds;
+	[ if player walks away, pause the seq. ]
+	if Mary is not visible, rule succeeds;
+	rule fails.
+
+
+Chapter - Scene_Bringing_Lunch
+
+There is a scene called Scene_Bringing_Lunch.
+Scene_Bringing_Lunch begins when Scene_Making_Sandwiches ends.
+Scene_Bringing_Lunch ends when Scene_Across_the_Creek begins.
+
+When Scene_Bringing_Lunch begins:
+	now dog is loose;
+	[now Grandpa is navbiguous;]
+	the log_bridge_forms in 10 turns from now.
+
+At the time when the log_bridge_forms:
+	now bridge_log_west is in Room_Crossing;
+	now pool_log is in Limbo
+
+
+Chapter - Scene_Across_the_Creek
+
+There is a scene called Scene_Across_the_Creek.
+Scene_Across_the_Creek begins when player has been in Room_Wooded_Trail.
+Scene_Across_the_Creek ends when Scene_Night_In_The_Woods begins.
+
+[ Now the time of day is 4:10 AM. ]
+When Scene_Across_the_Creek begins:
+	set_the_time_to late_afternoon.
+
+
+Part - Scene_Night_In_The_Woods
+
+There is a scene called Scene_Night_In_The_Woods.
+Scene_Night_In_The_Woods begins when landmark_nav_counter is 3.
+[Scene_Night_In_The_Woods begins when player is in Room_Forest_Meadow.]
+Scene_Night_In_The_Woods ends when Scene_Dreams begins.
+
+When Scene_Night_In_The_Woods begins:
+	now landmark_nav_counter is 0;
+	say "[lost_in_the_woods_payoff]";
+	pause the game;
+	say Title_Card_Part_2;
+	Now the right hand status line is "Evening";
+	[ move our elusive_landmark to the new location ]
+	Let this_thing be random elusive_landmark in Room_Dark_Woods_South;
+	Now this_thing is in Room_Dark_Woods_North;
+	Now player is in Room_Dark_Woods_North;
+	set_the_time_to evening.
+
+
+Chapter - Scene_STOP
+
+There is a scene called Scene_STOP.
+Scene_STOP begins when player is in Room_Forest_Meadow for first time.
+Scene_STOP ends when player is in Room_Protected_Hollow.
+
+When Scene_STOP begins:
+	now seq_jody_stop is in-progress.
+
+When Scene_STOP ends:
+	now seq_jody_stop is not in-progress;
+	set_the_time_to night.
+
+[S.T.O.P.
+S stands for SIT DOWN.
+T is for THINK.
+O is for OBSERVE.
+P stands for PLAN.
+
+Survival priorities: In extreme conditions…
+
+1. You can live 3 hours without shelter.
+2. You can live 3 days without water.
+3. You can live 3 weeks without food.
+]
+
+Section - Sequences
+
+[ seq_jody_stop sequence
+summary: Jody has a series of realizations/memories that help them not freak out.
+trigger: Scene_STOP begins, i.e., 2 turns in Room_Forest_Meadow ]
+
+seq_jody_stop is a sequence.
+	The action_handler is the seq_jody_stop_handler rule.
+	The interrupt_test is seq_jody_stop_interrupt_test rule.
+	The length_of_seq is 6.
+
+This is the seq_jody_stop_handler rule:
+	let index be index of seq_jody_stop;
+	if index is 3:
+		queue_report "You think of how worried Honey and grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say outloud to yourself." at priority 1;
+	else if index is 4:
+		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
+	else if index is 5:
+		queue_report "And suddenly a memory: [paragraph break][italic type]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[roman type][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break][italic type]Think.[roman type] You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break][italic type]Observe.[roman type] You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break][italic type]Plan.[roman type] The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
+		Move player to the meadow grass, without printing a room description;
+		Now Room_Forest_Meadow is observed;
+	else if index is 6:
+		queue_report "[one of]You have a plan. Find shelter[or]Hypothermia is a real risk in the chilly forest at night. Time to find a place to shelter[or]You look closer at the edge of the forest[stopping]." at priority 1;
+		[We do the following, because we want this step to repeat]
+		decrease index of seq_jody_stop by one;
+		[we make sure this ends when Scene_STOP ends]
+
+This is the seq_jody_stop_interrupt_test rule:
+	[ Nothing stops this rule. ]
+	rule fails.
+
+
+Chapter - Scene_Make_Shelter
+
+There is a scene called Scene_Make_Shelter.
+Scene_Make_Shelter begins when Scene_STOP ends.
+Scene_Make_Shelter ends when Room_Protected_Hollow is made_cozy.
+[scene ends when player has stacked sticks and moved leaves into fort]
+
+
+Chapter - Scene_Sleep_One
+
+There is a scene called Scene_Sleep_One.
+Scene_Sleep_One begins when
+	player is in Room_Protected_Hollow and
+	Scene_Defend_the_Fort has not happened and
+	Scene_Dreams has not happened.
+Scene_Sleep_One ends when
+	Scene_Defend_the_Fort begins.
+
+When Scene_Sleep_One begins:
+	Now the right hand status line is "Night";
+	say "Now you have shelter, but can you sleep?";
+
+Instead of sleeping during Scene_Sleep_One:
+	if Room_Protected_Hollow is not made_cozy:
+		say "You are too cold to sleep.";
+	else:
+		now player is asleep;
+		say Sleep_Card;
+		say "...and are awakened what seems like seconds later. You heard a noise very nearby.";
+		try looking;
+
+When Scene_Sleep_One ends:
+	now player is awake;
+
+Chapter - Scene_Defend_the_Fort
+
+There is a scene called Scene_Defend_the_Fort.
+Scene_Defend_the_Fort begins when
+	Scene_Sleep_One is happening and
+	player is asleep.
+Scene_Defend_the_Fort ends when raccoons are not in Region_Woods_Area.
+
+When Scene_Defend_the_Fort begins:
+	now raccoons are in Room_Forest_Meadow;
+	now virtual_raccoons are in Room_Protected_Hollow;
+	now seq_raccoon_visit is in-progress;
+
+Chapter - Sequences
+
+seq_raccoon_visit is a sequence.
+	The action_handler is the seq_raccoon_visit_handler rule.
+	The interrupt_test is seq_raccoon_visit_interrupt_test rule.
+	The length_of_seq is 2.
+
+This is the seq_raccoon_visit_handler rule:
+	let index be index of seq_raccoon_visit;
+	if index is 1:
+		do_raccoon_things;
+		if raccoons are in Region_Woods_Area:
+			[We do the following, because we want this step to repeat]
+			decrease index of seq_raccoon_visit by one;
+
+This is the seq_raccoon_visit_interrupt_test rule:
+  [ We don't worry about interrupting seq if NPCs are not visible because the seq accounts for that. ]
+	if we are speaking to raccoons:
+		rule succeeds;
+	if we are yelling:
+		rule succeeds;
+	if the current action is room_navigating and the noun is Room_Protected_Hollow:
+		rule succeeds;
+	rule fails.
+
+Section - Actions
+
+Instead of sleeping during Scene_Defend_the_Fort:
+	say "There is no way you are sleeping while wolves or bears are trying to eat you.";
+
+To do_raccoon_things:
+	Let limbo_sandwich_list be the list of tuna sandwiches enclosed by Limbo;
+	[This continues until all of the sandwiches are gone.]
+	If the number of entries in limbo_sandwich_list is less than three:
+		If player is in Room_Forest_Meadow:
+			[raccoons will be in Room_Forest_Meadow waiting at the edges]
+			queue_report "[raccoon_description]." at priority 1;
+		else if player is in Room_Protected_Hollow:
+			Let meadow_sandwich_list be the list of tuna sandwiches enclosed by Room_Forest_Meadow;
+			Let hollow_sandwich_list be the list of tuna sandwiches enclosed by Room_Protected_Hollow;
+			[if there are sandwiches in Room_Forest_Meadow]
+			If the number of entries in meadow_sandwich_list is greater than zero:
+				[raccoons will be making noise in the meadow eating them.]
+				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]" at priority 1;
+				[It takes one turn for the raccoons to eat one sandwich.]
+				let one_sandwich be a random tuna sandwich enclosed by Room_Forest_Meadow;
+				now one_sandwich is in Limbo;
+				if brown paper bag is in Room_Forest_Meadow:
+					now brown paper bag is torn;
+			[if there are sandwiches in Room_Protected_Hollow]
+			else if the number of entries in hollow_sandwich_list is greater than zero:
+				[raccoons will be making noise sniffing around the fort]
+				queue_report "[one of]Something is trying to get into the fort. There is a rustling thump like a ghost in the attic.[or]You hear a nearby growl that nearly stops your heart.[or]Something is trying to get in. You see a branch shift. Is something on top of the fallen trees?[or]You hear something walking around -- wolves? bears? And are they trying to get you?[or]You hear something outside the fort. What do they want?[or]Looks like you're going to have to go see what's outside.[or]You steel your courage to go confront the wolves. Maybe they're friendly, you think unconvincingly.[cycling]" at priority 1;
+	[If player yells or moves, it takes one turn for the raccoons to make noise again.]
+	else:
+		now raccoons are in Limbo;
+		now virtual_raccoons are in Limbo;
+		now seq_raccoon_visit is not in-progress;
+		if player is in Room_Protected_Hollow:
+			queue_report  "Suddenly, you hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 2;
+		else if player is in Room_Forest_Meadow:
+			queue_report  "The invaders have taken their sandwiches and gone. You protected the fort."  at priority 2;
+
+After taking tuna sandwich when raccoons are visible:
+ 	queue_report "The eyes of the invaders follow the tuna sandwich." at priority 1;
+
+After dropping tuna sandwich when raccoons are visible:
+ 	queue_report "The glittering eyes watch the tuna sandwich hit the ground." at priority 1;
+
+After dropping brown paper bag when raccoons are visible:
+ 	queue_report "Numerous pairs of eyes watch the paper bag hit the ground." at priority 1;
+
+
+Chapter - Scene_Sleep_Two
+
+There is a scene called Scene_Sleep_Two.
+Scene_Sleep_Two begins when
+	player is in Room_Protected_Hollow and
+	Scene_Defend_the_Fort has ended and
+	Scene_Dreams has not happened.
+Scene_Sleep_Two ends when
+	Scene_Dreams begins.
+
+When Scene_Sleep_Two begins:
+	say "Will you be able to sleep after that? It's been a long day and you realize you are really tired.";
+
+Instead of sleeping during Scene_Sleep_Two:
+	if Room_Protected_Hollow is not made_cozy:
+		say "Again, you are too cold to sleep.";
+	else:
+		now player is asleep;
+		say Sleep_Card;
+
+Chapter - Scene_Dreams
+
+There is a scene called Scene_Dreams.
+Scene_Dreams begins when
+	Scene_Sleep_Two is happening and
+	player is asleep.
+Scene_Dreams ends when Scene_Dog_Dream has happened and player is awake.
+
+[ Now the time of day is 9:15 PM; ]
+When Scene_Dreams begins:
+	set_the_time_to night;
+	Now the right hand status line is "";
+	Now Honey is in Room_Dream_Railroad_Tracks;
+	Now grandpa is in Room_Dream_Railroad_Tracks;
+	store_all_your_stuff;
+	Now flattened_penny is in Room_Dream_Railroad_Tracks;
+	Now player is asleep;
+	Move the player to Room_Car_With_Mom;
+
+When Scene_Dreams ends:
+	now seq_dog_convo is not in-progress;
+	say "[line break]The dog wags its tail and fades. You slowly shake off the cobwebs of an altogether strange night.";
+	pause the game;
+	say Title_Card_Part_3;
+
+test dreams with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep"
+
+[During Scene_Dreams player cannot move to next location until the scene for that location is finished]
+
+Chapter - Scene_Dream_About_Drive_In
+
+There is a scene called Scene_Dream_About_Drive_In.
+Scene_Dream_About_Drive_In begins when Scene_Dreams begins.
+Scene_Dream_About_Drive_In ends when player has been in Room_Drive_In
+	and (player holds popcorn or player holds Milk Duds).
+
+Chapter - Scene_Dream_about_Mom
+
+There is a scene called Scene_Dream_about_Mom.
+Scene_Dream_about_Mom begins when Scene_Dreams begins.
+Scene_Dream_about_Mom ends when player is in Room_Drive_In.
+
+Mom_free_to_go is truth state that varies.
+	Mom_free_to_go is false.
+
+When Scene_Dream_about_Mom begins:
+	now seq_mom_watching_movie is in-progress
+
+When Scene_Dream_about_Mom ends:
+		now seq_mom_watching_movie is not in-progress
+
+Chapter - Sequences
+
+seq_mom_watching_movie is a sequence.
+	The action_handler is the seq_mom_watching_movie_handler rule.
+	The interrupt_test is seq_mom_watching_movie_interrupt_test rule.
+	The length_of_seq is 6.
+
+This is the seq_mom_watching_movie_handler rule:
+	let index be index of seq_mom_watching_movie;
+	if index is 2:
+		Report Mom saying "You and mom watch the movie for a while. The boy that the movie is about doesn't say much, but everyone seems scared of him including his mom and dad. There is something bad that happens at his birthday party but mom makes you cover your eyes. 'I'll tell you when you can look,' mom says.";
+	else if index is 3:
+		queue_report "In the movie, the bad kid knocks his mom over a railing, but she doesn't die." at priority 2;
+	else if index is 4:
+		Report Mom saying "The dad and another guy go to a cemetary and find a dog skeleton and are attacked by other dogs. Are they protecting the dead dog? This movie is really scary. [paragraph break]'Are you okay, hon?' mom asks. Something else happens to the boy's mom and your mom makes you cover your eyes. Did she die? You think about what would happen if your mom died and you almost start to cry. You quickly think about something else and sneak a glance at mom. Thankfully she didn't notice.";
+	else if index is 5:
+		Report Mom saying "In the movie, the dad and the other guy get some knives for some reason. The dad is angry and throws them away. And then, oh! a truck with glass cuts off the other guy's head too fast for you to cover your eyes! You watch his head bounce away. You burst out crying.[paragraph break]'Oh, honey,' your mom says, holding you, 'I'm so sorry. I'm sorry.' She rocks you as your tears subside. 'Do you want to go? We don't have to stay. I'm sorry.'[paragraph break]The movie is scary, but you feel safe. There is something important here. You want to go. But you also want to stay. What happens to the evil boy? Will the dad kill him? 'No,' you manage through sniffles.[paragraph break]'Okay,' your mom says, clearly doubtful. 'You want to get us snacks?'";
+		now mom_free_to_go is true;
+	else if index is 6:
+		Report Mom saying "'The snack bar is right there,' mom says pointing, 'You can pick us up a snack and, I can tell by the way you are squirming, you have to use the potty.' That embarrasses you, but you don't say anything.";
+
+This is the seq_mom_watching_movie_interrupt_test rule:
+	[ Nothing stops this rule. ]
+	rule fails.
+
+
+Chapter - Scene_Dream_Have_To_Pee
+
+There is a scene called Scene_Dream_Have_To_Pee.
+Scene_Dream_Have_To_Pee begins when Scene_Dream_About_Drive_In is happening and the index of seq_mom_watching_movie is 5.
+Scene_Dream_Have_To_Pee ends when player has been in Room_Restroom.
+
+Section - Actions
+
+[Reminder that you have to pee every few turns]
+Every turn during Scene_Dream_Have_To_Pee:
+	queue_report "[one of]You suddenly realize that you've been holding it, and you really have to pee[or][one of]You really have to go[or]You do a little dance, your body reminding you that you really have to go[or]Your really really really don't want to wet yourself[cycling][stopping]." with priority 1.
+
+Chapter - Scene_Dream_About_Stepdad
+
+There is a scene called Scene_Dream_About_Stepdad.
+Scene_Dream_About_Stepdad begins when player is in Room_Camaro_With_Stepdad.
+Scene_Dream_About_Stepdad ends when player is in Room_Dream_Grassy_Field.
+
+stepdad_free_to_go is a truth state that varies.
+	stepdad_free_to_go is false.
+
+When Scene_Dream_About_Stepdad begins:
+	now seq_stepdad_in_car is in-progress.
+
+When Scene_Dream_About_Stepdad ends:
+	now seq_stepdad_in_car is not in-progress.
+
+Chapter - Sequences
+
+seq_stepdad_in_car is a sequence.
+	The action_handler is the seq_stepdad_in_car_handler rule.
+	The interrupt_test is seq_stepdad_in_car_interrupt_test rule.
+	The length_of_seq is 17.
+
+This is the seq_stepdad_in_car_handler rule:
+	let index be index of seq_stepdad_in_car;
+	if index is 2:
+		Report stepdad saying "Your step-dad reaches behind the seat and grabs a can of beer. He pulls the pop-top and tosses it out the window. He takes a long drink and puts the can between his legs. He shoots you a glance and you carefully look out the window.";
+	else if index is 5:
+		queue_report "Mark takes another long swig of his beer and taps on the steering wheel." at priority 2;
+	else if index is 8:
+		queue_report "You can tell Mark is working up to say something. Instead he drains his beer, drops the empty behind the seat, and grabs another can. He pops the top and puts the can between his legs." at priority 2;
+	else if index is 9:
+		queue_report "Mark taps out a cigarette but doesn't light it." at priority 2;
+	else if index is 11:
+		Report stepdad saying "Mark clears his throat as if he's not used to using his voice. 'When you asked to use my tools, I told you that I expected you to put them away when you were done,' Mark says and [stepdad_stuff].";
+	else if index is 12:
+		Report stepdad saying "'This morning, I found my screwdriver on the porch where you were playing with that old radio,' Mark says.";
+	else if index is 13:
+		Report stepdad saying "He waits and glances as you like he's expecting an answer. 'Did you leave it out there deliberately or are you just thoughtless?' he asks.";
+	else if index is 15:
+		Report stepdad saying "'What did I tell you?' Mark says glancing at you angrily, 'I told you to put away my tools.' He grabs your arm, 'Why can't you listen? Huh?' There are stopped cars ahead and Mark puts both hands on the wheel.[paragraph break]You've got to get out of here.";
+	else if index is 16:
+		Report stepdad saying "'I know your mom lets you do whatever you want,' Mark says, 'I told her she was spoiling you, but I'm not going to do that.' Mark slows the Camaro. Maybe this is your chance.";
+		now stepdad_free_to_go is true;
+	else if index is 17:
+		Report stepdad saying "[one of]'Are you just trying to make me mad?' Mark asks.[or]'When I was a kid, I understood that if I didn't do what my parents told me, I would get my ass whipped,' Mark says.[or]Mark grabs your arm, 'Are you listening to me?'[or]'Are you going to answer me?' Mark demands.[in random order]";
+		[We do the following, because we want this step to repeat]
+		decrease index of seq_stepdad_in_car by one;
+		[we make sure this ends when Scene_Dream_About_Stepdad begins]
+
+This is the seq_stepdad_in_car_interrupt_test rule:
+	[ Nothing stops this rule. ]
+	rule fails.
+
+
+Chapter - Scene_Dream_About_the_Tango
+
+[
+	a scene that triggers tango reports,
+	but does not keep player in location (that restriction will be cleared when sheriff arrives)
+]
+
+There is a scene called Scene_Dream_About_the_Tango.
+Scene_Dream_About_the_Tango begins when player is in Room_Dream_Grassy_Field.
+Scene_Dream_About_the_Tango ends when player is in Room_Dream_Railroad_Tracks.
+
+When Scene_Dream_About_the_Tango begins:
+	sheriff_plays_music in 2 turn from now;
+	[we do this so whatever action is in progress doesn't mess up the reporting rules because sheriff is already there]
+	sheriff_goes_to_field in 3 turn from now;
+	now lee is in Room_Dream_Grassy_Field;
+	now sharon is in Room_Dream_Grassy_Field;
+
+Section - Actions
+
+At the time when sheriff_plays_music:
+	queue_report "Suddenly, the sheriff rolls up in his car. Neither the Cat Lady nor Lee look at him. The sheriff pops out of his car with a big box, no an accordion! and begins playing music. It's a funny tune and somehow you know it's an Argentine Tango. The Cat Lady and Lee begin to dance." with priority 2;
+
+At the time when sheriff_goes_to_field:
+	now sheriff is in Room_Dream_Grassy_Field;
+	now the sheriffs_car is in Room_Dream_Grassy_Field;
+
+test tango with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump".
+
+Chapter - Scene_Dream_Tracks
+
+There is a scene called Scene_Dream_Tracks.
+Scene_Dream_Tracks begins when player is in Room_Dream_Railroad_Tracks.
+Scene_Dream_Tracks ends when player is in Room_Mars.
+
+Grandparents_track_done is truth state that varies. Grandparents_track_done is false.
+
+When Scene_Dream_Tracks begins:
+ 	now seq_grandparents_tracks is in-progress;
+	now Honey is in Room_Dream_Railroad_Tracks;
+	now Grandpa is in Room_Dream_Railroad_Tracks;
+
+When Scene_Dream_Tracks ends:
+ 	now seq_grandparents_tracks is not in-progress;
+	now Honey is in Room_Mars;
+	now Grandpa is in Room_Mars;
+
+[ grandparents_tracks sequence
+summary: Honey and Grandpa at the tracks
+conditions: when player is on Room_Dream_Railroad_Tracks.
+trigger: the player is in Room_Dream_Railroad_Tracks ]
+
+seq_grandparents_tracks is a sequence.
+	The action_handler is the seq_grandparents_tracks_handler rule.
+	The interrupt_test is seq_grandparents_tracks_interrupt_test rule.
+	The length_of_seq is 7.
+
+This is the seq_grandparents_tracks_handler rule:
+	let index be index of seq_grandparents_tracks;
+	if player is in Room_Dream_Railroad_Tracks:
+		if index is 1:
+			Report Grandpa saying "'Hey, [grandpas_nickname]. We've been waiting for you,' Grandpa says gently. Honey smiles at you.";
+		else if index is 2:
+			Report Grandpa saying "Grandpa puts his hand on your shoulder, 'You've had quite a time, haven't you? Don't you worry about it, about him.' Who is grandpa talking about?";
+		else if index is 3:
+			Report Grandpa saying "'Sometimes we worry about you,  [grandpas_nickname],' grandpa says, 'But it'll be okay, I promise.'";
+		else if index is 4:
+			Report Honey saying "Honey leans over and whispers, 'Try as we might, we may not always be able to keep you safe, [honeys_nickname].' She takes a deep breath, 'But I know you can take care of yourself when you need to.'";
+		else if index is 5:
+			Report Grandpa saying "'Let's see where this journey takes us', Grandpa says, inviting you with his hand to follow the tracks.";
+			now grandparents_track_done is true;
+		else if index is 5:
+			Report Honey saying "Grandpa says, 'Let's get going. I think we're meant to follow these,' he says gesturing at the tracks. [paragraph break]Honey laughs, 'There's a metaphor there somewhere.'";
+		else if index is 6:
+			Report Grandpa saying "[one of]'Time to go,' says grandpa.[or]Honey says, 'Let's see what's next, [honeys_nickname],' pointing at the tracks.[or]'Time to make like a hobo', says grandpa looking at the tracks.[at random]";
+			[We do the following, because we want this step tp repeat]
+			decrease index of seq_grandparents_tracks by one;
+			[we make sure this ends when Scene_Dream_Tracks ends]
+
+This is the seq_grandparents_tracks_interrupt_test rule:
+	[ We don't worry about interrupting seq if NPCs are not visible because our movements are limited. ]
+	rule fails.
+
+
+Chapter - Scene_Dream_Bouncing
+
+There is a scene called Scene_Dream_Bouncing.
+Scene_Dream_Bouncing begins when player is in Room_Mars.
+Scene_Dream_Bouncing ends when mars_free_to_go is true.
+
+mars_free_to_go is truth state that varies. mars_free_to_go is false.
+
+When Scene_Dream_Bouncing begins:
+ 	now seq_grandparents_bounce is in-progress.
+
+Section - Sequences
+
+[ grandparents_bounce sequence
+summary: Honey and Grandpa bounce on Mars
+conditions: during Scene_Dream_Bouncing when player is on Mars.
+trigger: the player is on Mars ]
+
+seq_grandparents_bounce is a sequence.
+	The action_handler is the seq_grandparents_bounce_handler rule.
+	The interrupt_test is seq_grandparents_bounce_interrupt_test rule.
+	The length_of_seq is 7.
+
+This is the seq_grandparents_bounce_handler rule:
+	let index be index of seq_grandparents_bounce;
+	if player is in Room_Mars:
+		if index is 2:
+			Report Grandpa saying "Honey and Grandpa both stumble in the light gravity. Honey looks concerned, but Grandpa looks thrilled. 'Hmm,' he says smiling broadly taking several experimental hops.";
+		else if index is 4:
+			queue_report "Honey smiles as she gives a little jump and sails high. Grandpa gives a bigger jump and flies almost as high as he is tall. They are both laughing." at priority 1;
+		else if index is 6:
+			Report Grandpa saying "'Watch this!' Grandpa says like a little kid and leaps high into the air yelling 'Woo!' while Honey laughs.";
+		else if index is 7:
+			queue_report "Grandpa gathers up his strength, squating down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'John!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
+			now seq_grandparents_bounce is not in-progress;
+			now mars_free_to_go is true;
+			now Honey is in Limbo;
+			now Grandpa is in Limbo;
+
+This is the seq_grandparents_bounce_interrupt_test rule:
+	[ We don't worry about interrupting seq if NPCs are not visible because our movements are limited. ]
+	rule fails.
+
+
+Chapter - Scene_Mars_Dream
+
+There is a scene called Scene_Mars_Dream.
+Scene_Mars_Dream begins when player is in Room_Mars.
+Scene_Mars_Dream ends when player is in Room_Dream_Dirt_Road.
+
+Chapter - Scene_Dog_Dream
+
+Scene_Dog_Dream is a dramatic scene.
+Scene_Dog_Dream begins when player is in Room_Dream_Dirt_Road.
+Scene_Dog_Dream ends when dog_free_to_go is true.
+
+dog_free_to_go is truth state that varies. dog_free_to_go is false.
+
+When Scene_Dog_Dream begins:
+	now seq_dog_convo is in-progress;
+
+Chapter - Sequences
+
+seq_dog_convo is a sequence.
+	The action_handler is the seq_dog_convo_handler rule.
+	The interrupt_test is seq_dog_convo_interrupt_test rule.
+	The length_of_seq is 9.
+
+This is the seq_dog_convo_handler rule:
+	let index be index of seq_dog_convo;
+	if index is 2:
+		Report dream_dog saying "[sub_pronoun_cap of dog] sees you, sizes you up, and to your surprise says, 'You ain't gettin['] by here, kid.'";
+	else if index is 4:
+		Report dream_dog saying "'Listen, kid,' the dog says, 'It's my job to protect my pack's territory.' [sub_pronoun_cap of dog] looks back at the fence uncertainly, then squats at the edge of the road and pees. 'I'm not sure where that ends, but better safe than sorry.'";
+	else if index is 5:
+		Report dream_dog saying "The dog looks at you and looks around. 'Shouldn't you be with your pack?' [sub_pronoun of dog] says.";
+	else if index is 7:
+		Report dream_dog saying "The dog [dog_does_stuff]. 'You know,' the dog says, 'You've been through a lot, but you're doing okay.' [sub_pronoun_cap of dog] wags [pos_pronoun of dog] tail.";
+	else if index is 8:
+		Report dream_dog saying "The dog looks thoughtful, 'If you don't mind me sayin['], it's about time you woke up,' [sub_pronoun of dog] says, [dog_doing_stuff], 'You can't spend your whole like dreaming. I'm gonna let you get going,' the dog says.";
+		now dog_free_to_go is true;
+	else if index is 9:
+		Report dream_dog saying "[one of]'Pal, I think it's time for you to get going,' the dog says wagging [pos_pronoun of dog] tail.[or]'I've liked talking to you. You better get going,' the dog says.[or]The dog looks seriously at you, 'Time for you to go on and wake up,' [sub_pronoun of dog] says.[in random order]";
+		[We do the following, because we want this step to repeat]
+		decrease index of seq_dog_convo by one;
+		[we make sure this ends when Scene_Dreams ends]
+
+This is the seq_dog_convo_interrupt_test rule:
+	if we are speaking to dream_dog:
+		rule succeeds;
+	[ If player walks away, pause the seq. ]
+	if dream_dog is not visible:
+		rule succeeds;
+	rule fails.
+
+
+Part - Scene_Day_Two
+
+There is a scene called Scene_Day_Two.
+Scene_Day_Two begins when Scene_Dreams has ended.
+
+When Scene_Day_Two begins:
+	unstore_all_your_stuff;
+	scatter_lost_stuff;
+	now player is in Room_Protected_Hollow;
+	now player is awake;
+	Now the right hand status line is "Morning";
+	Now Sharon is in Room_Other_Shore;
+	Now Lee is in Room_Blackberry_Tangle;
+
+test day2 with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump/z/z/z/z/ go to tracks/go on/ z/z/z/z/z/z/ go on/ go on/ z/z/z/z/z/z/z/wake up".
+
+Chapter - Morning After
+
+There is a scene called Scene_Morning_After.
+Scene_Morning_After begins when Scene_Day_Two is happening and player is in Room_Forest_Meadow.
+
+Chapter - Scene_Orienteering
+
+There is a scene called Scene_Orienteering.
+Scene_Orienteering begins when Scene_Morning_After begins.
+Scene_Orienteering ends when player is in Room_Sentinel_Tree.
+
+When Scene_Orienteering begins:
+	Change up exit of Room_Forest_Meadow to Room_Sentinel_Tree;
+	queue_report "It's time to figure out where you are. Perhaps if you could get a view of the surrounding area." with priority 2;
+
+When Scene_Orienteering ends:
+	Change south exit of Room_Forest_Meadow to Room_Dark_Woods_North;
+	Change west exit of Room_Forest_Meadow to Room_Dappled_Forest_Path;
+	Change south exit of Room_Dark_Woods_North to Room_Dark_Woods_South;
+	Change south exit of Room_Dark_Woods_South to Room_Wooded_Trail;
+	Change northwest exit of Room_Dark_Woods_North to Room_Dappled_Forest_Path;
+	now player is aware_of_compass_directions;
+	now player is not discouraged_from_compass_navigating;
+
+Chapter - Scene_Foraging_for_Breakfast
+
+There is a scene called Scene_Foraging_for_Breakfast.
+Scene_Foraging_for_Breakfast begins when Scene_Morning_After begins.
+Scene_Foraging_for_Breakfast ends when Scene_Found begins.
+Scene_Foraging_for_Breakfast ends when Scene_Foraging_for_Breakfast is happening and player is not hungry.
+
+When Scene_Foraging_for_Breakfast begins:
+	now player is hungry.
+
+Every turn during Scene_Foraging_for_Breakfast:
+	if the remainder after dividing the turn count by 2 is 0:
+		queue_report "[one of]You are quite hungry[or]You didn't have dinner (or lunch!) yesterday, so you are really quite famished[or]You find you are really hungry. Perhaps you can forage something like a good Exporer Scout[cycling]." with priority 1.
+
+[ If player eats berries on brambles or in pail, they should no longer be hungry. ]
+After eating during Scene_Foraging_for_Breakfast:
+	now player is not hungry.
+
+Chapter - Scene_Out_of_the_Woods
+
+There is a scene called Scene_Out_of_the_Woods.
+Scene_Out_of_the_Woods begins when Scene_Day_Two is happening and (player is in Room_Dappled_Forest_Path or player is in Room_Dark_Woods_South).
+Scene_Out_of_the_Woods ends when Scene_Found begins.
+
+Every turn during Scene_Out_of_the_Woods:
+	if player is in Room_Wooded_Trail:
+		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that the Cat Lady calling you?[or]Someone is calling you.[at random]" at priority 1;
+	else if player is in Room_Dappled_Forest_Path:
+		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that Lee calling you?[or]Someone is calling you.[at random]" at priority 1;
+
+Chapter - Scene_Found
+
+There is a scene called Scene_Found.
+Scene_Found begins when Scene_Day_Two is happening and (player is in Room_Blackberry_Tangle or player is in Room_Other_Shore).
+Scene_Found ends when player is in Room_Grassy_Field.
+
+When Scene_Found begins:
+	if player is in Room_Blackberry_Tangle:
+		now journey_lee_walk is in-progress;
+	else if player is in Room_Other_Shore:
+		now journey_sharon_walk is in-progress;
+
+Section - Sequences & Journeys
+
+[
+	Found by Sharon
+
+	This is a journey that begins
+		* during Scene_Found
+		* when player is in Room_Other_Shore
+
+ 	What happens on Sharon's walk:
+		* beginning: Sharon hugs you and says some stuff and sets off to return you home
+		* turn n: you arrive where sharon is waiting, maybe he says something if it has been more than a turn
+		* turn n+1: one turn after you arrive, sharon says something to you and goes one step closer
+		* turn n+m: if you take more than m turns to get to him and you are a location away, sharon comes to get you and ask if you are coming
+		* end: Sharon returns you to your family and tells where they found you, Lee arrives
+]
+
+journey_sharon_walk is an npc_journey.
+	The npc is Sharon.
+	The origin is Room_Other_Shore.
+	The destination is Room_Grassy_Field.
+	The wait_time is 2.
+	The max_wait is 10.
+	Waits_for_player is true.
+	The interrupt_test is the journey_sharon_walk_interrupt_test rule.
+	The action_at_start is the journey_sharon_walk_start rule.
+	The action_at_end is the journey_sharon_walk_end rule.
+	The action_before_moving is the journey_sharon_walk_before_moving rule.
+	The action_after_waiting is the journey_sharon_walk_after_waiting rule.
+	The action_catching_up is the journey_sharon_walk_catching_up rule.
+
+This is the journey_sharon_walk_interrupt_test rule:
+	if we are speaking to Sharon, rule succeeds;
+	rule fails.
+
+This is the journey_sharon_walk_start rule:
+	if time_here of journey_sharon_walk is 1:
+		Report Sharon saying "The Cat Lady, you suddenly remember her name is Sharon, sees you as you emerge from the woods and her eyes go wide. 'Oh my,' she says clutching her breast. Sharon sweeps you up in a huge hug, 'Oh my, we were so worried. Look at you.' she holds you out and looks at you carefully. Instead, you look at Sharon and notice she's dressed entirely differently than you are used to seeing her.";
+		rule fails;
+	else if time_here of journey_sharon_walk is 2:
+		Report Sharon saying "'Dearie, your grandparents are beside themselves with worry,' Sharon says, 'I have to get you back home. We've been looking everywhere.'";
+	rule succeeds;
+
+This is the
+journey_sharon_walk_before_moving rule:
+	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if player is in Room_Other_Shore]crosses the river to the crossing[else if player is in Room_Crossing]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if player is in Room_Swimming_Hole]makes her way up the steep trail to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+
+To say sharon_urging:
+	queue_report  "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]" at priority 3;
+
+This is the
+journey_sharon_walk_after_waiting rule:
+	queue_report "[one of]'Hurry along, dear,' Sharon says, 'We have to get you home.'[or]'You know, your grandparents are worried sick about you,' Sharon says, 'Let's not dawdle, shall we?'[or]Sharon looks irritated about having to wait, but says nothing.[or]'Now I don't mind if we spend all day out here,' Sharon says, 'But I would think you'd have a little more respect and concern for your grandpa and grandma who are worries about you.'[or]Sharon looks mad at you for making her wait.[stopping]" at priority 3;
+
+This is the
+	journey_sharon_walk_catching_up rule:
+	queue_report "Sharon catches up to you[if player is in Room_Crossing], carefully crossing the river on the floating log[else if player is in Room_Swimming_Hole] at the swimming hole[else if player is in Room_Railroad_Tracks] as you reach the railroad crossing[else if player is in Room_Grassy_Field] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 3;
+
+This is the journey_sharon_walk_end rule:
+	if time_here of journey_sharon_walk is 1:
+		Now Honey is in Room_Grassy_Field;
+		Now Grandpa is in Room_Grassy_Field;
+		Report Grandpa saying "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops and lets out a deep breath. He looks relieved. He looks at the Cat Lady for a long moment, 'You did it, Sharon. You have my gratitude.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your surprise, you start to cry.";
+		rule fails;
+		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
+	else if time_here of journey_sharon_walk is 2:
+		Now Lee is in Room_Grassy_Field;
+		Report Sharon saying "'He was on the other side of the creek, near the woods,' Sharon says.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
+		rule fails;
+	else if time_here of journey_sharon_walk is 3:
+		Report Sharon saying "'I think it's time I headed home,' Sharon says looking suddenly very tired.[paragraph break]'And maybe time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' He heads back to the trailer park with Sharon right behind him.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. Grandpa carries you all the way to...";
+		Now Sharon is in Room_Sharons_Trailer;
+		Now Lee is in Room_Lees_Trailer;
+		Now Honey is in Room_B_Loop;
+		Now Grandpa is in Room_B_Loop;
+		Move player to Room_B_Loop, without printing a room description;
+		queue_report "[bold type][location][roman type]" at priority 1;
+		rule succeeds;
+
+[
+	Found by Lee
+
+	This is a journey that begins
+		* during Scene_Found
+		* when player is in Room_Willow_Trail
+
+ 	What happens on Lee's walk:
+		* beginning: Lee hugs you and says some stuff and sets off to return you home
+		* turn n: you arrive where lee is waiting, maybe he says something if it has been more than a turn
+		* turn n+1: one turn after you arrive, lee says something to you and goes one step closer
+		* turn n+m: if you take more than m turns to get to him and you are a location away, lee comes to get you and ask if you are coming
+		* end: Lee returns you to your family and tells where they found you, Sharon arrives
+]
+
+[test gw with "teleport to lees trailer / teleport to grassy clearing / teleport to willow trail".]
+
+[TODO: Create a rule that prevents us from going anywhere but toward goal during this walk]
+
+journey_lee_walk is an npc_journey.
+	The npc is Lee.
+	The origin is Room_Blackberry_Tangle.
+	The destination is Room_Grassy_Field.
+	The wait_time is 2.
+	The max_wait is 10.
+	Waits_for_player is true.
+	The interrupt_test is the journey_lee_walk_interrupt_test rule.
+	The action_at_start is the journey_lee_walk_start rule.
+	The action_at_end is the journey_lee_walk_end rule.
+	The action_before_moving is the journey_lee_walk_before_moving rule.
+	The action_after_waiting is the journey_lee_walk_after_waiting rule.
+	The action_catching_up is the journey_lee_walk_catching_up rule.
+
+This is the journey_lee_walk_interrupt_test rule:
+	if we are speaking to Lee, rule succeeds;
+	rule fails.
+
+This is the journey_lee_walk_start rule:
+	if time_here of journey_lee_walk is 1:
+		Report Lee saying "Lee sees you as you emerge from the blackberry brambles and looks relieved. 'Oh, man, we've been looking for you everywhere. Oh man. Oh man,' he just keeps shaking his head. 'Come here, kid, lemme look at you.'";
+		rule fails;
+	if time_here of journey_lee_walk is 2:
+		Report Lee saying "Lee looks at your torn clothes and the leaves in your hair, 'Wow, I have to admit, I didn't think this would end well, but look,' he says gesturing at you. 'A little worse for wear, but still kickin'. Lee smiles and pats your back. 'I have a million questions. First, where did you bivvy last night?'";
+		rule fails;
+	else if time_here of journey_lee_walk is 3:
+		Report Lee saying "'I should have known. You're a little survivor.' Lee looks at you admiringly and it makes you proud of yourself, the leaf fort, the raccoons, the long night. 'I got to get you back to your family. They'll be so worried.'[line break]'Let's head back to the trailer park,' Lee says.";
+		rule succeeds;
+
+This is the
+journey_lee_walk_before_moving rule:
+	queue_report "[if a random chance of 1 in 2 succeeds][lee_urging] [run paragraph on][end if]Lee [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+
+To say lee_urging:
+	say "'[one of]We gotta hoof it, soldier'[or]Let's hustle'[or]Movin' out,'[or]Okay, let's go,'[or]We gotta double time. Your family's gonna be worried,'[or]You okay? Just a little farther,'[or]Coming up on home,'[cycling]";
+
+This is the
+journey_lee_walk_after_waiting rule:
+	Report Lee saying "[one of]'Your family is going to be worried, [lees_nickname],' Lee says, 'We gotta keep moving.'[or]'I know you've been through a lot,' Lee says, 'but we can't stop here.'[or]'We gotta get going, [lees_nickname],' Lee says, 'Your family is waiting.'[or]'We gotta hustle,' Lee says.[or]Lee looks impatient, but doesn't say anything.[stopping]";
+
+This is the
+	journey_lee_walk_catching_up rule:
+	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya', [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
+
+This is the journey_lee_walk_end rule:
+	if time_here of journey_lee_walk is 1:
+		Now Honey is in Room_Grassy_Field;
+		Now Grandpa is in Room_Grassy_Field;
+		Report Grandpa saying "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutchs her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more queitly looking at Lee, 'Thank you.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Lee: 'I found him out in the blackberry brambles.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your embarrassment, you start to cry.";
+		rule fails;
+		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
+	else if time_here of journey_lee_walk is 2:
+		Now Sharon is in Room_Grassy_Field;
+		Report Lee saying "'He was down on the other side of the creek, by the willows,' Lee says, carefully not looking at your tears.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
+		rule fails;
+	else if time_here of journey_lee_walk is 3:
+		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. He carries you all the way to...[paragraph break][bold type][location][roman type]";
+		Now Sharon is in Room_Sharons_Trailer;
+		Now Honey is in Room_B_Loop;
+		Now Grandpa is in Room_B_Loop;
+		Move player to Room_B_Loop, without printing a room description;
+		Now Lee is in Room_Lees_Trailer;
+		rule succeeds;
+
+
+Section - Actions
+
+[This will prevent player from getting re-lost after beign found!]
+Instead of room_navigating Room_Wooded_Trail when player is in Room_Other_Shore during Scene_Found:
+	say not_going_back_to_woods.
+
+Instead of going east when player is in Room_Other_Shore during Scene_Found:
+	say not_going_back_to_woods.
+
+Instead of room_navigating Room_Dappled_Forest_Path when player is in Room_Blackberry_Tangle during Scene_Found:
+	say not_going_back_to_woods.
+
+Instead of going east when player is in Room_Blackberry_Tangle during Scene_Found:
+	say not_going_back_to_woods.
+
+To say not_going_back_to_woods:
+	say "Maybe later, with your grandpa, you can go back to the woods and show him your little nest, but not now.".
+
+Test found with "test day2 / get up / climb pine tree / d".
+
+Section - Journeys
+
+
+
+Chapter - Scene_Reunions
+
+There is a scene called Scene_Reunions.
+Scene_Reunions begins when Scene_Found ends.
+Scene_Reunions ends when Scene_Long_Arm_of_the_Law begins.
+
+Instead of room_navigating or going during Scene_Reunions:
+	say "Now that you are with your Honey and grandpa, you don't want to go anywhere else.".
+
+Chapter - Scene_Long_Arm_of_the_Law
+
+There is a scene called Scene_Long_Arm_of_the_Law.
+
+Scene_Long_Arm_of_the_Law begins when 
+Scene_Day_Two is happening and player is in Room_B_Loop.
+
+Scene_Long_Arm_of_the_Law ends when seq_long_arm_of_the_law is run and seq_long_arm_of_the_law is not in-progress.
+
+Section - Sequences
+
+When Scene_Long_Arm_of_the_Law begins:
+	now seq_long_arm_of_the_law is in-progress;
+
+[
+	Sequence: Long Arm of the Law
+
+	summary: Sheriff confronts Lee
+	conditions: during Scene_Day_Two when player has been in Room_B_Loop
+	trigger: Scene_Long_Arm_of_the_Law starts
+]
+
+seq_long_arm_of_the_law is a sequence.
+	The action_handler is the seq_long_arm_of_the_law_handler rule.
+	The interrupt_test is seq_long_arm_of_the_law_interrupt_test rule.
+	The length_of_seq is 6.
+	The seq_long_arm_of_the_law has a number called wait_time.
+	The wait_time of seq_long_arm_of_the_law is 0.
+
+This is the seq_long_arm_of_the_law_handler rule:
+	let the index be the index of seq_long_arm_of_the_law;
+	if index is 1:
+		now Sheriff is in sheriffs_car;
+		now sheriffs_car is in Room_B_Loop;
+		[grandpa puts you down and Honey and Grandpa talk to you.]
+		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see you made it back home.'" at priority 2;
+		[sheriff shows up]
+	else if index is 2:
+		now Lee is in Room_C_Loop;
+		now Sheriff is in Room_C_Loop;
+		now sheriffs_car is in Room_C_Loop;
+		queue_report "'Yes, thank god,' grandpa says. 'Apparently, [grandpas_nickname] here,' he puts his hand on your head, 'spent a pretty cold night out in the woods. We were all out looking for this one.'[paragraph break]The sheriff's car radio crackles to life and the sheriff responds. He says something into his radio. You gather he is calling off the search for you. The sheriff ends his radio call and leans back out the window.[paragraph break]'Mr. Skarbek?' the Sheriff asks, glancing toward C Loop.[paragraph break]'Everyone was out looking,' Grandpa looks confused, 'But--'[paragraph break]'And Mr. Skarbek was out there while the child was missing?' the Sheriff interrupts.[paragraph break]'We were all searching everywhere we could think of,' Grandpa says, but the Sheriff appears to have stopped listening.[paragraph break]'That's all I need to know,' the Sheriff says grimly. He suddenly turns to you. 'You're lucky you were found,' he says and speeds off." with priority 2;
+	else if index is 3:
+		Move player to Room_C_Loop, without printing a room description;
+		now Lee is in sheriffs_car;
+		now honey is in Room_C_Loop;
+		now grandpa is in Room_C_Loop;
+		now current interlocutor is Sheriff;
+		queue_report "Honey and grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][bold type][location][roman type][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
+	else if index is 4:
+		[Sheriff tries to bully narator into implicating Lee]
+		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Shefiff says a little out of breath to Honey and grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
+		now lee_support of player is _uncertain;
+	else if index is 5:
+	  [we hang at this step until either player talks to sheriff or leaves]
+		queue_report "The sheriff is still filling out his forms. He asks Lee an occasional question, but Lee remains silent." with priority 2;
+		if lee_support of player is _uncertain:
+			decrement index of seq_long_arm_of_the_law;
+	else if index is 6:
+		move player to Room_B_Loop, without printing a room description;
+		now grandpa is in Room_B_Loop;
+		now Honey is in Room_B_Loop;
+		now Sheriff is in sheriffs_car;
+		now sheriffs_car is in Limbo;
+		if lee_support of player is _decided_no:
+			queue_report "The Sheriff closes the back door of the cruiser and goes around to the driver's side. As the car begins to roll away, you glance one more time at Lee who looks back without emotion.[paragraph break]Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a sad hug. 'He'll be okay,' grandpa says. Something about everything that has happened catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both grandpa and Honey try to comfort you." with priority 2;
+		else:
+			now Lee is in Room_Lees_Trailer;
+			queue_report "The Sheriff takes a long moment and looks you up and down. Both Honey and grandpa tense. Honey starts to say something, stops herself, shifts, and moves behind you looking challengingly at the Sheriff. Grandpa moves to stand beside her.[paragraph break]The Sheriff looks from you to your grandparents. He hesitates, apparently making a decision.[paragraph break]'Okay, maybe you could have told me that earlier.' He opens the back door of the cruiser and guides Lee out. He spins him around and removes the cuffs. 'You're free to go, Mr. Skarbek. Stay out of trouble.' Lee rubs his wrists and wipes the blood off his nose and mouth.[paragraph break]The Sheriff gets into his car without another word and drives quickly away.[paragraph break]Lee says quietly, 'Thank you, Jody,' bows slightly, and disappears into his trailer. You let Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a tearful hug. 'I'm proud of you, [grandpas_nickname],' he says. Something about seeing the magnitude of what you did through his eyes, telling your own story for maybe the first time in your life catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both grandpa and Honey try to comfort you." with priority 2;
+
+This is the seq_long_arm_of_the_law_interrupt_test rule:
+	[ Nothing stops this rule. ]
+	rule fails.
+
+Section - Actions
+
+[Things that make us decide NOT to support Lee:
+	Going elsewhere, waiting too long]
+Instead of room_navigating or going during Scene_Long_Arm_of_the_Law:
+	if index of seq_long_arm_of_the_law < 4:
+		say "You don't want to go anywhere, right now.";
+	else:
+		increment index of seq_long_arm_of_the_law;
+		now lee_support of player is _decided_no;
+		say "You feel bad leaving Lee, but you're hope he'll be okay. You let grandpa lead you back toward home.".
+
+Every turn while lee_support of player is _uncertain:
+	queue_report "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]" with priority 1.
+
+Instead of waiting during Scene_Long_Arm_of_the_Law:
+	if index of seq_long_arm_of_the_law < 4:
+		continue the action;
+	else:
+		if wait_time of seq_long_arm_of_the_law < 2:
+			increment wait_time of seq_long_arm_of_the_law;
+			say "[one of]You're waiting to see what happens, but should you do something?[or]You're waiting, but shouldn't you do something?[in random order]";
+			continue the action;
+		else:
+			[ we do this to jump past the pause in the seq ]
+			increment index of seq_long_arm_of_the_law;
+			now lee_support of player is _decided_no;
+			say "Well now you've waited too long, and whatever's going to happen is going to happen. You feel bad for Lee, but you're sure he'll be okay. You let grandpa lead you back toward home.".
+
+[Things that make us decide to support Lee:
+	Saying no, telling about night in woods, yelling, attacking Sheriff]
+Instead of informing or telling or yelling or saying no during Scene_Long_Arm_of_the_Law:
+	decide_to_support_lee.
+Instead of attacking Sheriff when lee_support of player is _uncertain:
+  say "You're not sure violence is the answer, though it might make you feel better. But you would probably end up worse than Lee.";
+	decide_to_support_lee.
+
+To decide_to_support_lee:
+	if index of seq_long_arm_of_the_law < 4:
+		say "It seems that everyone is focused elsewhere";
+	else:
+		increment index of seq_long_arm_of_the_law;
+		now lee_support of player is _decided_yes;
+		now player is compassionate;
+		now player is intrepid;
+		say "You take a deep breath, and yell, 'No, wait!'[paragraph break]Everyone turns to you. And the words tumble out. Quick as you can, stumbling, messing up some of the details, you tell how you wandered into the woods by yourself, about the dog, about the nest, about the raccoons, about orienteering, every word chasing the previous word, and how you were found by Lee and the Cat Lady.[paragraph break]You stop and take a breath.".
+
+
+Chapter - Scene_Parents_Arrive
+
+There is a scene called Scene_Parents_Arrive.
+
+Scene_Parents_Arrive begins when Scene_Long_Arm_of_the_Law ends.
+
+Scene_Parents_Arrive ends when seq_parents_arrive is run and seq_parents_arrive is not in-progress.
+
+When Scene_Parents_Arrive begins:
+	now seq_parents_arrive is in-progress.
+
+Section - Sequences
+
+[
+	Sequence: Parents Arrive
+
+	summary: mom and stepdad arrive after Jody is found
+	conditions: during Scene_Day_Two after sheriff leaves
+	trigger: Scene_Long_Arm_of_the_Law ends
+]
+
+seq_parents_arrive is a sequence.
+	The action_handler is the seq_parents_arrive_handler rule.
+	The interrupt_test is seq_parents_arrive_interrupt_test rule.
+	The length_of_seq is 5.
+
+This is the seq_parents_arrive_handler rule:
+	let the index be the index of seq_parents_arrive;
+	if index is 1:
+		[mom and stepdad show up]
+		now moms_camaro is in Room_B_Loop;
+		now mom is in Room_B_Loop;
+		now stepdad is in Room_B_Loop;
+		queue_report "You are still holding grandpa when mom's Camaro pulls into B Loop. Normally, you would run to your mom for comfort, but something's changed. You dry your eyes, pull away from grandpa, and strand up straight. Mom and your stepdad get out of the car. Your mom runs and gives you a huge hug and when she lets go, she looks at grandpa and says, 'Oh dad.' There are tears in her eyes when grandpa hugs her. You realize in this moment that that your mom is usually strong for you, and this is your chance to be strong for her. You start to tell her about your adventures.[paragraph break]Mark is standing around looking uncomfortable. 'Do you know how much you worried your mom?' he demands. [paragraph break]'Oh, Mark, give it a rest,' mom says. Mark shoots her a look. 'We drove all night to get here,' mom tells your grandparents. 'We're shot. Do you have any coffee?' [paragraph break]Aunt Mary, who's been hovering anxiously in the background, wipes away her tears and says 'I'll go make some,' and goes inside." with priority 2;
+	else if index is 2:
+		queue_report "Your stepdad remains quietly simmering. Your mom hugs you again, 'Honey, we were so worried.' She straightens up looking you up and down. Your mom looks from Honey to Grandpa.[paragraph break]'It seems Jo wandered away, got lost, and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was found by Sharon and Lee.'" with priority 2;
+	else if index is 3:
+		queue_report "Mark can't stay quiet any longer. 'Jody, if I had my way, I'd paddle your behind,' he says advancing on you.[paragraph break]'Mark, I told you. This is not--'[paragraph break]
+		'You spoil this kid and are surprised when Jody acts out,' he says as he grabs your arm.[paragraph break]Both grandpa and Honey take a step forward. Your mom stands up tall, looking like she is suddenly twice her height, 'Let go. Now. Mark.' she says fiercely. 'Are you going to hit 'em again?'[paragraph break]Mark instinctively lets go of your arm and stands with his feet apart, arms out, fists clenched ready to fight. You back away from him toward your grandpa who puts his arms protectively around you. Mark makes an angry hissing sound and yanks the car keys out of his pocket. 'We'll talk about this at home. We're leaving,' he says, going around to the driver's door of the Camaro. 'Both of you, get in the car. Now.'[paragraph break]Your mom looks helplessly at her parents. 'Sorry, mom,' she says. 'We better go. I'll call you later and let you know we're okay.'[paragraph break]Honey looks grim and Grandpa starts to say, 'Rachel.'[paragraph break]'Dad, I know,' she says and sighs. She turns to you and smiles thinly, 'Okay Jody, it's best we get going.' She opens the car door and puts the seat back so you can get in." with priority 2;
+		now stepdad is in moms_camaro;
+		now current interlocutor is mom;
+		now going_home_decision of player is _uncertain;
+	else if index is 4:
+		[we hang at this step until either player talks to sheriff or leaves]
+		queue_report "[one of]'I'm sorry, hon, we have to go,' your mom says[or]'We better go, love,' mom says sadly[or]Mom sighs and gestures for you to get in the car[in random order]." with priority 2;
+		if going_home_decision of player is _uncertain:
+			decrement index of seq_parents_arrive;
+	else if index is 5:
+		if going_home_decision of player is _decided_yes:
+			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and grandpa and raise a hand goodbye." with priority 2;
+		else:
+			queue_report "'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you. Mark's door starts to open and grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath as she puts her hand on Mark's arm. Mark shoves her away, but after a clear moment, he doesn't get out of the car.[paragraph break]'We better go, mom,' Rachel says to Honey. To Mark she says, 'Let's go.'[paragraph break]As the car pulls out of B Loop, you can see your mom look at Honey, grandpa and you in turn and mouth, 'I love you.'" with priority 2;
+
+[ TODO: This scene should continue at least two more beats, as the decision seems super abrupt. ]
+[ TODO: Prohibit player from having normal conversations with the people here. This has happened enough times that perhaps it needs a more general handler. ]
+
+This is the seq_parents_arrive_interrupt_test rule:
+	[ Nothing stops this rule. ]
+	rule fails.
+
+Section - Actions
+
+Every turn while going_home_decision of player is _uncertain:
+	queue_report "[one of]Mom says it's time to go.[or]You feel terrible. You think maybe this is all your fault and now it's time to face the consequences[or]Mom's ready to go home, but what do you want?[or]Maybe you can just be quiet in the car and things will simmer down.[or]What if Mark hurts your mom and you're not there to stop him?[or]Can you just stay here with Honey and grandpa?[cycling]" with priority 1.
+
+Instead of waiting during Scene_Parents_Arrive:
+	say "[one of]The moment seems to balance on a knife's edge.[or]Seconds tick by.[or]The world holds its breath.[in random order]".
+
+Instead of room_navigating or going during Scene_Parents_Arrive:
+	if index of seq_parents_arrive < 3:
+		say "There's no way you are leaving now that your mom's here.";
+	else:
+		say "If you don't want to go home with mom, you're probably going to have to say something.".
+
+[Things that make us decide to go home:
+	getting in car, saying yes]
+Instead of saying yes during Scene_Parents_Arrive:
+	decide_to_go_home.
+Instead of entering moms_camaro during Scene_Parents_Arrive:
+	decide_to_go_home.
+
+To decide_to_go_home:
+	if index of seq_parents_arrive < 3:
+		say "It seems that everyone is focused elsewhere";
+	else:
+		increment index of seq_parents_arrive;
+		now going_home_decision of player is _decided_yes;
+		say "You don't want to go, but you want to keep your mom safe. You turn to hug grandpa who then lets you go. Honey looks sad and worried. You slowly get in the back of the Camaro.".
+
+[Things that make us decide not to go home:
+	Saying no, yelling, attacking Mark]
+Instead of yelling or saying no during Scene_Parents_Arrive:
+	decide_not_to_go_home.
+Instead of attacking stepdad when going_home_decision of player is _uncertain:
+  say "Oh, how you want to hurt him. But you are sure it would give him an excuse to hurt you back worse. You decide to use words instead.";
+	decide_not_to_go_home.
+
+To decide_not_to_go_home:
+	if index of seq_parents_arrive < 3:
+		say "It seems that everyone is focused elsewhere";
+	else:
+		increment index of seq_parents_arrive;
+		now going_home_decision of player is _decided_no;
+		say "You stand up straight. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]going[roman type] to stay here,' you say firmly. You can feel grandpa's arms tighten around you.".
+
+test parents with "test long-arm / z/z/z/yell/z"
+
+Chapter - Scene_Fallout
+
+There is a scene called Scene_Fallout.
+
+Scene_Fallout begins when 
+Scene_Parents_Arrive ends.
+
+When Scene_Fallout begins:
+	say paragraph break;
+	say line break;
+	center "[italic type]***   ";
+	say paragraph break;
+	say line break;
+	say story_endings;
+	say "";
+	end the story;
+
+to say story_endings:
+	if going_home_decision of player is _decided_no:
+		say "";
+	else:
+		say "";
+
+[TODO: Should this be exposition or a scene in which the player as an older person pours over a box in which there are photos and keepsakes (the Mika figurine, the purple heart, the lucky penny, the pet rock? ]
+
 
 Book - Regions & Rooms
 
@@ -7002,38 +8057,6 @@ Instead of taking off tennis_shoes, say "Better keep those on for now."
 Instead of taking off underwear, say "No way! You're not taking those off!"
 
 
-Chapter - Sequences
-
-[ seq_jody_stop sequence
-summary: Jody has a series of realizations/memories that help them not freak out.
-trigger: Scene_STOP begins, i.e., 2 turns in Room_Forest_Meadow ]
-
-seq_jody_stop is a sequence.
-	The action_handler is the seq_jody_stop_handler rule.
-	The interrupt_test is seq_jody_stop_interrupt_test rule.
-	The length_of_seq is 6.
-
-This is the seq_jody_stop_handler rule:
-	let index be index of seq_jody_stop;
-	if index is 3:
-		queue_report "You think of how worried Honey and grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say outloud to yourself." at priority 1;
-	else if index is 4:
-		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
-	else if index is 5:
-		queue_report "And suddenly a memory: [paragraph break][italic type]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[roman type][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break][italic type]Think.[roman type] You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break][italic type]Observe.[roman type] You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break][italic type]Plan.[roman type] The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
-		Move player to the meadow grass, without printing a room description;
-		Now Room_Forest_Meadow is observed;
-	else if index is 6:
-		queue_report "[one of]You have a plan. Find shelter[or]Hypothermia is a real risk in the chilly forest at night. Time to find a place to shelter[or]You look closer at the edge of the forest[stopping]." at priority 1;
-		[We do the following, because we want this step to repeat]
-		decrease index of seq_jody_stop by one;
-		[we make sure this ends when Scene_STOP ends]
-
-This is the seq_jody_stop_interrupt_test rule:
-	[ Nothing stops this rule. ]
-	rule fails.
-
-
 Part - Honey
 
 Honey is a _female woman.
@@ -7284,133 +8307,12 @@ Quote
 "'If I get a call from your mom in the middle of the night one more time, I'm going to drive there myself and your step-dad's gonna have some real problems,' Honey says in a rush[if grandpa is visible]. Grandpa gives her another Look[end if]."
 "Honey clenches her teeth and growls but says no more."
 
-Chapter - Sequences
 
-[ seq_grandparents_chat sequence
-summary: Honey and Grandpa talk about other characters
-conditions: during Picking Blackberries when player is in or near blackberry clearing.
-trigger: the player is in blackberry clearing for two turns ]
-
-seq_grandparents_chat is a sequence.
-	The action_handler is the seq_grandparents_chat_handler rule.
-	The interrupt_test is seq_grandparents_chat_interrupt_test rule.
-	The length_of_seq is 13.
-
-This is the seq_grandparents_chat_handler rule:
-	let index be index of seq_grandparents_chat;
-	if a random chance of 1 in 2 succeeds:
-		rule fails;
-	else:
-		if player is in Room_Lost_in_the_Brambles or player is in Room_Blackberry_Tangle:
-			queue_report "You hear Honey and Grandpa talking and you perk up your ears." at priority 1;
-		else if player is in Room_Grassy_Clearing:
-			if index is 1:
-				Report Honey saying "Honey and Grandpa continue their conversation: 'Have you heard from Nick about this summer? Is he planning a visit or are we just left guessing?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says.";
-			else if index is 2:
-				queue_report "[grandparent_random]" at priority 2;
-			else if index is 3:
-				Report Honey saying "'Did you call Rachel?' Honey asks Grandpa. 'Sounded like she wanted to talk to her dad.'";
-			else if index is 4:
-				Report Grandpa saying "'I'll call her tonight, see how she is,' Grandpa says to Honey.";
-			else if index is 5:
-				Report Honey saying "'You're not worried about her?' Honey asks Grandpa in a low voice glancing your way, 'With Mark?' You keep your head down and try to look like you are concentrating on picking berries.";
-			else if index is 6:
-				Report Grandpa saying "'Well, you know Rach, she can take care of herself,' Grandpa says to Honey, 'She's a big girl.' And after a moment, 'But I'll tell ya...'";
-			else if index is 7:
-				Report Grandpa saying "You wander a little distance away, but close enough that you can still hear. 'I do not like the way he treats, ah, the little one. At all.' Grampa says.";
-			else if index is 8:
-				queue_report "[grandparent_random]" at priority 1;
-			else if index is 9:
-				Report Honey saying "'I don't know,' Honey says quietly. 'I trust Rachel too, but still. I'm not happy how it's turning out with this guy. Maybe it happened too quickly.";
-			else if index is 10:
-				Report Honey saying "'Did you ask about the arm?' Honey asks Grandpa, glancing in your direction.";
-				now player is aware_of_arm_injury;
-			else if index is 11:
-				Report Grandpa saying "'I did ask about the arm, but I didn't find out anything,' Grandpa says, looking over at you. 'To think that asshole, pardon my French, might have...' Grandpa just shakes his head.";
-			else if index is 12:
-				Report Honey saying "'I wouldn't put anything past him when he's been drinking,' Honey says to Grandpa. 'Yeah, he's a charmer. What was Rachel thinking?'";
-			else if index is 13:
-				queue_report "[grandparent_random]" at priority 1;
-				[We do the following, because we want this step to repeat]
-				decrease index of seq_grandparents_chat by one;
-				[we make sure this ends when Scene_Walk_With_Grandpa begins]
-
-This is the seq_grandparents_chat_interrupt_test rule:
-	[ We don't worry about interrupting seq if NPCs are not visible because seq accounts for this. ]
-	if we are speaking to Grandpa, rule succeeds;
-	if we are speaking to Honey, rule succeeds;
-	rule fails.
 
 To say grandparent_random:
 	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[or]'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.[or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both!' Honey laughs.[or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[or]'Hey, [honeys_nickname],' Honey calls to you. 'When you go with grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[in random order]".
 
 [TODO in a long list of random utterances, make it so new interlocutor is set]
-
-[ grandparents_tracks sequence
-summary: Honey and Grandpa at the tracks
-conditions: when player is on Room_Dream_Railroad_Tracks.
-trigger: the player is in Room_Dream_Railroad_Tracks ]
-
-seq_grandparents_tracks is a sequence.
-	The action_handler is the seq_grandparents_tracks_handler rule.
-	The interrupt_test is seq_grandparents_chat_interrupt_test rule.
-	The length_of_seq is 7.
-
-This is the seq_grandparents_tracks_handler rule:
-	let index be index of seq_grandparents_tracks;
-	if player is in Room_Dream_Railroad_Tracks:
-		if index is 1:
-			Report Grandpa saying "'Hey, [grandpas_nickname]. We've been waiting for you,' Grandpa says gently. Honey smiles at you.";
-		else if index is 2:
-			Report Grandpa saying "Grandpa puts his hand on your shoulder, 'You've had quite a time, haven't you? Don't you worry about it, about him.' Who is grandpa talking about?";
-		else if index is 3:
-			Report Grandpa saying "'Sometimes we worry about you,  [grandpas_nickname],' grandpa says, 'But it'll be okay, I promise.'";
-		else if index is 4:
-			Report Honey saying "Honey leans over and whispers, 'Try as we might, we may not always be able to keep you safe, [honeys_nickname].' She takes a deep breath, 'But I know you can take care of yourself when you need to.'";
-		else if index is 5:
-			Report Grandpa saying "'Let's see where this journey takes us', Grandpa says, inviting you with his hand to follow the tracks.";
-			now grandparents_track_done is true;
-		else if index is 5:
-			Report Honey saying "Grandpa says, 'Let's get going. I think we're meant to follow these,' he says gesturing at the tracks. [paragraph break]Honey laughs, 'There's a metaphor there somewhere.'";
-		else if index is 6:
-			Report Grandpa saying "[one of]'Time to go,' says grandpa.[or]Honey says, 'Let's see what's next, [honeys_nickname],' pointing at the tracks.[or]'Time to make like a hobo', says grandpa looking at the tracks.[at random]";
-			[We do the following, because we want this step tp repeat]
-			decrease index of seq_grandparents_tracks by one;
-			[we make sure this ends when Scene_Dream_Tracks ends]
-
-This is the seq_grandparents_tracks_interrupt_test rule:
-	[ We don't worry about interrupting seq if NPCs are not visible because our movements are limited. ]
-	rule fails.
-
-[ grandparents_bounce sequence
-summary: Honey and Grandpa bounce on Mars
-conditions: during Scene_Dream_Bouncing when player is on Mars.
-trigger: the player is on Mars ]
-
-seq_grandparents_bounce is a sequence.
-	The action_handler is the seq_grandparents_bounce_handler rule.
-	The interrupt_test is seq_grandparents_bounce_interrupt_test rule.
-	The length_of_seq is 7.
-
-This is the seq_grandparents_bounce_handler rule:
-	let index be index of seq_grandparents_bounce;
-	if player is in Room_Mars:
-		if index is 2:
-			Report Grandpa saying "Honey and Grandpa both stumble in the light gravity. Honey looks concerned, but Grandpa looks thrilled. 'Hmm,' he says smiling broadly taking several experimental hops.";
-		else if index is 4:
-			queue_report "Honey smiles as she gives a little jump and sails high. Grandpa gives a bigger jump and flies almost as high as he is tall. They are both laughing." at priority 1;
-		else if index is 6:
-			Report Grandpa saying "'Watch this!' Grandpa says like a little kid and leaps high into the air yelling 'Woo!' while Honey laughs.";
-		else if index is 7:
-			queue_report "Grandpa gathers up his strength, squating down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'John!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
-			now seq_grandparents_bounce is not in-progress;
-			now mars_free_to_go is true;
-			now Honey is in Limbo;
-			now Grandpa is in Limbo;
-
-This is the seq_grandparents_bounce_interrupt_test rule:
-	[ We don't worry about interrupting seq if NPCs are not visible because our movements are limited. ]
-	rule fails.
 
 
 Part - Grandpa
@@ -7707,76 +8609,6 @@ Chapter - Journeys
 
 test gw with "teleport to grandpas trailer / teleport to grassy clearing / teleport to willow trail".
 
-journey_gpa_walk is an npc_journey.
-	The npc is Grandpa.
-	The origin is Room_Grassy_Clearing.
-	The destination is Room_Grandpas_Trailer.
-	The wait_time is 2.
-	The max_wait is 8.
-	Waits_for_player is true.
-	The interrupt_test is the journey_gpa_walk_interrupt_test rule.
-	The action_at_start is the journey_gpa_walk_start rule.
-	The action_at_end is the journey_gpa_walk_end rule.
-	The action_before_moving is the journey_gpa_walk_before_moving rule.
-	The action_after_waiting is the journey_gpa_walk_after_waiting rule.
-	The action_catching_up is the journey_gpa_walk_catching_up rule.
-
-This is the journey_gpa_walk_interrupt_test rule:
-	if we are speaking to Grandpa, rule succeeds;
-	rule fails.
-
-This is the journey_gpa_walk_start rule:
-	if grandpa is not visible:
-		if player is in Region_Blackberry_Area:
-			queue_report "[one of]You hear grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
-		else if player is in Region_River_Area or player is in Region_Dirt_Road:
-			if a random chance of 1 in 2 succeeds:
-				queue_report "[one of]You think you hear your Grandpa calling you[or]Is that grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think grandpa's calling.[at random]" at priority 1;
-		rule fails;
-	else:
-		if time_here of journey_gpa_walk is 1:
-			Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old grandpa?'";
-			rule fails;
-		else if time_here of journey_gpa_walk is 2:
-			Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge.";
-			now Grandpa holds bucket;
-		rule succeeds;
-
-This is the
-journey_gpa_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Room_Stone_Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]heads for the grassy field[else if player is in Room_Grassy_Field]goes through the back gate into the trailer park[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Room_B_Loop]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 1;
-
-This is the
-journey_gpa_walk_after_waiting rule:
-	Report Grandpa saying "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]";
-
-This is the
-	journey_gpa_walk_catching_up rule:
-	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
-
-[
-	Grandpa in Trailer
-]
-
-This is the
-		journey_gpa_walk_end rule:
-	if time_here of journey_gpa_walk is 1:
-		Report Mary saying "'Mornin['], Mary,' Grandpa says.[paragraph break]'How's the berry picking?' Mary asks.";
-		rule fails;
-	else if time_here of journey_gpa_walk is 2:
-		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
-		now bucket is empty;
-		rule fails;
-	else if time_here of journey_gpa_walk is 3:
-		Report Mary saying "Your grandpa gets a big glass of water from the sink and drinks it.
-		[paragraph break]Aunt Mary turns to you, 'Sweetheart, Can I get your help making lunch?'";
-		now seq_mary_sandwich is in-progress;
-		rule fails;
-	else if time_here of journey_gpa_walk is 4:
-		Report Grandpa saying "'I better hustle back,' Grandpa says, 'before Ellie needs the bucket.' Grandpa turns to you on his way out, 'See you down there, [grandpas_nickname].' Grandpa squeezes your shoulder and heads out the door.";
-		now grandpa is in Room_Grassy_Clearing;
-		rule succeeds;
-
 
 Part - Sharon
 
@@ -8049,175 +8881,11 @@ Quote
 
 Chapter - Sequences
 
-[
-	Invite Sequence
-]
 
-seq_sharon_invite is a sequence.
-	The action_handler is the seq_sharon_invite_handler rule.
-	The interrupt_test is seq_sharon_invite_interrupt_test rule.
-	The length_of_seq is 2.
 
-This is the seq_sharon_invite_handler rule:
-	let index be index of seq_sharon_invite;
-	if Sharon is visible:
-		now current interlocutor is Sharon;
-	if index is 2:
-		Report Sharon saying "'Won't you come in for a moment?' the Cat Lady gestures at her trailer, 'I just love guests. And I do so enjoy talking to you.'";
-
-This is the seq_sharon_invite_interrupt_test rule:
-	[ If player walks away, pause the seq. ]
-	if player is not in Room_D_Loop or Sharon is not visible:
-		rule succeeds;
-	if we are speaking to sharon:
-		rule succeeds;
-	if Scene_Sheriffs_Drive_By is happening:
-		rule succeeds;
-	rule fails.
-
-[
-	Tea Time Sequence
-]
-
-seq_sharon_teatime is a sequence.
-	The action_handler is the seq_sharon_teatime_handler rule.
-	The interrupt_test is seq_sharon_teatime_interrupt_test rule.
-	The length_of_seq is 6.
-
-This is the seq_sharon_teatime_handler rule:
-	let index be index of seq_sharon_teatime;
-	if Sharon is visible:
-		now current interlocutor is Sharon;
-	if index is 1:
-		if sharon is not in Room_Sharons_Trailer:
-			Move Sharon into her trailer;
-		now sharon is ready-for-tea-time;
-		Report Sharon saying "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest.";
-	else if index is 2:
-		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Oh, [sharons_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
-		do Sharon_Teatime_Premonition;
-	else if index is 3:
-		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Please, [sharons_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharons_nickname]. What adventures have you had since we talked last?'";
-	else if index is 4:
-		if sharon is visible:
-			if player is not on Cat Lady's kitchen table:
-				queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3;
-				try silently entering the Cat Lady's kitchen table;
-			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharons_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
-			now your teacup is filled;
-			Now player is sharon_experienced;
-	else if index is 5:
-		if turns_so_far of seq_sharon_teatime is less than 40 and player is on Cat Lady's kitchen table:
-			decrease index of seq_sharon_teatime by one;
-			if sharon is visible:
-				if your teacup is unfilled and a random chance of 2 in 3 succeeds:
-					refill the teacups;
-				queue_report "[cat lady prattle]" at priority 2;
-		else:
-			now index of seq_sharon_teatime is 6;
-			now index is 6;
-	if index is 6:
-		Report Sharon saying "'Oh [sharons_nickname], it's been so nice talking to you. I can see you have to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you.";
-		if player holds your teacup:
-			queue_report "You return your teacup to the table." at priority 1;
-			now your teacup is on the Cat Lady's kitchen table;
-		Sharon resumes gardening in two turns from now;
-		Now player is compassionate;
-
-This is the seq_sharon_teatime_interrupt_test rule:
-	[ If player walks away, pause the seq. ]
-	if player is not in Room_Sharons_Trailer and player is not on Cat Lady's kitchen table:
-		[a condition so if player leaves, the cat lady doesn't get stuck waiting]
-		[TODO: Add a similar condition to other seq? ]
-		if turns_so_far of seq_sharon_teatime is greater than 40:
-			rule fails;
-		else:
-			rule succeeds;
-	if we are speaking to sharon, rule succeeds;
-	rule fails.
-
-To refill the teacups:
-	say "The Cat Lady re-fills [if a random chance of 1 in 2 succeeds]both of your cups[else]your cup[end if] with more tepid tea.";
-	now your teacup is filled;
 
 	Chapter - Sequences
 
-[
-	Found by Sharon
-
-	This is a journey that begins
-		* during Scene_Found
-		* when player is in Room_Other_Shore
-
- 	What happens on Sharon's walk:
-		* beginning: Sharon hugs you and says some stuff and sets off to return you home
-		* turn n: you arrive where sharon is waiting, maybe he says something if it has been more than a turn
-		* turn n+1: one turn after you arrive, sharon says something to you and goes one step closer
-		* turn n+m: if you take more than m turns to get to him and you are a location away, sharon comes to get you and ask if you are coming
-		* end: Sharon returns you to your family and tells where they found you, Lee arrives
-]
-
-journey_sharon_walk is an npc_journey.
-	The npc is Sharon.
-	The origin is Room_Other_Shore.
-	The destination is Room_Grassy_Field.
-	The wait_time is 2.
-	The max_wait is 10.
-	Waits_for_player is true.
-	The interrupt_test is the journey_sharon_walk_interrupt_test rule.
-	The action_at_start is the journey_sharon_walk_start rule.
-	The action_at_end is the journey_sharon_walk_end rule.
-	The action_before_moving is the journey_sharon_walk_before_moving rule.
-	The action_after_waiting is the journey_sharon_walk_after_waiting rule.
-	The action_catching_up is the journey_sharon_walk_catching_up rule.
-
-This is the journey_sharon_walk_interrupt_test rule:
-	if we are speaking to Sharon, rule succeeds;
-	rule fails.
-
-This is the journey_sharon_walk_start rule:
-	if time_here of journey_sharon_walk is 1:
-		Report Sharon saying "The Cat Lady, you suddenly remember her name is Sharon, sees you as you emerge from the woods and her eyes go wide. 'Oh my,' she says clutching her breast. Sharon sweeps you up in a huge hug, 'Oh my, we were so worried. Look at you.' she holds you out and looks at you carefully. Instead, you look at Sharon and notice she's dressed entirely differently than you are used to seeing her.";
-		rule fails;
-	else if time_here of journey_sharon_walk is 2:
-		Report Sharon saying "'Dearie, your grandparents are beside themselves with worry,' Sharon says, 'I have to get you back home. We've been looking everywhere.'";
-	rule succeeds;
-
-This is the
-journey_sharon_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if player is in Room_Other_Shore]crosses the river to the crossing[else if player is in Room_Crossing]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if player is in Room_Swimming_Hole]makes her way up the steep trail to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
-
-To say sharon_urging:
-	queue_report  "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]" at priority 3;
-
-This is the
-journey_sharon_walk_after_waiting rule:
-	queue_report "[one of]'Hurry along, dear,' Sharon says, 'We have to get you home.'[or]'You know, your grandparents are worried sick about you,' Sharon says, 'Let's not dawdle, shall we?'[or]Sharon looks irritated about having to wait, but says nothing.[or]'Now I don't mind if we spend all day out here,' Sharon says, 'But I would think you'd have a little more respect and concern for your grandpa and grandma who are worries about you.'[or]Sharon looks mad at you for making her wait.[stopping]" at priority 3;
-
-This is the
-	journey_sharon_walk_catching_up rule:
-	queue_report "Sharon catches up to you[if player is in Room_Crossing], carefully crossing the river on the floating log[else if player is in Room_Swimming_Hole] at the swimming hole[else if player is in Room_Railroad_Tracks] as you reach the railroad crossing[else if player is in Room_Grassy_Field] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 3;
-
-This is the journey_sharon_walk_end rule:
-	if time_here of journey_sharon_walk is 1:
-		Now Honey is in Room_Grassy_Field;
-		Now Grandpa is in Room_Grassy_Field;
-		Report Grandpa saying "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops and lets out a deep breath. He looks relieved. He looks at the Cat Lady for a long moment, 'You did it, Sharon. You have my gratitude.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your surprise, you start to cry.";
-		rule fails;
-		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
-	else if time_here of journey_sharon_walk is 2:
-		Now Lee is in Room_Grassy_Field;
-		Report Sharon saying "'He was on the other side of the creek, near the woods,' Sharon says.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
-		rule fails;
-	else if time_here of journey_sharon_walk is 3:
-		Report Sharon saying "'I think it's time I headed home,' Sharon says looking suddenly very tired.[paragraph break]'And maybe time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' He heads back to the trailer park with Sharon right behind him.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. Grandpa carries you all the way to...";
-		Now Sharon is in Room_Sharons_Trailer;
-		Now Lee is in Room_Lees_Trailer;
-		Now Honey is in Room_B_Loop;
-		Now Grandpa is in Room_B_Loop;
-		Move player to Room_B_Loop, without printing a room description;
-		queue_report "[bold type][location][roman type]" at priority 1;
-		rule succeeds;
 
 
 Part - Lee
@@ -8400,13 +9068,6 @@ Response of Lee when asked-or-told about purple_heart:
 To say lee_purple_heart_story:
 	say "'It was nothing,' Lee says, though you can tell he's pleased to be able to give you the gift. 'You hold on to that. That's for your courage and endurance.'[paragraph break]'You know, they gave me that when I got hurt in the war,' Lee says, 'I wasn't even shot. I just crashed a jeep,' Lee laughs. 'I was a driver at the base in Da Nang and there was a rocket attack. A fuel tank went up and I turned to look. Hit a Jersey barrier. Add so I got a purple heart like a hero.'[paragraph break]";
 
-[transition text]
-Instead of going from Room_Lees_Trailer during Scene_Hangout_With_Lee:
-	say "You give a wave to Lee as you go.[paragraph break]'Alright, drop by any time, Jody,' Lee says. 'You take care of yourself. And don't let the assholes get you down,' he adds with a wink.";
-	if index of seq_lee_hangout is greater than 4:
-		now seq_lee_hangout is not in-progress;
-		lee_resumes_smoking in four turns from now;
-	continue the action.
 
 Chapter - Rants
 
@@ -8457,191 +9118,6 @@ Quote
 "'This whole area, hell, this whole country, is Indian land, Jody.', Lee says, 'I grew up here, but my mom grew up on the rez. I don't think she ever wanted to go back. She was full blood Dakota. They took her out for Indian School and erased her culture, man. I knew I was Indian, but had no connection to it, you know?' Lee takes a drag of his cigarette."
 "Lee continues. 'I met more Indians in name than I ever did in the World,' Lee laughs bitterly. 'I mean they like to send poor people to war, don't they? And that means Blacks and Chicanos and Indians.'"
 "'That's why we're seeing all that stuff on the news about the Indian Movement,' Lee continues, 'They're fed up, man. You watch, Jody, someday the Indians are gonna take back this whole country.'"
-
-
-Chapter - Sequences
-
-[
-	Lee Invite Sequence
-]
-
-[TODO: All seq should stop if rant is in progress]
-
-seq_lee_invite is a sequence.
-	The action_handler is the seq_lee_invite_handler rule.
-	The interrupt_test is seq_lee_invite_interrupt_test rule.
-	The length_of_seq is 5.
-
-This is the seq_lee_invite_handler rule:
-	let index be index of seq_lee_invite;
-	if Lee is visible:
-		now current interlocutor is Lee;
-	if index is 2:
-		Report Lee saying "Lee looks you over. 'What happened to your arm?' he asks with what seems like genuine concern.[if player is injured] 'I see you're looking a little rough around the edges. You okay?' You notice you've been holding your side where you bashed it on the big pine tree.[end if]";
-		now player is aware_of_arm_injury;
-	else if index is 4:
-		queue_report "Lee looks like he is thinking about something. Finally, he nods to himself." at priority 2;
-	else if index is 5:
-		Report Lee saying "'I think I have something for you. You're welcome to come in, if you want,' Lee shrugs.[first time]
-		[paragraph break][Lee_Invite_Premonition].[only]";
-
-[TODO: Add visibility rule to interrupt tests and eliminate stuff like "if player is in Room_C_Loop and lee is visible" from the individual sequence steps, making sure they only apply within Day One or Day Two as appropriate]
-
-This is the seq_lee_invite_interrupt_test rule:
-	[End seq if still in-progress but scene has ended]
-	if Scene_Day_One is not happening or Scene_Hangout_With_Lee has happened:
-		now seq_lee_invite is not in-progress;
-		rule succeeds;
-	[Pause seq if we walk away]
-	if Lee is not visible or player is not in Room_C_Loop:
-		rule succeeds;
-	[if we are speaking to lee:
-		rule succeeds;]
-	if Scene_Sheriffs_Drive_By is happening:
-		rule succeeds;
-	rule fails.
-
-[
-	Scene_Hangout_With_Lee Sequence
-]
-
-seq_lee_hangout is a sequence.
-	The action_handler is the seq_lee_hangout_handler rule.
-	The interrupt_test is seq_lee_hangout_interrupt_test rule.
-	The length_of_seq is 8.
-
-This is the seq_lee_hangout_handler rule:
-	let index be index of seq_lee_hangout;
-	if Lee is visible:
-		now current interlocutor is Lee;
-	if index is 1:
-		if Lee is not in Room_Lees_Trailer:
-			move_lee_into_his_trailer;
-		Report Lee saying "'So what's up in your world?' Lee asks. 'Anything good?' He pauses for a moment. 'I have something here for you.'
-			[paragraph break]Lee is fumbling around in a drawer.";
-	if index is 2:
-		Report Lee saying "'Hey, make yourself comfortable,' Lee says. 'Mi casa, es su casa. That means [']My home is your home.['] Do you want anything? A drink or anything?' It makes you [nervous] to think of drinking or eating in Lee's trailer. You can smell a little alcohol on his breath like your step-dad.
-		[paragraph break]Lee is fumbling around in a drawer.";
-	if index is 3:
-		Report Lee saying "'I got this when I got hurt in Da Nang,' Lee says. 'And now I think it's time to pass it on to you.'
-		[paragraph break]Lee is still looking for something.";
-	else if index is 4:
-		Report Lee saying "'They gave it to me just for being in the wrong place at the wrong time,' Lee is still fumbling in a drawer.
-		[paragraph break]'And I didn't even want to be there. So I always felt weird about it. Like it wasn't really mine. Like I didn't deserve it,' Lee says, 'But you're full of spirit and should have this.' Lee seems to find what he's looking for and puts it behind his back. 'This is for you.'
-		[paragraph break]He holds out a purple medal. It has a purple ribbon and a gold heart-shaped medalion, purple around a gold figure in the middle. You want to hold it in your hand and feel its weight. You put out your hand and, for a moment, are scared Lee is going to snatch it back.
-		[paragraph break]But Lee puts the medal in your hand with a smile. It's heavier even than it appears.";
-		now player holds purple_heart;
-	else if index is 5:
-		Report Lee saying "You start to thank Lee, but he looks embarrassed even before you say it and cuts you off. 'I wonder what's on the tube,' He turns to the television and starts fiddling with the rabbit ears.";
-	else if index is 6:
-		if lee is visible:
-			try Lee switching on lees_tv;
-			say what_show_is_playing;
-			say line break;
-			Report Lee saying "'There's never anything really on. Don't know why I bother,' Lee says. 'Feel free to find something that you like.'";
-	else if index is 7:
-		if turns_so_far of seq_lee_hangout is less than 40:
-			decrease index of seq_lee_hangout by one;
-	else if index is greater than 7:
-		Report Lee saying "'Okay, I'm heading out. You can stay here long as you want. Drop by any time, Jody,' Lee says. 'You take care of yourself. And don't let the assholes get you down,' he adds with a wink.";
-		lee_resumes_smoking in one turn from now;
-
-This is the seq_lee_hangout_interrupt_test rule:
-	if we are speaking to Lee:
-		rule succeeds;
-	[ If player walks away, pause the seq. ]
-	if player is not enclosed by Room_Lees_Trailer:
-		[a condition so if player leaves, Lee doesn't get stuck waiting]
-		if turns_so_far of seq_lee_hangout is greater than 40:
-			rule fails;
-		else:
-			rule succeeds;
-	rule fails.
-
-	Chapter - Sequences
-
-[
-	Found by Lee
-
-	This is a journey that begins
-		* during Scene_Found
-		* when player is in Room_Willow_Trail
-
- 	What happens on Lee's walk:
-		* beginning: Lee hugs you and says some stuff and sets off to return you home
-		* turn n: you arrive where lee is waiting, maybe he says something if it has been more than a turn
-		* turn n+1: one turn after you arrive, lee says something to you and goes one step closer
-		* turn n+m: if you take more than m turns to get to him and you are a location away, lee comes to get you and ask if you are coming
-		* end: Lee returns you to your family and tells where they found you, Sharon arrives
-]
-
-[test gw with "teleport to lees trailer / teleport to grassy clearing / teleport to willow trail".]
-
-[TODO: Create a rule that prevents us from going anywhere but toward goal during this walk]
-
-journey_lee_walk is an npc_journey.
-	The npc is Lee.
-	The origin is Room_Blackberry_Tangle.
-	The destination is Room_Grassy_Field.
-	The wait_time is 2.
-	The max_wait is 10.
-	Waits_for_player is true.
-	The interrupt_test is the journey_lee_walk_interrupt_test rule.
-	The action_at_start is the journey_lee_walk_start rule.
-	The action_at_end is the journey_lee_walk_end rule.
-	The action_before_moving is the journey_lee_walk_before_moving rule.
-	The action_after_waiting is the journey_lee_walk_after_waiting rule.
-	The action_catching_up is the journey_lee_walk_catching_up rule.
-
-This is the journey_lee_walk_interrupt_test rule:
-	if we are speaking to Lee, rule succeeds;
-	rule fails.
-
-This is the journey_lee_walk_start rule:
-	if time_here of journey_lee_walk is 1:
-		Report Lee saying "Lee sees you as you emerge from the blackberry brambles and looks relieved. 'Oh, man, we've been looking for you everywhere. Oh man. Oh man,' he just keeps shaking his head. 'Come here, kid, lemme look at you.'";
-		rule fails;
-	if time_here of journey_lee_walk is 2:
-		Report Lee saying "Lee looks at your torn clothes and the leaves in your hair, 'Wow, I have to admit, I didn't think this would end well, but look,' he says gesturing at you. 'A little worse for wear, but still kickin'. Lee smiles and pats your back. 'I have a million questions. First, where did you bivvy last night?'";
-		rule fails;
-	else if time_here of journey_lee_walk is 3:
-		Report Lee saying "'I should have known. You're a little survivor.' Lee looks at you admiringly and it makes you proud of yourself, the leaf fort, the raccoons, the long night. 'I got to get you back to your family. They'll be so worried.'[line break]'Let's head back to the trailer park,' Lee says.";
-		rule succeeds;
-
-This is the
-journey_lee_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds][lee_urging] [run paragraph on][end if]Lee [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
-
-To say lee_urging:
-	say "'[one of]We gotta hoof it, soldier'[or]Let's hustle'[or]Movin' out,'[or]Okay, let's go,'[or]We gotta double time. Your family's gonna be worried,'[or]You okay? Just a little farther,'[or]Coming up on home,'[cycling]";
-
-This is the
-journey_lee_walk_after_waiting rule:
-	Report Lee saying "[one of]'Your family is going to be worried, [lees_nickname],' Lee says, 'We gotta keep moving.'[or]'I know you've been through a lot,' Lee says, 'but we can't stop here.'[or]'We gotta get going, [lees_nickname],' Lee says, 'Your family is waiting.'[or]'We gotta hustle,' Lee says.[or]Lee looks impatient, but doesn't say anything.[stopping]";
-
-This is the
-	journey_lee_walk_catching_up rule:
-	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya', [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
-
-This is the journey_lee_walk_end rule:
-	if time_here of journey_lee_walk is 1:
-		Now Honey is in Room_Grassy_Field;
-		Now Grandpa is in Room_Grassy_Field;
-		Report Grandpa saying "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutchs her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more queitly looking at Lee, 'Thank you.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Lee: 'I found him out in the blackberry brambles.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your embarrassment, you start to cry.";
-		rule fails;
-		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
-	else if time_here of journey_lee_walk is 2:
-		Now Sharon is in Room_Grassy_Field;
-		Report Lee saying "'He was down on the other side of the creek, by the willows,' Lee says, carefully not looking at your tears.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
-		rule fails;
-	else if time_here of journey_lee_walk is 3:
-		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. He carries you all the way to...[paragraph break][bold type][location][roman type]";
-		Now Sharon is in Room_Sharons_Trailer;
-		Now Honey is in Room_B_Loop;
-		Now Grandpa is in Room_B_Loop;
-		Move player to Room_B_Loop, without printing a room description;
-		Now Lee is in Room_Lees_Trailer;
-		rule succeeds;
 
 
 Part - Aunt Mary
@@ -8763,112 +9239,6 @@ Response of Mary when asked about topic_work:
 Response of Mary when asked about topic_family:
 	say "'I come from a big family,' she says. 'Not as many of them left anymore. Your uncle Charlie died a couple years ago. Ethel is still in Portland. Your uncle John died before you were even born, when I was still a girl. That just about broke Mama and Papa's hearts.".
 
-Chapter - Rants
-
-Chapter - Sequences
-
-[
-	Mary Suggestion Sequence
-
-	summary: Mary suggests we go back to blackberry clearing to help grandpa bring bucket back and get lunch
-	conditions: during explorations, hasn't happened already, in Room_Grandpas_Trailer for some number of turns
-	trigger: the scene Mary Suggestion starts
-]
-
-seq_mary_suggestion is a sequence.
-	The action_handler is the seq_mary_suggestion_handler rule.
-	The interrupt_test is seq_mary_suggestion_interrupt_test rule.
-	The length_of_seq is 3.
-
-This is the seq_mary_suggestion_handler rule:
-	let index be index of seq_mary_suggestion;
-	if index is 1:
-		Report Mary saying "Aunt Mary pauses for a moment from her jam making to talk to you, 'You know your grandpa may need some company if he's bringing that bucket up here.'";
-	else if index is 2:
-		Report Mary saying "'Also, when you go down to the creek, ask your Grandpa and Grandma about lunch,' Aunt Mary says. 'I can make some sandwiches to send down with you.'";
-	else if index is 3:
-		Report Mary saying "'Why don't you hustle down to the creek and help your grandpa,' Aunt Mary says and goes back to stirring the jam.";
-
-This is the seq_mary_suggestion_interrupt_test rule:
-	if Scene_Explorations has ended, rule fails; [if no longer applicable, run out the sequence]
-	if we are speaking to Mary, rule succeeds;
-	[ If player walked away, pause the seq. ]
-	if Mary is not visible, rule succeeds;
-	rule fails.
-
-[
-	Mary Sandwich Sequence
-
-	summary: Mary makes player stay and help make sandwiches
-	conditions: after Scene_Walk_With_Grandpa, player in trailer
-	trigger: the scene Mary Sandwich starts
-]
-
-Some sandwich_ingredients are a fixed in place thing.
-	The printed name is "sandwich makin's".
-	The initial appearance is "Aunt Mary has gotten out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread for making tuna sandwiches.". The description is "Several cans of Chicken of the Sea, Miracle Whip, and Wonder Bread are out for making tuna sandwiches."
-	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonnaise/whip/can/cans/bags", "sandwich bags" as sandwich_ingredients.
-
-The brown paper bag is a unopenable open container.
-	The printed name is "[if brown paper bag is torn]torn up [end if]brown paper bag".
-	The description is "A plain brown paper bag[if brown paper bag is torn] now pretty torn up[end if]".
-The brown paper bag can be torn.
-
-[Originally I thought to simplify this model, but it came in handy during Scene_Defend_the_Fort]
-A tuna sandwich is a kind of thing.
-	A tuna sandwiches is edible.
-	[It is singular-named "tuna sandwich".]
-	Three tuna sandwiches are in brown paper bag.
-	The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
-	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spead/mayonaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna sandwiches.
-
-Instead of dropping tuna sandwich during Scene_Day_One:
-	if raccoons are in Region_Woods_Area:
-		say "Maybe they want the tuna sandwiches.";
-		continue the action;
-	else:
-		say "No way. That's lunch for Honey and grandpa.";
-
-Instead of dropping brown paper bag during Scene_Day_One:
-	if raccoons are in Region_Woods_Area:
-		say "Maybe they want the tuna sandwiches.";
-		continue the action;
-	else:
-		say "No way. That's lunch for Honey and grandpa.";
-
-Instead of eating tuna sandwich during Scene_Day_One:
-	say "Not yet. You want to eat lunch with Honey and grandpa.";
-
-seq_mary_sandwich is a sequence.
-	The action_handler is the seq_mary_sandwich_handler rule.
-	The interrupt_test is seq_mary_sandwich_interrupt_test rule.
-	The length_of_seq is 3.
-
-Instead of going when seq_mary_sandwich is in-progress:
-	say "'I want you to stay and help make sandwiches,' Aunt Mary says. 'It will just take a minute. Then you can go join your grandpa and bring them lunch.'";
-
-Understand "make sandwiches/sandwich/lunch", "help with/make sandwiches/sandwich/lunch" as a mistake ("Aunt Mary already has you working on the assembly line making tuna sandwiches.").
-
-This is the seq_mary_sandwich_handler rule:
-	let index be index of seq_mary_sandwich;
-	if index is 1:
-		if mary is visible:
-			Report Mary saying "Your Aunt Mary recruits you to help make lunch, getting out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread.";
-			now sandwich_ingredients are in Room_Grandpas_Trailer;
-	else if index is 2:
-		Report Mary saying "Your Aunt Mary has you on the assembly line constructing tuna fish sandwiches and putting them in sandwich bags.";
-	else if index is 3:
-		Report Mary saying "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makin's. 'Okay, you take those sandwiches down to your grandparents. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles.";
-		now all tuna sandwiches are in brown paper bag;
-		now brown paper bag is held by player;
-		now sandwich_ingredients are off-stage;
-
-This is the seq_mary_sandwich_interrupt_test rule:
-	if we are speaking to Mary, rule succeeds;
-	[ if player walks away, pause the seq. ]
-	if Mary is not visible, rule succeeds;
-	rule fails.
-
 
 Part - the Sheriff
 
@@ -8935,177 +9305,6 @@ Default response for Sheriff:
 Instead of touching Sheriff:
 	say "That seems like a terrible idea, and you reconsider."
 
-Chapter - Rants
-
-Chapter - Sequences
-
-[
-	Sequence: Sheriffs_Drive_By
-
-	summary: Sheriff and Cat Lady talk about Lee
-	conditions: during explorations when player has been in trailer park region for a numer of turns
-	trigger: the scene Scene_Sheriffs_Drive_By starts
-]
-
-seq_sheriffs_drive_by is a sequence.
-	The action_handler is the seq_sheriffs_drive_by_handler rule.
-	The interrupt_test is seq_sheriffs_drive_by_interrupt_test rule.
-	The length_of_seq is 6.
-
-This is the seq_sheriffs_drive_by_handler rule:
-	let the index be the index of seq_sheriffs_drive_by;
-	if (player is in Room_C_Loop or player is in Room_B_Loop or player is in Room_Picnic_Area) and index is greater than 1 and index is less than 6:
-		queue_report "The Sheriff is still talking to the Cat Lady in D Loop." with priority 3;
-	if index is 1:
-		if player is in Room_D_Loop:
-			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. As it drives through C Loop and passes Lee, the car slows way down but doesn't stop. It's coming straight toward where you stand in D Loop." with priority 2;
-		else if player is in Room_C_Loop:
-			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park, headed toward D Loop. As the car passes [if Lee was visible]Lee who is out in front of his trailer smoking, you see the policeman slow down and give him a Look[else]Lee's trailer, you see the policeman looking carefully at his trailer[end if]. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
-			Move player to Room_D_Loop, without printing a room description;
-		else if player is in Region_Trailer_Outdoors:
-			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
-			Move player to Room_D_Loop, without printing a room description;
-		else if player is in Region_Trailer_Indoors:
-			queue_report "You get a lurching feeling as you catch sight of a police car outside the window. It is driving slowly by. Curiosity draws you outside and along in its wake. It stops in D Loop and so do you.[line break][location heading]" with priority 2;
-			Move player to Room_D_Loop, without printing a room description;
-		queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 1;
-	else if index is 2:
-		if sharon is not in Room_D_Loop:
-			move sharon out of her trailer;
-		if player is in Room_D_Loop:
-			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing, Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 2;
-	else if index is 3:
-		if player is in Room_D_Loop:
-			queue_report "'Well, pretty good, Bill. I can't complain,' the Cat Lady tells the Sheriff. Then a frown crosses her face, 'Oh except Oliver has an abscess. I have to take him to the kitty doctor next week.'" with priority 2;
-	else if index is 4:
-		if player is in Room_D_Loop:
-			queue_report "'Well what I came to ask,' the Sheriff says to the Cat Lady, 'Has he been bothering you any?' He looks back toward C Loop. 'When I drove up, I saw him over there. Has he been leaving you alone?'" with priority 2;
-	else if index is 5:
-		if player is in Room_D_Loop:
-			queue_report "'Oh, he hasn't so much as looked in my direction,' the Cat Lady says to the Sheriff.
-			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?''" with priority 2;
-	else if index is 6:
-		if player is in Room_D_Loop:
-			queue_report "'Dearie, you're a sweet man to check in on me,' the Cat Lady puts her hand on the Sheriff's arm and he almost smiles.
-			[paragraph break]He pats her hand, 'You take care of yourself Sharon, and make sure you call me if you have any problems.' He talks briefly on his radio and then drives off, a little too fast for inside the trailer park. The Cat Lady unwinds the hose and continues watering her garden." with priority 2;
-		else if player is in Region_Trailer_Park_Area:
-			queue_report "You hear the Sheriff's car drive off, a little too fast for inside the trailer park." with priority 1;
-		now sheriffs_car is in Limbo;
-
-This is the seq_sheriffs_drive_by_interrupt_test rule:
-	[ We don't worry about interrupting seq if NPCs are not visible because the seq accounts for that. ]
-	if we are speaking to Sharon, rule succeeds;
-	if we are speaking to Sheriff, rule succeeds;
-	rule fails.
-
-Test long-arm with "test day2 / get up / climb pine tree / d / w / w / go to grassy field / again / again / again / again / again / z / z / z".
-
-[
-	Sequence: Long Arm of the Law
-
-	summary: Sheriff confronts Lee
-	conditions: during Scene_Day_Two when player has been in Room_B_Loop
-	trigger: Scene_Long_Arm_of_the_Law starts
-]
-
-seq_long_arm_of_the_law is a sequence.
-	The action_handler is the seq_long_arm_of_the_law_handler rule.
-	The interrupt_test is seq_long_arm_of_the_law_interrupt_test rule.
-	The length_of_seq is 6.
-	The seq_long_arm_of_the_law has a number called wait_time.
-	The wait_time of seq_long_arm_of_the_law is 0.
-
-This is the seq_long_arm_of_the_law_handler rule:
-	let the index be the index of seq_long_arm_of_the_law;
-	if index is 1:
-		now Sheriff is in sheriffs_car;
-		now sheriffs_car is in Room_B_Loop;
-		[grandpa puts you down and Honey and Grandpa talk to you.]
-		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see you made it back home.'" at priority 2;
-		[sheriff shows up]
-	else if index is 2:
-		now Lee is in Room_C_Loop;
-		now Sheriff is in Room_C_Loop;
-		now sheriffs_car is in Room_C_Loop;
-		queue_report "'Yes, thank god,' grandpa says. 'Apparently, [grandpas_nickname] here,' he puts his hand on your head, 'spent a pretty cold night out in the woods. We were all out looking for this one.'[paragraph break]The sheriff's car radio crackles to life and the sheriff responds. He says something into his radio. You gather he is calling off the search for you. The sheriff ends his radio call and leans back out the window.[paragraph break]'Mr. Skarbek?' the Sheriff asks, glancing toward C Loop.[paragraph break]'Everyone was out looking,' Grandpa looks confused, 'But--'[paragraph break]'And Mr. Skarbek was out there while the child was missing?' the Sheriff interrupts.[paragraph break]'We were all searching everywhere we could think of,' Grandpa says, but the Sheriff appears to have stopped listening.[paragraph break]'That's all I need to know,' the Sheriff says grimly. He suddenly turns to you. 'You're lucky you were found,' he says and speeds off." with priority 2;
-	else if index is 3:
-		Move player to Room_C_Loop, without printing a room description;
-		now Lee is in sheriffs_car;
-		now honey is in Room_C_Loop;
-		now grandpa is in Room_C_Loop;
-		now current interlocutor is Sheriff;
-		queue_report "Honey and grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][bold type][location][roman type][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
-	else if index is 4:
-		[Sheriff tries to bully narator into implicating Lee]
-		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Shefiff says a little out of breath to Honey and grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
-		now lee_support of player is _uncertain;
-	else if index is 5:
-	  [we hang at this step until either player talks to sheriff or leaves]
-		queue_report "The sheriff is still filling out his forms. He asks Lee an occasional question, but Lee remains silent." with priority 2;
-		if lee_support of player is _uncertain:
-			decrement index of seq_long_arm_of_the_law;
-	else if index is 6:
-		move player to Room_B_Loop, without printing a room description;
-		now grandpa is in Room_B_Loop;
-		now Honey is in Room_B_Loop;
-		now Sheriff is in sheriffs_car;
-		now sheriffs_car is in Limbo;
-		if lee_support of player is _decided_no:
-			queue_report "The Sheriff closes the back door of the cruiser and goes around to the driver's side. As the car begins to roll away, you glance one more time at Lee who looks back without emotion.[paragraph break]Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a sad hug. 'He'll be okay,' grandpa says. Something about everything that has happened catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both grandpa and Honey try to comfort you." with priority 2;
-		else:
-			now Lee is in Room_Lees_Trailer;
-			queue_report "The Sheriff takes a long moment and looks you up and down. Both Honey and grandpa tense. Honey starts to say something, stops herself, shifts, and moves behind you looking challengingly at the Sheriff. Grandpa moves to stand beside her.[paragraph break]The Sheriff looks from you to your grandparents. He hesitates, apparently making a decision.[paragraph break]'Okay, maybe you could have told me that earlier.' He opens the back door of the cruiser and guides Lee out. He spins him around and removes the cuffs. 'You're free to go, Mr. Skarbek. Stay out of trouble.' Lee rubs his wrists and wipes the blood off his nose and mouth.[paragraph break]The Sheriff gets into his car without another word and drives quickly away.[paragraph break]Lee says quietly, 'Thank you, Jody,' bows slightly, and disappears into his trailer. You let Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a tearful hug. 'I'm proud of you, [grandpas_nickname],' he says. Something about seeing the magnitude of what you did through his eyes, telling your own story for maybe the first time in your life catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both grandpa and Honey try to comfort you." with priority 2;
-
-This is the seq_long_arm_of_the_law_interrupt_test rule:
-	[ Nothing stops this rule. ]
-	rule fails.
-
-[
-	Sequence: Parents Arrive
-
-	summary: mom and stepdad arrive after Jody is found
-	conditions: during Scene_Day_Two after sheriff leaves
-	trigger: Scene_Long_Arm_of_the_Law ends
-]
-
-seq_parents_arrive is a sequence.
-	The action_handler is the seq_parents_arrive_handler rule.
-	The interrupt_test is seq_parents_arrive_interrupt_test rule.
-	The length_of_seq is 5.
-
-This is the seq_parents_arrive_handler rule:
-	let the index be the index of seq_parents_arrive;
-	if index is 1:
-		[mom and stepdad show up]
-		now moms_camaro is in Room_B_Loop;
-		now mom is in Room_B_Loop;
-		now stepdad is in Room_B_Loop;
-		queue_report "You are still holding grandpa when mom's Camaro pulls into B Loop. Normally, you would run to your mom for comfort, but something's changed. You dry your eyes, pull away from grandpa, and strand up straight. Mom and your stepdad get out of the car. Your mom runs and gives you a huge hug and when she lets go, she looks at grandpa and says, 'Oh dad.' There are tears in her eyes when grandpa hugs her. You realize in this moment that that your mom is usually strong for you, and this is your chance to be strong for her. You start to tell her about your adventures.[paragraph break]Mark is standing around looking uncomfortable. 'Do you know how much you worried your mom?' he demands. [paragraph break]'Oh, Mark, give it a rest,' mom says. Mark shoots her a look. 'We drove all night to get here,' mom tells your grandparents. 'We're shot. Do you have any coffee?' [paragraph break]Aunt Mary, who's been hovering anxiously in the background, wipes away her tears and says 'I'll go make some,' and goes inside." with priority 2;
-	else if index is 2:
-		queue_report "Your stepdad remains quietly simmering. Your mom hugs you again, 'Honey, we were so worried.' She straightens up looking you up and down. Your mom looks from Honey to Grandpa.[paragraph break]'It seems Jo wandered away, got lost, and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was found by Sharon and Lee.'" with priority 2;
-	else if index is 3:
-		queue_report "Mark can't stay quiet any longer. 'Jody, if I had my way, I'd paddle your behind,' he says advancing on you.[paragraph break]'Mark, I told you. This is not--'[paragraph break]
-		'You spoil this kid and are surprised when Jody acts out,' he says as he grabs your arm.[paragraph break]Both grandpa and Honey take a step forward. Your mom stands up tall, looking like she is suddenly twice her height, 'Let go. Now. Mark.' she says fiercely. 'Are you going to hit 'em again?'[paragraph break]Mark instinctively lets go of your arm and stands with his feet apart, arms out, fists clenched ready to fight. You back away from him toward your grandpa who puts his arms protectively around you. Mark makes an angry hissing sound and yanks the car keys out of his pocket. 'We'll talk about this at home. We're leaving,' he says, going around to the driver's door of the Camaro. 'Both of you, get in the car. Now.'[paragraph break]Your mom looks helplessly at her parents. 'Sorry, mom,' she says. 'We better go. I'll call you later and let you know we're okay.'[paragraph break]Honey looks grim and Grandpa starts to say, 'Rachel.'[paragraph break]'Dad, I know,' she says and sighs. She turns to you and smiles thinly, 'Okay Jody, it's best we get going.' She opens the car door and puts the seat back so you can get in." with priority 2;
-		now stepdad is in moms_camaro;
-		now current interlocutor is mom;
-		now going_home_decision of player is _uncertain;
-	else if index is 4:
-		[we hang at this step until either player talks to sheriff or leaves]
-		queue_report "[one of]'I'm sorry, hon, we have to go,' your mom says[or]'We better go, love,' mom says sadly[or]Mom sighs and gestures for you to get in the car[in random order]." with priority 2;
-		if going_home_decision of player is _uncertain:
-			decrement index of seq_parents_arrive;
-	else if index is 5:
-		if going_home_decision of player is _decided_yes:
-			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and grandpa and raise a hand goodbye." with priority 2;
-		else:
-			queue_report "'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you. Mark's door starts to open and grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath as she puts her hand on Mark's arm. Mark shoves her away, but after a clear moment, he doesn't get out of the car.[paragraph break]'We better go, mom,' Rachel says to Honey. To Mark she says, 'Let's go.'[paragraph break]As the car pulls out of B Loop, you can see your mom look at Honey, grandpa and you in turn and mouth, 'I love you.'" with priority 2;
-
-[ TODO: This scene should continue at least two more beats, as the decision seems super abrupt. ]
-[ TODO: Prohibit player from having normal conversations with the people here. This has happened enough times that perhaps it needs a more general handler. ]
-
-This is the seq_parents_arrive_interrupt_test rule:
-	[ Nothing stops this rule. ]
-	rule fails.
 
 Part - Mom
 
@@ -9306,30 +9505,6 @@ Response of mom when asked-or-told about topic_war:
 
 Chapter - Rants
 
-Chapter - Sequences
-
-seq_mom_watching_movie is a sequence.
-	The action_handler is the seq_mom_watching_movie_handler rule.
-	The interrupt_test is seq_mom_watching_movie_interrupt_test rule.
-	The length_of_seq is 6.
-
-This is the seq_mom_watching_movie_handler rule:
-	let index be index of seq_mom_watching_movie;
-	if index is 2:
-		Report Mom saying "You and mom watch the movie for a while. The boy that the movie is about doesn't say much, but everyone seems scared of him including his mom and dad. There is something bad that happens at his birthday party but mom makes you cover your eyes. 'I'll tell you when you can look,' mom says.";
-	else if index is 3:
-		queue_report "In the movie, the bad kid knocks his mom over a railing, but she doesn't die." at priority 2;
-	else if index is 4:
-		Report Mom saying "The dad and another guy go to a cemetary and find a dog skeleton and are attacked by other dogs. Are they protecting the dead dog? This movie is really scary. [paragraph break]'Are you okay, hon?' mom asks. Something else happens to the boy's mom and your mom makes you cover your eyes. Did she die? You think about what would happen if your mom died and you almost start to cry. You quickly think about something else and sneak a glance at mom. Thankfully she didn't notice.";
-	else if index is 5:
-		Report Mom saying "In the movie, the dad and the other guy get some knives for some reason. The dad is angry and throws them away. And then, oh! a truck with glass cuts off the other guy's head too fast for you to cover your eyes! You watch his head bounce away. You burst out crying.[paragraph break]'Oh, honey,' your mom says, holding you, 'I'm so sorry. I'm sorry.' She rocks you as your tears subside. 'Do you want to go? We don't have to stay. I'm sorry.'[paragraph break]The movie is scary, but you feel safe. There is something important here. You want to go. But you also want to stay. What happens to the evil boy? Will the dad kill him? 'No,' you manage through sniffles.[paragraph break]'Okay,' your mom says, clearly doubtful. 'You want to get us snacks?'";
-		now mom_free_to_go is true;
-	else if index is 6:
-		Report Mom saying "'The snack bar is right there,' mom says pointing, 'You can pick us up a snack and, I can tell by the way you are squirming, you have to use the potty.' That embarrasses you, but you don't say anything.";
-
-This is the seq_mom_watching_movie_interrupt_test rule:
-	[ Nothing stops this rule. ]
-	rule fails.
 
 
 Part - Stepdad
@@ -9440,49 +9615,6 @@ Response of stepdad when asked-or-told about topic_family:
 
 Response of stepdad when asked-or-told about topic_war:
 	say "'I was never in the war,' Mark says, 'I served between wars. On a torpedo boat in the Pacific.'".
-
-Chapter - Rants
-
-Chapter - Sequences
-
-seq_stepdad_in_car is a sequence.
-	The action_handler is the seq_stepdad_in_car_handler rule.
-	The interrupt_test is seq_stepdad_in_car_interrupt_test rule.
-	The length_of_seq is 17.
-
-This is the seq_stepdad_in_car_handler rule:
-	let index be index of seq_stepdad_in_car;
-	if index is 2:
-		Report stepdad saying "Your step-dad reaches behind the seat and grabs a can of beer. He pulls the pop-top and tosses it out the window. He takes a long drink and puts the can between his legs. He shoots you a glance and you carefully look out the window.";
-	else if index is 5:
-		queue_report "Mark takes another long swig of his beer and taps on the steering wheel." at priority 2;
-	else if index is 8:
-		queue_report "You can tell Mark is working up to say something. Instead he drains his beer, drops the empty behind the seat, and grabs another can. He pops the top and puts the can between his legs." at priority 2;
-	else if index is 9:
-		queue_report "Mark taps out a cigarette but doesn't light it." at priority 2;
-	else if index is 11:
-		Report stepdad saying "Mark clears his throat as if he's not used to using his voice. 'When you asked to use my tools, I told you that I expected you to put them away when you were done,' Mark says and [stepdad_stuff].";
-	else if index is 12:
-		Report stepdad saying "'This morning, I found my screwdriver on the porch where you were playing with that old radio,' Mark says.";
-	else if index is 13:
-		Report stepdad saying "He waits and glances as you like he's expecting an answer. 'Did you leave it out there deliberately or are you just thoughtless?' he asks.";
-	else if index is 15:
-		Report stepdad saying "'What did I tell you?' Mark says glancing at you angrily, 'I told you to put away my tools.' He grabs your arm, 'Why can't you listen? Huh?' There are stopped cars ahead and Mark puts both hands on the wheel.[paragraph break]You've got to get out of here.";
-	else if index is 16:
-		Report stepdad saying "'I know your mom lets you do whatever you want,' Mark says, 'I told her she was spoiling you, but I'm not going to do that.' Mark slows the Camaro. Maybe this is your chance.";
-		now stepdad_free_to_go is true;
-	else if index is 17:
-		Report stepdad saying "[one of]'Are you just trying to make me mad?' Mark asks.[or]'When I was a kid, I understood that if I didn't do what my parents told me, I would get my ass whipped,' Mark says.[or]Mark grabs your arm, 'Are you listening to me?'[or]'Are you going to answer me?' Mark demands.[in random order]";
-		[We do the following, because we want this step to repeat]
-		decrease index of seq_stepdad_in_car by one;
-		[we make sure this ends when Scene_Dream_About_Stepdad begins]
-
-
-This is the seq_stepdad_in_car_interrupt_test rule:
-	[ Nothing stops this rule. ]
-	rule fails.
-
-
 
 
 Book - Animals
@@ -9770,39 +9902,6 @@ Quote
 "'I had my own litter once,' the dog continues sadly, 'but they took them away before they were weaned.'"
 "The dog scratches an ear and looks thoughtful. Finally, [sub_pronoun of dog] says, 'Now I have my pack. That's my people. They're okay. I wouldn't say there's a lot of warmth, but I have a job and I get kibble. So who am I to complain?''"
 
-Chapter - Sequences
-
-seq_dog_convo is a sequence.
-	The action_handler is the seq_dog_convo_handler rule.
-	The interrupt_test is seq_dog_convo_interrupt_test rule.
-	The length_of_seq is 9.
-
-This is the seq_dog_convo_handler rule:
-	let index be index of seq_dog_convo;
-	if index is 2:
-		Report dream_dog saying "[sub_pronoun_cap of dog] sees you, sizes you up, and to your surprise says, 'You ain't gettin['] by here, kid.'";
-	else if index is 4:
-		Report dream_dog saying "'Listen, kid,' the dog says, 'It's my job to protect my pack's territory.' [sub_pronoun_cap of dog] looks back at the fence uncertainly, then squats at the edge of the road and pees. 'I'm not sure where that ends, but better safe than sorry.'";
-	else if index is 5:
-		Report dream_dog saying "The dog looks at you and looks around. 'Shouldn't you be with your pack?' [sub_pronoun of dog] says.";
-	else if index is 7:
-		Report dream_dog saying "The dog [dog_does_stuff]. 'You know,' the dog says, 'You've been through a lot, but you're doing okay.' [sub_pronoun_cap of dog] wags [pos_pronoun of dog] tail.";
-	else if index is 8:
-		Report dream_dog saying "The dog looks thoughtful, 'If you don't mind me sayin['], it's about time you woke up,' [sub_pronoun of dog] says, [dog_doing_stuff], 'You can't spend your whole like dreaming. I'm gonna let you get going,' the dog says.";
-		now dog_free_to_go is true;
-	else if index is 9:
-		Report dream_dog saying "[one of]'Pal, I think it's time for you to get going,' the dog says wagging [pos_pronoun of dog] tail.[or]'I've liked talking to you. You better get going,' the dog says.[or]The dog looks seriously at you, 'Time for you to go on and wake up,' [sub_pronoun of dog] says.[in random order]";
-		[We do the following, because we want this step to repeat]
-		decrease index of seq_dog_convo by one;
-		[we make sure this ends when Scene_Dreams ends]
-
-This is the seq_dog_convo_interrupt_test rule:
-	if we are speaking to dream_dog:
-		rule succeeds;
-	[ If player walks away, pause the seq. ]
-	if dream_dog is not visible:
-		rule succeeds;
-	rule fails.
 
 Chapter - Dialogue
 
@@ -9900,71 +9999,6 @@ Chapter - Responses
 
 Chapter - Rants
 
-Chapter - Sequences
 
-seq_raccoon_visit is a sequence.
-	The action_handler is the seq_raccoon_visit_handler rule.
-	The interrupt_test is seq_raccoon_visit_interrupt_test rule.
-	The length_of_seq is 2.
-
-This is the seq_raccoon_visit_handler rule:
-	let index be index of seq_raccoon_visit;
-	if index is 1:
-		do_raccoon_things;
-		if raccoons are in Region_Woods_Area:
-			[We do the following, because we want this step to repeat]
-			decrease index of seq_raccoon_visit by one;
-
-This is the seq_raccoon_visit_interrupt_test rule:
-  [ We don't worry about interrupting seq if NPCs are not visible because the seq accounts for that. ]
-	if we are speaking to raccoons:
-		rule succeeds;
-	if we are yelling:
-		rule succeeds;
-	if the current action is room_navigating and the noun is Room_Protected_Hollow:
-		rule succeeds;
-	rule fails.
-
-To do_raccoon_things:
-	Let limbo_sandwich_list be the list of tuna sandwiches enclosed by Limbo;
-	[This continues until all of the sandwiches are gone.]
-	If the number of entries in limbo_sandwich_list is less than three:
-		If player is in Room_Forest_Meadow:
-			[raccoons will be in Room_Forest_Meadow waiting at the edges]
-			queue_report "[raccoon_description]." at priority 1;
-		else if player is in Room_Protected_Hollow:
-			Let meadow_sandwich_list be the list of tuna sandwiches enclosed by Room_Forest_Meadow;
-			Let hollow_sandwich_list be the list of tuna sandwiches enclosed by Room_Protected_Hollow;
-			[if there are sandwiches in Room_Forest_Meadow]
-			If the number of entries in meadow_sandwich_list is greater than zero:
-				[raccoons will be making noise in the meadow eating them.]
-				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]" at priority 1;
-				[It takes one turn for the raccoons to eat one sandwich.]
-				let one_sandwich be a random tuna sandwich enclosed by Room_Forest_Meadow;
-				now one_sandwich is in Limbo;
-				if brown paper bag is in Room_Forest_Meadow:
-					now brown paper bag is torn;
-			[if there are sandwiches in Room_Protected_Hollow]
-			else if the number of entries in hollow_sandwich_list is greater than zero:
-				[raccoons will be making noise sniffing around the fort]
-				queue_report "[one of]Something is trying to get into the fort. There is a rustling thump like a ghost in the attic.[or]You hear a nearby growl that nearly stops your heart.[or]Something is trying to get in. You see a branch shift. Is something on top of the fallen trees?[or]You hear something walking around -- wolves? bears? And are they trying to get you?[or]You hear something outside the fort. What do they want?[or]Looks like you're going to have to go see what's outside.[or]You steel your courage to go confront the wolves. Maybe they're friendly, you think unconvincingly.[cycling]" at priority 1;
-	[If player yells or moves, it takes one turn for the raccoons to make noise again.]
-	else:
-		now raccoons are in Limbo;
-		now virtual_raccoons are in Limbo;
-		now seq_raccoon_visit is not in-progress;
-		if player is in Room_Protected_Hollow:
-			queue_report  "Suddenly, you hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 2;
-		else if player is in Room_Forest_Meadow:
-			queue_report  "The invaders have taken their sandwiches and gone. You protected the fort."  at priority 2;
-
-After taking tuna sandwich when raccoons are visible:
- 	queue_report "The eyes of the invaders follow the tuna sandwich." at priority 1;
-
-After dropping tuna sandwich when raccoons are visible:
- 	queue_report "The glittering eyes watch the tuna sandwich hit the ground." at priority 1;
-
-After dropping brown paper bag when raccoons are visible:
- 	queue_report "Numerous pairs of eyes watch the paper bag hit the ground." at priority 1;
 
 Volume - Debugging
