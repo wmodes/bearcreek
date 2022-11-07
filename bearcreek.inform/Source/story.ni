@@ -3343,7 +3343,7 @@ When Scene_Walk_With_Grandpa begins:
 When Scene_Walk_With_Grandpa ends:
 	now big_bucket is empty.
 
-Chapter - Journeys
+Chapter - Sequenes & Journeys
 
 journey_gpa_walk is an npc_journey.
 	The npc is Grandpa.
@@ -4536,8 +4536,7 @@ When Scene_Found begins:
 
 Section - Sequences & Journeys
 
-[
-	Found by Sharon
+[ Found by Sharon
 
 	This is a journey that begins
 		* during Scene_Found
@@ -4613,8 +4612,7 @@ This is the journey_sharon_walk_end rule:
 		queue_report "[bold type][location][roman type]" at priority 1;
 		rule succeeds;
 
-[
-	Found by Lee
+[ Found by Lee
 
 	This is a journey that begins
 		* during Scene_Found
@@ -4967,20 +4965,20 @@ Scene_Fallout begins when
 Scene_Parents_Arrive ends.
 
 When Scene_Fallout begins:
+	section_break;
+	end_the_story;
+
+to section_break:
 	say paragraph break;
 	say line break;
 	center "[italic type]***   ";
 	say paragraph break;
 	say line break;
-	say story_endings;
-	say "";
-	end the story;
 
-to say story_endings:
-	if going_home_decision of player is _decided_no:
-		say "";
-	else:
-		say "";
+to end_the_story:
+	say paragraph break;
+	say line break;
+	end the story;
 
 [TODO: Should this be exposition or a scene in which the player as an older person pours over a box in which there are photos and keepsakes (the Mika figurine, the purple heart, the lucky penny, the pet rock? ]
 
@@ -7451,7 +7449,7 @@ Room_Camaro_With_Stepdad is a room.
 The printed name is "The Camaro".
 The casual_name is "in a dream".
 The description is "You are in mom's Camaro, but your stepdad is driving. He focuses on the road and you can sense an edge of anger just beneath the surface.[first time] How did you get here? Where's mom?[only]".
-The scent is "".
+The scent is "fear".
 The outside_view is "the highway. [description of road]".
 Understand "Camaro/car" as Room_Camaro_With_Stepdad.
 
@@ -7464,11 +7462,11 @@ Section - Objects
 
 Section - Backdrops and Scenery
 
-The Camaro is backdrop in Room_Camaro_With_Stepdad.
+The camaro_backdrop is backdrop in Room_Camaro_With_Stepdad.
 
 The cigarette lighter is scenery in Room_Camaro_With_Stepdad.
 
-The road is backdrop in Room_Camaro_With_Stepdad.
+The road_backdrop is backdrop in Room_Camaro_With_Stepdad.
 	The description is "The road and the trees zoom by as the car barrels down the highway.".
 	Understand "trees/road/window/highway/outside" as road.
 
@@ -7810,6 +7808,125 @@ Instead of going_on when player is in Room_Dream_Dirt_Road:
 		say "You're pretty sure, the dog will not let you.";
 	else:
 		try waking up;
+
+Chapter - Room_Dream_Dirt_Road
+
+Section - Description
+
+Room_Dream_Dirt_Road is a room.
+The printed name is "Dirt Road".
+The casual_name is "in a dream".
+The description is "The dirt road slopes down as it runs along the creek before turning into a trail over the stone bridge. There is a field full of tall weeds and junk cars separated by a chainlink fence. There is a sizable hole dug under the fence.".
+The scent is "sunshine and dust".
+Understand "Dream Dirt Road" as Room_Dream_Dirt_Road
+
+
+Section - Navigation
+
+Room_Dream_Dirt_Road is east of Room_Chryse_Planitia.
+
+The available_exits of Room_Dream_Dirt_Road are "The old dirt road that runs uphill is vague. Back toward the old stone bridge, the road narrows to a ragged trail but after that it gets fuzzy.[if dog_free_to_go is true] Time to go on or wake up.[end if]"
+
+Section - Objects and People
+
+[The dog is in Room_Dream_Dirt_Road]
+
+[There is a dog here defined in her own section below.]
+
+Section - Backdrops and Scenery
+
+Someone's field is backdrop in Room_Dream_Dirt_Road.
+
+The road is backdrop in Room_Dream_Dirt_Road.
+
+A chainlink fence is backdrop in Room_Dream_Dirt_Road.
+
+Some old junk cars are backdrop in Room_Dream_Dirt_Road.
+
+Some tall weeds are backdrop in Room_Dream_Dirt_Road.
+
+Some tall grass are backdrop in Room_Dream_Dirt_Road.
+
+Section - Rules and Actions
+
+[Transition text]
+Instead of going to Room_Dream_Dirt_Road when player is in Room_Chryse_Planitia:
+	say "As you walk, you look at your feet and notice that the dust has changed to a more familiar color.";
+	continue the action.
+
+[keep player here until they finish their convo with dog]
+Instead of going_on when player is in Room_Dream_Dirt_Road:
+	if dog_free_to_go is not true:
+		say "You're pretty sure, the dog will not let you.";
+	else:
+		try waking up;
+
+
+Chapter - Room_In_Car_With_Parents
+
+Section - Description
+
+Room_In_Car_With_Parents is a room.
+The printed name is "Car on the Ride Home".
+The casual_name is "in the car".
+The description is "You are in the car with mom and your stepdad. There is a vicious silence that you don't dare break. The road rolls by but you don't really see it. You are concentrating on making yourself invisible.".
+The scent is "fear".
+The outside_view is "the highway. [description of road]".
+Understand "Camaro/car" as Room_In_Car_With_Parents.
+
+Section - Navigation
+
+Section - Objects and People
+
+Section - Backdrops and Scenery
+
+The camaro_backdrop is backdrop in Room_In_Car_With_Parents.
+
+The road_backdrop is backdrop in Room_In_Car_With_Parents.
+
+Section - Rules and Actions
+
+Instead of doing anything except looking when player is in Room_In_Car_With_Parents:
+	say "[one of]You are trying not to move or talk or remind your stepdad that you exist.[or]You are trying to remain invisible.[or]You dare not do anything to remind your stepdad that you are here.[cycling]";
+
+
+Chapter - Room_In_Attic
+
+Section - Description
+
+Room_Attic is a room.
+The printed name is "Up in the Attic".
+The casual_name is "in the attic".
+The description is "You are up in the unfinished attic of your house. You came up here looking amongst the clutter and old camping gear for something that you no longer remember. Instead you found this box from your childhood.".
+The scent is "musty memory".
+Understand "attic" as Room_Attic.
+
+Section - Navigation
+
+Room_Attic is up from Upstairs Hall.
+
+Section - Objects and People
+
+The special_box is an closed openable container in Room_Attic.
+The printed name is "cigar box".
+The description is "This is a cigar box that you have decorated over the years. Maps and photos of animals cut from National Geographic are glued on every side[first time]. You called this your 'special box' because it contained special stuff[only][if special_box is closed]. The contents of the box rattles inside[else]. The miscelaneous keepsakes of your childhood are revealed inside[end if]."
+Understand "cigar/special/keepsake/-- box", "animals/maps/decoration" as special_box.
+The scent is "cigars still even after all these years".
+
+A photo is in special_box.
+
+Section - Backdrops and Scenery
+
+Various_clutter is scenery in Room_Attic.
+Description is "A decade of random stuff has ended up here. Boxes, furniture, skis, snowshoes, tents and other camping gear, holiday decorations, storm windows, extra blankets, a sewing machine, luggage, a typewriter, and hundreds of other things.".
+Understand "clutter/boxes/furniture/skis/snowshoes/tents/luggage/blankets/typewriter/decorations", "storm windows", "extra blankets", "sewing machine", "camping gear", "holiday decorations" as various_clutter.
+
+Keepsakes are scenery in special_box.
+
+Section - Rules and Actions
+
+Instead of examining keepsakes:
+	list the contents of special_box, as a sentence, including contents, listing marked items only;
 
 
 Book - People
