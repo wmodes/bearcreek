@@ -53,7 +53,7 @@ The Bear Creek source code, over 14,000 lines and 71,000 words, is written in In
 > Some pine trees are backdrop in Room_Lost_in_the_Brambles.
 >   The description is "Pine trees fringe the tangle of berry brambles.". Understand "tree/pines/pine" as pine trees.
 >   The scent is "sharp pine pitch".
-
+> 
 > Some backdrop_sunlight is backdrop in Region_Blackberry_Area.
 >   The printed name is "sunlight".
 >   The description is "The sunlight comes slanting through the trees in the [if current_time_period is morning]morning light. The air is still crisp here in the shade with the early promise of a hot midsummer day[otherwise]afternoon light. Under the trees, the air is cooler[end if]."
