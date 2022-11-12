@@ -768,9 +768,9 @@ Dressing is an action applying to nothing.
 
 [ TODO: Don't trigger this is we didn't get undressed! ]
 Carry out dressing:
-	Put clothes back on.
+	put_clothes_back_on.
 
-To put clothes back on:
+To put_clothes_back_on:
 	if player is in Room_Swimming_Hole:
 		let gettin-stuff be false;
 		let gettin-clothes be false;
@@ -788,7 +788,7 @@ To put clothes back on:
 		if grandpas_shirt is visible:
 			now grandpas_shirt is worn by player;
 		if gettin-stuff is true or gettin-clothes is true:
-			say "You[one of] slowly[or] leisurely[or][at random] gather your stuff[if gettin-clothes is true] and pull your clothes back on[end if].";
+			say "You[one of] slowly[or] leisurely[or][at random] gather your stuff[if gettin-clothes is true] and pull your clothes back on[end if]. [run paragraph on]";
 		change stuff_you_brought_here to have 0 entries;
 	else:
 		say "You are already dressed!";
@@ -1909,13 +1909,13 @@ To end_the_story:
 	say line break;
 	end the story;
 
-Section - Fake waiting - Not for release
+[ Section - Fake waiting - Not for release
 
 To wait for any key:
 	do nothing.
 
 To clear the screen:
-	do nothing.
+	do nothing. ]
 
 Part - Premonitions
 
@@ -2711,13 +2711,13 @@ To put_berries_in_pail:
 		say "You drop the berries into the pail which is getting close to full.";
 		now pail is three-quarter-full;
 	else if pail is three-quarter-full:
-		say "You carefully put these blackberries in the pail which is now heaping. You should probably dump the berries in Honey and grandpa's bucket.";
+		say "You carefully put these blackberries in the pail which is now heaping. You should probably dump the berries in Honey and Grandpa's bucket.";
 		now pail is full;
 		if player is warned_by_grandma:
 			say "[line break][blackberry_payoff]";
 			now player is free_to_wander;
 	else if pail is full:
-		say "Your pail is already full. You should probably dump it into Honey and grandpa's bucket.";
+		say "Your pail is already full. You should probably dump it into Honey and Grandpa's bucket.";
 		stop;
 	now handful_of_berries is in Limbo;
 
@@ -3397,16 +3397,16 @@ This is the journey_gpa_walk_interrupt_test rule:
 	rule fails.
 
 This is the journey_gpa_walk_start rule:
-	if grandpa is not visible:
+	if Grandpa is not visible:
 		if player is in Region_Blackberry_Area:
-			queue_report "[one of]You hear grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
+			queue_report "[one of]You hear Grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
 		else if player is in Region_River_Area or player is in Region_Dirt_Road:
 			if a random chance of 1 in 2 succeeds:
-				queue_report "[one of]You think you hear your Grandpa calling you[or]Is that grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think grandpa's calling.[at random]" at priority 1;
+				queue_report "[one of]You think you hear your Grandpa calling you[or]Is that Grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think Grandpa's calling.[at random]" at priority 1;
 		rule fails;
 	else:
 		if time_here of journey_gpa_walk is 1:
-			Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old grandpa?'";
+			Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old Grandpa?'";
 			rule fails;
 		else if time_here of journey_gpa_walk is 2:
 			Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge.";
@@ -3419,11 +3419,11 @@ journey_gpa_walk_before_moving rule:
 
 This is the
 journey_gpa_walk_after_waiting rule:
-	Report Grandpa saying "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]";
+	Report Grandpa saying "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old Grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]";
 
 This is the
 	journey_gpa_walk_catching_up rule:
-	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
+	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
 
 This is the
 		journey_gpa_walk_end rule:
@@ -3441,7 +3441,7 @@ This is the
 		rule fails;
 	else if time_here of journey_gpa_walk is 4:
 		Report Grandpa saying "'I better hustle back,' Grandpa says, 'before Ellie needs the bucket.' Grandpa turns to you on his way out, 'See you down there, [grandpas_nickname].' Grandpa squeezes your shoulder and heads out the door.";
-		now grandpa is in Room_Grassy_Clearing;
+		now Grandpa is in Room_Grassy_Clearing;
 		rule succeeds;
 
 Chapter - Actions
@@ -3463,7 +3463,7 @@ Chapter - Scene_Sheriffs_Drive_By
 
 Scene_Sheriffs_Drive_By is a dramatic scene.
 
-Scene_Sheriffs_Drive_By begins when player has been in Region_Trailer_Park_Area for eight turns and Scene_Day_One is happening and Scene_Tea_Time is not happening and Scene_Hangout_With_Lee is not happening and Scene_Making_Sandwiches is not happening and grandpa is not in Region_Trailer_Park_Area.
+Scene_Sheriffs_Drive_By begins when player has been in Region_Trailer_Park_Area for eight turns and Scene_Day_One is happening and Scene_Tea_Time is not happening and Scene_Hangout_With_Lee is not happening and Scene_Making_Sandwiches is not happening and Grandpa is not in Region_Trailer_Park_Area.
 
 Scene_Sheriffs_Drive_By ends when seq_sheriffs_drive_by is run and seq_sheriffs_drive_by is not in-progress.
 
@@ -3805,7 +3805,7 @@ Section - Sequences
 
 [ Mary Suggestion Sequence
 
-	summary: Mary suggests we go back to blackberry clearing to help grandpa bring bucket back and get lunch
+	summary: Mary suggests we go back to blackberry clearing to help Grandpa bring bucket back and get lunch
 	conditions: during explorations, hasn't happened already, in Room_Grandpas_Trailer for some number of turns
 	trigger: the scene Mary Suggestion starts
 ]
@@ -3876,17 +3876,17 @@ Instead of dropping tuna sandwich during Scene_Day_One:
 		say "Maybe they want the tuna sandwiches.";
 		continue the action;
 	else:
-		say "No way. That's lunch for Honey and grandpa.";
+		say "No way. That's lunch for Honey and Grandpa.";
 
 Instead of dropping brown paper bag during Scene_Day_One:
 	if raccoons are in Region_Woods_Area:
 		say "Maybe they want the tuna sandwiches.";
 		continue the action;
 	else:
-		say "No way. That's lunch for Honey and grandpa.";
+		say "No way. That's lunch for Honey and Grandpa.";
 
 Instead of eating tuna sandwich during Scene_Day_One:
-	say "Not yet. You want to eat lunch with Honey and grandpa.";
+	say "Not yet. You want to eat lunch with Honey and Grandpa.";
 
 seq_mary_sandwich is a sequence.
 	The action_handler is the seq_mary_sandwich_handler rule.
@@ -4006,7 +4006,7 @@ seq_jody_stop is a sequence.
 This is the seq_jody_stop_handler rule:
 	let index be index of seq_jody_stop;
 	if index is 3:
-		queue_report "You think of how worried Honey and grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say outloud to yourself." at priority 1;
+		queue_report "You think of how worried Honey and Grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say outloud to yourself." at priority 1;
 	else if index is 4:
 		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
 	else if index is 5:
@@ -4114,7 +4114,7 @@ To do_raccoon_things:
 			[if there are sandwiches in Room_Forest_Meadow]
 			If the number of entries in meadow_sandwich_list is greater than zero:
 				[raccoons will be making noise in the meadow eating them.]
-				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]" at priority 1;
+				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and Grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]" at priority 1;
 				[It takes one turn for the raccoons to eat one sandwich.]
 				let one_sandwich be a random tuna sandwich enclosed by Room_Forest_Meadow;
 				now one_sandwich is in Limbo;
@@ -4177,7 +4177,7 @@ When Scene_Dreams begins:
 	set_the_time_to night;
 	Now the right hand status line is "";
 	Now Honey is in Room_Dream_Railroad_Tracks;
-	Now grandpa is in Room_Dream_Railroad_Tracks;
+	Now Grandpa is in Room_Dream_Railroad_Tracks;
 	store_all_your_stuff;
 	Now flattened_penny is in Room_Dream_Railroad_Tracks;
 	Now player is asleep;
@@ -4370,9 +4370,9 @@ This is the seq_grandparents_tracks_handler rule:
 		if index is 1:
 			Report Grandpa saying "'Hey, [grandpas_nickname]. We've been waiting for you,' Grandpa says gently. Honey smiles at you.";
 		else if index is 2:
-			Report Grandpa saying "Grandpa puts his hand on your shoulder, 'You've had quite a time, haven't you? Don't you worry about it, about him.' Who is grandpa talking about?";
+			Report Grandpa saying "Grandpa puts his hand on your shoulder, 'You've had quite a time, haven't you? Don't you worry about it, about him.' Who is Grandpa talking about?";
 		else if index is 3:
-			Report Grandpa saying "'Sometimes we worry about you,  [grandpas_nickname],' grandpa says, 'But it'll be okay, I promise.'";
+			Report Grandpa saying "'Sometimes we worry about you,  [grandpas_nickname],' Grandpa says, 'But it'll be okay, I promise.'";
 		else if index is 4:
 			Report Honey saying "Honey leans over and whispers, 'Try as we might, we may not always be able to keep you safe, [honeys_nickname].' She takes a deep breath, 'But I know you can take care of yourself when you need to.'";
 		else if index is 5:
@@ -4381,7 +4381,7 @@ This is the seq_grandparents_tracks_handler rule:
 		else if index is 5:
 			Report Honey saying "Grandpa says, 'Let's get going. I think we're meant to follow these,' he says gesturing at the tracks. [paragraph break]Honey laughs, 'There's a metaphor there somewhere.'";
 		else if index is 6:
-			Report Grandpa saying "[one of]'Time to go,' says grandpa.[or]Honey says, 'Let's see what's next, [honeys_nickname],' pointing at the tracks.[or]'Time to make like a hobo', says grandpa looking at the tracks.[at random]";
+			Report Grandpa saying "[one of]'Time to go,' says Grandpa.[or]Honey says, 'Let's see what's next, [honeys_nickname],' pointing at the tracks.[or]'Time to make like a hobo', says Grandpa looking at the tracks.[at random]";
 			[We do the following, because we want this step tp repeat]
 			decrease index of seq_grandparents_tracks by one;
 			[we make sure this ends when Scene_Dream_Tracks ends]
@@ -4641,7 +4641,7 @@ This is the journey_sharon_walk_end rule:
 		Report Sharon saying "'He was on the other side of the creek, near the woods,' Sharon says.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
 		rule fails;
 	else if time_here of journey_sharon_walk is 3:
-		Report Sharon saying "'I think it's time I headed home,' Sharon says looking suddenly very tired.[paragraph break]'And maybe time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' He heads back to the trailer park with Sharon right behind him.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. Grandpa carries you all the way to...";
+		Report Sharon saying "'I think it's time I headed home,' Sharon says looking suddenly very tired.[paragraph break]'And maybe time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' He heads back to the trailer park with Sharon right behind him.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on Grandpa's shoulder. Grandpa carries you all the way to...";
 		Now Sharon is in Room_Sharons_Trailer;
 		Now Lee is in Room_Lees_Trailer;
 		Now Honey is in Room_B_Loop;
@@ -4724,7 +4724,7 @@ This is the journey_lee_walk_end rule:
 		Report Lee saying "'He was down on the other side of the creek, by the willows,' Lee says, carefully not looking at your tears.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
 		rule fails;
 	else if time_here of journey_lee_walk is 3:
-		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on grandpa's shoulder. He carries you all the way to...[paragraph break][bold type][location][roman type]";
+		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on Grandpa's shoulder. He carries you all the way to...[paragraph break][bold type][location][roman type]";
 		Now Sharon is in Room_Sharons_Trailer;
 		Now Honey is in Room_B_Loop;
 		Now Grandpa is in Room_B_Loop;
@@ -4759,12 +4759,13 @@ Section - Journeys
 
 Chapter - Scene_Reunions
 
+[TODO: Make sure can't make small talk with NPCs during these dramatic scenes ]
 There is a scene called Scene_Reunions.
 Scene_Reunions begins when Scene_Found ends.
 Scene_Reunions ends when Scene_Long_Arm_of_the_Law begins.
 
 Instead of room_navigating or going during Scene_Reunions:
-	say "Now that you are with your Honey and grandpa, you don't want to go anywhere else.".
+	say "Now that you are with your Honey and Grandpa, you don't want to go anywhere else.".
 
 Chapter - Scene_Long_Arm_of_the_Law
 
@@ -4800,24 +4801,24 @@ This is the seq_long_arm_of_the_law_handler rule:
 	if index is 1:
 		now Sheriff is in sheriffs_car;
 		now sheriffs_car is in Room_B_Loop;
-		[grandpa puts you down and Honey and Grandpa talk to you.]
-		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see you made it back home.'" at priority 2;
+		[Grandpa puts you down and Honey and Grandpa talk to you.]
+		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and Grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see you made it back home.'" at priority 2;
 		[sheriff shows up]
 	else if index is 2:
 		now Lee is in Room_C_Loop;
 		now Sheriff is in Room_C_Loop;
 		now sheriffs_car is in Room_C_Loop;
-		queue_report "'Yes, thank god,' grandpa says. 'Apparently, [grandpas_nickname] here,' he puts his hand on your head, 'spent a pretty cold night out in the woods. We were all out looking for this one.'[paragraph break]The sheriff's car radio crackles to life and the sheriff responds. He says something into his radio. You gather he is calling off the search for you. The sheriff ends his radio call and leans back out the window.[paragraph break]'Mr. Skarbek?' the Sheriff asks, glancing toward C Loop.[paragraph break]'Everyone was out looking,' Grandpa looks confused, 'But--'[paragraph break]'And Mr. Skarbek was out there while the child was missing?' the Sheriff interrupts.[paragraph break]'We were all searching everywhere we could think of,' Grandpa says, but the Sheriff appears to have stopped listening.[paragraph break]'That's all I need to know,' the Sheriff says grimly. He suddenly turns to you. 'You're lucky you were found,' he says and speeds off." with priority 2;
+		queue_report "'Yes, thank god,' Grandpa says. 'Apparently, [grandpas_nickname] here,' he puts his hand on your head, 'spent a pretty cold night out in the woods. We were all out looking for this one.'[paragraph break]The sheriff's car radio crackles to life and the sheriff responds. He says something into his radio. You gather he is calling off the search for you. The sheriff ends his radio call and leans back out the window.[paragraph break]'Mr. Skarbek?' the Sheriff asks, glancing toward C Loop.[paragraph break]'Everyone was out looking,' Grandpa looks confused, 'But--'[paragraph break]'And Mr. Skarbek was out there while the child was missing?' the Sheriff interrupts.[paragraph break]'We were all searching everywhere we could think of,' Grandpa says, but the Sheriff appears to have stopped listening.[paragraph break]'That's all I need to know,' the Sheriff says grimly. He suddenly turns to you. 'You're lucky you were found,' he says and speeds off." with priority 2;
 	else if index is 3:
 		Move player to Room_C_Loop, without printing a room description;
 		now Lee is in sheriffs_car;
 		now honey is in Room_C_Loop;
-		now grandpa is in Room_C_Loop;
+		now Grandpa is in Room_C_Loop;
 		now current interlocutor is Sheriff;
-		queue_report "Honey and grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][bold type][location][roman type][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
+		queue_report "Honey and Grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask Grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][bold type][location][roman type][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
 	else if index is 4:
 		[Sheriff tries to bully narator into implicating Lee]
-		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Shefiff says a little out of breath to Honey and grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
+		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Shefiff says a little out of breath to Honey and Grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
 		now lee_support of player is _uncertain;
 	else if index is 5:
 	  [we hang at this step until either player talks to sheriff or leaves]
@@ -4826,15 +4827,15 @@ This is the seq_long_arm_of_the_law_handler rule:
 			decrement index of seq_long_arm_of_the_law;
 	else if index is 6:
 		move player to Room_B_Loop, without printing a room description;
-		now grandpa is in Room_B_Loop;
+		now Grandpa is in Room_B_Loop;
 		now Honey is in Room_B_Loop;
 		now Sheriff is in sheriffs_car;
 		now sheriffs_car is in Limbo;
 		if lee_support of player is _decided_no:
-			queue_report "The Sheriff closes the back door of the cruiser and goes around to the driver's side. As the car begins to roll away, you glance one more time at Lee who looks back without emotion.[paragraph break]Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a sad hug. 'He'll be okay,' grandpa says. Something about everything that has happened catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both grandpa and Honey try to comfort you." with priority 2;
+			queue_report "The Sheriff closes the back door of the cruiser and goes around to the driver's side. As the car begins to roll away, you glance one more time at Lee who looks back without emotion.[paragraph break]Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a sad hug. 'He'll be okay,' Grandpa says. Something about everything that has happened catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 2;
 		else:
 			now Lee is in Room_Lees_Trailer;
-			queue_report "The Sheriff takes a long moment and looks you up and down. Both Honey and grandpa tense. Honey starts to say something, stops herself, shifts, and moves behind you looking challengingly at the Sheriff. Grandpa moves to stand beside her.[paragraph break]The Sheriff looks from you to your grandparents. He hesitates, apparently making a decision.[paragraph break]'Okay, maybe you could have told me that earlier.' He opens the back door of the cruiser and guides Lee out. He spins him around and removes the cuffs. 'You're free to go, Mr. Skarbek. Stay out of trouble.' Lee rubs his wrists and wipes the blood off his nose and mouth.[paragraph break]The Sheriff gets into his car without another word and drives quickly away.[paragraph break]Lee says quietly, 'Thank you, Jody,' bows slightly, and disappears into his trailer. You let Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a tearful hug. 'I'm proud of you, [grandpas_nickname],' he says. Something about seeing the magnitude of what you did through his eyes, telling your own story for maybe the first time in your life catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both grandpa and Honey try to comfort you." with priority 2;
+			queue_report "The Sheriff takes a long moment and looks you up and down. Both Honey and Grandpa tense. Honey starts to say something, stops herself, shifts, and moves behind you looking challengingly at the Sheriff. Grandpa moves to stand beside her.[paragraph break]The Sheriff looks from you to your grandparents. He hesitates, apparently making a decision.[paragraph break]'Okay, maybe you could have told me that earlier.' He opens the back door of the cruiser and guides Lee out. He spins him around and removes the cuffs. 'You're free to go, Mr. Skarbek. Stay out of trouble.' Lee rubs his wrists and wipes the blood off his nose and mouth.[paragraph break]The Sheriff gets into his car without another word and drives quickly away.[paragraph break]Lee says quietly, 'Thank you, Jody,' bows slightly, and disappears into his trailer. You let Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a tearful hug. 'I'm proud of you, [grandpas_nickname],' he says. Something about seeing the magnitude of what you did through his eyes, telling your own story for maybe the first time in your life catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 2;
 
 This is the seq_long_arm_of_the_law_interrupt_test rule:
 	[ Nothing stops this rule. ]
@@ -4850,7 +4851,7 @@ Instead of room_navigating or going during Scene_Long_Arm_of_the_Law:
 	else:
 		increment index of seq_long_arm_of_the_law;
 		now lee_support of player is _decided_no;
-		say "You feel bad leaving Lee, but you're hope he'll be okay. You let grandpa lead you back toward home.".
+		say "You feel bad leaving Lee, but you're hope he'll be okay. You let Grandpa lead you back toward home.".
 
 Every turn while lee_support of player is _uncertain:
 	queue_report "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]" with priority 1.
@@ -4867,7 +4868,7 @@ Instead of waiting during Scene_Long_Arm_of_the_Law:
 			[ we do this to jump past the pause in the seq ]
 			increment index of seq_long_arm_of_the_law;
 			now lee_support of player is _decided_no;
-			say "Well now you've waited too long, and whatever's going to happen is going to happen. You feel bad for Lee, but you're sure he'll be okay. You let grandpa lead you back toward home.".
+			say "Well now you've waited too long, and whatever's going to happen is going to happen. You feel bad for Lee, but you're sure he'll be okay. You let Grandpa lead you back toward home.".
 
 [Things that make us decide to support Lee:
 	Saying no, telling about night in woods, yelling, attacking Sheriff]
@@ -4921,12 +4922,12 @@ This is the seq_parents_arrive_handler rule:
 		now moms_camaro is in Room_B_Loop;
 		now mom is in Room_B_Loop;
 		now stepdad is in Room_B_Loop;
-		queue_report "You are still holding grandpa when mom's Camaro pulls into B Loop. Normally, you would run to your mom for comfort, but something's changed. You dry your eyes, pull away from grandpa, and strand up straight. Mom and your stepdad get out of the car. Your mom runs and gives you a huge hug and when she lets go, she looks at grandpa and says, 'Oh dad.' There are tears in her eyes when grandpa hugs her. You realize in this moment that that your mom is usually strong for you, and this is your chance to be strong for her. You start to tell her about your adventures.[paragraph break]Mark is standing around looking uncomfortable. 'Do you know how much you worried your mom?' he demands. [paragraph break]'Oh, Mark, give it a rest,' mom says. Mark shoots her a look. 'We drove all night to get here,' mom tells your grandparents. 'We're shot. Do you have any coffee?' [paragraph break]Aunt Mary, who's been hovering anxiously in the background, wipes away her tears and says 'I'll go make some,' and goes inside." with priority 2;
+		queue_report "You are still holding Grandpa when mom's Camaro pulls into B Loop. Normally, you would run to your mom for comfort, but something's changed. You dry your eyes, pull away from Grandpa, and strand up straight. Mom and your stepdad get out of the car. Your mom runs and gives you a huge hug and when she lets go, she looks at Grandpa and says, 'Oh dad.' There are tears in her eyes when Grandpa hugs her. You realize in this moment that that your mom is usually strong for you, and this is your chance to be strong for her. You start to tell her about your adventures.[paragraph break]Mark is standing around looking uncomfortable. 'Do you know how much you worried your mom?' he demands. [paragraph break]'Oh, Mark, give it a rest,' mom says. Mark shoots her a look. 'We drove all night to get here,' mom tells your grandparents. 'We're shot. Do you have any coffee?' [paragraph break]Aunt Mary, who's been hovering anxiously in the background, wipes away her tears and says 'I'll go make some,' and goes inside." with priority 2;
 	else if index is 2:
 		queue_report "Your stepdad remains quietly simmering. Your mom hugs you again, 'Honey, we were so worried.' She straightens up looking you up and down. Your mom looks from Honey to Grandpa.[paragraph break]'It seems Jo wandered away, got lost, and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was found by Sharon and Lee.'" with priority 2;
 	else if index is 3:
 		queue_report "Mark can't stay quiet any longer. 'Jody, if I had my way, I'd paddle your behind,' he says advancing on you.[paragraph break]'Mark, I told you. This is not--'[paragraph break]
-		'You spoil this kid and are surprised when Jody acts out,' he says as he grabs your arm.[paragraph break]Both grandpa and Honey take a step forward. Your mom stands up tall, looking like she is suddenly twice her height, 'Let go. Now. Mark.' she says fiercely. 'Are you going to hit 'em again?'[paragraph break]Mark instinctively lets go of your arm and stands with his feet apart, arms out, fists clenched ready to fight. You back away from him toward your grandpa who puts his arms protectively around you. Mark makes an angry hissing sound and yanks the car keys out of his pocket. 'We'll talk about this at home. We're leaving,' he says, going around to the driver's door of the Camaro. 'Both of you, get in the car. Now.'[paragraph break]Your mom looks helplessly at her parents. 'Sorry, mom,' she says. 'We better go. I'll call you later and let you know we're okay.'[paragraph break]Honey looks grim and Grandpa starts to say, 'Rachel.'[paragraph break]'Dad, I know,' she says and sighs. She turns to you and smiles thinly, 'Okay Jody, it's best we get going.' She opens the car door and puts the seat back so you can get in." with priority 2;
+		'You spoil this kid and are surprised when Jody acts out,' he says as he grabs your arm.[paragraph break]Both Grandpa and Honey take a step forward. Your mom stands up tall, looking like she is suddenly twice her height, 'Let go. Now. Mark.' she says fiercely. 'Are you going to hit 'em again?'[paragraph break]Mark instinctively lets go of your arm and stands with his feet apart, arms out, fists clenched ready to fight. You back away from him toward your grandpa who puts his arms protectively around you. Mark makes an angry hissing sound and yanks the car keys out of his pocket. 'We'll talk about this at home. We're leaving,' he says, going around to the driver's door of the Camaro. 'Both of you, get in the car. Now.'[paragraph break]Your mom looks helplessly at her parents. 'Sorry, mom,' she says. 'We better go. I'll call you later and let you know we're okay.'[paragraph break]Honey looks grim and Grandpa starts to say, 'Rachel.'[paragraph break]'Dad, I know,' she says and sighs. She turns to you and smiles thinly, 'Okay Jody, it's best we get going.' She opens the car door and puts the seat back so you can get in." with priority 2;
 		now stepdad is in moms_camaro;
 		now current interlocutor is mom;
 		now going_home_decision of player is _uncertain;
@@ -4937,9 +4938,9 @@ This is the seq_parents_arrive_handler rule:
 			decrement index of seq_parents_arrive;
 	else if index is 5:
 		if going_home_decision of player is _decided_yes:
-			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and grandpa and raise a hand goodbye." with priority 2;
+			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and Grandpa and raise a hand goodbye." with priority 2;
 		else:
-			queue_report "Mark starts to walk around the car toward you. Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you.[paragraph break]Mom glances warningly at Mark. 'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay, let's go.' She gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls angrily out of B Loop, you can see your mom look at Honey, grandpa and you in turn and mouth, 'I love you.'" with priority 2;
+			queue_report "Mark starts to walk around the car toward you. Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you.[paragraph break]Mom glances warningly at Mark. 'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay, let's go.' She gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls angrily out of B Loop, you can see your mom look at Honey, Grandpa and you in turn and mouth, 'I love you.'" with priority 2;
 
 [ TODO: This scene should continue at least two more beats, as the decision seems super abrupt. ]
 [ TODO: Prohibit player from having normal conversations with the people here. This has happened enough times that perhaps it needs a more general handler. ]
@@ -4951,7 +4952,7 @@ This is the seq_parents_arrive_interrupt_test rule:
 Section - Actions
 
 Every turn while going_home_decision of player is _uncertain:
-	queue_report "[one of]Mom says it's time to go.[or]You feel terrible. You think maybe this is all your fault and now it's time to face the consequences[or]Mom's ready to go home, but what do you want?[or]Maybe you can just be quiet in the car and things will simmer down.[or]What if Mark hurts your mom and you're not there to stop him?[or]Can you just stay here with Honey and grandpa?[cycling]" with priority 1.
+	queue_report "[one of]Mom says it's time to go.[or]You feel terrible. You think maybe this is all your fault and now it's time to face the consequences[or]Mom's ready to go home, but what do you want?[or]Maybe you can just be quiet in the car and things will simmer down.[or]What if Mark hurts your mom and you're not there to stop him?[or]Can you just stay here with Honey and Grandpa?[cycling]" with priority 1.
 
 Instead of waiting during Scene_Parents_Arrive:
 	say "[one of]The moment seems to balance on a knife's edge.[or]Seconds tick by.[or]The world holds its breath.[in random order]".
@@ -4975,7 +4976,7 @@ To decide_to_go_home:
 	else:
 		increment index of seq_parents_arrive;
 		now going_home_decision of player is _decided_yes;
-		say "You don't want to go, but you want to keep your mom safe. You turn to hug grandpa who then lets you go. Honey looks sad and worried. You slowly get in the back of the Camaro.".
+		say "You don't want to go, but you want to keep your mom safe. You turn to hug Grandpa who then lets you go. Honey looks sad and worried. You slowly get in the back of the Camaro.".
 
 [Things that make us decide not to go home:
 	Saying no, yelling, attacking Mark]
@@ -4991,7 +4992,7 @@ To decide_not_to_go_home:
 	else:
 		increment index of seq_parents_arrive;
 		now going_home_decision of player is _decided_no;
-		say "You stand up straight. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]staying[roman type] here,' you say firmly. You can feel grandpa's arms tighten around you.".
+		say "You stand up straight. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]staying[roman type] here,' you say firmly. You can feel Grandpa's arms tighten around you.".
 
 test parents with "test long-arm / z/z/z/yell/z"
 
@@ -5041,7 +5042,7 @@ When Scene_Fallout_Staying begins:
 
 When Scene_Fallout_Staying ends:
 	section_break;
-	say "Later that night, you watch [italic type]Bowling for Dollars[roman type] with grandpa who lays on the carpet in front of the TV while you climb all over him. He occasionally gets up and shouts 'Brooklyn! Brooklyn!' (Grandpa explained that that's when a ball hits the wrong side of the pins.) You can smell dinner cooking in the other room and hear Honey and Aunt Mary talking and laughing.[paragraph break]After dinner, Honey and grandpa watch [italic type]Wild World of Animals[roman type] and let you stay up to watch [italic type]The Wonderful World of Disney[roman type]. You fall asleep on the couch sitting between your Honey and Grandpa.";
+	say "Later that night, you watch [italic type]Bowling for Dollars[roman type] with Grandpa who lays on the carpet in front of the TV while you climb all over him. He occasionally gets up and shouts 'Brooklyn! Brooklyn!' (Grandpa explained that that's when a ball hits the wrong side of the pins.) You can smell dinner cooking in the other room and hear Honey and Aunt Mary talking and laughing.[paragraph break]After dinner, Honey and Grandpa watch [italic type]Wild World of Animals[roman type] and let you stay up to watch [italic type]The Wonderful World of Disney[roman type]. You fall asleep on the couch sitting between your Honey and Grandpa.";
 	say paragraph break;
 	pause_the_game;
 	say Title_Card_Epilogue;
@@ -5061,7 +5062,7 @@ This is the seq_staying_w_grandpa_handler rule:
 	if index is 1:
 		say "Grandpa and Honey watch mom's Camaro drive away.[paragraph break]'Alright [grandpas_nickname], let's get you inside. You must be starving.' And as Grandpa says it, you realize he's right. You are ravenous. Honey guides you inside. You're still in a bit of a daze.";
 		now player is in Room_Grandpas_Trailer;
-		now grandpa is in Room_Grandpas_Trailer;
+		now Grandpa is in Room_Grandpas_Trailer;
 		now honey is in Room_Grandpas_Trailer;
 	else if index is 2:
 		say "'Let's get some breakfest together for [grandpas_nickname],' Grandpa says to Aunt Mary who starts rummaging in the fridge.[paragraph break]Grandpa and Honey retreat to the kitchen to talk quietly.";
@@ -5109,7 +5110,7 @@ Instead of going down during Scene_Epilogue:
 	if player is not photo_experienced:
 		say "It's been years since you looked at the stuff in your special box. You might want to take a moment.";
 	else:
-		say "You shut all your memories away in the box and return it to where you found it before going back down to your life.";
+		say "You shut all your memories away in the box and return it to where you found it. You take a moment, close your eyes, and let out a long deep breath. Then you go back down and resume your life.";
 		end_the_story.
 
 Book - Regions & Rooms
@@ -5250,7 +5251,7 @@ The honeys_radio is scenery.
 	It is in Room_Grassy_Clearing.
 	It is a familiar device.
 	Honeys_radio is switched on.
-	The description of the radio is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
+	The description of the radio is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
 	Understand "honey's/honeys/grandma's/grandmas/-- portable/-- transistor/-- radio", "knob/cube/woodgrain/plastic/wax", "music" as the honeys_radio.
 	The scent is "ozone".
 	The indefinite article is "Honey's".
@@ -5261,7 +5262,7 @@ Instead of doing anything to honeys_radio:
 
 Grandpas_shirt is an undescribed thing in Room_Grassy_Clearing.
 	The printed name is "Grandpa's shirt".
-	The description is "This is the warm green plaid shirt that grandpa always wears[if grandpas_cigarettes are in location]. There are a pack of cigarettes in the pocket[end if]."
+	The description is "This is the warm green plaid shirt that Grandpa always wears[if grandpas_cigarettes are in location]. There are a pack of cigarettes in the pocket[end if]."
 	It is a wearable [floatable] thing.
 	Understand "Grandpa's/Grandpas/Grampa's/Grampas/plaid/green/warm/-- shirt" as grandpas_shirt.
 	The dry_time of grandpas_shirt is 6.
@@ -5287,7 +5288,7 @@ Some stubbly grass is scenery in Room_Grassy_Clearing.
 Some pine trees are backdrop in Room_Grassy_Clearing.
 
 A low bank is scenery in Room_Grassy_Clearing.
-	The description is "Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside grandpa's shirt [end if]under the tree.".
+	The description is "Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree.".
 
 Section - Rules and Actions
 
@@ -5577,10 +5578,6 @@ Instead of taking off tennis_shoes in Room_Swimming_Hole:
 	say "You take off your shoes and put them on the rocks.";
 	move tennis_shoes to location;
 
-Instead of going from Room_Swimming_Hole:
-	put clothes back on;
-	continue the action.
-
 Instead of entering deep pool:
 	try doing_some_swimming.
 
@@ -5592,13 +5589,13 @@ Deep pool has a number called swim attempts. Swim attempts is 0.
 Instead of doing_some_swimming in Room_Swimming_Hole:
 	increase swim attempts of deep pool by 1;
 	if swim attempts of deep pool is greater than 1:
-		say "[if clothes are worn]You look around again to see if you are alone[one of]. The path from the dirt road is deep forest and there is no one else at the swimming hole[or] and there is no one in sight[stopping]. So you carefully strip down to your skivvies, folding your clothes on the rocks. [run paragraph on][end if][one of][swimming_payoff][or]You leap in! Cold! But you get used to it, and it feels good. Actually, it feels great, as you swim around for a bit[or]You try diving like they taught you at the YWCA, but you're scared of conking your head. So your uncommitted dive turns into a belly flop[or]You make a huge splash[or]The water feels refreshing on this hot day[or]You dip in the cool water and swim about[stopping]. When you get out of the water, [one of]the warm air feels good on your skin[or]you dry quickly in the warm air[or]you stand in the cool shade, and you get a sudden chill[in random order].[paragraph break]";
+		say "On this hot day, you are eager to get back in the water[if clothes are worn]. You look around again to see if you are alone[one of]. The path from the dirt road is deep forest and there is no one else at the swimming hole[or] and there is no one in sight[stopping]. So you carefully strip down to your skivvies, folding your clothes on the rocks[end if]. [one of][swimming_payoff][or]You leap in! Cold! But you get used to it, and it feels good. Actually, it feels great, as you swim around for a bit[or]You try diving like they taught you at the YWCA, but you're scared of conking your head. So your uncommitted dive turns into a belly flop[or]You make a huge splash[or]The water feels refreshing on this hot day[or]You dip in the cool water and swim about[stopping]. When you get out of the water, [one of]the warm air feels good on your skin[or]you dry quickly in the warm air[or]you stand in the cool shade, and you get a sudden chill[in random order].";
 		now player is intrepid;
 		now player is swim_experienced;
 		drop_all_your_stuff;
 		make underwear wet;
 	else:
-		say "Hmm, are you sure? [if clothes are worn]You don't have a bathing suit, so you'd have to strip down to your undies[otherwise]The water is likely to be pretty cold[end if].";
+		say "You hesitate. [if clothes are worn]You don't have a bathing suit, so you'd have to strip down to your undies. But the water does look inviting[otherwise]The water is likely to be pretty cold. But the day is pretty hot[end if].";
 
 
 Chapter - Room_Crossing
@@ -5616,7 +5613,6 @@ The description is "Here the creek broadens out a little and, except for a place
 [paragraph break][available_exits]".
 The scent is "cool creek water and mossy rocks".
 Understand "crossing" as Room_Crossing.
-
 
 Section - Navigation
 
@@ -5678,8 +5674,9 @@ Test crossing with "test bridge/ go to crossing/ g/g/g".
 
 [Transition text]
 Instead of going to Room_Crossing when player was in Room_Swimming_Hole:
-		say "You carefully navigate the rocky bank, making your way downstream.";
-		Continue the action.
+	put_clothes_back_on;
+	say "You carefully navigate the rocky bank, making your way downstream.";
+	Continue the action.
 
 [Transition text]
 Instead of going east when player is in Room_Crossing:
@@ -5808,6 +5805,7 @@ Section - Rules and Actions
 
 [Transition text]
 Instead of going to Room_Long_Stretch when player is in Room_Swimming_Hole:
+	put_clothes_back_on;
 	say "You clamber up the steep trail. As you step out of the shaded trail, the heat is like a physical force that pushes against you.";
 	continue the action.
 
@@ -6550,7 +6548,7 @@ The lees_table is a undescribed fixed in place enterable sit-at-able supporter i
 	Understand "table/chairs/chair" as lees_table.
 
 A newspaper is floating undescribed thing on lees_table.
-	The description is "[if newspaper is wet]The newspaper has gotten wet and is now unreadable[else if newspaper is stained]The newspaper is stained and is now unreadable[else]This is the local newspaper. Usually when grandpa reads the newspaper or Honey does the crossword, you ask for the comics[one of]. An article on the front page catches your eye[or]. Among the usual disasters, bombings, and boring politics, there is an article about the Viking lander to Mars[stopping][end if]."
+	The description is "[if newspaper is wet]The newspaper has gotten wet and is now unreadable[else if newspaper is stained]The newspaper is stained and is now unreadable[else]This is the local newspaper. Usually when Grandpa reads the newspaper or Honey does the crossword, you ask for the comics[one of]. An article on the front page catches your eye[or]. Among the usual disasters, bombings, and boring politics, there is an article about the Viking lander to Mars[stopping][end if]."
 	Understand "news/newspaper/paper/journal" as newspaper.
 	The dry_time is 20.
 	The newspaper can be stained.
@@ -6633,8 +6631,8 @@ The available_exits are "You can go in to Honey and Grandpa's trailer of course.
 Section - Objects
 
 The grandpas_virtual_trailer is a fixed in place undescribed enterable container in Room_B_Loop.
-	The printed name is "Honey and grandpa's trailer".
-	The description is "Honey and grandpa's trailer is white with dark brown trim, and has hanging ferns from the porch.".
+	The printed name is "Honey and Grandpa's trailer".
+	The description is "Honey and Grandpa's trailer is white with dark brown trim, and has hanging ferns from the porch.".
 	Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas/-- trailer/house/place/home" as grandpas_virtual_trailer.
 
 Your bicycle is a fixed in place thing in Room_B_Loop.
@@ -6706,7 +6704,7 @@ The floral print couch is a lie-able surface in Room_Grandpas_Trailer.
 	Understand "sofa", "couches", "divan", "floral-print" as floral print couch.
 
 The carpet is a lie-able surface in Room_Grandpas_Trailer.
-		The description of the carpet is "The carpet is this strange mottled gold-brown that looks a little bit like fallen Autumn leaves gone indistinct after the first winter rain. In any case, it is nice to lie on with grandpa and watch TV.".
+		The description of the carpet is "The carpet is this strange mottled gold-brown that looks a little bit like fallen Autumn leaves gone indistinct after the first winter rain. In any case, it is nice to lie on with Grandpa and watch TV.".
 	Understand "rug", "floor" as carpet.
 
 Section - Rules and Actions
@@ -6910,7 +6908,7 @@ South of Room_Dark_Woods_South is nowhere.
 The available_exits of Room_Dark_Woods_South are "[if Scene_Day_Two is not happening][day1_woods_exits][else][day2_woods_exits][end if].".
 
 To say day1_woods_exits:
-	say "[one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there[in random order] [a list of elusive_landmarks in the_distance][if a random chance of 1 in 2 succeeds]. [one of]This may be the way back to Honey and grandpa. You long to give him a hug and never let go[or]Is that the way back to the blackberry trail? You hope so[in random order][end if]";
+	say "[one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there[in random order] [a list of elusive_landmarks in the_distance][if a random chance of 1 in 2 succeeds]. [one of]This may be the way back to Honey and Grandpa. You long to give him a hug and never let go[or]Is that the way back to the blackberry trail? You hope so[in random order][end if]";
 
 To say day2_woods_exits:
 	say "There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail";
@@ -7610,7 +7608,7 @@ The cigarette lighter is scenery in Room_Camaro_With_Stepdad.
 
 The road_backdrop is backdrop in Room_Camaro_With_Stepdad.
 	The description is "The road and the trees zoom by as the car barrels down the highway.".
-	Understand "trees/road/window/highway/outside" as road.
+	Understand "trees/road/window/highway/outside" as road_backdrop.
 
 Virtual_Mom is scenery in Room_Camaro_With_Stepdad.
 	The printed name is "Mom".
@@ -7789,7 +7787,7 @@ Section - Description
 Room_Mars is a room.
 The printed name is "On Mars".
 The casual_name is "in a dream about Mars".
-The description is "This is the surface of Mars, the red planet, at least 100 million miles from Earth. [if grandpa is in Room_Mars	]You recognize it instantly from the Viking photos. Thick red dust scattered with various-sized dark rocks all under an orange-pink sky. You also know that it should be -80 degrees Fahrenheit, but you aren't feeling the cold. And though there is a very light unbreathable atmosphere, you aren't wearing a suit. You stumble, trying to get the hang of walking in the light gravity, only about a third of Earth's gravity. How high could you jump here?[else]Now you just feel lonely and alone. You are no longer excited at the prospect of this alien world.
+The description is "This is the surface of Mars, the red planet, at least 100 million miles from Earth. [if Grandpa is in Room_Mars	]You recognize it instantly from the Viking photos. Thick red dust scattered with various-sized dark rocks all under an orange-pink sky. You also know that it should be -80 degrees Fahrenheit, but you aren't feeling the cold. And though there is a very light unbreathable atmosphere, you aren't wearing a suit. You stumble, trying to get the hang of walking in the light gravity, only about a third of Earth's gravity. How high could you jump here?[else]Now you just feel lonely and alone. You are no longer excited at the prospect of this alien world.
 [paragraph break][available_exits][end if]".
 The scent is "billion year old dust".
 Understand "Mars" as Room_Mars.
@@ -7828,20 +7826,20 @@ Section - Rules and Actions
 Instead of going to Room_Mars when player is in Room_Dream_Railroad_Tracks:
 	say "You follow the railroad tracks walking silently with Honey and Grandpa, briefly balancing on the rails while you hold Honey's hand. This time, you're not worried about a train coming. You walk for a while humming a little tune. You look down and realize you've lost the train tracks and see only red dust.";
 	Now honey is in Room_Mars;
-	Now grandpa is in Room_Mars;
+	Now Grandpa is in Room_Mars;
 	Continue the action.
 
 Instead of jumping when player is in Room_Mars:
-	if grandpa is visible:
+	if Grandpa is visible:
 		say "[one of]You give a little experimental jump in the light gravity and sail up at least half your height. Grandpa and Honey watch you.[or]You try another experimental jump, this time a little harder, leaping at least your height. Grandpa smiles and Honey says, 'Be careful, Hon.'[or]This time, you really give it a good effort, jumping as high as you can, sailing to a startling height. For a moment, you are afraid you won't come down and will sail off into the sky, and Grandpa dives forward to catch you. But you reach the top of your flight and touch down lightly.[or]This time, you jump more cautiously.[stopping]";
 	else:
 		say "You make a halfhearted little jump, your heart not really into it.";
 
-[keep player here until Honey and grandpa are gone]
+[keep player here until Honey and Grandpa are gone]
 Instead of going to Room_Chryse_Planitia when Scene_Dream_Bouncing is happening:
 	say "You don't want to leave without Honey and Grandpa."
 
-test mars with "teleport to mars/purloin honey/ purloin grandpa".
+test mars with "teleport to mars/purloin honey/ purloin Grandpa".
 
 
 Chapter - Room_Chryse_Planitia
@@ -8055,7 +8053,7 @@ Understand "photos/photo/honey/grandpa/mom/friend/lizard/cat/cats/dog" as photos
 
 Some photos_from_home is a thing.
 The printed name is "photos".
-The description is "These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's you, Honey, and Grandpa on a visit to their house. You look like you're about 10. This must have been just before Mark and mom moved you to Idaho. After that, you saw Honey and Grandpa only in summers and sometimes Christmas.[paragraph break]This is you and your best friend from 6th grade. You both had a crush on the same person, but decided if you had to, you would share them. After you moved, you never saw them again.[paragraph break]Here's a photo Honey and Grandpa sent from a trip they took to visit family in Kansas City, Missouri. You were supposed to be on that trip but for some reason, you didn't get to go.[paragraph break]Here's a photo of your dog Dodo, smiling with his tougue out, as always. Your stepdad took him to the pound when you moved to Idaho.[paragraph break]Here's mom and you at Christmas. She looks so old though you don't look much older than 15.[paragraph break]Here's Grandpa, Honey, and you at the Craters of the Moon when they came to visit. You have your arms around your Grandpa. This couldn't have been too many years before he died.[paragraph break]This is whatshisname? Greg? and you in your first car, a yellow Corolla before leaving home on your cross-country trip when you were 17. You never did come back except to briefly visit your mom.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you she hated that picture. They look like they are just about to crack up laughing. You miss them both terribly.[paragraph break]That's it. A young life in a dozen photos."
+The description is "These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's you, Honey, and Grandpa on a visit to their house. You look like you're about 10. This must have been just before Mark and mom moved you to Idaho. After that, you saw Honey and Grandpa only in summers and sometimes Christmas.[paragraph break]This is you and your best friend from 6th grade. You both had a crush on the same person, but decided if you had to, you would share them.[paragraph break]Here's a photo Honey and Grandpa sent from a trip they took to visit family in Kansas City, Missouri.[paragraph break]Here's a photo of your dog Dodo, smiling with his tougue out, as always. When you moved to Idaho, your stepdad said there would be no room for a dog and took him to the pound.[paragraph break]Here's mom and you at Christmas. She looks so old though you don't look much older than 15.[paragraph break]Here's Grandpa, Honey, and you at the Craters of the Moon when they came to visit. You have your arms around your Grandpa. This couldn't have been too many years before he died.[paragraph break]This is whatshisname? Greg? and you in your first car, a yellow Corolla before leaving home on your cross-country trip when you were 17. You never did come back except to briefly visit your mom.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you she hated that picture. They look like they are just about to crack up laughing. You miss them.[paragraph break]That's it. A young life in a dozen photos."
 Understand "photos/photo/honey/grandpa/mom/friend/dodo/dog" as photos_from_home.
 
 Your_keys is a thing.
@@ -8362,7 +8360,7 @@ To say honey_initial_description:
 	else:
 		say "Honey and Grandpa are here[if player is in Region_Blackberry_Area] picking berries[else if Scene_Dreams is happening]waiting for you[end if].[run paragraph on]";
 		now honey is not marked for listing;
-		now grandpa is not marked for listing;
+		now Grandpa is not marked for listing;
 
 [
 	Honey picking berries
@@ -8380,7 +8378,7 @@ Instead of going down when player is in Room_Grassy_Clearing:
 
 Instead of going down when player is in Room_Blackberry_Tangle during Scene_Picking_Berries:
 	Increase attempts_to_leave of Player by 1;
-	say "[one of]Ever vigilant[or]Again[or]Once again[or]Of course[stopping], Honey looks down the trail and sees you [one of]wandering[or]leaving[or]exploring[at random]. [one of]'Hey, why don't you stay here with us? Don't you want to help your Honey and grandpa? One more pail, okay?'[run paragraph on][or]'Hey Ants-In-The-Pants, are you getting bored? Why don't you come pick some more berries?'[run paragraph on][or]'I want you to pick one more pail before you go exploring.'[run paragraph on][or]'Uh. What did I tell you?'[run paragraph on][or]She gives you A Look.[run paragraph on][stopping] You reluctantly head back to the clearing.";
+	say "[one of]Ever vigilant[or]Again[or]Once again[or]Of course[stopping], Honey looks down the trail and sees you [one of]wandering[or]leaving[or]exploring[at random]. [one of]'Hey, why don't you stay here with us? Don't you want to help your Honey and Grandpa? One more pail, okay?'[run paragraph on][or]'Hey Ants-In-The-Pants, are you getting bored? Why don't you come pick some more berries?'[run paragraph on][or]'I want you to pick one more pail before you go exploring.'[run paragraph on][or]'Uh. What did I tell you?'[run paragraph on][or]She gives you A Look.[run paragraph on][stopping] You reluctantly head back to the clearing.";
 	Move player to Room_Grassy_Clearing with little fuss;
 	now player is warned_by_grandma;
 
@@ -8466,7 +8464,7 @@ Response of Honey when asked-or-told about Grandpa:
 	say "'Ah, your grandpa. He's probably a smarter man than I give him credit for,' Honey says, leaving you wondering what that means exactly.".
 
 Response of Honey when asked-or-told about Aunt Mary:
-	say "'Ah, my sister Mary, your great-great -- no, only one great -- your great Aunt. She was the baby in the family until I came along as an accident when your great grandma was pretty old. She's kind of loosing her marbles lately, I think.'[run paragraph on][one of][if grandpa is visible] She looks over at Grandpa, 'John, don't you think?'[line break][paragraph break]Grandpa looks up from picking berries. 'What?'[paragraph break]'Mary. You think she's cracking up?'[paragraph break]'Oh, leave her alone,' Grandpa says. 'Why do you have to pick on your sister?'[end if][or][paragraph break][stopping]".
+	say "'Ah, my sister Mary, your great-great -- no, only one great -- your great Aunt. She was the baby in the family until I came along as an accident when your great grandma was pretty old. She's kind of loosing her marbles lately, I think.'[run paragraph on][one of][if Grandpa is visible] She looks over at Grandpa, 'John, don't you think?'[line break][paragraph break]Grandpa looks up from picking berries. 'What?'[paragraph break]'Mary. You think she's cracking up?'[paragraph break]'Oh, leave her alone,' Grandpa says. 'Why do you have to pick on your sister?'[end if][or][paragraph break][stopping]".
 
 Response of Honey when asked-or-told about Lee:
 	say "'Stay away from him,' Honey looks up seriously. Is she mad at you? 'I mean it. He's not right. Something about him's not quite right.'".
@@ -8555,7 +8553,7 @@ gma_sharon_rant is a rant.
 
 Table of gma_sharon_rant
 Quote
-"'That crazy old coot. I told your mom the other day I caught her standing out in her garden in the middle of the night talking to the flowers,' Honey says, 'but that's not all.[run paragraph on][if grandpa is visible]' She turns toward Grandpa, 'John, did I tell you this?[end if]'"
+"'That crazy old coot. I told your mom the other day I caught her standing out in her garden in the middle of the night talking to the flowers,' Honey says, 'but that's not all.[run paragraph on][if Grandpa is visible]' She turns toward Grandpa, 'John, did I tell you this?[end if]'"
 "'I couldn't sleep because your grandpa's snoring was keeping me up and I was taking a walk,' Honey says, 'and that's when I caught Sharon talking to her flowers.'"
 "Honey says: 'I asked the cat lady, [']What are you doing?['] and she said, [']I'm keeping my babies safe from slugs.['] And then she gives me the nuttiest smile. Okay, I told her, most of us just put snailbait out in the daytime.'"
 "Honey shakes her head, 'That cat lady is a crazy old nut.'"
@@ -8581,28 +8579,26 @@ gma_stepdad_rant is a rant.
 
 Table of gma_stepdad_rant
 Quote
-"'Now, here's a guy who has some problems, but really knows how to generously share them with others,' Honey says[if grandpa is visible]. Grandpa gives her a Look[end if]."
+"'Now, here's a guy who has some problems, but really knows how to generously share them with others,' Honey says[if Grandpa is visible]. Grandpa gives her a Look[end if]."
 "Honey's eyes spark dangerously, 'I told your mom that if I saw Mark put his hand on you one more time, you were coming to live with us,' she says, and suddenly you feel scared, though you're not sure why."
-"'If I get a call from your mom in the middle of the night one more time, I'm going to drive there myself and your step-dad's gonna have some real problems,' Honey says in a rush[if grandpa is visible]. Grandpa gives her another Look[end if]."
+"'If I get a call from your mom in the middle of the night one more time, I'm going to drive there myself and your step-dad's gonna have some real problems,' Honey says in a rush[if Grandpa is visible]. Grandpa gives her another Look[end if]."
 "Honey clenches her teeth and growls but says no more."
 
 
 
 To say grandparent_random:
-	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[or]'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.[or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both!' Honey laughs.[or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[or]'Hey, [honeys_nickname],' Honey calls to you. 'When you go with grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[in random order]".
+	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[or]'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.[or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both!' Honey laughs.[or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[or]'Hey, [honeys_nickname],' Honey calls to you. 'When you go with Grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[in random order]".
 
 [TODO in a long list of random utterances, make it so new interlocutor is set]
 
 
 Part - Grandpa
 
-[TODO: Decide whether Grandpa/grandpa should be capitalized, and then make it consistent.]
-
 Grandpa is an undescribed _male man in Room_Grassy_Clearing.
 	The initial appearance is "[grandpas_initial_appearance]".
 	The description of Grandpa is "Grandpa is, well, Grandpa. He's not tall. He's not fat. He has a bald spot right on top of his head like a little hat. He's like a bull, kind of, but skinnier and wears a warm plaid shirt. Today he's in a t-shirt, but usually. He smells good, like cigarettes and that stuff he puts on his face when he shaves.[if a random chance of 1 in 3 succeeds]
 	[paragraph break]While you are looking, he sees you and smiles.[end if]".
-	Understand "grampa/granpa/grandfather/gramp/pa/gramps/John" as grandpa.
+	Understand "grampa/granpa/grandfather/gramp/pa/gramps/John" as Grandpa.
 	The scent is "something familiar, like cigarettes and the stuff he uses when he shaves".
 
 Chapter - Properties
@@ -8611,8 +8607,8 @@ Chapter - Rules and Actions
 
 To say grandpas_initial_appearance:
 	[if location of player is Room_Grassy_Clearing:
-		now grandpa is not marked for listing;
-		now grandpa is undescribed;
+		now Grandpa is not marked for listing;
+		now Grandpa is undescribed;
 	else:]
 		say "Your Grandpa is here[if Grandpa holds big_bucket and big_bucket is full] with the big bucket full of berries[else if Grandpa holds big_bucket and big_bucket is empty] with the empty bucket[end if].";
 
@@ -8728,23 +8724,23 @@ Response of Grandpa when asked-or-told about Lee:
 Response of Grandpa when asked-or-told about stepdad:
 	say "[one of]'Mark? He seemed like a nice enough guy when I met him, but...' Grandpa looks like he's going to get mad at you, 'he better start being a whole heck of a lot nicer to you and your[if player is in Room_Grassy_Clearing]--'[paragraph break]Honey cuts him off, 'John, that's enough. Remember, little pitchers have big ears.'[paragraph break]Grandpa leans down and says a little quieter, 'Well, you just know that your mom, your Honey, and your grandpa love you,' and he [grandpa_stuff].[else] mom or he's going to have to answer to me. That's all I have to say.'[end if][or]Grandpa face goes tight. 'I don't think I can rightly say anything more about that without saying anything I don't want to.'[stopping]".
 
-Response of grandpa when asked-or-told about topic_dreams:
-	say "'We all have dreams, [grandpas_nickname]. Sometimes as you get older, or if you get to be an old man like me, you have different dreams than you did when you were a young man,' grandpa says, 'These days, I dream about a quiet river with a fishing pole.'".
+Response of Grandpa when asked-or-told about topic_dreams:
+	say "'We all have dreams, [grandpas_nickname]. Sometimes as you get older, or if you get to be an old man like me, you have different dreams than you did when you were a young man,' Grandpa says, 'These days, I dream about a quiet river with a fishing pole.'".
 
-Response of grandpa when asked-or-told about topic_creek:
-	say "'Well, I love that old creek. It's one of the reasons we bought our house here,' grandpa says, 'You know we call it [']Bear Creek,['] but the Miwok people who lived here long before us had another name for it. I've never known this creek's true name.'".
+Response of Grandpa when asked-or-told about topic_creek:
+	say "'Well, I love that old creek. It's one of the reasons we bought our house here,' Grandpa says, 'You know we call it [']Bear Creek,['] but the Miwok people who lived here long before us had another name for it. I've never known this creek's true name.'".
 
-Response of grandpa when asked-or-told about topic_indians:
-	say "'The Miwok people used to live in these hills along Bear Creek,' grandpa says, 'You know, there are still remains of houses and petroglyphs, those are drawings on rocks, made by Indians who lived here long before we came here.'".
+Response of Grandpa when asked-or-told about topic_indians:
+	say "'The Miwok people used to live in these hills along Bear Creek,' Grandpa says, 'You know, there are still remains of houses and petroglyphs, those are drawings on rocks, made by Indians who lived here long before we came here.'".
 
 Response of Grandpa when asked-or-told about topic_berries:
 [Response of Grandpa when asked about backdrop_berries or told about backdrop_berries:]
-	say "'How you doing, [grandpas_nickname]?' Grandpa [grandpa_stuff]. 'You helping your Honey and grandpa make blackberry jam?'".
+	say "'How you doing, [grandpas_nickname]?' Grandpa [grandpa_stuff]. 'You helping your Honey and Grandpa make blackberry jam?'".
 
 [TODO: Grandpa doesn't respond here]
 
 Response of Grandpa when asked-or-told about bucket:
-	say "[if Scene_Bringing_Lunch has not happened]'That's our berry pickin' bucket, [grandpas_nickname]. Soon as we get that filled up I'm gonna take it up to your Aunt Mary,' Grandpa says. 'You going to help me?'[else if Scene_Bringing_Lunch is happening]'Got to take this up to Mary, so she can turn this into jam,' Grandpa says. 'You gonna help your old grandpa get this up to the house?'[else]'I gotta get this down to your Honey before she needs to dump her pail,' Grandpa says. 'You wanna walk with me?'[end if]".
+	say "[if Scene_Bringing_Lunch has not happened]'That's our berry pickin' bucket, [grandpas_nickname]. Soon as we get that filled up I'm gonna take it up to your Aunt Mary,' Grandpa says. 'You going to help me?'[else if Scene_Bringing_Lunch is happening]'Got to take this up to Mary, so she can turn this into jam,' Grandpa says. 'You gonna help your old Grandpa get this up to the house?'[else]'I gotta get this down to your Honey before she needs to dump her pail,' Grandpa says. 'You wanna walk with me?'[end if]".
 
 [TODO ensure that response is approp for day 2]
 
@@ -8817,7 +8813,7 @@ Response of Grandpa when asked about topic_death:
 	say "'Death is just part of life, my little [grandpas_nickname],' Grandpa says and [grandpa_stuff].".
 
 Response of Grandpa when asked about topic_family:
-	say "'Well, you have a lot of family that loves you, your mom, your Honey, your old grandpa, your Aunt Mary,' Grandpa says. 'Even your dad loves you, in his way.'".
+	say "'Well, you have a lot of family that loves you, your mom, your Honey, your old Grandpa, your Aunt Mary,' Grandpa says. 'Even your dad loves you, in his way.'".
 
 Response of Grandpa when asked-or-told about topic_war:
 	say "'War is not a lot of fun, I can tell you that,' Grandpa says[one of]. 'Even though I didn't see a lot of action in dubya-dubya-two like a lot of guys, it was a pretty brutal, mean time. Even for people like your Honey who were helping out here at home.'[or].[stopping]".
@@ -8879,11 +8875,11 @@ Chapter - Journeys
 		* when player is in blackberry clearing
 
  	What happens on Grandpa's walk:
-		* turn 1: 1 turn warning, grandpa tells you he wants your help
-		* turn 2: grandpa gets bucket, asks you to come along, and goes one step closer to goal
-		* turn n: you arrive where grandpa is waiting, maybe he says something if it has been more than a turn
-		* turn n+1: one turn after you arrive, grandpa says something to you and goes one step closer
-		* turn n+m: if you take more than m turns to get to him and you are a location away, grandpa comes to get you and ask if you are coming
+		* turn 1: 1 turn warning, Grandpa tells you he wants your help
+		* turn 2: Grandpa gets bucket, asks you to come along, and goes one step closer to goal
+		* turn n: you arrive where Grandpa is waiting, maybe he says something if it has been more than a turn
+		* turn n+1: one turn after you arrive, Grandpa says something to you and goes one step closer
+		* turn n+m: if you take more than m turns to get to him and you are a location away, Grandpa comes to get you and ask if you are coming
 ]
 
 test gw with "teleport to grandpas trailer / teleport to grassy clearing / teleport to willow trail".
@@ -9062,7 +9058,7 @@ Response of Sharon when asked-or-told about player:
 	say "'Well [sharons_nickname], you are the sweetest child and my very favorite neighbor,' the Cat Lady says patting you on the head affectionately.".
 
 Response of Sharon when asked-or-told about Grandpa:
-	say "'Your grandfather is such a nice man,' the Cat Lady says. 'Just the other day, he helped me get Zoey out of the neighbor's tree[if grandpa is visible].' She smiles at your Grandpa and puts her hand on his arm.[else].'[end if]".
+	say "'Your grandfather is such a nice man,' the Cat Lady says. 'Just the other day, he helped me get Zoey out of the neighbor's tree[if Grandpa is visible].' She smiles at your Grandpa and puts her hand on his arm.[else].'[end if]".
 
 Response of Sharon when asked-or-told about Honey:
 	say "The Cat Lady looks a little uncomfortable, 'Your grandmother is very beautiful,' she says after a moment.".
@@ -9719,10 +9715,10 @@ Response of mom when asked-or-told about topic_dreams:
 	say "'I think dreams have meaning,' mom says, 'I choose to think they are trying to speak to us in some way, to wake up our brains, to alert us, or to confirm something we’re wondering about.'".
 
 Response of mom when asked-or-told about topic_berries:
-	say "'Were you helping your Honey and grandpa pick berries?' she asks.".
+	say "'Were you helping your Honey and Grandpa pick berries?' she asks.".
 
 Response of mom when asked-or-told about topic_trailer:
-	say "'Honey and grandpa's house? I love that trailer. Your grandpa has worked so hard to make that place beautiful for us,' mom says.".
+	say "'Honey and Grandpa's house? I love that trailer. Your grandpa has worked so hard to make that place beautiful for us,' mom says.".
 
 Response of mom when asked about train_track:
 	say "[moms_train_ask_response].";
@@ -9871,7 +9867,7 @@ Response of stepdad when asked-or-told about Honey:
 	say stepdad_disinterested.
 
 Response of stepdad when asked-or-told about Grandpa:
-	say "'Your grandpa's a good guy,' Mark says. 'He helped me build our house.'".
+	say "'Your grandpa 's a good guy,' Mark says. 'He helped me build our house.'".
 
 Response of stepdad when asked-or-told about Lee:
 	say "'That guy,' Mark says, 'I don't know him well, but he's a vet. I respect that.'".
@@ -10110,7 +10106,7 @@ Response of dream_dog when asked-or-told about dream_dog:
 Response of dream_dog when asked-or-told about honey:
 	say_dog_people_response;
 
-Response of dream_dog when asked-or-told about grandpa:
+Response of dream_dog when asked-or-told about Grandpa:
 	say "'I think one time when I got out of that goddamn fence I tried to bite him,' the dog laughs.";
 	now dream_dog is friendly.
 
