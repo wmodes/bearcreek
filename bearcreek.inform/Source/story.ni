@@ -299,6 +299,7 @@ rule name		message
 too many words rule		"[as the parser]You typed a rather long command. You might want to stick to simpler things like TAKE [get noun example].[as normal][paragraph break]"
 
 [TODO: Remove line break when correcting a command]
+[TODO: [run paragraph on] is sus and makes the entire paragraph jacked. Find a better solution wherever it appears.]
 
 Chapter - Style
 
@@ -766,7 +767,6 @@ Understand the command "dress" as something new.
 Understand "dress", "get dressed" as Dressing.
 Dressing is an action applying to nothing.
 
-[ TODO: Don't trigger this is we didn't get undressed! ]
 Carry out dressing:
 	put_clothes_back_on.
 
@@ -2663,7 +2663,6 @@ To say eat_berries:
 	say "You eat a few of the berries[one of]. Yum[or]. Oh yum[or]. Delicious[or]. Sour. Some of these weren't quite ripe[or]. Oh those were really sweet[or]. Yum[or]. You can feel the little seeds between your teeth[in random order][if player is hungry]. That may have been the best thing you've ever eaten. You are reminded of something: 'Hunger is the best seasoning,' your grandpa always says[end if]";
 	now player is not hungry;
 
-[TODO: When you try to get or eat berries outside of the Region_Blackberry_Area and there is none, you get "You can't see any such thing." This could be improved]
 
 Section - Berries in Hand
 
@@ -5047,8 +5046,6 @@ When Scene_Fallout_Staying ends:
 	pause_the_game;
 	say Title_Card_Epilogue;
 	say "Despite everything, the years roll by.";
-	[TODO: make the above transition text work]
-	[TODO: Tie epilogue into the intro at the beginning.]
 
 Section - Actions and Sequences
 
