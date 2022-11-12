@@ -1528,8 +1528,8 @@ Carry out going_uppath:
 
 Going_downpath is an action applying to nothing.
 Understand
-	"go down/-- the/-- path/trail/road/hill/downhill",
-	"follow the/-- path/trail/road"
+	"go down/-- the/-- wooded/dark/-- path/trail/road/hill/downhill",
+	"follow the/-- wooded/dark/-- path/trail/road"
 	as going_downpath.
 
 Carry out going_downpath:
@@ -2714,7 +2714,7 @@ Section - The Pail
 
 [TODO: oops.
 	>put sandwich in pail
-	You put the tuna sandwich into your pail
+	You put the tuna_sandwich into your pail
 ]
 
 Instead of inserting handful_of_berries into pail:
@@ -3889,14 +3889,17 @@ The brown paper bag is a unopenable open container.
 The brown paper bag can be torn.
 
 [Originally I thought to simplify this model, but it came in handy during Scene_Defend_the_Fort]
-A tuna sandwich is a kind of thing.
-	A tuna sandwiches is edible.
+A tuna_sandwich is a kind of thing.
+	A tuna_sandwiches is edible.
 	[It is singular-named "tuna sandwich".]
-	Three tuna sandwiches are in brown paper bag.
+	Three tuna_sandwiches are in brown paper bag.
+	[TODO: Test plural name is correcct]
+	The printed name is "tuna sandwich".
+	Rule for printing the plural name of a tuna_sandwich: say "tuna sandwiches".
 	The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
-	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spead/mayonaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna sandwiches.
+	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spead/mayonaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna_sandwiches.
 
-Instead of dropping tuna sandwich during Scene_Day_One:
+Instead of dropping tuna_sandwich during Scene_Day_One:
 	if raccoons are in Region_Woods_Area:
 		say "Maybe they want the tuna sandwiches.";
 		continue the action;
@@ -3910,7 +3913,7 @@ Instead of dropping brown paper bag during Scene_Day_One:
 	else:
 		say "No way. That's lunch for Honey and Grandpa.";
 
-Instead of eating tuna sandwich during Scene_Day_One:
+Instead of eating tuna_sandwich during Scene_Day_One:
 	say "Not yet. You want to eat lunch with Honey and Grandpa.";
 
 seq_mary_sandwich is a sequence.
@@ -3932,8 +3935,8 @@ This is the seq_mary_sandwich_handler rule:
 	else if index is 2:
 		Report Mary saying "Your Aunt Mary has you on the assembly line constructing tuna fish sandwiches and putting them in sandwich bags.";
 	else if index is 3:
-		Report Mary saying "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makin's. 'Okay, you take those sandwiches down to your grandparents. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles.";
-		now all tuna sandwiches are in brown paper bag;
+		Report Mary saying "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makings. 'Okay, you take those sandwiches down to your grandparents. She hands you the paper bag. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles.";
+		now all tuna_sandwiches are in brown paper bag;
 		now brown paper bag is held by player;
 		now sandwich_ingredients are off-stage;
 
@@ -4127,21 +4130,21 @@ Instead of sleeping during Scene_Defend_the_Fort:
 	say "There is no way you are sleeping while wolves or bears are trying to eat you.";
 
 To do_raccoon_things:
-	Let limbo_sandwich_list be the list of tuna sandwiches enclosed by Limbo;
+	Let limbo_sandwich_list be the list of tuna_sandwiches enclosed by Limbo;
 	[This continues until all of the sandwiches are gone.]
 	If the number of entries in limbo_sandwich_list is less than three:
 		If player is in Room_Forest_Meadow:
 			[raccoons will be in Room_Forest_Meadow waiting at the edges]
 			queue_report "[raccoon_description]." at priority 1;
 		else if player is in Room_Protected_Hollow:
-			Let meadow_sandwich_list be the list of tuna sandwiches enclosed by Room_Forest_Meadow;
-			Let hollow_sandwich_list be the list of tuna sandwiches enclosed by Room_Protected_Hollow;
+			Let meadow_sandwich_list be the list of tuna_sandwiches enclosed by Room_Forest_Meadow;
+			Let hollow_sandwich_list be the list of tuna_sandwiches enclosed by Room_Protected_Hollow;
 			[if there are sandwiches in Room_Forest_Meadow]
 			If the number of entries in meadow_sandwich_list is greater than zero:
 				[raccoons will be making noise in the meadow eating them.]
 				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and Grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]" at priority 1;
 				[It takes one turn for the raccoons to eat one sandwich.]
-				let one_sandwich be a random tuna sandwich enclosed by Room_Forest_Meadow;
+				let one_sandwich be a random tuna_sandwich enclosed by Room_Forest_Meadow;
 				now one_sandwich is in Limbo;
 				if brown paper bag is in Room_Forest_Meadow:
 					now brown paper bag is torn;
@@ -4159,11 +4162,11 @@ To do_raccoon_things:
 		else if player is in Room_Forest_Meadow:
 			queue_report  "The invaders have taken their sandwiches and gone. You protected the fort."  at priority 2;
 
-After taking tuna sandwich when raccoons are visible:
+After taking tuna_sandwich when raccoons are visible:
  	queue_report "The eyes of the invaders follow the tuna sandwich." at priority 1;
 
-After dropping tuna sandwich when raccoons are visible:
- 	queue_report "The glittering eyes watch the tuna sandwich hit the ground." at priority 1;
+After dropping tuna_sandwich when raccoons are visible:
+ 	queue_report "The glittering eyes watch the tuna_sandwich hit the ground." at priority 1;
 
 After dropping brown paper bag when raccoons are visible:
  	queue_report "Numerous pairs of eyes watch the paper bag hit the ground." at priority 1;
@@ -5232,6 +5235,10 @@ The available_exits of Room_Lost_in_the_Brambles is "The grassy clearing where H
 Section - Objects
 
 Section - Backdrops
+
+[TODO: oops
+>x pine trees
+You look around, but don't see the pine trees. Last you remember, they were .]
 
 Some pine trees are backdrop in Room_Lost_in_the_Brambles.
 	The description is "Pine trees fringe the tangle of berry brambles.". Understand "tree/pines/pine" as pine trees.
@@ -6866,9 +6873,6 @@ test shore with "teleport to other shore /abstract bridge west to crossing";
 
 Chapter - Room_Wooded_Trail
 
-[TODO: >follow wooded trail
-That noun did not make sense in this context.]
-
 Section - Description
 
 Room_Wooded_Trail is a room.
@@ -6938,15 +6942,15 @@ Section - Backdrops & Scenery
 
 A rise is a landscape_feature in Limbo.
 	The description is "The trail tops a small rise".
-	Understand "hill/slope/trail" as rise.
+	Understand "small/-- hill/slope/trail/rise" as rise.
 
 A switchback is a landscape_feature in Limbo.
 	The description is "The trail makes a switchback down a gentle slope".
-	Understand "gentle/-- hill/slope/trail" as switchback.
+	Understand "gentle/-- switchback/hill/slope/trail" as switchback.
 
 A slope is a landscape_feature in Limbo.
 	The description is "The forest slopes down into a shallow draw".
-	Understand "shallow/-- hill/draw/trail" as slope.
+	Understand "shallow/-- slope/hill/draw/trail" as slope.
 
 A clearing is a landscape_feature in Limbo.
 	The description is "The trail levels out and crosses a tiny clearing".
@@ -6954,21 +6958,19 @@ A clearing is a landscape_feature in Limbo.
 
 A white tree is an elusive_landmark in Limbo.
 	The description is "Looking closer you see the tree is a dogwood growing in a place where the woods are thinner."
-	Understand "white/light tree/trees", "dogwood tree/--", "nav-landmark"  as white tree.
+	Understand "white/light/-- tree/trees", "dogwood tree/--", "nav-landmark"  as white tree.
 
 A huge madrone tree is an elusive_landmark in Limbo.
 	The description is "This is a particularly huge madrone tree whose branches twist far above your head."
-	Understand "huge/-- madrone tree", "nav-landmark" as huge madrone tree
+	Understand "huge/-- madrone/-- tree", "madrone", "nav-landmark" as huge madrone tree
 
 A burned out tree is an elusive_landmark in Limbo.
 	The description is "This tree went through a fire at some point, but still lived. The inside is all burnt, but the outside looks like a normal tree."
-	Understand "burned out/-- tree", "nav-landmark"  as burned out tree.
+	Understand "burned/burnt/-- out/-- tree", "nav-landmark"  as burned out tree.
 
 A bright patch in the woods is an elusive_landmark in Limbo.
 	The description is "This is a bright patch in the woods with darker woods all around."
-	Understand "bright/light/-- patch/clearing", "bright/light/-- patch/clearing in/of the/-- woods", "nav-landmark"  as bright patch in the woods.
-
-[TODO: Review ALL of the understand rules for objects esp adjectives]
+	Understand "bright/light/-- patch/clearing", "nav-landmark"  as bright patch in the woods.
 
 The sound_of_the_creek is an elusive_landmark in Limbo.
 	The printed name is "sound of the creek".
@@ -8665,7 +8667,7 @@ To say grandpa_stuff:
 	default tell response for the banker:
 	default ask-tell response for the banker:
 
-	defaullt give response for the banker:
+	default give response for the banker:
 	default show response for the banker:
 	default give-show response for the banker:
 
@@ -10010,6 +10012,12 @@ To say dog alert:
 Default response for dog:
 	say "[dog alert].";
 
+Default give response for dog:
+	if noun is tuna_sandwich:
+		say "The dog sniffs suspiciously and erupts in a flurry of barking.";
+	else:
+		say "[dog alert].";
+
 
 Part - Dream Dog
 
@@ -10240,6 +10248,8 @@ Every turn when player is in Room_Sharons_Trailer and (a random chance of 1 in 3
 
 Every turn when player is in Room_D_Loop and (a random chance of 1 in 6 succeeds):
 	queue_report "[one of]A [random-cat] darts out of the Cat Lady's cat door and around the trailer[or]A [random-cat] streaks from around the corner and disappears into the bushes[or]A [random-cat] is walking on the roof of the Cat Lady's trailer and then ducks out of sight[in random order]." with priority 6;
+
+[TODO: This cat shows up even if you leave the area and go to Grandpas_trailer.]
 
 Every turn when yellow tabby is visible and (a random chance of 1 in 4 succeeds):
 	queue_report "[one of]The yellow tabby scratches its ear[or]The yellow tabby carefully licks its paws[or]The tabby grooms itself carefully[or]The tabby rubs up against your legs[or]The yellow tabby looks up at you as if it wants something[as decreasingly likely outcomes]." with priority 5;
