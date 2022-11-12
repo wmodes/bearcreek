@@ -4939,7 +4939,7 @@ This is the seq_parents_arrive_handler rule:
 		if going_home_decision of player is _decided_yes:
 			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and grandpa and raise a hand goodbye." with priority 2;
 		else:
-			queue_report "Mark starts to walk around the car toward you. Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you.[paragraph break]Mom glances warningly at Mark. 'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay, let's go.' She gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls out of B Loop, you can see your mom look at Honey, grandpa and you in turn and mouth, 'I love you.'" with priority 2;
+			queue_report "Mark starts to walk around the car toward you. Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you.[paragraph break]Mom glances warningly at Mark. 'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay, let's go.' She gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls angrily out of B Loop, you can see your mom look at Honey, grandpa and you in turn and mouth, 'I love you.'" with priority 2;
 
 [ TODO: This scene should continue at least two more beats, as the decision seems super abrupt. ]
 [ TODO: Prohibit player from having normal conversations with the people here. This has happened enough times that perhaps it needs a more general handler. ]
@@ -5106,8 +5106,11 @@ To add_stuff_to_special_box:
 		now photos_from_home is in special_box;
 
 Instead of going down during Scene_Epilogue:
-	say "You shut all your memories away in the box and return it to where you found it before going back down to your life.";
-	end_the_story.
+	if player is not photo_experienced:
+		say "It's been years since you looked at the stuff in your special box. You might want to take a moment.";
+	else:
+		say "You shut all your memories away in the box and return it to where you found it before going back down to your life.";
+		end_the_story.
 
 Book - Regions & Rooms
 
@@ -8034,7 +8037,7 @@ Section - Navigation
 
 Room_Attic is up from Upstairs Hall.
 
-The available_exits of Room_Attic is "The only way from here is down."
+The available_exits of Room_Attic is "[one of]Stairs go back downstairs[or]The only way from here is down[or]It's all down from here[stopping].".
 
 Section - Objects and People
 
@@ -8080,6 +8083,14 @@ Section - Rules and Actions
 
 Instead of examining keepsakes:
 	list the contents of special_box, as a sentence, including contents, listing marked items only;
+
+Instead of examining photos_from_home:
+	now player is photo_experienced;
+	continue the action;
+
+Instead of examining photos_from_grampas:
+	now player is photo_experienced;
+	continue the action;
 
 Book - People
 
@@ -8136,6 +8147,7 @@ Yourself can be sharon_experienced.
 Yourself can be found_by_lee.
 Yourself can be found_by_sharon.
 Yourself can be formerly_in_possession_of_lucky_penny.
+Yourself can be photo_experienced.
 
 The player has a number called persistence count. Persistence count is 0.
 The player has a number called pinetree_tries_count.

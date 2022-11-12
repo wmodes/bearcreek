@@ -15,7 +15,7 @@ Here you can play the story online, super convenient, but not my recommendation.
 
 **Version 2.0, the complete story in three parts, is a work in progress, expected to be released within the next several months.**
 
-While playing a browser is certainly convenient, it can be typographically painful to this author.  A better alternative is to download software that presents interactive fiction on your desktop.  I highly recommend the typographically beautiful Lectrote which can play a whole host of different format IF games. This is a bit more complicated, but in this author's opinion, well worth it.
+While playing in a browser is certainly convenient, it can be typographically painful to this author.  A better alternative is to download software that presents interactive fiction on your desktop.  I highly recommend the typographically beautiful Lectrote which can play a whole host of different format IF games. This is a bit more complicated, but in this author's opinion, well worth it.
 
 1. Download and install [Lectrote](https://github.com/erkyrath/lectrote/releases), available for Linux, Mac, and PC.
 2. Download the [Bear Creek story file](https://modes.io/html/bearcreek/Bear%20Creek.gblorb)
@@ -39,7 +39,7 @@ Traditionally, in parser-based fiction there are puzzles that occasionally chall
 
 ## Behind-the-Scenes
 
-The Bear Creek source code, over 10,000 lines and 67,000 words, is written in Inform7, a programming language and design system for interactive fiction. Inform7 uses natural language syntax and draws on ideas from linguistics and from literate programming. This example of Inform7 code from the Bear Creek source defines the first "room" of the game.
+The Bear Creek source code, over 14,000 lines and 71,000 words, is written in Inform7, a programming language and design system for interactive fiction. Inform7 uses natural language syntax and draws on ideas from linguistics and from literate programming. This example of Inform7 code from the Bear Creek source defines the first "room" of the game.
 
     Room_Lost_in_the_Brambles is a room.
       The printed name is "Lost in the Brambles".
