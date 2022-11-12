@@ -7,7 +7,7 @@ Bearcreek by Wes Modes begins here.]
 
 Volume - Meta
 
-The story headline is "an interactive fiction".
+The story headline is "An interactive fiction".
 The story genre is "Fiction".
 The release number is 2.
 The story creation year is 2020.
@@ -34,7 +34,7 @@ To start_transcript:
 		try switching the story transcript on;
 		say "Transcript being recorded. Please send completed transcript to wmodes@gmail.com.";
 		say "[line break]NOTE: You can add a comment into the transcript by preceding a command with any punctuation.";
-	pause the game;
+	pause_the_game;
 	clear the screen;
 
 Part - Locations
@@ -1120,13 +1120,14 @@ Carry out taking inventory (this is the print non-standard inventory rule):
 		say "nothing";
 	[worn items]
 	now everything carried by the player is not marked for listing;
-	[now everything not worn by the player is not marked for listing;]
-	now everything worn by the player is marked for listing;
-	now everything unmentionable is not marked for listing;
-	if number of marked for listing things worn by the player is greater than 0:
-		say " and wearing ";
-		list the contents of the player, as a sentence, including contents, listing marked items only;
-	say "[other_attributes][permanent_attributes].";
+	if Scene_Epilogue is not happening:
+		[now everything not worn by the player is not marked for listing;]
+		now everything worn by the player is marked for listing;
+		now everything unmentionable is not marked for listing;
+		if number of marked for listing things worn by the player is greater than 0:
+			say " and wearing ";
+			list the contents of the player, as a sentence, including contents, listing marked items only;
+		say "[other_attributes][permanent_attributes].";
 
 Chapter - New Can't See That Report
 
@@ -1817,7 +1818,7 @@ Part - Title Cards
 
 [When play begins:
 	say story_intro;
-	pause the game;
+	pause_the_game;
 	say Title_Card_Part_1;
 	say "[line break]You've wandered away from Honey and Grandpa picking blackberries.";
 	now the right hand status line is "Late Morning".]
@@ -1834,9 +1835,9 @@ To say story_intro:
 To say Title_Card_Part_1:
 	clear the screen;
 	say paragraph break;
-	center "[bold type]Part 1   ";
+	center "[bold type]Part 1     ";
 	say roman type;
-	center "[italic type]A Fateful Day";
+	center "[italic type]A Fateful Day   ";
 	say paragraph break;
 	say line break;
 	center "[italic type]Memories may be beautiful and yet        ";
@@ -1844,26 +1845,26 @@ To say Title_Card_Part_1:
 	center "[italic type]We simply choose to forget               ";
 	center "[italic type]      -- Gladys Knight And The Pips, 1975";
 	say paragraph break;
-	pause the game;
+	pause_the_game;
 
 To say Title_Card_Part_2:
 	clear the screen;
 	say paragraph break;
-	center "[bold type]Part 2      ";
-	center "[italic type]Lost     ";
+	center "[bold type]Part 2     ";
+	center "[italic type]Lost   ";
 	say paragraph break;
 	say line break;
 	center "[italic type]Now my old world is gone for dead    ";
 	center "[italic type]Cos I can't get it out of my head.    ";
 	center "[italic type]      -- Electric Light Orchestra, 1975";
 	say paragraph break;
-	pause the game;
+	pause_the_game;
 
 To say Title_Card_Part_3:
 	clear the screen;
 	say paragraph break;
-	center "[bold type]Part 3 ";
-	center "[italic type]Fallout";
+	center "[bold type]Part 3    ";
+	center "[italic type]Fallout   ";
 	say paragraph break;
 	say line break;
 	center "[italic type]Butterflies are free to fly    ";
@@ -1872,17 +1873,49 @@ To say Title_Card_Part_3:
 	center "[italic type]Bye bye                        ";
 	center "[italic type]         -- Elton John, 1975";
 	say paragraph break;
-	pause the game;
+	pause_the_game;
 
 To say Sleep_Card:
 	say "[one of]You are surprisingly tired. You nod off almost immediately[or]After your long day, you find that you can't keep your eyes open for another moment.[in random order]";
-	pause the game;
+	pause_the_game;
 	clear only the main screen;
 
-To pause the/-- game:
-say "[paragraph break]Press any key to continue.";
-wait for any key;
-clear the screen.
+To say Title_Card_Epilogue:
+	clear the screen;
+	say paragraph break;
+	center "[bold type]Epilogue     ";
+	center "[italic type]The Special Box   ";
+	say paragraph break;
+	say line break;
+	say line break;
+	say line break;
+	say line break;
+	say line break;
+	say paragraph break;
+	pause_the_game;
+
+To pause_the_game:
+	say "[paragraph break]Press any key to continue.";
+	wait for any key;
+	[ clear the screen. ]
+	[ pause the game; ]
+
+To section_break:
+	center "[italic type]***   ";
+	say paragraph break;
+
+To end_the_story:
+	say paragraph break;
+	say line break;
+	end the story;
+
+Section - Fake waiting - Not for release
+
+To wait for any key:
+	do nothing.
+
+To clear the screen:
+	do nothing.
 
 Part - Premonitions
 
@@ -2031,9 +2064,7 @@ To step a sequence for (this_seq - a sequence):
 
 Chapter - An Example
 
-[
-	Lee's Visit Sequence - An Example
-]
+[ Lee's Visit Sequence - An Example ]
 
 [seq_lees_visit is a sequence.
 	The action_handler is the seq_lees_visit_handler rule.
@@ -2470,6 +2501,8 @@ A thing can be unmentionable. [reserved for underwear, clothing, and shoes]
 
 A thing can be floating or sinking. Things are usually sinking.
 
+A thing can be special.
+
 A supporter can be lie-able. Supporters are usually not lie-able.
 A supporter can be sit-at-able. Supporters are usually not sit-at-able.
 
@@ -2815,7 +2848,7 @@ Loose_rock are undescribed.
 The printed name is "rock".
 The printed plural name is "rocks".
 The description is "Grandpa called these ballast, rocks that line the railroad tracks.".
-10 loose_rocks are in Room_Railroad_Tracks.
+20 loose_rocks are in Room_Railroad_Tracks.
 The loose_rocks are not marked for listing.
 Understand "mound of rock/rocks", "mound", "rock/rocks/stone/stones/ballast" as loose_rock.
 
@@ -3230,7 +3263,7 @@ When Scene_Day_One begins:
 	[turn this on when beta-testing]
 	[start_transcript;]
 	say story_intro;
-	pause the game;
+	pause_the_game;
 	say Title_Card_Part_1;
 	say "[line break]You've wandered away from Honey and Grandpa picking blackberries.";
 	set_the_time_to late_morning.
@@ -3429,7 +3462,9 @@ There is a scene called Scene_Helping_the_Cat_Lady.
 Chapter - Scene_Sheriffs_Drive_By
 
 Scene_Sheriffs_Drive_By is a dramatic scene.
+
 Scene_Sheriffs_Drive_By begins when player has been in Region_Trailer_Park_Area for eight turns and Scene_Day_One is happening and Scene_Tea_Time is not happening and Scene_Hangout_With_Lee is not happening and Scene_Making_Sandwiches is not happening and grandpa is not in Region_Trailer_Park_Area.
+
 Scene_Sheriffs_Drive_By ends when seq_sheriffs_drive_by is run and seq_sheriffs_drive_by is not in-progress.
 
 When Scene_Sheriffs_Drive_By begins:
@@ -3921,7 +3956,7 @@ Scene_Night_In_The_Woods ends when Scene_Dreams begins.
 When Scene_Night_In_The_Woods begins:
 	now landmark_nav_counter is 0;
 	say "[lost_in_the_woods_payoff]";
-	pause the game;
+	pause_the_game;
 	say Title_Card_Part_2;
 	Now the right hand status line is "Evening";
 	[ move our elusive_landmark to the new location ]
@@ -4151,7 +4186,7 @@ When Scene_Dreams begins:
 When Scene_Dreams ends:
 	now seq_dog_convo is not in-progress;
 	say "[line break]The dog wags its tail and fades. You slowly shake off the cobwebs of an altogether strange night.";
-	pause the game;
+	pause_the_game;
 	say Title_Card_Part_3;
 
 test dreams with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep"
@@ -4461,10 +4496,13 @@ When Scene_Day_Two begins:
 	unstore_all_your_stuff;
 	scatter_lost_stuff;
 	now player is in Room_Protected_Hollow;
+	now pet_rock is in Room_Protected_Hollow;
 	now player is awake;
-	Now the right hand status line is "Morning";
+	now current_time_period is early_morning;
+	now the right hand status line is "Morning";
 	Now Sharon is in Room_Other_Shore;
 	Now Lee is in Room_Blackberry_Tangle;
+	queue_report "[pet_rock_initial_appearance]." with priority 2;
 
 test day2 with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump/z/z/z/z/ go to tracks/go on/ z/z/z/z/z/z/ go on/ go on/ z/z/z/z/z/z/z/wake up".
 
@@ -4901,7 +4939,7 @@ This is the seq_parents_arrive_handler rule:
 		if going_home_decision of player is _decided_yes:
 			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and grandpa and raise a hand goodbye." with priority 2;
 		else:
-			queue_report "'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you. Mark's door starts to open and grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath as she puts her hand on Mark's arm. Mark shoves her away, but after a clear moment, he doesn't get out of the car.[paragraph break]'We better go, mom,' Rachel says to Honey. To Mark she says, 'Let's go.'[paragraph break]As the car pulls out of B Loop, you can see your mom look at Honey, grandpa and you in turn and mouth, 'I love you.'" with priority 2;
+			queue_report "Mark starts to walk around the car toward you. Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you.[paragraph break]Mom glances warningly at Mark. 'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay, let's go.' She gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls out of B Loop, you can see your mom look at Honey, grandpa and you in turn and mouth, 'I love you.'" with priority 2;
 
 [ TODO: This scene should continue at least two more beats, as the decision seems super abrupt. ]
 [ TODO: Prohibit player from having normal conversations with the people here. This has happened enough times that perhaps it needs a more general handler. ]
@@ -4953,35 +4991,123 @@ To decide_not_to_go_home:
 	else:
 		increment index of seq_parents_arrive;
 		now going_home_decision of player is _decided_no;
-		say "You stand up straight. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]going[roman type] to stay here,' you say firmly. You can feel grandpa's arms tighten around you.".
+		say "You stand up straight. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]staying[roman type] here,' you say firmly. You can feel grandpa's arms tighten around you.".
 
 test parents with "test long-arm / z/z/z/yell/z"
 
-Chapter - Scene_Fallout
 
-There is a scene called Scene_Fallout.
+Chapter - Scene_Fallout_Going_Home
 
-Scene_Fallout begins when 
-Scene_Parents_Arrive ends.
+There is a scene called Scene_Fallout_Going_Home.
 
-When Scene_Fallout begins:
+Scene_Fallout_Going_Home begins when going_home_decision of player is _decided_yes and Scene_Parents_Arrive has ended;
+
+Scene_Fallout_Going_Home ends when end_fallout_flag is true.
+
+end_fallout_flag is a truth state that varies.
+
+When Scene_Fallout_Going_Home begins:
+	now player is in Room_In_Car_With_Parents;
+	now mom is in Room_In_Car_With_Parents;
+	now stepdad is in Room_In_Car_With_Parents;
+	fallout_home_ends in 4 turns from now;
+
+At the time when fallout_home_ends:
+	now end_fallout_flag is true;
+	say "Mom tries to keep it light, and when that fails, she sheilds you by keeping the focus on herself.[paragraph break]Mark who was simmering at the start of the drive, is mellowed two beers in and says several nice things including how worried he was about you.[paragraph break]For the rest of the ride home, you keep your head down and speak only when spoken to which is mercifully seldom.";
+	pause_the_game;
+	say Title_Card_Epilogue;
+	say "Despite everything, the years roll by.";
+
+Section - Actions
+
+Instead of doing anything except looking or examining or looking_outside when Scene_Fallout_Going_Home is happening:
+	say "[one of]You are trying not to move or talk or remind your stepdad that you exist.[or]You are trying to remain invisible.[or]You dare not do anything to remind your stepdad that you are here.[cycling]";
+
+Chapter - Scene_Fallout_Staying
+
+There is a scene called Scene_Fallout_Staying.
+
+Scene_Fallout_Staying begins when going_home_decision of player is _decided_no and Scene_Parents_Arrive has ended;
+
+Scene_Fallout_Staying ends when  
+seq_staying_w_grandpa is run and seq_staying_w_grandpa is not in-progress.
+
+When Scene_Fallout_Staying begins:
+	now mom is in Limbo;
+	now stepdad is in Limbo;
+	now moms_camaro is in Limbo; 
+	now seq_staying_w_grandpa is in-progress;
+
+When Scene_Fallout_Staying ends:
 	section_break;
-	end_the_story;
-
-to section_break:
+	say "Later that night, you watch [italic type]Bowling for Dollars[roman type] with grandpa who lays on the carpet in front of the TV while you climb all over him. He occasionally gets up and shouts 'Brooklyn! Brooklyn!' (Grandpa explained that that's when a ball hits the wrong side of the pins.) You can smell dinner cooking in the other room and hear Honey and Aunt Mary talking and laughing.[paragraph break]After dinner, Honey and grandpa watch [italic type]Wild World of Animals[roman type] and let you stay up to watch [italic type]The Wonderful World of Disney[roman type]. You fall asleep on the couch sitting between your Honey and Grandpa.";
 	say paragraph break;
-	say line break;
-	center "[italic type]***   ";
-	say paragraph break;
-	say line break;
+	pause_the_game;
+	say Title_Card_Epilogue;
+	say "Despite everything, the years roll by.";
+	[TODO: make the above transition text work]
+	[TODO: Tie epilogue into the intro at the beginning.]
 
-to end_the_story:
-	say paragraph break;
-	say line break;
-	end the story;
+Section - Actions and Sequences
 
-[TODO: Should this be exposition or a scene in which the player as an older person pours over a box in which there are photos and keepsakes (the Mika figurine, the purple heart, the lucky penny, the pet rock? ]
+seq_staying_w_grandpa is a sequence.
+	The action_handler is the seq_staying_w_grandpa_handler rule.
+	The interrupt_test is seq_staying_w_grandpa_interrupt_test rule.
+	The length_of_seq is 4.
 
+This is the seq_staying_w_grandpa_handler rule:
+	let index be index of seq_staying_w_grandpa;
+	if index is 1:
+		say "Grandpa and Honey watch mom's Camaro drive away.[paragraph break]'Alright [grandpas_nickname], let's get you inside. You must be starving.' And as Grandpa says it, you realize he's right. You are ravenous. Honey guides you inside. You're still in a bit of a daze.";
+		now player is in Room_Grandpas_Trailer;
+		now grandpa is in Room_Grandpas_Trailer;
+		now honey is in Room_Grandpas_Trailer;
+	else if index is 2:
+		say "'Let's get some breakfest together for [grandpas_nickname],' Grandpa says to Aunt Mary who starts rummaging in the fridge.[paragraph break]Grandpa and Honey retreat to the kitchen to talk quietly.";
+	else if index is 3:
+		say "Honey and Grandpa are still talking intensely in the kitchen.";
+	else if index is 4:
+		say "'Don't you worry,' Honey says to you.[paragraph break]'We'll call your mom a little later as soon as she gets home,' Grandpa says and seeing your worried face adds, 'Don't you worry about your mom. She can take care of herself.'[paragraph break]'You'll see her this weekend,' Honey adds putting her hand on your shoulder.[paragraph break]'Now, as we're waiting for breakfast, why don't you tell me about the shelter you made?' Grandpa says. 'And what were you saying about raccoon invaders?'";
+
+This is the seq_staying_w_grandpa_interrupt_test rule:
+	[nothing interupts this rule]
+	rule fails.
+
+Chapter - Scene_Epilogue
+
+There is a scene called Scene_Epilogue.
+
+Scene_Epilogue begins when 
+Scene_Fallout_Going_Home ends.
+Scene_Epilogue begins when 
+Scene_Fallout_Staying ends.
+[for testing]
+Scene_Epilogue begins when player is in Room_Attic;
+
+When Scene_Epilogue begins:
+	add_stuff_to_special_box;
+	now player is in Room_Attic;
+
+Section - Actions
+
+To add_stuff_to_special_box:
+	now pail is in Limbo;
+	let special_stuff be the list of special things;
+	repeat with item running through special_stuff:
+		if player holds item:
+			now item is in special_box;
+	now everything carried by player is in Limbo;
+	now player holds your_wallet;
+	now player holds your_keys;
+	if going_home_decision of player is _decided_no:
+		now photos_from_grampas is in special_box;
+	else:
+		now photos_from_home is in special_box;
+
+Instead of going down during Scene_Epilogue:
+	say "You shut all your memories away in the box and return it to where you found it before going back down to your life.";
+	end_the_story.
 
 Book - Regions & Rooms
 
@@ -5174,7 +5300,6 @@ The casual_name is "in the blackberry tangle".
 The description is "There are paths through the brambles, a maze with tantalizing fruit. Although this area is mostly picked since you and Honey and Grandpa came this way when you started picking this morning. You can still find some ripe berries though.
 [paragraph break][available_exits]".
 Understand "blackberry/-- tangle/maze" as Room_Blackberry_Tangle.
-
 
 Section - Navigation
 
@@ -5733,17 +5858,18 @@ The printed name is "train tracks".
 The description is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock.".
 Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as train_track.
 
-A lost_penny is in Room_Railroad_Tracks.
+A lost_penny is a special thing in Room_Railroad_Tracks.
 The printed name is "penny".
 The initial appearance is "Hey, there's the penny you lost when you came here with Grandpa to make train pennies!".
 The description is "Ah, this is a wheat penny. Its tiny numbers say 1956. The tiny S means it was minted in Sacramento.".
 Understand "penny/coin" as lost_penny.
 
-A flattened_penny is a described thing in Limbo.
+A flattened_penny is a described special thing in Limbo.
 The printed name is "flattened train penny".
 The initial appearance is "[if player is not in Room_Dream_Railroad_Tracks]Hey, the train flattened the wheat penny! You made a lucky coin![else]Your lucky penny is here.[end if]".
 The description is "The train rolled over your penny and turned it into a flattened oval. You can't read it anymore, but you can see a very faint image of Lincoln with a stretched head.".
 Understand "lucky/flattened/flat/train/-- penny/coin" as flattened_penny.
+The indefinite article is "the".
 
 [ A mound_of_rock is a undescribed fixed in place supporter in Room_Railroad_Tracks.
 The printed name is "mound of rock".
@@ -6235,9 +6361,10 @@ North from Room_Sharons_Trailer is Room_D_Loop.
 
 Section - Objects
 
-The Mika figurine is an undescribed [sinkable] thing in Room_Sharons_Trailer. The description of Mika is "It looks just like your cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear.".
+The Mika figurine is an undescribed special thing in Room_Sharons_Trailer. The description of Mika is "It looks just like your cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear.".
 Understand "figurine", "statue", "sculpture", or "toy" as Mika.
 The Mika figurine can be palmed.
+The indefinite article is "the".
 
 Your teacup is on Cat Lady's kitchen table. It is an unopenable open container. The description is "[one of]This is a teacup -- not at all like the coffee mugs at home -- made of china, complete with a delicate little handle. The complicated rose-colored pattern may be dogs and fancy men on horses. Your teacup is [or]Your teacup is [stopping][if your teacup is unfilled]empty[else]full of tea barely worthy of the name, a lukewarm watery somewhat tea-flavored liquid[end if]."
 Understand "cup/teacup/tea/mug/glass/lukewarm/watery/tea-flavored/liquid", "tea cup" as teacup.
@@ -6443,7 +6570,7 @@ The lees_tv is an undescribed fixed in place device in Room_Lees_Trailer.
 	The indefinite article is "the".
 	Include (- with articles "The" "the" "a", -) when defining lees_tv.
 
-The purple_heart is a familiar thing in Limbo.
+The purple_heart is a familiar special thing in Limbo.
 	The printed name is "Purple Heart".
 	The description is "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like Geroge Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break][paragraph break][italic type]What will happen if your mom discovers this? You determine to hide the medal and not let her find out.[roman type][only].".
 	Understand "war/service/purple/-- medal/heart/ribbon" as purple_heart.
@@ -6539,12 +6666,10 @@ Section - Description
 Room_Grandpas_Trailer is a room.
 The printed name is "Honey and Grandpa's Trailer".
 The casual_name is "in Honey and Grandpa's trailer".
-The description is "This trailer feels comfy to you, as much home as your real home with your mom. Honey and Grandpa have lived here as long as you remember[one of]. All these things are touchstones of familiarity, the floral-patterned couch on which you and Grandpa cuddle and watch Bowling for Dollars, the big TV, even the brown carpeting with its mottled pattern that looks like lichen on rocks[or]. All of the familiar stuff, the couch and the TV are here[stopping].
-[paragraph break]Today all the windows are steamed up. Fragrant steam wafts from the kitchen. Occasionally, you hear the rattle of jars and lids being washed and set out.".
+The description is "This trailer feels comfy to you, as much home as your real home with your mom. Honey and Grandpa have lived here as long as you remember[one of]. All these things are touchstones of familiarity, the floral-patterned couch on which you and Grandpa cuddle and watch the big TV, even the brown carpeting with its mottled pattern that looks like lichen on rocks[or]. All of the familiar stuff[stopping][if Scene_Day_One is happening].[paragraph break]Today all the windows are steamed up. Fragrant steam wafts from the kitchen. Occasionally, you hear the rattle of jars and lids being washed and set out[end if].".
 The scent is "what it would smell like if you lived inside a blackberry pie".
 The outside_view is "B Loop and your broken bicycle".
 Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas trailer" as Room_Grandpas_Trailer.
-
 
 Section - Navigation
 
@@ -6562,13 +6687,13 @@ The pot_of_blackberry_jam is scenery in Room_Grandpas_Trailer.
 	The scent is "the most intense blackberry smell ever. Like when blackberries dream of being the best blackberries they can be, this is what they dream".
 
 Some jam_jars are scenery in Room_Grandpas_Trailer.
-	The printed name is "jame jars".
+	The printed name is "jam jars".
 	The description of the jam_jars is "Jars and lids and pots and pans and paraffin and tongs and boiling water are laid out strategically all over the kitchen. Who knew making jam was so complicated?".
 	Understand "jar", "lid/lids", "parafin/paraffin/wax", "tongs", "water", "boiling" as jam_jars.
 
 The Honeys_tv is undescribed fixed in place device in Room_Grandpas_Trailer.
 	The printed name is "TV".
-	The description is "This is Honey's big color TV in its wooden case, pretty much like the one you have at home with mom, but with lighter wood. On weekend nights you lie on the floor with Grandpa and watch Bowling for Dollars, Wild World of Animals, and sometimes, if you and mom aren't going home early, Wonderful World of Disney on Sunday night.".
+	The description is "This is Honey's big color TV in its wooden case, pretty much like the one you have at home with mom, but with lighter wood. On weekend nights you lie on the floor with Grandpa and [one of]watch [italic type]Bowling for Dollars[roman type][or]watch [italic type]Wild World of Animals[roman type][or]sometimes, if you and mom aren't going home early on Sunday night, watch [italic type]Wonderful World of Disney[roman type][at random].".
 	Understand "honeys/honey's/-- big/color/-- television/tv/tele/tely/telly/boob/tube/set" as honeys_tv.
 	The indefinite article is "the".
 	Include (- with articles "The" "the" "a", -) when defining honeys_tv.
@@ -7009,7 +7134,6 @@ The outside_view is "the meadow".
 Understand "protected/-- hollow", "fallen tree", "my/-- fort" as Room_Protected_Hollow.
 Understand "protected/-- hollow/cave/nest" as Room_Protected_Hollow.
 
-
 To say hollow_desc_day1:
 	say "This is a protected hollow formed where a big tree has fallen over several smaller ones making a perfect fort. It is dark and would normally be kind of scary, but the dark woods are scarier[first time]. It helps to have some shelter. The Explorer Scouts taught you that shelter is the first thing you are supposed to find in a survival situation[only]";
 
@@ -7038,6 +7162,14 @@ To say fallen_leaves_appearance:
 		say "There is a thick carpet of fallen leaves, dried now in the summer heat. They crunch beneath you.[run paragraph on]";
 	else:
 		say "You are in the middle of a warm, dry pile of leaves.[run paragraph on]"
+
+A pet_rock is a special _critter animal.
+	The printed name is "round rock".
+	The description is "[if pet_rock is _critter]This round rock[else]George[end if] is almost perfectly round and a satisfying granite gray. [sub_pronoun_cap of pet_rock] looks smooth like [sub_pronoun of pet_rock] spent some time rolling around in a river.".
+	Understand "pet/round/river/gray/-- rock", "george" as pet_rock.
+
+To say pet_rock_initial_appearance:
+	say "You shift around uncomfortably because the ground is far from soft. In fact, something is poking you in the side. Rummaging around in the leaves, you find a nearly perfectly round rock.[paragraph break]Aw, it slept here all night cuddled up against you. The poor thing was probably cold"
 
 Section - Backdrops & Scenery
 
@@ -7070,6 +7202,13 @@ Every turn when Scene_Night_In_The_Woods is happening and
 
 Instead of taking fallen_leaves:
 	try piling fallen_leaves.
+
+Instead of taking pet_rock:
+	say "You decide to adopt this pet rock and call it George.";
+	now player holds pet_rock;
+	now the printed name of pet_rock is "George";
+	now pet_rock is _male;
+	now the pet_rock is proper-named;
 
 Chapter - Room_Sentinel_Tree
 
@@ -7190,7 +7329,7 @@ Section - Backdrops and Scenery
 
 The movie is backdrop in Room_Car_With_Mom.
 The description is "The movie is playing on the big screen. In the last of the sunset light, you can still see the figures of kids running around at the playground at the front of the drive-in. It seems unsettling that some parents would let their kids run around in the dark.[paragraph break]Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Bengi. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who kills people by looking at them."
-	Understand "film/drive-in/omen/window", "drive in" as movie.
+Understand "film/drive-in/omen", "drive in" as movie.
 
 The camaro_backdrop is backdrop in Room_Car_With_Mom.
 The printed name is "Mom's Camaro".
@@ -7230,7 +7369,7 @@ Section - Objects
 
 moms_camaro is fixed in place climbable enterable container in Room_Drive_In.
 	The printed name is "Mom's Camaro".
-	The initial appearance is "Mom's Camaro is here parked among the other cars.".
+	The initial appearance is "Mom's Camaro is here[if Scene_Dreams is happening] parked among the other cars[end if].".
 	The printed name is "Mom's Camaro".
 	The description is "Mom's car is green and sleek with a black vinyl top."
 	Understand "Camaro/car" as moms_camaro.
@@ -7717,11 +7856,6 @@ Understand "Chryse Planitia" as Room_Chryse_Planitia.
 
 Section - Navigation
 
-[TODO: Fix this:
-	>walk
-	You'll have to say which compass direction to go in
-]
-
 Room_Chryse_Planitia is east of Room_Mars.
 
 The available_exits of Room_Chryse_Planitia is "Other than the lander, there is nothing else here. Scanning the too-near horizon, there's little to see out there either. The only thing to do is to go on."
@@ -7884,11 +8018,6 @@ The camaro_backdrop is backdrop in Room_In_Car_With_Parents.
 
 The road_backdrop is backdrop in Room_In_Car_With_Parents.
 
-Section - Rules and Actions
-
-Instead of doing anything except looking when player is in Room_In_Car_With_Parents:
-	say "[one of]You are trying not to move or talk or remind your stepdad that you exist.[or]You are trying to remain invisible.[or]You dare not do anything to remind your stepdad that you are here.[cycling]";
-
 
 Chapter - Room_In_Attic
 
@@ -7897,7 +8026,7 @@ Section - Description
 Room_Attic is a room.
 The printed name is "Up in the Attic".
 The casual_name is "in the attic".
-The description is "You are up in the unfinished attic of your house. You came up here looking amongst the clutter and old camping gear for something that you no longer remember. Instead you found this box from your childhood.".
+The description is "You are up in the unfinished attic of your home. You came up here looking amongst the clutter and old camping gear for something that you no longer remember. Instead you found this box from your childhood.[paragraph break][available_exits]".
 The scent is "musty memory".
 Understand "attic" as Room_Attic.
 
@@ -7905,15 +8034,39 @@ Section - Navigation
 
 Room_Attic is up from Upstairs Hall.
 
+The available_exits of Room_Attic is "The only way from here is down."
+
 Section - Objects and People
 
 The special_box is an closed openable container in Room_Attic.
 The printed name is "cigar box".
 The description is "This is a cigar box that you have decorated over the years. Maps and photos of animals cut from National Geographic are glued on every side[first time]. You called this your 'special box' because it contained special stuff[only][if special_box is closed]. The contents of the box rattles inside[else]. The miscelaneous keepsakes of your childhood are revealed inside[end if]."
 Understand "cigar/special/keepsake/-- box", "animals/maps/decoration" as special_box.
-The scent is "cigars still even after all these years".
+The scent is "cigars still, even after all these years".
 
-A photo is in special_box.
+Some photos_from_grampas is a thing.
+The printed name is "photos".
+The description is "These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you Honey hated that picture. They look like they are just about to crack up laughing.[paragraph break]Here's your Grandpa and you getting ready to hike part of the Pacific Crest Trail. You were maybe 15. This is just a few yeaars before he died. You both were woefully unprepared for late fall freezing temperatures. Though you were miserable at night, Grandpa toughed it out.[paragraph break]This is you and your best friend at your 6th grade graduation in your new school. You kind of lost touch when you both went into Middle School but became friends again in high school.[paragraph break]Here's a photo your mom sent after she and Mark moved to Idaho. She's smiling, but it looks strained. Or maybe that's just your imagination. She's standing on the edge of a giant volcanic crater.[paragraph break]Here's a blurry photo of a lizard on a rock in Death Valley you took on a trip with Honey and Grandpa.[paragraph break]This is mom, Honey, and you at your high school graduation. Mark probably took this photo. You don't look happy to be there.[paragraph break]Oh and here's a memorial card from Honey's funeral. You said something at the service, but you have no idea what you said. By then you were in college.[paragraph break]
+There's a whole series of photos of pets that you had through the years, mostly cats, including some of Sharon's cats. There's even a photo of you with the dog down by Bear Creek who you eventually made friends with.[paragraph break]That's it. A young life in a dozen photos."
+Understand "photos/photo/honey/grandpa/mom/friend/lizard/cat/cats/dog" as photos_from_grampas.
+
+Some photos_from_home is a thing.
+The printed name is "photos".
+The description is "These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's you, Honey, and Grandpa on a visit to their house. You look like you're about 10. This must have been just before Mark and mom moved you to Idaho. After that, you saw Honey and Grandpa only in summers and sometimes Christmas.[paragraph break]This is you and your best friend from 6th grade. You both had a crush on the same person, but decided if you had to, you would share them. After you moved, you never saw them again.[paragraph break]Here's a photo Honey and Grandpa sent from a trip they took to visit family in Kansas City, Missouri. You were supposed to be on that trip but for some reason, you didn't get to go.[paragraph break]Here's a photo of your dog Dodo, smiling with his tougue out, as always. Your stepdad took him to the pound when you moved to Idaho.[paragraph break]Here's mom and you at Christmas. She looks so old though you don't look much older than 15.[paragraph break]Here's Grandpa, Honey, and you at the Craters of the Moon when they came to visit. You have your arms around your Grandpa. This couldn't have been too many years before he died.[paragraph break]This is whatshisname? Greg? and you in your first car, a yellow Corolla before leaving home on your cross-country trip when you were 17. You never did come back except to briefly visit your mom.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you she hated that picture. They look like they are just about to crack up laughing. You miss them both terribly.[paragraph break]That's it. A young life in a dozen photos."
+Understand "photos/photo/honey/grandpa/mom/friend/dodo/dog" as photos_from_home.
+
+Your_keys is a thing.
+The printed name is "keys".
+The description is "A keyring containing your car keys, house keys, and who knows what these other ones are?".
+The indefinite article is "your".
+	Include (- with articles "your" "the" "a", -) when defining your_keys.
+
+Your_wallet is a thing.
+The printed name is "wallet".
+The description is "It's just your wallet".
+Understand "wallet/id/license" as your_wallet.
+The indefinite article is "your".
+	Include (- with articles "your" "the" "a", -) when defining your_wallet.
 
 Section - Backdrops and Scenery
 
@@ -7928,16 +8081,21 @@ Section - Rules and Actions
 Instead of examining keepsakes:
 	list the contents of special_box, as a sentence, including contents, listing marked items only;
 
-
 Book - People
 
 Part - Jody (the Player Character)
 
 The player is a _neutrois person.
 The player is in Room_Lost_in_the_Brambles.
-The description of player is "What's to say? You are eight and a half, and you are going into 4th grade in the fall. [one of]And you like watching the Wonderful World of Disney on Sunday night and Bowling for Dollars with your grandpa[or]And you and your mom play car games when you drive to Honey and Grandpa's house on the weekends[or]And you've lived in more different places than you are years old, so it's hard for you to make friends[or]And you like riding your bike on dirt roads around Honey and Grandpa's house[or]And you love cats, most of all, your cat Mika[or]And you have a crush on someone in school but you'd never in a million billion qazillion years tell anybody[in random order][other_attributes][permanent_attributes]."
+The description of player is "[if Scene_Epilogue is not happening][nine_year_old_description][else][adult_description][end if]."
 [Understand "jody/Jodi/Jojo/jodie" as me.]
 Understand "jody/Jodi/Jojo/jodie", "you", "me" as yourself.
+
+To say nine_year_old_description:
+	say "What's to say? You are nine and a half, and you are going into 5th grade in the fall. [one of]And you like watching TV with your grandpa[or]And you and your mom play car games when you drive to Honey and Grandpa's house on the weekends[or]And you've lived in more different places than you are years old, so it's hard for you to make friends[or]And you like riding your bike on dirt roads around Honey and Grandpa's house[or]And you love cats, most of all, your cat Mika[or]And you have a crush on someone in school but you'd never in a million billion qazillion years tell anybody[in random order][other_attributes][permanent_attributes]";
+
+To say adult_description:
+	say "What's to say? You were nine years old a lifetime ago. And though you've gone through a lot and have responsibilities and now live thousands of miles away from that place, sometimes you still feel like that little kid";
 
 Chapter - Properties
 
@@ -8188,19 +8346,11 @@ Chapter - Rules and Actions
 
 To say honey_initial_description:
 	if Grandpa is not visible:
-		if player is in Region_Blackberry_Area:
-			say "Honey is here picking berries. [run paragraph on]";
-		else:
-			say "Honey is here.[run paragraph on]";
+		say "Honey is here[if player is in Region_Blackberry_Area] picking berries[end if]. [run paragraph on]";
 	else:
-		if player is in Region_Blackberry_Area:
-			say "Honey and Grandpa are here picking berries.[run paragraph on]";
-			now honey is not marked for listing;
-			now grandpa is not marked for listing;
-		else:
-			say "Honey and Grandpa are here waiting for you.[run paragraph on]";
-			now honey is not marked for listing;
-			now grandpa is not marked for listing;
+		say "Honey and Grandpa are here[if player is in Region_Blackberry_Area] picking berries[else if Scene_Dreams is happening]waiting for you[end if].[run paragraph on]";
+		now honey is not marked for listing;
+		now grandpa is not marked for listing;
 
 [
 	Honey picking berries
@@ -9240,8 +9390,8 @@ Quote
 Part - Aunt Mary
 
 Aunt Mary is a _female woman in Room_Grandpas_Trailer.
-	The initial appearance is "Your Aunt Mary is looming over the stove in the kitchen, stirring a huge vat of blackberry jam.".
-	The description is "This is your Aunt Mary, or actually your Great Aunt Mary since she is your Grandma Honey's sister. She is a huge woman and wears an old lady dress with flowers and a checked apron. She is stirring the pot_of_blackberry_jam continuously and staring into space.".
+	The initial appearance is "[if Scene_Day_One is happening]Your Aunt Mary is looming over the stove in the kitchen, stirring a huge vat of blackberry jam[else]Your Great Aunt Mary is in the kitchen.".
+	The description is "This is your Aunt Mary, or actually your Great Aunt Mary since she is your Grandma Honey's sister. She is a huge woman and wears an old lady dress with flowers and a checked apron[if Scene_Day_One is happening]. She is stirring the pot_of_blackberry_jam continuously and staring into space[else]. She is fiddling around nervously in the kitchen[end if].".
 	Understand "great-aunt", "great-aunt", "aunty" as Aunt Mary.
 
 Chapter - Properties
@@ -9267,8 +9417,10 @@ Implicit farewell response for Mary:
 	do nothing;
 
 To say mary_stuff:
-		say "[if Mary is in Room_Grandpas_Trailer][one of]stirring the blackberry jam vigorously[or]testing the jam by letting it run off the edge of a spoon[or]stacking jam jars and lids in the dish drainer[or]plopping paraffin into a double boiler to melt[at random][else][one of]smoothing down the front of her old lady dress[or]tugging at her apron[or]looking around worriedly[at random][end if]";
-
+	if Scene_Day_One is happening:
+		say "[one of]stirring the blackberry jam vigorously[or]testing the jam by letting it run off the edge of a spoon[or]stacking jam jars and lids in the dish drainer[or]plopping paraffin into a double boiler to melt[at random]";
+	else:
+		say "[one of]making coffee[or]smoothing down the front of her old lady dress[or]tugging at her apron[or]looking around worriedly[at random]";
 [
 	Defaults
 ]
@@ -9277,7 +9429,7 @@ Default give-show response for Mary:
 	say "'Oh, thanks, dear, but I couldn't,' says Aunt Mary[if a random chance of 1 in 3 succeeds], [mary_stuff][end if].";
 
 Default response for Mary:
-	say "[one of]'Uh huh,' Aunt Mary says distractedly[or]'I apologize, dear, but I have to go stir the jam,' Mary says[or]'Hm, what was that?' Mary says[or]'Oh, you don't say,' Mary says vaguely[at random][if a random chance of 1 in 3 succeeds], [mary_stuff][end if].";
+	say "[one of]'Uh huh,' Aunt Mary says distractedly[or]'Hm, what was that?' Mary says[or]'Oh, you don't say,' Mary says vaguely[at random][if a random chance of 1 in 3 succeeds], [mary_stuff][end if].";
 
 Default thanks response for Mary:
 	say "'Okay, dear,' Aunt Mary says.";
@@ -9323,8 +9475,8 @@ Response of Mary when asked-or-told about stepdad:
 Response of Mary when asked-or-told about topic_berries:
 	say "'Every year,' she smiles. 'Every year, we pick the berries and the jam lasts until the next summer.'"
 
-Response of Honey when asked-or-told about bucket:
-	say "Your lee [if Scene_Bringing_Lunch is happening]will be bringing[else]brought[end if] that bucket up for me to make more jam."
+Response of Mary when asked-or-told about bucket:
+	say "Your grandpa [if Scene_Bringing_Lunch is happening]will be bringing[else]brought[end if] that bucket up for me to make more jam."
 
 Response of Mary when asked-or-told about topic_jam:
 	say "'That's your grandma's recipe,' she says proudly. 'No,' she looks worried, 'No. Mama is your great-grandmother. It's your great-grandma's recipe.'".
@@ -9351,10 +9503,10 @@ Response of Mary when asked about topic_war:
 	say "'Those were hard times. I don't like to talk much about that,' she looks sad. 'Better to just let some thing go, I think.'".
 
 Response of Mary when asked about topic_work:
-	say "'I helped your uncle Charlie with his rock shop in Grass Valley years ago, but now he's gone,' she says sadly.".
+	say "'I helped your great uncle Charlie with his rock shop in Grass Valley years ago, but now he's gone,' she says sadly.".
 
 Response of Mary when asked about topic_family:
-	say "'I come from a big family,' she says. 'Not as many of them left anymore. Your uncle Charlie died a couple years ago. Ethel is still in Portland. Your uncle John died before you were even born, when I was still a girl. That just about broke Mama and Papa's hearts.".
+	say "'I come from a big family,' she says. 'Not as many of them left anymore. Your great uncle Charlie died a couple years ago. Ethel is still in Portland. Your great uncle John died before you were even born, when I was still a girl. That just about broke Mama and Papa's hearts.".
 
 
 Part - the Sheriff
@@ -9629,7 +9781,7 @@ Part - Stepdad
 Stepdad is an undescribed _male man.
 The printed name is "Mark".
 Stepdad is in Room_Camaro_With_Stepdad.
-The description is "[first time]Your stepdad's name is Mark. You call him 'dad' because your mom asked if you wanted to call him dad when she first got re-married. So you did. Who knows what the rules are here? You have an inkling that your mom married him because she thought you needed a father. He was nice to you at first, but now it seems like you just make him mad. [paragraph break]If you are honest, you're scared of him. You never know whether he will be nice or angry. He's nicer when he drinks beer, but if he has too much, your mom and stepdad get in arguments. One night there was yelling and someone broke the glass clock that used to sit on the end table in the living room.[paragraph break]You know this though: if he ever hurt your mom, you don't know how, but you would kill him.[paragraph break][only]He is intensely focusing on the road in a way that you know is seething anger."
+The description is "[first time]Your stepdad's name is Mark. You call him 'dad' because your mom asked if you wanted to call him dad when she first got re-married. So you did. Who knows what the rules are here? You have an inkling that your mom married him because she thought you needed a father. He was nice to you at first, but now it seems like you just make him mad. [paragraph break]If you are honest, you're scared of him. You never know whether he will be nice or angry. He's nicer when he drinks beer, but if he has too much, your mom and stepdad get in arguments. One night there was yelling and someone broke the glass clock that used to sit on the end table in the living room.[paragraph break]You know this though: if he ever hurt your mom, you don't know how, but you would kill him.[paragraph break][only][if Scene_Dream_About_Stepdad is happening or Scene_Fallout_Going_Home is happening]He is intensely focused on the road in a way that you know is seething anger[else]He is gritting his teeth and is folding and unfolding his fist[end if].".
 Understand "step-dad/step-father/stepdad/stepfather/mark", "step dad/father" as stepdad.
 
 Chapter - Properties
@@ -9772,9 +9924,7 @@ Chapter - Rules and Actions
 Instead of touching dog:
 	say "As you reach out to the dog, [sub_pronoun of dog] lunges as you and you withdraw your hand quickly.";
 
-[
-	Closer Examination
-]
+[ Closer Examination ]
 
 When play begins:
 	now dog is neuter.
@@ -9786,9 +9936,7 @@ After examining the dog two times:
 	now player is dog_experienced;
 	continue the action.
 
-[
-	Dog Barking
-]
+[ Dog Barking ]
 
 Every turn when location is in Region_Blackberry_Area
 	and (a random chance of 1 in 8 succeeds),
@@ -9827,9 +9975,7 @@ Instead of listening when location of player is in Region_Trailer_Outdoors,
 
 Chapter - Responses
 
-[
-	Defaults
-]
+[ Defaults ]
 
 Greeting response for the dog:
 	say "[dog alert].";
@@ -9848,7 +9994,6 @@ To say dog alert:
 
 Default response for dog:
 	say "[dog alert].";
-
 
 
 Part - Dream Dog

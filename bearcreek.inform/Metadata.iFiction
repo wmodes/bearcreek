@@ -8,7 +8,7 @@
         <bibliographic>
             <title>Bear Creek</title>
             <author>Wes Modes</author>
-            <headline>an interactive fiction</headline>
+            <headline>An interactive fiction</headline>
             <genre>Fiction</genre>
             <firstpublished>2020</firstpublished>
             <description>Bear Creek, August 1975.<br/>Looking back, it was that summer, or maybe just that one day that changed everything. KC and the Sunshine Band was on the radio and you were eight years old. A curious daydreamer, on the verge of learning what lay beyond the boundaries of your own little world, and nothing was certain about whether you'd survive the journey.</description>
@@ -24,7 +24,7 @@
         <releases>
             <attached>
                 <release>
-                    <releasedate>2022-11-06</releasedate>
+                    <releasedate>2022-11-11</releasedate>
                     <version>2</version>
                     <compiler>Inform 7</compiler>
                     <compilerversion>6M62</compilerversion>
@@ -34,10 +34,10 @@
         <colophon>
             <generator>Inform 7</generator>
             <generatorversion>6M62</generatorversion>
-            <originated>2022-11-06</originated>
+            <originated>2022-11-11</originated>
         </colophon>
         <glulx>
-            <serial>221106</serial>
+            <serial>221111</serial>
             <release>2</release>
             <compiler>Inform 7 build 6M62</compiler>
             <coverpicture>1</coverpicture>
