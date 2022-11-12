@@ -150,7 +150,7 @@ This is the new_where_can_I_go rule:
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-where can I go rule	"[as the parser]While compass directions won't always work (especially if you don't know which directions are which without a compass), you can usually go to landmarks you can see (GO TO CLEARING or FOLLOW CREEK or ENTER TRAILER). Exits and landmarks are usually listed in the descriptions.[as normal][command clarification break]"
+where can I go rule	"[as the parser]While compass directions won't always work (especially if you don't know which directions are which without a compass), you can usually go to landmarks you can see ([italic type]go to clearing  [roman type] or [italic type]  follow creek [roman type] or [italic type]  enter trailer[roman type]). Exits and landmarks are usually listed in the descriptions.[as normal][command clarification break]"
 
 Chapter - the signs of confusion rule
 
@@ -158,7 +158,7 @@ Chapter - the signs of confusion rule
 
 Table of Smarter Parser Messages (continued)
 rule name		message
-signs of confusion rule		"[as the parser]Try typing LOOK for a description of your surroundings. While compass directions won't always work (especially if you don't know which directions are which), you can usually go to landmarks you can see (GO TO CLEARING or FOLLOW CREEK or ENTER TRAILER). Exits and landmarks are usually listed in the descriptions. [paragraph break]Some of the objects mentioned in the description might be worth a closer look with a command like EXAMINE [get noun example]. You can also TAKE or DROP some things, type INVENTORY to see a list of what you're carrying, OPEN or CLOSE containers or doors, and so on.[as normal][command clarification break]"
+signs of confusion rule		"[as the parser]Try typing LOOK for a description of your surroundings. While compass directions won't always work (especially if you don't know which directions are which), you can usually go to landmarks you can see ([italic type]go to clearing [roman type] or [italic type] follow creek [roman type] or [italic type] enter trailer[roman type]). Exits and landmarks are usually listed in the descriptions. [paragraph break]Some of the objects mentioned in the description might be worth a closer look with a command like [italic type] examine [roman type] [get noun example]. You can also [italic type] take [roman type] or [italic type] drop [roman type] some things, type [italic type] inventory [roman type] to see a list of what you're carrying, [italic type] open [roman type] or [italic type] close [roman type] containers or doors, and so on.[as normal][command clarification break]"
 
 Chapter - stripping niceties
 
@@ -334,7 +334,7 @@ Chapter - Smarter Messages
 
 The parser error internal rule response (E) is "Oh? Do you see that here?".
 
-The can't go that way rule response (A) is "Which direction is that? You might want to use landmarks to navigate".
+The can't go that way rule response (A) is "Which direction is that? You might want to use landmarks to navigate.".
 
 The can't eat unless edible rule response (A) is "[one of]Blecch[or]Ugh[or]Bleurgh[or]Ew[at random].".
 
@@ -1265,7 +1265,7 @@ Carry out exit_listing:
 		say looking_for_available_exits;
 
 To hint_at_navigation:
-	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Which direction is that? You might want to use landmarks to navigate[or]Try using landmarks. For example: GO TO CLEARING[line break]Or even try: GO BACK or GO ON[line break]If you need a reminder, try: WHICH WAY[stopping].";
+	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [italic type]  go to clearing  [roman type][line break]Or try: [italic type]  follow trail  [roman type][line break]Or even: [italic type]  go back  [roman type] or [italic type]  go on  [roman type][line break]If you need a reminder of where you can go, try: [italic type]  which way  [roman type] or simply [italic type]  look[roman type][stopping]";
 
 Part - Compass Navigation
 
@@ -1282,6 +1282,9 @@ Part - Compass Navigation
 
 Yourself can be discouraged_from_compass_navigating.
 Yourself can be aware_of_compass_directions.
+
+When play begins:
+	now player is discouraged_from_compass_navigating.
 
 Every turn when player is not aware_of_compass_directions:
 	now player is discouraged_from_compass_navigating.
@@ -1897,7 +1900,7 @@ To say Title_Card_Epilogue:
 To pause_the_game:
 	say "[paragraph break]Press any key to continue.";
 	wait for any key;
-	[ clear the screen. ]
+	clear the screen.
 	[ pause the game; ]
 
 To section_break:
@@ -5138,11 +5141,11 @@ The scent of Region_Blackberry_Area is "sunshine and dust and the tang of ripe b
 
 Section - Navigation
 
-The return_dest of Region_Blackberry_Area is Room_Grassy_Clearing.
+The return_dest of Region_Blackberry_Area is Room_Lost_in_the_Brambles.
 The forward_dest of Region_Blackberry_Area is Room_Grandpas_Trailer.
-The upstream_dest of Region_Blackberry_Area is Room_Grassy_Clearing.
+The upstream_dest of Region_Blackberry_Area is Room_Lost_in_the_Brambles.
 The downstream_dest of Region_Blackberry_Area is Room_Stone_Bridge.
-The uppath_dest of Region_Blackberry_Area is Room_Grassy_Clearing.
+The uppath_dest of Region_Blackberry_Area is Room_Lost_in_the_Brambles.
 The downpath_dest of Region_Blackberry_Area is Room_Stone_Bridge.
 
 Section - Backdrops
@@ -5192,8 +5195,8 @@ Section - Description
 Room_Lost_in_the_Brambles is a room.
 The printed name is "Lost in the Brambles".
 The casual_name is "lost in the brambles".
-The description is "[one of]You were sure that this was a better spot than where you've been picking all morning. But here too, the biggest ripest berries seem just out of reach. You pick a few ripe berries and drop them in your pail[or]This spot, a little ways from where Honey and Grandpa are picking, has some good berries[stopping]. Under the pine trees, the air smells good.
-[paragraph break]Looking around: [available_exits]
+The description is "[one of]You were sure that this was a better spot than where you've been picking all morning. But here too, the biggest ripest berries seem just out of reach. You pick a few ripe berries and drop them in your pail[or]This spot, a little ways from where Honey and Grandpa are picking, has some good berries[stopping]. Under the pine trees, the air [italic type]smells[roman type] good.
+[paragraph break]Looking around for where you can go: [available_exits]
 [paragraph break][description of backdrop_sunlight]".
 Understand "lost/-- in/-- the/-- brambles" as Room_Lost_in_the_Brambles.
 The scent is "sunshine and that dusty fragrance of pine trees that you remember from hiking with Grandpa in the mountains".
@@ -5201,7 +5204,7 @@ The scent is "sunshine and that dusty fragrance of pine trees that you remember 
 
 Section - Navigation
 
-The available_exits of Room_Lost_in_the_Brambles is "The grassy clearing where Honey and Grandpa have been picking is just down the hill from here."
+The available_exits of Room_Lost_in_the_Brambles is "The grassy clearing where Honey and Grandpa have been picking is just [italic type]down the hill[roman type] from here."
 
 Section - Objects
 
@@ -5231,7 +5234,7 @@ Section - Navigation
 
 Room_Grassy_Clearing is south of Room_Lost_in_the_Brambles and down from Room_Lost_in_the_Brambles.
 
-The available_exits of Room_Grassy_Clearing is "Along the path and down the creek, there's a tangle of blackberry bushes. Up the hill is the blackberry brambles where you've been picking for a while.".
+The available_exits of Room_Grassy_Clearing is "If you [italic type]follow the path[roman type] or [italic type]go down the creek[roman type], there's a tangle of blackberry bushes. [italic type]Up the hill[roman type] is the blackberry brambles where you've been picking for a while.".
 
 Section - Objects and People
 
@@ -5269,7 +5272,7 @@ grandpas_cigarettes are scenery in Room_Grassy_Clearing.
 	The printed name is "cigarettes".
 	The indefinite article is "Grandpa's".
 	The description is "These are Grandpa's cigarettes. Lucky Strikes. He's been smoking since World War Two.
-	[paragraph break][italic type]You didn't know it then, but you had ten more years with Grandpa. It turns out, two packs a day for three or four decades can kill a man.[roman type]".
+	[paragraph break][italic type]You didn't know it then, but you had less than ten more years with Grandpa. It turns out, two packs a day for three or four decades can kill a man.[roman type]".
 	Understand "cig/cigs/cigarette/cigarettes/smokes/pack/tobacco", "lucky strikes/strike", "pack of cig/cigs/smokes/cigarettes" as grandpas_cigarettes.
 	The scent is "mmm, tobacco. You've always liked the smell".
 
@@ -5299,7 +5302,7 @@ Room_Blackberry_Tangle is a room.
 The printed name is "Blackberry Tangle".
 The casual_name is "in the blackberry tangle".
 The description is "There are paths through the brambles, a maze with tantalizing fruit. Although this area is mostly picked since you and Honey and Grandpa came this way when you started picking this morning. You can still find some ripe berries though.
-[paragraph break][available_exits]".
+[paragraph break]Looking for places you can explore: [available_exits]".
 Understand "blackberry/-- tangle/maze" as Room_Blackberry_Tangle.
 
 Section - Navigation
@@ -5309,7 +5312,7 @@ East of Room_Blackberry_Tangle is nowhere.
 [When Scene_Day_Two has begun:
 	East of Room_Blackberry_Tangle is Room_Dappled_Forest_Path.]
 
-The available_exits of Room_Blackberry_Tangle is "Through the blackberry tangle, there's a trail going down along the creek shaded by lush green willow trees. Back the way you came is the clearing where Honey and Grandpa have been picking. ";
+The available_exits of Room_Blackberry_Tangle is "Through the blackberry tangle, you can [italic type]follow the trail[roman type] and [italic type]go down[roman type] along the creek shaded by lush green willow trees. Back the way you came, you can [italic type]go to the clearing[roman type] where Honey and Grandpa have been picking. ";
 
 Section - Objects
 
