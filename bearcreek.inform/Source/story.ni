@@ -107,6 +107,29 @@ Part - Smarter Parser
 
 Include Smarter Parser by Aaron Reed.
 
+To say get_noun_example:
+	let fake_example be false;
+	let noun_example be indexed text;
+	[Check to see if the player tried to reference something nearby, maybe in a command like WALK TO CABINET.]
+	let candidate be indexed text;
+	let last word be indexed text;
+	now last word is word number ( the number of words in the rejected command ) in the rejected command;
+	repeat with item running through probably_visible things:
+		now candidate is printed name of item in lower case;
+		repeat with wordcounter running from 1 to the number of words in candidate:
+			if word number wordcounter in candidate matches the regular expression "\b[last word]":
+				now noun_example is the printed name of item;
+	if noun_example is empty:
+		[Otherwise, choose the most sensible example possible.]
+		if the number of appropriate for taking things which are not enclosed by the player > 0:
+			now noun_example is "[random appropriate for taking thing which is not enclosed by the player]";
+		otherwise if the number of probably_visible things which are not sp_alive > 0:
+			now noun_example is "[random probably_visible thing which is not sp_alive]";
+		otherwise:
+			now noun_example is "[default noun example]";
+			now fake_example is true;
+	say "[noun_example in lower case]".
+
 Part - Response Assistant
 
 Include Response Assistant by Aaron Reed.
@@ -150,7 +173,7 @@ This is the new_where_can_I_go rule:
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-where can I go rule	"[as the parser]While compass directions won't always work (especially if you don't know which directions are which without a compass), you can usually go to landmarks you can see ([italic type]go to clearing  [roman type] or [italic type]  follow creek [roman type] or [italic type]  enter trailer[roman type]). Exits and landmarks are usually listed in the descriptions.[as normal][command clarification break]"
+where can I go rule	"While compass directions won't always work (especially if you don't know which directions are which without a compass), you can usually go to landmarks you can see ([italic type]go to clearing  [roman type] or [italic type]  follow creek [roman type] or [italic type]  enter trailer[roman type]). Exits and landmarks are usually listed in the descriptions.[as normal][command clarification break]"
 
 Chapter - the signs of confusion rule
 
@@ -158,7 +181,7 @@ Chapter - the signs of confusion rule
 
 Table of Smarter Parser Messages (continued)
 rule name		message
-signs of confusion rule		"[as the parser]Try typing LOOK for a description of your surroundings. While compass directions won't always work (especially if you don't know which directions are which), you can usually go to landmarks you can see ([italic type]go to clearing [roman type] or [italic type] follow creek [roman type] or [italic type] enter trailer[roman type]). Exits and landmarks are usually listed in the descriptions. [paragraph break]Some of the objects mentioned in the description might be worth a closer look with a command like [italic type] examine [roman type] [get noun example]. You can also [italic type] take [roman type] or [italic type] drop [roman type] some things, type [italic type] inventory [roman type] to see a list of what you're carrying, [italic type] open [roman type] or [italic type] close [roman type] containers or doors, and so on.[as normal][command clarification break]"
+signs of confusion rule		"Try typing [italic type] look [roman type] for a description of your surroundings. While compass directions won't always work (especially if you don't know which directions are which), you can usually go to landmarks you can see ([italic type]go to clearing [roman type] or [italic type] follow creek [roman type] or [italic type] enter trailer[roman type]). Exits and landmarks are usually listed in the descriptions. [paragraph break]Some of the objects mentioned in the description might be worth a closer look with a command like [italic type] examine [get_noun_example][roman type]. You can also [italic type] take [roman type] or [italic type] drop [roman type] some things, take [italic type] inventory [roman type] to see what you're carrying, [italic type] open [roman type] or [italic type] close [roman type] containers or doors, and so on.[as normal][command clarification break]"
 
 Chapter - stripping niceties
 
@@ -214,7 +237,7 @@ The asking unparseable questions rule is not listed in the Smarter Parser rulebo
 
 [Table of Smarter Parser Messages (continued)
 rule name	message
-asking unparseable questions rule	"[as the parser]Stick with imperitives. It might be more effective to offer verb - noun command like EXAMINE [get noun example] to interact with the story, or LOOK to get a description of your surroundings.[as normal][paragraph break]"]
+asking unparseable questions rule	"[as the parser]Stick with imperitives. It might be more effective to offer verb - noun command like EXAMINE [get_noun_example] to interact with the story, or LOOK to get a description of your surroundings.[as normal][paragraph break]"]
 
 Chapter - the stripping adverbs rule
 
@@ -230,7 +253,7 @@ Chapter - the making assertions rule
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-making assertions rule	"[as the parser]You might want to rephrase your command to start with an imperative verb, like LOOK.[as normal][command clarification break]"
+making assertions rule	"You might want to rephrase that to start with an imperative verb, like [italic type] look[roman type].[command clarification break]"
 
 Chapter - the unnecessary movement rule
 
@@ -240,7 +263,7 @@ The unnecessary movement rule is not listed in the Smarter Parser rulebook.
 
 Table of Smarter Parser Messages (continued)
 rule name		message
-unnecessary movement rule		"[as the parser]If you can see an object, you can usually just interact with it directly without worrying about your position[if player is enclosed by something] (although since you're in or on something, you may need to type EXIT first)[end if]. Try a command like EXAMINE [get noun example] for a closer look at something, LOOK to get a new description of this location, or WHICH WAY to see where you can go[as normal].[line break]"
+unnecessary movement rule		"If you can see an object, you can usually just interact with it directly without worrying about your position[if player is enclosed by something] (although since you're in or on something, you may need to type [italic type] exit [roman type] first)[end if]. Try a command like [italic type] examine [get_noun_example] [roman type] for a closer look at something, [italic type] look [roman type] to get a new description of this location, or [italic type] which way [roman type] to see where you can go[as normal].[line break]"
 
 Chapter - the stripping vague words rule
 
@@ -248,7 +271,7 @@ Chapter - the stripping vague words rule
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-stripping vague words rule	"[as the parser]You might want to be more specific. Try typing LOOK to get a description of your surroundings.[as normal][command clarification break]"
+stripping vague words rule	"You might want to be more specific. Try typing [italic type] look [roman type] to get a description of your surroundings.[as normal][command clarification break]"
 
 Chapter - the stripping pointless words rule
 
@@ -256,7 +279,7 @@ Chapter - the stripping pointless words rule
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-stripping pointless words rule	"[as the parser]Most connecting and comparative words are not necessary.[as normal][command clarification break]"
+stripping pointless words rule	"Most connecting and comparative words are not necessary.[command clarification break]"
 
 Chapter - the stripping failed with rule
 
@@ -272,7 +295,7 @@ Chapter - the gerunds rule
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-no gerunds rule	"[as the parser]You might want to stick with verbs in present tense command form.[as normal][command clarification break]"
+no gerunds rule	"You might want to stick with verbs in present tense command form.[as normal][command clarification break]"
 
 Chapter - the unnecessary possessives rule
 
@@ -296,7 +319,7 @@ Chapter - the too many words rule
 
 Table of Smarter Parser Messages (continued)
 rule name		message
-too many words rule		"[as the parser]You typed a rather long command. You might want to stick to simpler things like TAKE [get noun example].[as normal][paragraph break]"
+too many words rule		"You typed a rather long command. You might want to stick to simpler things like [italic type] take [get_noun_example][roman type].[as normal][paragraph break]"
 
 [TODO: Remove line break when correcting a command]
 [TODO: [run paragraph on] is sus and makes the entire paragraph jacked. Find a better solution wherever it appears.]
@@ -1265,7 +1288,7 @@ Carry out exit_listing:
 		say looking_for_available_exits;
 
 To hint_at_navigation:
-	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [italic type]  go to clearing  [roman type][line break]Or try: [italic type]  follow trail  [roman type][line break]Or even: [italic type]  go back  [roman type] or [italic type]  go on  [roman type][line break]If you need a reminder of where you can go, try: [italic type]  which way  [roman type] or simply [italic type]  look[roman type][stopping]";
+	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [italic type]  go to clearing  [roman type][line break]Or try: [italic type]  follow trail  [roman type][line break]Or even: [italic type]  go back  [roman type] or [italic type]  go on  [roman type][line break]If you need a reminder of where you can go, try: [italic type]  which way  [roman type] or simply [italic type]  look[roman type][stopping].";
 
 Part - Compass Navigation
 
@@ -5244,20 +5267,17 @@ The big_bucket is scenery unopenable open container in Room_Grassy_Clearing.
 	Understand "big/-- bucket" as big_bucket.
 	The big_bucket can be empty, quarter-full, half-full, three-quarter-full, or full.
 	The big_bucket is quarter-full.
-	The scent is "the delicious smell of ripe berries".
+	The scent is "ripe berries".
 
-The honeys_radio is scenery.
+The honeys_radio is improper-named scenery in Room_Grassy_Clearing.
+	It is familiar, switched on, device.
 	The printed name is "transitor radio".
-	It is in Room_Grassy_Clearing.
-	It is a familiar device.
-	Honeys_radio is switched on.
-	The description of the radio is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
+	The description is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
 	Understand "honey's/honeys/grandma's/grandmas/-- portable/-- transistor/-- radio", "knob/cube/woodgrain/plastic/wax", "music" as the honeys_radio.
 	The scent is "ozone".
 	The indefinite article is "Honey's".
-	Include (- with articles "Honey's" "the" "a", -) when defining honeys_radio.
 
-Instead of doing anything to honeys_radio:
+Instead of doing anything except examining to honeys_radio:
 	say "[one of]Honey will kill you if you mess with it.[or]You better leave that alone.[or]Honey gives you a [italic type]look[roman type], and you leave it alone.[cycling]".
 
 Grandpas_shirt is an undescribed thing in Room_Grassy_Clearing.
@@ -5595,7 +5615,7 @@ Instead of doing_some_swimming in Room_Swimming_Hole:
 		drop_all_your_stuff;
 		make underwear wet;
 	else:
-		say "You hesitate. [if clothes are worn]You don't have a bathing suit, so you'd have to strip down to your undies. But the water does look inviting[otherwise]The water is likely to be pretty cold. But the day is pretty hot[end if].";
+		say "You hesitate. [if clothes are worn]You don't have a bathing suit, so you'd have to strip down to your undies. But the water does look inviting. Maybe try again?[otherwise]The water is likely to be pretty cold. But the day is pretty hot.[end if]";
 
 
 Chapter - Room_Crossing
@@ -6025,7 +6045,7 @@ Instead of going to Room_Halfway_Up when player is in Room_Long_Stretch:
 	Increase pinetree_tries_count of player by one;
 	if pinetree_tries_count of player is less than 3:
 		say "[one of]You jump to reach the lowest branch and hang there struggling for a few moments before dropping back to the ground frustrated[or]This time, you get a leg up and hang there like a monkey, but can't quite get up on the lowest branch. You drop down when your arms start shaking[stopping].
-		[paragraph break][one of]You [italic type]know[roman type] you've climbed this tree before and you were probably smaller then too. Maybe you should try again?[or]You pretty sure you've climbed this tree before. You remember that your grandpa always says that the most important character traits are courage, perseverance and self-reliance.[stopping]";
+		[paragraph break][one of]You [italic type]know[roman type] you've climbed this tree before and you were probably smaller then too. Maybe you should try again?[or]You pretty sure you've climbed this tree before. You remember that your grandpa always says that the most important character traits are courage, perseverance, and self-reliance.[stopping]";
 		rule fails;
 	else if pinetree_tries_count of player is not less than 3:
 		say "Using the rise on the uphill side of the tree, you are able to get a hold of a branch and swing your leg over, dangling precariously for a few moments, before pulling yourself upright. After that, the tree is pretty easy to climb[first time]. Although you've now got sap all over your hands[only].";
@@ -6401,12 +6421,11 @@ The description is "This tea is barely worthy of the name, a lukewarm watery som
 
 [Instead of taking tea things,... what? the default's not good enough?]
 
-The sharons_tv is scenery device in Room_Sharons_Trailer.
+The sharons_tv is an improper-named scenery device in Room_Sharons_Trailer.
 	The printed name is "TV".
 	The description is "This is a standard color set, but not as big and fancy as Honey's.".
 	Understand "tv/television/tele/tely/telly/boob/tube/set" as sharons_tv.
 	The indefinite article is "the".
-	Include (- with articles "The" "the" "a", -) when defining sharons_tv.
 
 Knickknacks are scenery.
 	They are in Room_Sharons_Trailer.
@@ -6564,19 +6583,17 @@ A coffee mug is an undescribed unopenable open container on lees_table.
 	Understand "mug/cup/glass", "coffee mug/cup" as coffee mug.
 	The scent is "stale bitter coffee".
 
-The lees_tv is an undescribed fixed in place device in Room_Lees_Trailer.
+The lees_tv is an improper-named undescribed fixed in place device in Room_Lees_Trailer.
 	The printed name is "TV".
 	The description is "This is a tiny portable black and white set with a giant channel changer and bent rabbit ears propped on a crate[if lees_tv is switched on] [what_show_is_playing][else].[end if]".
 	Understand "tv/television/tele/tely/telly/boob/tube/set/crate/box/antenna/antennas/antena", "boob tube", "rabbit ears" as lees_tv.
 	The indefinite article is "the".
-	Include (- with articles "The" "the" "a", -) when defining lees_tv.
 
-The purple_heart is a familiar special thing in Limbo.
+The purple_heart is an improper-named familiar special thing in Limbo.
 	The printed name is "Purple Heart".
 	The description is "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like Geroge Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break][paragraph break][italic type]What will happen if your mom discovers this? You determine to hide the medal and not let her find out.[roman type][only].".
 	Understand "war/service/purple/-- medal/heart/ribbon" as purple_heart.
 	The indefinite article is "the".
-	Include (- with articles "The" "the" "a", -) when defining purple_heart.
 
 Section - Backdrops & Scenery
 
@@ -6692,12 +6709,11 @@ Some jam_jars are scenery in Room_Grandpas_Trailer.
 	The description of the jam_jars is "Jars and lids and pots and pans and paraffin and tongs and boiling water are laid out strategically all over the kitchen. Who knew making jam was so complicated?".
 	Understand "jar", "lid/lids", "parafin/paraffin/wax", "tongs", "water", "boiling" as jam_jars.
 
-The Honeys_tv is undescribed fixed in place device in Room_Grandpas_Trailer.
+Honeys_tv is improper-named undescribed fixed in place device in Room_Grandpas_Trailer.
 	The printed name is "TV".
 	The description is "This is Honey's big color TV in its wooden case, pretty much like the one you have at home with mom, but with lighter wood. On weekend nights you lie on the floor with Grandpa and [one of]watch [italic type]Bowling for Dollars[roman type][or]watch [italic type]Wild World of Animals[roman type][or]sometimes, if you and mom aren't going home early on Sunday night, watch [italic type]Wonderful World of Disney[roman type][at random].".
 	Understand "honeys/honey's/-- big/color/-- television/tv/tele/tely/telly/boob/tube/set" as honeys_tv.
 	The indefinite article is "the".
-	Include (- with articles "The" "the" "a", -) when defining honeys_tv.
 
 The floral print couch is a lie-able surface in Room_Grandpas_Trailer.
 		The description is "Sometimes you curl up on Honey's floral print couches with a crocheted afghan and a book and spend the afternoon.".
@@ -8056,18 +8072,16 @@ The printed name is "photos".
 The description is "These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's you, Honey, and Grandpa on a visit to their house. You look like you're about 10. This must have been just before Mark and mom moved you to Idaho. After that, you saw Honey and Grandpa only in summers and sometimes Christmas.[paragraph break]This is you and your best friend from 6th grade. You both had a crush on the same person, but decided if you had to, you would share them.[paragraph break]Here's a photo Honey and Grandpa sent from a trip they took to visit family in Kansas City, Missouri.[paragraph break]Here's a photo of your dog Dodo, smiling with his tougue out, as always. When you moved to Idaho, your stepdad said there would be no room for a dog and took him to the pound.[paragraph break]Here's mom and you at Christmas. She looks so old though you don't look much older than 15.[paragraph break]Here's Grandpa, Honey, and you at the Craters of the Moon when they came to visit. You have your arms around your Grandpa. This couldn't have been too many years before he died.[paragraph break]This is whatshisname? Greg? and you in your first car, a yellow Corolla before leaving home on your cross-country trip when you were 17. You never did come back except to briefly visit your mom.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you she hated that picture. They look like they are just about to crack up laughing. You miss them.[paragraph break]That's it. A young life in a dozen photos."
 Understand "photos/photo/honey/grandpa/mom/friend/dodo/dog" as photos_from_home.
 
-Your_keys is a thing.
+Your_keys is an improper-named thing.
 The printed name is "keys".
 The description is "A keyring containing your car keys, house keys, and who knows what these other ones are?".
 The indefinite article is "your".
-	Include (- with articles "your" "the" "a", -) when defining your_keys.
 
-Your_wallet is a thing.
+Your_wallet is an improper-named thing.
 The printed name is "wallet".
 The description is "It's just your wallet".
 Understand "wallet/id/license" as your_wallet.
 The indefinite article is "your".
-	Include (- with articles "your" "the" "a", -) when defining your_wallet.
 
 Section - Backdrops and Scenery
 
@@ -8164,64 +8178,58 @@ Yourself has a decision called going_home_decision.
 
 Chapter - Possessions
 
-Some tennis_shoes are an undescribed unmentionable floating thing.
+Some tennis_shoes are an improper-named undescribed unmentionable floating thing.
 	The printed name is "tennis shoes".
 	Tennis_shoes are worn by the player.
 	The description of tennis_shoes is "Your white and black tennies[if tennis_shoes are wet], now soaking wet[end if]".
 	Understand "sneakers/shoes/shoe/tennies/feet" as tennis_shoes.
 	The dry_time of tennis_shoes is 10.
 	The indefinite article of tennis_shoes is "your".
-	Include (- with articles "Your" "your" "a", -) when defining tennis_shoes.
 
-Some clothes are an undescribed unmentionable floating thing.
+Some clothes are an improper-named undescribed unmentionable floating thing.
 	Clothes are worn by the player.
 	The description of clothes is "Your pants and blue Mickey Mouse T-shirt".
 	Understand "clothing", "dress", "pants", "tshirt", "t-shirt", "tee", "skirt", "blouse" as clothes.
 	The dry_time of clothes is 10.
 	The indefinite article of clothes is "your".
-	Include (- with articles "Your" "your" "a", -) when defining clothes.
 
-Some underwear are an undescribed unmentionable floating thing.
+Some underwear are an improper-named undescribed unmentionable floating thing.
 	Underwear is worn by the player.
 	The description of underwear is "Mom buys you plain white cotton underwear[if underwear is wet], now slightly damp[end if]."
 	Understand "panties", "drawers", "skivvies", "undies", "bra", "shorts", "jockeys", "boxers", "briefs" as underwear.
 	The dry_time of underwear is 8.
 	The indefinite article of underwear is "your".
-	Include (- with articles "Your" "your" "a", -) when defining underwear.
 
-Your hands are an undescribed unmentionable thing.
-	Your hands are part of the player.
-	The printed name is "your hands".
+Players_hands are an improper-named undescribed unmentionable thing.
+	Players_hands are part of the player.
+	The printed name is "hands".
 	The description is "Your fingers are stained blue with blackberries[if player is sappy] and spotted with pine pitch[end if].".
-	Understand "hand", "fingers", "palms", "pine/tree sap", "pitch" as hands.
-	The indefinite article of hands is "your".
+	Understand "hand/hands/finger/fingers/palm/palms", "pine/tree/-- sap/pitch" as players_hands.
+	The indefinite article is "your".
 	The scent is "[if player is not sappy]blackberries[else]tangy pine[end if]".
-	Include (- with articles "Your" "your" "a", -) when defining hands.
 
-Your arm is an undescribed unmentionable thing.
-	Your arm is part of the player.
-	The printed name is "your arm".
-	The description of arm is "Looking carefully, you can see marks on your arm where your step-dad grabbed you, and it's still a little tender".
-	The indefinite article of arm is "your".
-	Understand "arms/forearm/forearms/bicep/biceps" as your arm.
-	Include (- with articles "Your" "your" "a", -) when defining arm.
+Players_arm is an improper-named undescribed unmentionable thing.
+Players_arm is part of the player.
+The printed name is "arm".
+The description is "Looking carefully, you can see marks on your arm where your step-dad grabbed you, and it's still a little tender".
+The indefinite article is "your".
+Understand "arm/arms/forearm/forearms" as Players_arm.
 
-Instead of examining arm:
+Instead of examining players_arm:
 	now player is perceptive;
 	now player is viewed_arm_injury;
 	continue the action;
 
-A pail is an unopenable floating open container.
-	The printed name is "your pail".
-	It is held by the player.
-	The description of the pail is "This is [one of]a purple pail with a yellow handle. You recognize this pail from your trip to the beach with mom. She had to run out and get it when the waves tried to steal it. You thought she'd be mad, but you both laughed and laughed. That was a long time ago[or]your purple beach pail[stopping][if pail is empty]. The pail is empty, but it is still stained from juice at the bottom[else if pail is quarter-full]. It has a good number of ripe berries in it and a puddle of purple juice[else if pail is half-full]. It is about half full of berries[else if pail is three-quarter-full]. It is getting pretty full of blackberries[otherwise]. ripe blackberries heap over the rim of the pail. You are careful not to spill them[end if]."
-	Understand "purple/-- pail/juice" as pail.
+The pail is an improper-named unopenable floating open container held by the player.
+The printed name is "pail".
+The description of the pail is "This is [one of]a purple pail with a yellow handle. You recognize this pail from your trip to the beach with mom. She had to run out and get it when the waves tried to steal it. You thought she'd be mad, but you both laughed and laughed. That was a long time ago[or]your purple beach pail[stopping][if pail is empty]. The pail is empty, but it is still stained from juice at the bottom[else if pail is quarter-full]. It has a good number of ripe berries in it and a puddle of purple juice[else if pail is half-full]. It is about half full of berries[else if pail is three-quarter-full]. It is getting pretty full of blackberries[otherwise]. ripe blackberries heap over the rim of the pail. You are careful not to spill them[end if]."
+Understand "purple/-- pail/juice" as pail.
+The indefinite article is "your".
 
 A pail can be empty, quarter-full, half-full, three-quarter-full, or full.
 	It is quarter-full.
 
 The dry_time of pail is 1.
-	Include (- with articles "Your" "your" "a", -) when defining pail.
 
 Instead of searching pail:
 	try examining pail.
@@ -8896,8 +8904,8 @@ Sharon is a _female woman in Room_D_Loop.
 	The initial appearance is "[sharons_initial_appearance]. ".
 	The description is "[sharon_description].".
 	Understand "cat lady", "Sharon", "lady", "Sharon", "Shannon", "curls/makeup", "high heels", "evening/-- dress" as Sharon.
+	Sharon is improper-named.
 	The indefinite article is "the".
-	Include (- with articles "The" "the" "a", -) when defining Sharon.
 
 To say sharons_initial_appearance:
 	if Scene_Day_One is happening:
@@ -9898,14 +9906,13 @@ Book - Animals
 
 Part - Dog
 
-The dog is a _critter animal in Room_Dirt_Road.
+The dog is an improper-named _critter animal in Room_Dirt_Road.
 	The initial appearance is "[if not loose]There's a dog behind the fence, alternately digging and barking[otherwise]The dog is wandering in the road[end if].".
 	The description of the dog is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. [one of][sub_pronoun_cap of dog] reminds you of Uncle Buddy's dog that mom was taking care of and how when you tried to feed it and get the spoon, it bit you.
 	[paragraph break][sub_pronoun_cap of dog] makes you [nervous]. But there's something about this dog.[or]
 	[paragraph break]Looking more carefully, you notice that it has prominent teats. So it's a girl dog. Maybe she's pregnant or was. You are pleased with yourself for noticing. You know about this stuff because of Mika who had kittens.[or]The dog makes you [nervous]. [if dog is not loose]Can [sub_pronoun of dog] get out of there[else]What do you do now that [sub_pronoun of dog][']s loose[end if]?[stopping]".
 	Understand "yellow/guard/-- dog/bitch/mutt/canine/pup/puppy/doge/cujo/kujo", "german shepherd", "doberman", "pitbull" as the dog.
 	The indefinite article of dog is "the".
-	Include (- with articles "The" "the" "a", -) when defining dog.
 
 After examining the dog two times:
 	now dog is _female;
@@ -10006,13 +10013,12 @@ Default response for dog:
 
 Part - Dream Dog
 
-The dream_dog is a _critter animal in Room_Dream_Dirt_Road.
+The dream_dog is an improper-named _critter animal in Room_Dream_Dirt_Road.
 	The printed name is "dog".
 	The initial appearance is "Oh no. The dog is wandering in the road. The dog perks up [pos_pronoun of dog] ears as you approach.".
 	The description is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. Do you [italic type]still[roman type] have to get past this damn dog?".
 	Understand "dogs/bitch/mutt/canine/yellow/medium/pointy", "doberman/shepher/cujo/kujo/puppy", "german shepherd", "guard dog" as the dream_dog.
 	The indefinite article of dream_dog is "the".
-	Include (- with articles "The" "the" "a", -) when defining dream_dog.
 	Understand "yellow/guard/-- dog/bitch/mutt/canine/pup/puppy/doge/cujo/kujo", "german shepherd", "doberman", "pitbull" as the dream_dog.
 
 Chapter - Properties
