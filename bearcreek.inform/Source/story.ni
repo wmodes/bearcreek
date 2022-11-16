@@ -827,8 +827,8 @@ Understand
 Carry out laughing:
 	say "You [one of]laugh out loud[or]chuckle heartily[or]giggle loudly[at random][run paragraph on]";
 	if people who are not the player are visible and a random chance of 1 in 4 succeeds:
-		let reactor be a random visible person who is not the player;
-		say " and [Reactor] [one of]looks at[or]glances over at[or]smiles at[at random] you";
+		let reactor be a random touchable person who is not the player;
+		say " and [the reactor] [one of]looks at[or]glances over at[at random] you";
 	say ".[line break]";
 
 Laughing at is an action applying to one thing.
@@ -838,7 +838,7 @@ Carry out laughing at:
 	if the noun is not a person:
 		try laughing;
 	otherwise:
-		say "[Noun] looks first confused and then hurt. You feel bad for laughing.";
+		say "[The noun] looks first confused and then hurt. You feel bad for laughing.";
 		now player is not compassionate.
 
 
@@ -853,18 +853,18 @@ Carry out yelling:
 	say "Your [one of]scream echoes off the surrounding hills[or]yell is heard far and wide[or]shriek causes a nearby flock of birds to take flight[at random][run paragraph on]";
 	if people who are not the player are visible:
 		[ let affected people be the list of visible people who are not the player; ]
-		let affected_people be the list of people who are not the player enclosed by location of player;
+		let affected_people be the list of touchable people who are not the player;
 		let number_of_affected_people be the number of entries in affected_people;
 		if the number_of_affected_people is one:
-			say " -- [affected_people] stares at you in surprise";
+			say " -- [affected_people with indefinite articles] stares at you in surprise";
 		else if the number_of_affected_people is two:
-			say " -- [affected_people] look at you in surprise";
+			say " -- [affected_people with indefinite articles] look at you in surprise";
 		else:
 			say " -- everyone looks at you in surprise";
 	else:
 		say " after which [one of]there is a profound silence[or]several minutes go by before the birds resume their song[or]your throat is sore[at random]";
 	say ".[line break]";
-
+	
 
 Chapter - Petting
 
@@ -898,16 +898,16 @@ Carry out piling:
 		now player is dirty;
 		Now player is resourceful;
 
-	Part - Howdy?
+Part - Howdy?
 
-	[howdy / how are you doing? asking about self]
+[howdy / how are you doing? asking about self]
 
-	Understand "howdy", "how do", "how are/-- you/ya doing/feeling/--", "how is your day/morning/afternoon/evening", "what is/-- up/going on/--", "what's up/going on/--" as asking_howdy.
-	asking_howdy is an action applying to nothing.
+Understand "howdy", "how do", "how are/-- you/ya doing/feeling/--", "how is your day/morning/afternoon/evening", "what is/-- up/going on/--", "what's up/going on/--" as asking_howdy.
+asking_howdy is an action applying to nothing.
 
-	Carry out asking_howdy:
-		let subject be the current interlocutor;
-		try quizzing subject about subject.
+Carry out asking_howdy:
+	let subject be the current interlocutor;
+	try quizzing subject about subject.
 
 Chapter - Thanking
 
@@ -916,36 +916,47 @@ The default thanks response rules have default success.
 
 The try default response rule is listed last in the default thanks response rules.
 
-Report thanking (this is the default thanks rule):
-  abide by the default thanks response rules for the current interlocutor.
-
-thanking is an action applying to one visible thing.
+Thanking_someone is an action applying to one thing.
 
 Understand
-	"thanks",
-	"thank you/--",
+	"thank [something]",
 	"thanks [something]",
 	"thank you/-- [something]",
 	"say thanks/thank you/-- to [something]",
-	"tell [something] thanks/thank you/--" as thanking.
+	"tell [something] thanks/thank you/--" as thanking_someone.
 
-Check thanking:
-	[say "(DEBUG: checking thanking)";]
-	if noun is not a person or noun is player:
+Check thanking_someone:
+	[ say "(DEBUG: checking thanking noun)"; ]
+	if noun is the player:
 		say "You thank the heavens." instead;
-	else if noun is not visible:
-		say "You'll have to find them first.";
+	else if noun is not a person:
+		say "You say a solemn thank you to [the noun]." instead;
 
-Carry out thanking:
-	[say "(DEBUG: carrying out thanking)";]
-	now current interlocutor is noun;
+Carry out thanking_someone:
+	[ say "(DEBUG: carry out thanking noun)"; ]
+	abide by the default thanks response rules for noun.
 
-Rule for supplying a missing noun when thanking:
-	let subject be a random [other] person enclosed by the location;
-	if subject is not a person and subject is not an animal:
-		say "You thank the heavens.";
+test thank-dog with "d.teleport to dirt road.thank dog";
+
+Thanking_no_one is an action applying to nothing.
+
+Understand
+	"thank you",
+	"thanks",
+	"say thanks/thank you/--"
+	as thanking_no_one.
+
+Carry out thanking_no_one:
+	[ say "(DEBUG: carrying out thanking)"; ]
+	[ say "(DEBUG: current interlocutor is [current interlocutor])"; ]
+	if current interlocutor is touchable:
+		try thanking_someone current interlocutor;
 	else:
-		now the noun is the subject;
+		let subject be a random touchable person who is not the player;
+		if subject is not nothing:
+			try thanking_someone subject;
+		else:
+			say "You thank the heavens.";
 
 Chapter - Attacking
 
@@ -954,7 +965,7 @@ Instead of attacking a thing that is not a person:
 
 Instead of attacking someone (called the subject):
 	say "[one of]Sometimes you get so mad you wish you had a laser ray that could just zap somebody dead. No, better, a disappearance ray that made someone disappear like they'd never ever existed.
-	[paragraph break]But then you think about it a bit, and wonder: What if you disappeared [subject] and [sub_pronoun of subject] was meant to help you or save your life or something later and you'd never know it because [sub_pronoun of subject] never existed? Or if you had a Disappear Ray, why couldn't someone else have one? And what would keep them from disappearing you?[or]If you knew Kung Fu you'd chop [obj_pronoun of subject] to pieces. But then what if [subject] didn't die right away and [sub_pronoun of subject] just laid there suffering? Could you finish [obj_pronoun of subject] off while [sub_pronoun of subject] laid there helpless?[or]What is you hurt [obj_pronoun of subject] and you got put in jail and you never saw your mom again?[cycling][line break]The thought makes you [nervous]. Maybe violence isn't the answer."
+	[paragraph break]But then you think about it a bit, and wonder: What if you disappeared [the subject] and [sub_pronoun of subject] was meant to help you or save your life or something later and you'd never know it because [sub_pronoun of subject] never existed? Or if you had a Disappear Ray, why couldn't someone else have one? And what would keep them from disappearing you?[or]If you knew Kung Fu you'd chop [obj_pronoun of subject] to pieces. But then what if [the subject] didn't die right away and [sub_pronoun of subject] just laid there suffering? Could you finish [obj_pronoun of subject] off while [sub_pronoun of subject] laid there helpless?[or]What is you hurt [obj_pronoun of subject] and you got put in jail and you never saw your mom again?[cycling][line break]The thought makes you [nervous]. Maybe violence isn't the answer."
 
 Chapter - Singing
 
@@ -974,15 +985,15 @@ Instead of singing:
 
 To say sing_action:
 	if a random chance of 1 in 3 succeeds:
-		say "You make up a song about [one of]killer red ants that eat everyone[or]picking blackberries until your fingers are bloody[or]riding the train out of town and living like a hobo[at random] [one of][or]to the tune of 'When You Need a Friend'[or]to the tune of 'Baby I'm a Want You'[or]to the tune of 'American Pie'[at random].[run paragraph on]";
+		say "You make up a song about [one of]killer red ants that eat everyone[or]picking blackberries until your fingers are bloody[or]riding the train out of town and living like a hobo[at random][one of][or] to the tune of  'When You Need a Friend'[or] to the tune of  'Baby I'm a Want You'[or] to the tune of  'American Pie'[at random]";
 	else if player is in Region_Blackberry_Area:
-		say "You sing along to [current_song], but you [one of]only know the chorus[or]only know some of the words[or]have to make up most of it[or]don't know most of the words, and you don't really care[at random].[run paragraph on]";
+		say "You sing along to [current_song],  but you [one of]only know the chorus[or]only know some of the words[or]have to make up most of it[or]don't know most of the words, and you don't really care[at random]";
 	else:
-		say "You sing a little bit of one of your favorite songs, [one of]'Knock Three Times on the Ceiling If You Want Me'[or]'Before the Next Teardrop Falls'[or]'Thank God I'm a Country Boy'[or]'He Don't Love You Like I Love You'[or]'How Sweet It Is To Be Loved By You'[or]'Kung Fu Fighting'[at random], but you [one of]only know the chorus[or]don't really know the words[or]have to make up most of it[or]but you don't know most of the words, but you don't really care[at random].[run paragraph on]";
-	if people who are not the player are visible and a random chance of 1 in 3 succeeds:
-		let reactor be a random visible person who is not the player;
-		say " [Reactor] [one of]looks at[or]glances over at[or]smiles at[at random] you.[run paragraph on]";
-	say "[line break]";
+		say "You sing a little bit of one of your favorite songs, [one of]'Knock Three Times on the Ceiling If You Want Me'[or]'Before the Next Teardrop Falls'[or]'Thank God I'm a Country Boy'[or]'He Don't Love You Like I Love You'[or]'How Sweet It Is To Be Loved By You'[or]'Kung Fu Fighting'[at random], but you [one of]only know the chorus[or]don't really know the words[or]have to make up most of it[or]but you don't know most of the words, but you don't really care[at random]";
+	if people who are not the player are touchable and a random chance of 1 in 3 succeeds:
+		let reactor be a random touchable person who is not the player;
+		say ". [The reactor] [one of]looks at[or]glances over at[at random] you";
+	say ".";
 
 Chapter - Jumping
 
@@ -1170,7 +1181,10 @@ Last when play begins (this is the Remembering update remembered positions for f
 
 Every turn (this is the Remembering update remembered positions of things rule):
 	unless in darkness:
-		repeat with item running through things that are enclosed by the location:
+		let all_things be list of things that are enclosed by the location;
+		add the list of backdrops in location to all_things;
+		[ say "Remembering: [all_things]"; ]
+		repeat with item running through all_things:
 			if remembered location of item is not holder of item:
 				if item is visible:
 					now the remembered location of item is the holder of item.
@@ -1211,7 +1225,7 @@ For saying the location name of a supporter (called the holder) (this is the Rem
 
 A room has some text called casual_name.
 
-The Remembering saying room name rule response (A) is "[the casual_name of the place]".
+The Remembering saying room name rule response (A) is "[if casual_name of the place is not empty][the casual_name of the place][else][the printed name of the place][end if]".
 
 [
 	Deciding scope and Reporting
@@ -1270,8 +1284,6 @@ To say looking_for_available_exits:
 	say "You take a quick look around you: [available_exits of location][line break]";
 
 Part - Navigation Hints
-
-[TODO: Check to see if we can hook this up with similar features of Aaron Reed's Better Parser]
 
 exit_listing is an action applying to nothing.
 Understand
@@ -1478,9 +1490,10 @@ The new vaguely going rule is listed instead of the block vaguely going rule in 
 This is the new vaguely going rule:
 	if examining:
 		try looking;
-		continue the action;
+		[ continue the action; ]
 	else:
   		try going_on;
+	rule fails.
 
 Going_upstream is an action applying to nothing.
 Understand
@@ -1961,7 +1974,7 @@ To do Sharon_Teatime_Premonition:
 	queue_report "[italic type]A sudden thought: What if you are here talking to the Cat Lady and something happens to your Grandpa or Honey? Or worse, your mom? You struggle to think about something else.[roman type]" at priority 1.
 
 To say Lee_Invite_Premonition:
-	say "[italic type]You remember your grandma's warning and suddenly feel [nervous], but something tells you it will be okay. You couldn't say why, but you trust Lee.[roman type]".
+	say "[italic type]You remember your grandma's warning and suddenly feel [nervous], but something tells you it will be okay. You couldn't say why, but you trust Lee[roman type]".
 
 When Scene_Bringing_Lunch begins:
 	Premonition_About_Something_Wrong in 30 turns from now;
@@ -2599,7 +2612,7 @@ Does the player mean picking backdrop_berries:
 	it is very likely.
 Does the player mean doing anything except picking backdrop_berries:
 	it is unlikely.
-["Does the player mean" rules clarify the noun, not the verb. I think the following are unneeded, but not sure]
+[TODO: "Does the player mean" rules clarify the noun, not the verb. I think the following are unneeded, but not sure]
 Does the player mean doing anything except taking or picking handful_of_berries:
 	it is very likely.
 Does the player mean doing anything to berries_in_pail:
@@ -2637,8 +2650,12 @@ To say pick_berries:
 Instead of eating backdrop_berries:
 	say "[pick_berries] [eat_berries].";
 
-Instead of inserting backdrop_berries into something:
-	try inserting pail into second noun.
+[ why did this even exist? the result was:
+>put berries in pail
+(the backdrop_berries in the pail)
+You can't put something inside itself.]
+[ Instead of inserting backdrop_berries into something:
+	try inserting pail into second noun. ]
 
 Section - Berries in the pail
 
@@ -2667,21 +2684,18 @@ Instead of drinking berries_in_pail:
 Instead of dropping berries_in_pail:
 	say "Now why would you want to drop all of those beautiful berries you picked? You can't bring yourself to do it.".
 
-[procedural rules are removed.]
 [this allows us to things to the berries (dropping them, eating them, feeding them to dog, etc) without taking them out of pail]
-[Procedural rule while doing anything to the berries_in_pail:
-	ignore the carrying requirements rule;
-	ignore the can't show what you haven't got rule;]
-
 The carrying requirements rule does nothing if doing anything to the berries_in_pail.
 
 The can't show what you haven't got rule does nothing if doing anything to the berries_in_pail.
 
-Instead of inserting berries_in_pail into something:
-	try inserting pail into second noun.
+[What was this for??]
+[ Instead of inserting berries_in_pail into something:
+	try inserting pail into second noun. ]
 
 Instead of taking berries_in_pail when player holds pail and player is in Region_Blackberry_Area:
 	try picking backdrop_berries;
+
 Instead of taking berries_in_pail when player holds pail and player is not in Region_Blackberry_Area:
 	say "There are too many to hold in your hands. You can eat some though. Or better yet, when your pail gets full, dump them in Honey and Grandpa's bucket for jam.";
 
@@ -2693,6 +2707,8 @@ To say eat_berries:
 Section - Berries in Hand
 
 [the handful of ripe berries, that is, the berries we can hold ]
+
+[TODO: Consider eliminating the complexities of another berry object by making it so player cannot drop pail - then berries just go into the pail]
 
 A handful_of_berries is a sinking edible thing.
 	The printed name is "handful of ripe berries".
@@ -2708,16 +2724,12 @@ Instead of eating handful_of_berries:
 Section - The Pail
 
 [TODO: oops.
-	>put berries in pail
-	You can't put something inside itself
-]
-
-[TODO: oops.
 	>put sandwich in pail
 	You put the tuna_sandwich into your pail
 ]
 
 Instead of inserting handful_of_berries into pail:
+	say "2nd noun: [second noun]";
 	put_berries_in_pail.
 
 Instead of taking berries_in_pail when pail is not held by player and pail is visible:
@@ -2808,6 +2820,7 @@ Instead of inserting something into big_bucket:
 		now berries_in_pail is in Limbo;
 	else if noun is backdrop_berries:
 		if pail is visible:
+			[why is this here?]
 			try inserting pail into second noun;
 		else:
 			say "You pick some berries into the big bucket.";
@@ -3186,6 +3199,8 @@ Show	Channel	Index	Reaction
 "Guiding Light"	7	5	"At least this soap opera isn't in a hospital. It's a court room instead. But the people are still doing the same things, yelling at each other and crying and stuff."
 
 Chapter - The Train
+
+[TODO: Should we head the train in dreams? Should we hear it in epilogue? Probably not.]
 
 The distant_train is scenery. 
 The printed name is "distant train".
@@ -5162,6 +5177,7 @@ Part - Region_Blackberry_Area
 Section - Description
 
 Region_Blackberry_Area is a region.
+The printed name is "in the brambles down by the creek".
 Room_Lost_in_the_Brambles, Room_Grassy_Clearing, Room_Blackberry_Tangle, Room_Willow_Trail, Room_Lost_Trail, Room_Dappled_Forest_Path are in Region_Blackberry_Area.
 The scent of Region_Blackberry_Area is "sunshine and dust and the tang of ripe blackberries".
 
@@ -5179,13 +5195,15 @@ Section - Backdrops
 Some backdrop_blackberry_brambles is backdrop in Region_Blackberry_Area.
 	The printed name is "berry brambles".
 	The description is "[if player is in Room_Willow_Trail]The blackberry brambles are thinner here, forming prickly walls on either side of the trail[otherwise]The brambles are as high as you are, higher actually[end if]. They are heavy with berries, the very ripest ones always just out of reach."
-	Understand "brambles/bramble/bushes/bush/thicket/vines/plant" as backdrop_blackberry_brambles.
+	Understand "berry/-- brambles/bramble/bushes/bush/thicket/vines/plant" as backdrop_blackberry_brambles.
 
 Some backdrop_berries are backdrop in Region_Blackberry_Area.
 	The printed name is "bunch of ripe berries".
 	The description is "There are some big, ripe berries over there. If you could reach just a little bit farther or maybe get in there, maybe you could reach them."
 	Understand "bunch/handful/lots/-- of/-- ripe/big/-- black/-- blackberries/blackberry/berries/berry" as backdrop_berries.
 	The scent is "mmm, blackberry jam, blackberry pie, yum".
+
+[TODO: Somewhere there is a "radio" "out of play" but it really should be "honey's_radio"]
 
 Some backdrop_paths are backdrop in Region_Blackberry_Area.
 	The printed name is "paths".
@@ -7962,58 +7980,6 @@ Instead of going_on when player is in Room_Dream_Dirt_Road:
 	else:
 		try waking up;
 
-Chapter - Room_Dream_Dirt_Road
-
-Section - Description
-
-Room_Dream_Dirt_Road is a room.
-The printed name is "Dirt Road".
-The casual_name is "in a dream".
-The description is "The dirt road slopes down as it runs along the creek before turning into a trail over the stone bridge. There is a field full of tall weeds and junk cars separated by a chainlink fence. There is a sizable hole dug under the fence.".
-The scent is "sunshine and dust".
-Understand "Dream Dirt Road" as Room_Dream_Dirt_Road
-
-
-Section - Navigation
-
-Room_Dream_Dirt_Road is east of Room_Chryse_Planitia.
-
-The available_exits of Room_Dream_Dirt_Road are "The old dirt road that runs uphill is vague. Back toward the old stone bridge, the road narrows to a ragged trail but after that it gets fuzzy.[if dog_free_to_go is true] Time to go on or wake up.[end if]"
-
-Section - Objects and People
-
-[The dog is in Room_Dream_Dirt_Road]
-
-[There is a dog here defined in her own section below.]
-
-Section - Backdrops and Scenery
-
-Someone's field is backdrop in Room_Dream_Dirt_Road.
-
-The road is backdrop in Room_Dream_Dirt_Road.
-
-A chainlink fence is backdrop in Room_Dream_Dirt_Road.
-
-Some old junk cars are backdrop in Room_Dream_Dirt_Road.
-
-Some tall weeds are backdrop in Room_Dream_Dirt_Road.
-
-Some tall grass are backdrop in Room_Dream_Dirt_Road.
-
-Section - Rules and Actions
-
-[Transition text]
-Instead of going to Room_Dream_Dirt_Road when player is in Room_Chryse_Planitia:
-	say "As you walk, you look at your feet and notice that the dust has changed to a more familiar color.";
-	continue the action.
-
-[keep player here until they finish their convo with dog]
-Instead of going_on when player is in Room_Dream_Dirt_Road:
-	if dog_free_to_go is not true:
-		say "You're pretty sure, the dog will not let you.";
-	else:
-		try waking up;
-
 
 Chapter - Room_In_Car_With_Parents
 
@@ -8488,7 +8454,7 @@ Response of Honey when asked-or-told about Mom:
 Response of Honey when asked-or-told about topic_dreams:
 	say "'What do you think, [honeys_nickname]?' Honey asks, 'Your grandpa only dreams about fishing. Me, I don't sleep enough these days to dream. But I get pretty good at crosswords.'".
 
-Response of Honey when asked-or-told about topic_berries:
+Response of Honey when asked-or-told about backdrop_berries or topic_berries:
 	say "'I'd like you to pick one more pail before you go wondering off,' she says.".
 
 Response of Honey when asked-or-told about bucket:
@@ -8743,13 +8709,12 @@ Response of Grandpa when asked-or-told about topic_creek:
 Response of Grandpa when asked-or-told about topic_indians:
 	say "'The Miwok people used to live in these hills along Bear Creek,' Grandpa says, 'You know, there are still remains of houses and petroglyphs, those are drawings on rocks, made by Indians who lived here long before we came here.'".
 
-Response of Grandpa when asked-or-told about topic_berries:
-[Response of Grandpa when asked about backdrop_berries or told about backdrop_berries:]
+Response of Grandpa when asked-or-told about backdrop_berries or topic_berries:
 	say "'How you doing, [grandpas_nickname]?' Grandpa [grandpa_stuff]. 'You helping your Honey and Grandpa make blackberry jam?'".
 
 [TODO: Grandpa doesn't respond here]
 
-Response of Grandpa when asked-or-told about bucket:
+Response of Grandpa when asked-or-told about big_bucket:
 	say "[if Scene_Bringing_Lunch has not happened]'That's our berry pickin' bucket, [grandpas_nickname]. Soon as we get that filled up I'm gonna take it up to your Aunt Mary,' Grandpa says. 'You going to help me?'[else if Scene_Bringing_Lunch is happening]'Got to take this up to Mary, so she can turn this into jam,' Grandpa says. 'You gonna help your old Grandpa get this up to the house?'[else]'I gotta get this down to your Honey before she needs to dump her pail,' Grandpa says. 'You wanna walk with me?'[end if]".
 
 [TODO ensure that response is approp for day 2]
@@ -8901,12 +8866,11 @@ Part - Sharon
 
 [TODO: Double check the entire teatime seq]
 
-Sharon is a _female woman in Room_D_Loop.
+The Sharon is an improper-named _female woman in Room_D_Loop.
 	The printed name is "Cat Lady".
 	The initial appearance is "[sharons_initial_appearance]. ".
 	The description is "[sharon_description].".
 	Understand "cat lady", "Sharon", "lady", "Sharon", "Shannon", "curls/makeup", "high heels", "evening/-- dress" as Sharon.
-	Sharon is improper-named.
 	The indefinite article is "the".
 
 To say sharons_initial_appearance:
@@ -9088,7 +9052,7 @@ Response of Sharon when asked-or-told about Mom:
 Response of Sharon when asked-or-told about Dad:
 	say "'I didn't know your dad, [sharons_nickname], but I heard he was a very charming man,' the Cat Lady says.".
 
-Response of Sharon when asked-or-told about topic_jam:
+Response of Sharon when asked-or-told about topic_jam or topic_berries or backdrop_berries or berries_in_pail:
 	say "'I love your grandmother's preserves,' says the Cat Lady.";
 
 Response of Sharon when asked-or-told about topic_trailer:
@@ -9320,8 +9284,12 @@ Response of Lee when asked-or-told about stepdad:
 Response of Lee when asked-or-told about topic_tree:
 	say "'I must have spent half my time up in the treetops when I was a kid,' Lee says. 'Fell out of some too. I even built a treehouse deep in the woods. Not much to look at, but it was a great hideout. I made friends with squirrels and birds. I liked to think I was part of the Squirrel clan.' Lee takes a drag from his cigarette.[if player is tree_experienced] 'I guess you might be part of that clan too.'[end if]".
 
-Response of Lee when asked-or-told about topic_jam or topic_berries:
+Response of Lee when asked-or-told about topic_jam or topic_berries or backdrop_berries or berries_in_pail:
 	say "'You know, I grew up around here. Guess that's why I came back here,' Lee says mostly to himself. 'I used to pick blackberries in August too. Me and my brother used to pick berries and eat every single one until our tongues and our fingers were purple and our bellies were sore.'".
+
+[ TODO: Oops
+>ask lee about berries
+Which do you mean, blackberries, the bunch of ripe berries, or the bunch of ripe berries?]
 
 Response of Lee when asked-or-told about topic_trailer:
 	say "'Ah, I don't know,' Lee says. 'This is where I hang my hat. It could be any place. It could be somewhere else tomorrow.'".
@@ -9490,7 +9458,7 @@ Response of Mary when asked-or-told about Dad:
 Response of Mary when asked-or-told about stepdad:
 	say "Her eyes look sharp for a moment, 'I know he and your grandmother have their differences, but I can tell you that he looks like he really loves your mom. When she leaves the room, that man looks like someone just let the air out of him.'"
 
-Response of Mary when asked-or-told about topic_berries:
+Response of Mary when asked-or-told about backdrop_berries or topic_berries:
 	say "'Every year,' she smiles. 'Every year, we pick the berries and the jam lasts until the next summer.'"
 
 Response of Mary when asked-or-told about bucket:
@@ -9724,7 +9692,7 @@ Response of mom when asked-or-told about stepdad:
 Response of mom when asked-or-told about topic_dreams:
 	say "'I think dreams have meaning,' mom says, 'I choose to think they are trying to speak to us in some way, to wake up our brains, to alert us, or to confirm something we’re wondering about.'".
 
-Response of mom when asked-or-told about topic_berries:
+Response of mom when asked-or-told about backdrop_berries or topic_berries:
 	say "'Were you helping your Honey and Grandpa pick berries?' she asks.".
 
 Response of mom when asked-or-told about topic_trailer:
@@ -10220,10 +10188,11 @@ To say ant stuff:
 
 Part - Cats
 
-The yellow tabby is an undescribed _critter animal in Room_D_Loop.
-The printed name is "the yellow tabby".
+The yellow tabby is an improper-named undescribed _critter animal in Room_D_Loop.
+The printed name is "yellow tabby".
 The description is "He is striped yellow and white like a tiger. A small one."
 Understand "tabby/yellow/tiger cat/cats/kitty/kitten/kitties" as yellow tabby.
+The indefinite article is "the".
 
 Housecats are animals in Room_Sharons_Trailer.
 	The printed name of housecats is "[if yellow tabby is not visible]a huge pack of cats[otherwise]her other near-feral cats".
@@ -10249,9 +10218,7 @@ Every turn when player is in Room_Sharons_Trailer and (a random chance of 1 in 3
 Every turn when player is in Room_D_Loop and (a random chance of 1 in 6 succeeds):
 	queue_report "[one of]A [random-cat] darts out of the Cat Lady's cat door and around the trailer[or]A [random-cat] streaks from around the corner and disappears into the bushes[or]A [random-cat] is walking on the roof of the Cat Lady's trailer and then ducks out of sight[in random order]." with priority 6;
 
-[TODO: This cat shows up even if you leave the area and go to Grandpas_trailer.]
-
-Every turn when yellow tabby is visible and (a random chance of 1 in 4 succeeds):
+Every turn when yellow tabby is contained by location of player and (a random chance of 1 in 4 succeeds):
 	queue_report "[one of]The yellow tabby scratches its ear[or]The yellow tabby carefully licks its paws[or]The tabby grooms itself carefully[or]The tabby rubs up against your legs[or]The yellow tabby looks up at you as if it wants something[as decreasingly likely outcomes]." with priority 5;
 
 
