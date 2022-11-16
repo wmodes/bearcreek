@@ -2786,12 +2786,6 @@ Does player mean inserting berries_in_pail into pail:
 
 Section - The Bucket
 
-[TODO:
->dump berries
-What do you want to dump the bunch of ripe berries into?
->big bucket
-You can't see any such thing.]
-
 Instead of taking or attacking or kissing the big_bucket,
 	say "A glance from Honey and you get the message that you better not.".
 
@@ -2969,12 +2963,8 @@ Chapter - Tuning
 
 Understand "watch [something]", "play [something]", "turn on [something]" as switching on.
 
-Understand "tune [something]", "tune station/channel/dial on [something]", "adjust [something]", "change the/-- station/channel/dial on [something]", "turn the/-- station/channel/dial on [something]" as tuning_this.
+Understand "tune [device]", "adjust [device]", "change [device]", "turn [device]" as tuning_this.
 tuning_this is an action applying to one thing.
-
-Check tuning_this:
-	if noun is not a device:
-		say "Hm, I don't know how to tune that." instead;
 
 Carry out tuning_this:
 	Try tuning;
@@ -3554,7 +3544,7 @@ This is the seq_sheriffs_drive_by_handler rule:
 	else if index is 5:
 		if player is in Room_D_Loop:
 			queue_report "'Oh, he hasn't so much as looked in my direction,' the Cat Lady says to the Sheriff.
-			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?''" with priority 2;
+			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?'" with priority 2;
 	else if index is 6:
 		if player is in Room_D_Loop:
 			queue_report "'Dearie, you're a sweet man to check in on me,' the Cat Lady puts her hand on the Sheriff's arm and he almost smiles.
@@ -5295,12 +5285,12 @@ The honeys_radio is improper-named scenery in Room_Grassy_Clearing.
 	It is familiar, switched on, device.
 	The printed name is "transitor radio".
 	The description is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
-	Understand "honey's/honeys/grandma's/grandmas/-- portable/-- transistor/-- radio", "knob/cube/woodgrain/plastic/wax", "music" as the honeys_radio.
+	Understand "honey's/honeys/grandma's/grandmas/-- portable/-- transistor/-- radio", "radio/-- station/dial/channel", "knob/cube/woodgrain/plastic/wax", "music" as the honeys_radio.
 	The scent is "ozone".
 	The indefinite article is "Honey's".
 
 Instead of doing anything except examining to honeys_radio:
-	say "[one of]Honey will kill you if you mess with it.[or]You better leave that alone.[or]Honey gives you a [italic type]look[roman type], and you leave it alone.[cycling]".
+	say "[one of]Honey will kill you if you mess with her radio.[or]You better leave the radio alone.[or]Honey gives you a [italic type]look[roman type], and you leave the radio alone.[cycling]".
 
 Grandpas_shirt is an undescribed thing in Room_Grassy_Clearing.
 	The printed name is "Grandpa's shirt".
@@ -6391,7 +6381,7 @@ Section - Description
 Room_Sharons_Trailer is a room.
 The printed name is "Cat Lady's Trailer".
 The casual_name is "in the Cat Lady's trailer".
-The description is "[one of]The first thing you notice is the smell of cat pee and rotten fish[or]You are starting to get used to the smell[stopping]. Rose-tinted light comes slanting through the dingy ruffled curtains. The Cat Lady's Trailer is full of lace doilies, porcelain figurines, and most of all cats -- sitting, lying, prowling, and meowing. The little figures catch your eye."
+The description is "[one of]The first thing you notice is the smell of cat pee and rotten fish[or]You are starting to get used to the smell[stopping]. Rose-tinted light comes slanting through the dingy ruffled curtains. The Cat Lady's Trailer is full of lace doilies, porcelain figurines, and most of all cats -- sitting, lying, prowling, and meowing. The little figurines catch your eye."
 The scent is "Yucky fish and cat pee".
 The outside_view is "D Loop".
 Understand "catlady's/catladys/sharon's/sharons/shannon's/shannons/pink/-- trailer/house/place/home", "cat lady's/ladys trailer/house/place/home" as Room_Sharons_Trailer.
@@ -6446,7 +6436,7 @@ The description is "This tea is barely worthy of the name, a lukewarm watery som
 The sharons_tv is an improper-named scenery device in Room_Sharons_Trailer.
 	The printed name is "TV".
 	The description is "This is a standard color set, but not as big and fancy as Honey's.".
-	Understand "tv/television/tele/tely/telly/boob/tube/set" as sharons_tv.
+	Understand "standard/color/-- television/tv set/--", "tv/television/-- station/dial/channel" as sharons_tv.
 	The indefinite article is "the".
 
 Knickknacks are scenery.
@@ -6608,7 +6598,7 @@ A coffee mug is an undescribed unopenable open container on lees_table.
 The lees_tv is an improper-named undescribed fixed in place device in Room_Lees_Trailer.
 	The printed name is "TV".
 	The description is "This is a tiny portable black and white set with a giant channel changer and bent rabbit ears propped on a crate[if lees_tv is switched on] [what_show_is_playing][else].[end if]".
-	Understand "tv/television/tele/tely/telly/boob/tube/set/crate/box/antenna/antennas/antena", "boob tube", "rabbit ears" as lees_tv.
+	Understand "lees/lee's/-- tiny/-- television/tv set/--", "tv/television/-- station/dial/channel/changer", "bent/-- rabbit ears" as lees_tv.
 	The indefinite article is "the".
 
 The purple_heart is an improper-named familiar special thing in Limbo.
@@ -6734,7 +6724,7 @@ Some jam_jars are scenery in Room_Grandpas_Trailer.
 Honeys_tv is improper-named undescribed fixed in place device in Room_Grandpas_Trailer.
 	The printed name is "TV".
 	The description is "This is Honey's big color TV in its wooden case, pretty much like the one you have at home with mom, but with lighter wood. On weekend nights you lie on the floor with Grandpa and [one of]watch [italic type]Bowling for Dollars[roman type][or]watch [italic type]Wild World of Animals[roman type][or]sometimes, if you and mom aren't going home early on Sunday night, watch [italic type]Wonderful World of Disney[roman type][at random].".
-	Understand "honeys/honey's/-- big/color/-- television/tv/tele/tely/telly/boob/tube/set" as honeys_tv.
+	Understand "honeys/honey's/-- big/color/-- television/tv set/--", "tv/television/-- station/dial/channel" as honeys_tv.
 	The indefinite article is "the".
 
 The floral print couch is a lie-able surface in Room_Grandpas_Trailer.
@@ -9006,7 +8996,7 @@ Default ask response for Sharon:
 	say "'Well, I don't know, [sharons_nickname],' the Cat Lady says.";
 
 Default tell response for Sharon:
-	say "'[one of]Oh yes, [sharons_nickname], I can see it now![run paragraph on][or]How delightful![run paragraph on][or]Oh please tell me more, [sharons_nickname],[or]You don't say? That's great![run paragraph on][or]Have you talked to your grandpa about that?[run paragraph on][or]You must be thrilled, [sharons_nickname],[at random]' the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
+	say "'[one of]Oh yes, [sharons_nickname], I can see it now!'[no line break][or]How delightful!'[no line break][or]Oh please tell me more, [sharons_nickname],'[or]You don't say? That's great!'[no line break][or]Have you talked to your grandpa about that?'[no line break][or]You must be thrilled, [sharons_nickname],'[at random] the Cat Lady says[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
 
 Default thanks response for Sharon:
 	say "'Oh, of course, dear,' the Cat Lady says, 'You are very welcome.'";
