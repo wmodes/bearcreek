@@ -2723,14 +2723,11 @@ Instead of eating handful_of_berries:
 
 Section - The Pail
 
-[TODO: oops.
-	>put sandwich in pail
-	You put the tuna_sandwich into your pail
-]
-
-Instead of inserting handful_of_berries into pail:
-	say "2nd noun: [second noun]";
-	put_berries_in_pail.
+Instead of inserting anything into pail:
+	if noun is backdrop_berries:
+		put_berries_in_pail;
+	else:
+		say "Yucky. Your pail is for picking blackberries.";
 
 Instead of taking berries_in_pail when pail is not held by player and pail is visible:
 	try taking pail.
