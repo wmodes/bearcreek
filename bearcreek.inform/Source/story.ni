@@ -1161,7 +1161,7 @@ Carry out taking inventory (this is the print non-standard inventory rule):
 		if number of marked for listing things worn by the player is greater than 0:
 			say " and wearing ";
 			list the contents of the player, as a sentence, including contents, listing marked items only;
-		say "[other_attributes][permanent_attributes].";
+		say "[other_attributes] Thinking about it a bit, you conclude you are [permanent_attributes].";
 
 Chapter - New Can't See That Report
 
@@ -1716,17 +1716,21 @@ To say pos_pronoun_cap of (subject - a person):
 
 Book - Time
 
-[ Minutes_per_turn is a time that varies. Minutes_per_turn is three minutes.
+Minutes_per_turn is a time that varies. Minutes_per_turn is three minutes.
 
-Every turn, increase the time of day by minutes_per_turn minus one minute. ]
+Every turn, increase the time of day by minutes_per_turn minus one minute.
 
 To decide what time is sometime in the hour of (this-time - a time):
 	let offset be a random number between 0 and 59;
 	decide on offset minutes after this-time;
 
-To decide what time is around the hour of (this-time - a time):
+To decide what time is sometime around (this-time - a time):
 	let offset be a random number between -30 and 30;
 	decide on offset minutes after this-time;
+	
+Chapter - Checking Time - Not for Release
+
+Understand "time" as a mistake ("The time is [time of day].")
 
 Part - The World Turns
 
@@ -1935,8 +1939,8 @@ To say Title_Card_Epilogue:
 
 To pause_the_game:
 	say "[paragraph break]Press any key to continue.";
-	wait for any key;
-	clear the screen.
+	[ wait for any key;
+	clear the screen. ]
 	[ pause the game; ]
 
 To section_break:
@@ -1974,7 +1978,7 @@ To do Sharon_Teatime_Premonition:
 	queue_report "[italic type]A sudden thought: What if you are here talking to the Cat Lady and something happens to your Grandpa or Honey? Or worse, your mom? You struggle to think about something else.[roman type]" at priority 1.
 
 To say Lee_Invite_Premonition:
-	say "[italic type]You remember your grandma's warning and suddenly feel [nervous], but something tells you it will be okay. You couldn't say why, but you trust Lee[roman type]".
+	say "[italic type]You remember your grandma's warning and suddenly feel [nervous], but something tells you it will be okay. You've visited him before and it was fine. You couldn't say why, but you trust Lee[roman type]".
 
 When Scene_Bringing_Lunch begins:
 	Premonition_About_Something_Wrong in 30 turns from now;
@@ -2023,7 +2027,7 @@ To say swimming_payoff:
 	[paragraph break]THREE!
 	[paragraph break]You jump in feet first and plummet straight down, the world of air and trees and clouds receding far above. You go down down down letting yourself fall slowly until you feel a jolt as your feet bump the rocks at the bottom of the pool.
 	[paragraph break]In the moment before you run out of air, you look up at an enchanted underwater world. Fingers of sunlight flicker through the green twilight. Even the very water around you shimmers before your eyes.
-	[paragraph break]You push off the bottom and return to the surface with a gasp of delicious air and climb back up on the rocks. You feel courageous".
+	[paragraph break]You push off the bottom and return to the surface with a gasp of delicious air and climb back up on the rocks. You feel adventurous".
 
 To say crossing_payoff:
 	say "You made it across the creek.
@@ -2969,13 +2973,11 @@ tuning_this is an action applying to one thing.
 Carry out tuning_this:
 	Try tuning;
 
-[TODO: reverse these two verbs, i.e., make the one with no noun make assumptions and the one with a noun can do the action - this will make the article work properly. ]
-
 Understand 
-	"tune the/-- radio/tv/-- station/stations/channel/channels/dial/dials/--", 
-	"adjust the/-- radio/tv/-- station/stations/channel/channels/dial/dials/--", 
-	"change the/-- radio/tv/-- station/stations/channel/channels/dial/dials/--", 
-	"turn the/-- radio/tv/-- station/stations/channel/channels/dial/dials/--" 
+	"tune radio/tv/-- station/stations/channel/channels/dial/dials/--", 
+	"adjust radio/tv/-- station/stations/channel/channels/dial/dials/--", 
+	"change radio/tv/-- station/stations/channel/channels/dial/dials/--", 
+	"turn radio/tv/-- station/stations/channel/channels/dial/dials/--" 
 	as tuning.
 Tuning is an action applying to nothing.
 
@@ -2999,6 +3001,8 @@ Carry out tuning:
 		try taking honeys_radio;
 	else if lees_tv is visible:
 		change_TV_channel;
+
+[TODO: This probably doesn't need an "applying to nothing" varient]
 
 Chapter - The Radio
 
@@ -3098,18 +3102,18 @@ Every turn when player is in Room_Lees_Trailer and lees_tv is switched on:
 
 [Instead of watching when in Region_Blackberry_Area, say what_song_is_playing.]
 
-Show Index is a number that varies.
-TV Channel is a number that varies.
-	The tv channel is 5.
-Show Timer is a number that varies.
-	The show timer is 1.
-Global show length is a number that varies.
-	The global show length is 15.
+show_index is a number that varies.
+tv_channel is a number that varies.
+	The tv_channel is 5.
+show_timer is a number that varies.
+	The show_timer is 1.
+global_show_length is a number that varies.
+	The global_show_length is 15.
 current_show is a text that varies.
-Current reaction is a text that varies.
+current_reaction is a text that varies.
 
 When play begins:
-	Now the show index is a random number from 1 to 5;
+	Now the show_index is a random number from 1 to 5;
 	find_show_in_table;
 
 After switching on lees_tv:
@@ -3119,47 +3123,47 @@ After switching on lees_tv:
 [ Channels: 2abc, 4nbc, 5local, 7cbs, 9pbs ]
 
 To change_TV_channel:
-	if TV Channel is 2:
+	if tv_channel is 2:
 		say "You change the TV from channel 2 to channel 4.";
-		now TV Channel is 4;
-	else if TV Channel is 4:
+		now tv_channel is 4;
+	else if tv_channel is 4:
 		say "You change the TV to channel 5.";
-		now TV Channel is 5;
-	else if TV Channel is 5:
+		now tv_channel is 5;
+	else if tv_channel is 5:
 		say "You change the TV to channel 7.";
-		now TV Channel is 7;
-	else if TV Channel is 7:
-		say "You change the TV channel all the way around from 7 to 2, skipping 9 since nothing is ever on.";
-		now TV Channel is 2;
+		now tv_channel is 7;
+	else if tv_channel is 7:
+		say "You change the tv_channel all the way around from 7 to 2, skipping 9 since nothing is ever on.";
+		now tv_channel is 2;
 	find_show_in_table;
-	say "[line break][current_show] is on. [current reaction][line break]";
+	say "[line break][current_show] is on. [current_reaction][line break]";
 
 To report_new_tv_show_begins:
-	queue_report "[one of]On the little TV, after a few commercials, [current_show] begins[or][current_show] starts on Lee's little TV[or]After a bunch of commercials, [current_show] is on[at random]. [current reaction]" with priority 4;
+	queue_report "[one of]On the little TV, after a few commercials, [current_show] begins[or][current_show] starts on Lee's little TV[or]After a bunch of commercials, [current_show] is on[at random]. [current_reaction]" with priority 4;
 
 To say what_show_is_playing:
-	say "The little black and white TV is playing [current_show]. [current reaction]";
+	say "The little black and white TV is playing [current_show]. [current_reaction]";
 
 To say show_is_still_playing:
 	say "[one of][current_show] is still blaring on Lee's TV[or]Lee's TV is still playing [current_show][or][current_show] is on Lee's little TV[at random].";
 
 To find_show_in_table:
 	repeat through Table of TV Shows:
-		if Channel entry is TV Channel and Index entry is Show index:
+		if Channel entry is tv_channel and Index entry is show_index:
 			now current_show is show entry;
-			now current reaction is reaction entry;
+			now current_reaction is reaction entry;
 
 To go_to_next_show:
-	increase show index by 1;
-	if show index is greater than 5, now show index is 1;
+	increase show_index by 1;
+	if show_index is greater than 5, now show_index is 1;
 	find_show_in_table;
 
 To decide if time_for_a_new_show:
-	if show timer is greater than global show length :
+	if show_timer is greater than global_show_length :
 		go_to_next_show;
-		Now show timer is 1;
+		Now show_timer is 1;
 		Decide Yes;
-	Increase show timer by 1;
+	Increase show_timer by 1;
 	Decide No.
 
 Table of TV Shows
@@ -3217,30 +3221,33 @@ At the time when train_comes:
 	train_hits_crossing in 5 turns from now;
 
 To train_enters_area:
-	if current_time_period is not evening and current_time_period is not night:
-		queue_report "[one of]You think you hear the train blowing its whistle way off in the hills[or]You hear the train, pretty far off still[in random order]." with priority 3;
-	else:
-		queue_report "Was that a train whistle or just the wind whooshing through the tree tops?" with priority 3.
+	if Scene_Dreams is not happening and Scene_Epilogue is not happening:
+		if current_time_period is not evening and current_time_period is not night:
+			queue_report "[one of]You think you hear the train blowing its whistle way off in the hills[or]You hear the train, pretty far off still[in random order]." with priority 3;
+		else:
+			queue_report "Was that a train whistle or just the wind whooshing through the tree tops?" with priority 3.
 
 At the time when train_is_nearby:
-	if current_time_period is not evening and current_time_period is not night:
-		queue_report "[one of]You hear a train whistle in the distance[or]You hear the train whistle blowing as it goes through town[in random order]." with priority 3;
-		if player is in Room_Top_of_Pine_Tree:
-			queue_report "Looking toward the sound of the train, you can actually see it rounding the hill outside of town." with priority 2;
-		move distant_train to Room_Top_of_Pine_Tree;
-	else:
-		queue_report "You hear a train whistle in the distance, a lonely far off sorta sound." with priority 3;
+	if Scene_Dreams is not happening and Scene_Epilogue is not happening:
+		if current_time_period is not evening and current_time_period is not night:
+			queue_report "[one of]You hear a train whistle in the distance[or]You hear the train whistle blowing as it goes through town[in random order]." with priority 3;
+			if player is in Room_Top_of_Pine_Tree:
+				queue_report "Looking toward the sound, you can actually see the train rounding the hill outside of town." with priority 2;
+			move distant_train to Room_Top_of_Pine_Tree;
+		else:
+			queue_report "You hear a train whistle in the distance, a lonely far off sorta sound." with priority 3;
 
 At the time when train_hits_crossing:
-	if current_time_period is not evening and current_time_period is not night:
-		queue_report "[one of]You hear the train whistle, loud and close, as it hits the crossing[or]The train whistle screams as it hits the crossing[in random order]." with priority 6;
-	else:
-		queue_report "You hear the train at the crossing as it goes by your house. You think for a moment of Honey and Grandpa and how worried they will be and how much you miss them." with priority 6;
-	if lost_penny is on train_track:
-		now lost_penny is in Limbo;
-		now flattened_penny is in train_track;
-		now the flattened_penny is marked for listing;
-	show_train_crossing;
+	if Scene_Dreams is not happening and Scene_Epilogue is not happening:
+		if current_time_period is not evening and current_time_period is not night:
+			queue_report "[one of]You hear the train whistle, loud and close, as it hits the crossing[or]The train whistle screams as it hits the crossing[in random order]." with priority 6;
+		else:
+			queue_report "You hear the train at the crossing as it goes by your house. You think for a moment of Honey and Grandpa and how worried they will be and how much you miss them." with priority 6;
+		if lost_penny is on train_track:
+			now lost_penny is in Limbo;
+			now flattened_penny is in train_track;
+			now the flattened_penny is marked for listing;
+		show_train_crossing;
 	[ ready for next train]
 	now next_train_interval is a random number between 20 and 50;
 	train_comes in next_train_interval turns from now;
@@ -3276,8 +3283,14 @@ Volume - The World
 
 Book - Scenes
 
-[I can't remember what effect a dramatic scene has]
+Part - Scene Definitions
+
+Chapter - Dramaticc Scenes
+
+[A dramatic scene is mean to not be interrupted by another scheduled scene - if we start to launch a scene and a dramatic scene is happening, we reschedule the new scene for the future ]
+
 A scene can be dramatic. A scene is usually not dramatic.
+
 
 Part - Scene_Day_One
 
@@ -3532,7 +3545,7 @@ This is the seq_sheriffs_drive_by_handler rule:
 		queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 1;
 	else if index is 2:
 		if sharon is not in Room_D_Loop:
-			move sharon out of her trailer;
+			move_sharon_out_of_her_trailer;
 		if player is in Room_D_Loop:
 			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing, Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 2;
 	else if index is 3:
@@ -3561,24 +3574,36 @@ This is the seq_sheriffs_drive_by_interrupt_test rule:
 
 Test long-arm with "test day2 / get up / climb pine tree / d / w / w / go to grassy field / again / again / again / again / again / z / z / z".
 
+Section - Actions
+
+Instead of going during Scene_Sheriffs_Drive_By:
+	if Scene_Sheriffs_Drive_By has been happening for less than 2 turns:
+		say "But you're curious what the police are here for, so you change your mind and keep listening.";
+		stop the action;
+	else if Scene_Sheriffs_Drive_By has been happening for less than 4 turns:
+		say "You quietly back away while the Cat Lady and the Sheriff are still talking about something. A quick look back. Did the Cat Lady just point over toward you? Are they talking about you for some reason? You want to hear what they are saying, so you creep closer.";
+		stop the action;
+	otherwise:
+		continue the action;
+
 
 Chapter - Scene_Visit_With_Sharon
 
 There is a recurring scene called Scene_Visit_With_Sharon.
+
 Scene_Visit_With_Sharon begins when player is in Room_D_Loop and Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening.
+
 Scene_Visit_With_Sharon ends when Scene_Sheriffs_Drive_By begins.
+
 Scene_Visit_With_Sharon ends when player is not in Room_D_Loop and player is not in Room_Sharons_Trailer.
 
 When Scene_Visit_With_Sharon begins:
-	try saying hello to Sharon;
+	if Scene_Visit_With_Sharon has not happened:
+		try saying hello to Sharon;
 	if Scene_Tea_Time has not happened:
 		now seq_sharon_invite is in-progress.
 
 Section - Sequences
-
-[
-	Invite Sequence
-]
 
 seq_sharon_invite is a sequence.
 	The action_handler is the seq_sharon_invite_handler rule.
@@ -3606,7 +3631,9 @@ This is the seq_sharon_invite_interrupt_test rule:
 Chapter - Scene_Tea_Time
 
 Scene_Tea_Time is a dramatic scene.
+
 Scene_Tea_Time begins when player has been in Room_Sharons_Trailer for two turns and Scene_Sheriffs_Drive_By is not happening.
+
 Scene_Tea_Time ends when seq_sharon_teatime is run and seq_sharon_teatime is not in-progress.
 
 When Scene_Tea_Time begins:
@@ -3614,10 +3641,6 @@ When Scene_Tea_Time begins:
 	now Sharon is ready-for-tea-time;
 
 Section - Sequences
-
-[
-	Tea Time Sequence
-]
 
 seq_sharon_teatime is a sequence.
 	The action_handler is the seq_sharon_teatime_handler rule.
@@ -3630,9 +3653,9 @@ This is the seq_sharon_teatime_handler rule:
 		now current interlocutor is Sharon;
 	if index is 1:
 		if sharon is not in Room_Sharons_Trailer:
-			Move Sharon into her trailer;
+			move_sharon_into_her_trailer;
 		now sharon is ready-for-tea-time;
-		Report Sharon saying "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest.";
+		queue_report "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest." at priority 2;
 	else if index is 2:
 		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Oh, [sharons_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
 		do Sharon_Teatime_Premonition;
@@ -3651,17 +3674,17 @@ This is the seq_sharon_teatime_handler rule:
 			decrease index of seq_sharon_teatime by one;
 			if sharon is visible:
 				if your teacup is unfilled and a random chance of 2 in 3 succeeds:
-					refill the teacups;
+					refill_teacups;
 				queue_report "[cat lady prattle]" at priority 2;
 		else:
 			now index of seq_sharon_teatime is 6;
 			now index is 6;
 	if index is 6:
-		Report Sharon saying "'Oh [sharons_nickname], it's been so nice talking to you. I can see you have to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you.";
+		Report Sharon saying "'Oh [sharons_nickname], it's been so nice talking to you. I can see you're ready to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you. 'I better go water my garden.'";
 		if player holds your teacup:
 			queue_report "You return your teacup to the table." at priority 1;
 			now your teacup is on the Cat Lady's kitchen table;
-		Sharon resumes gardening in two turns from now;
+		sharon_resumes_gardening in two turns from now;
 		Now player is compassionate;
 
 This is the seq_sharon_teatime_interrupt_test rule:
@@ -3678,7 +3701,7 @@ This is the seq_sharon_teatime_interrupt_test rule:
 
 Section - Actions
 
-To refill the teacups:
+To refill_teacups:
 	say "The Cat Lady re-fills [if a random chance of 1 in 2 succeeds]both of your cups[else]your cup[end if] with more tepid tea.";
 	now your teacup is filled;
 
@@ -3735,7 +3758,9 @@ This is the seq_lee_invite_interrupt_test rule:
 Chapter - Scene_Hangout_With_Lee
 
 Scene_Hangout_With_Lee is a dramatic scene.
+
 Scene_Hangout_With_Lee begins when player has been in Room_Lees_Trailer for one turn and Scene_Sheriffs_Drive_By is not happening.
+
 Scene_Hangout_With_Lee ends when seq_lee_hangout is run and seq_lee_hangout is not in-progress.
 
 When Scene_Hangout_With_Lee begins:
@@ -3755,8 +3780,8 @@ This is the seq_lee_hangout_handler rule:
 	if index is 1:
 		if Lee is not in Room_Lees_Trailer:
 			move_lee_into_his_trailer;
-		Report Lee saying "'So what's up in your world?' Lee asks. 'Anything good?' He pauses for a moment. 'I have something here for you.'
-			[paragraph break]Lee is fumbling around in a drawer.";
+		queue_report "'So what's up in your world?' Lee asks. 'Anything good?' He pauses for a moment. 'Hey, I have something here for you.'
+			[paragraph break]Lee is fumbling around in a drawer." at priority 2;
 	if index is 2:
 		Report Lee saying "'Hey, make yourself comfortable,' Lee says. 'Mi casa, es su casa. That means [']My home is your home.['] Do you want anything? A drink or anything?' It makes you [nervous] to think of drinking or eating in Lee's trailer. You can smell a little alcohol on his breath like your step-dad.
 		[paragraph break]Lee is fumbling around in a drawer.";
@@ -4473,7 +4498,7 @@ Scene_Mars_Dream ends when player is in Room_Dream_Dirt_Road.
 
 Chapter - Scene_Dog_Dream
 
-Scene_Dog_Dream is a dramatic scene.
+Scene_Dog_Dream is a scene.
 Scene_Dog_Dream begins when player is in Room_Dream_Dirt_Road.
 Scene_Dog_Dream ends when dog_free_to_go is true.
 
@@ -4789,7 +4814,6 @@ Section - Journeys
 
 Chapter - Scene_Reunions
 
-[TODO: Make sure can't make small talk with NPCs during these dramatic scenes ]
 There is a scene called Scene_Reunions.
 Scene_Reunions begins when Scene_Found ends.
 Scene_Reunions ends when Scene_Long_Arm_of_the_Law begins.
@@ -4799,7 +4823,7 @@ Instead of room_navigating or going during Scene_Reunions:
 
 Chapter - Scene_Long_Arm_of_the_Law
 
-There is a scene called Scene_Long_Arm_of_the_Law.
+There is an scene called Scene_Long_Arm_of_the_Law.
 
 Scene_Long_Arm_of_the_Law begins when 
 Scene_Day_Two is happening and player is in Room_B_Loop.
@@ -4811,13 +4835,11 @@ Section - Sequences
 When Scene_Long_Arm_of_the_Law begins:
 	now seq_long_arm_of_the_law is in-progress;
 
-[
-	Sequence: Long Arm of the Law
+[ Sequence: Long Arm of the Law
 
 	summary: Sheriff confronts Lee
 	conditions: during Scene_Day_Two when player has been in Room_B_Loop
-	trigger: Scene_Long_Arm_of_the_Law starts
-]
+	trigger: Scene_Long_Arm_of_the_Law starts ]
 
 seq_long_arm_of_the_law is a sequence.
 	The action_handler is the seq_long_arm_of_the_law_handler rule.
@@ -4904,6 +4926,7 @@ Instead of waiting during Scene_Long_Arm_of_the_Law:
 	Saying no, telling about night in woods, yelling, attacking Sheriff]
 Instead of informing or telling or yelling or saying no during Scene_Long_Arm_of_the_Law:
 	decide_to_support_lee.
+
 Instead of attacking Sheriff when lee_support of player is _uncertain:
   say "You're not sure violence is the answer, though it might make you feel better. But you would probably end up worse than Lee.";
 	decide_to_support_lee.
@@ -4915,9 +4938,14 @@ To decide_to_support_lee:
 		increment index of seq_long_arm_of_the_law;
 		now lee_support of player is _decided_yes;
 		now player is compassionate;
-		now player is intrepid;
+		now player is courageous;
+		now player is protective;
 		say "You take a deep breath, and yell, 'No, wait!'[paragraph break]Everyone turns to you. And the words tumble out. Quick as you can, stumbling, messing up some of the details, you tell how you wandered into the woods by yourself, about the dog, about the nest, about the raccoons, about orienteering, every word chasing the previous word, and how you were found by Lee and the Cat Lady.[paragraph break]You stop and take a breath.".
 
+[TODO: Oops
+>tell grandpa about dog
+Which do you mean, the dog, the dog, or the photos?
+Can we create a new clarifing the choice of the parser rule?]
 
 Chapter - Scene_Parents_Arrive
 
@@ -4932,13 +4960,11 @@ When Scene_Parents_Arrive begins:
 
 Section - Sequences
 
-[
-	Sequence: Parents Arrive
+[ Sequence: Parents Arrive
 
 	summary: mom and stepdad arrive after Jody is found
 	conditions: during Scene_Day_Two after sheriff leaves
-	trigger: Scene_Long_Arm_of_the_Law ends
-]
+	trigger: Scene_Long_Arm_of_the_Law ends ]
 
 seq_parents_arrive is a sequence.
 	The action_handler is the seq_parents_arrive_handler rule.
@@ -4981,17 +5007,22 @@ This is the seq_parents_arrive_interrupt_test rule:
 
 Section - Actions
 
-Every turn while going_home_decision of player is _uncertain:
-	queue_report "[one of]Mom says it's time to go.[or]You feel terrible. You think maybe this is all your fault and now it's time to face the consequences[or]Mom's ready to go home, but what do you want?[or]Maybe you can just be quiet in the car and things will simmer down.[or]What if Mark hurts your mom and you're not there to stop him?[or]Can you just stay here with Honey and Grandpa?[cycling]" with priority 1.
-
-Instead of waiting during Scene_Parents_Arrive:
-	say "[one of]The moment seems to balance on a knife's edge.[or]Seconds tick by.[or]The world holds its breath.[in random order]".
-
+[ Prevent player from going anywhere during this imporant scene ]
 Instead of room_navigating or going during Scene_Parents_Arrive:
 	if index of seq_parents_arrive < 3:
 		say "There's no way you are leaving now that your mom's here.";
 	else:
 		say "If you don't want to go home with mom, you're probably going to have to say something.".
+
+[ Prevent small talk during this important scene ]
+Instead of quizzing or informing or implicit-quizzing or implicit-informing during Scene_Parents_Arrive:
+	say "Everyone's attention is focused elsewhere.";
+
+Every turn while going_home_decision of player is _uncertain:
+	queue_report "[one of]Mom says it's time to go.[or]You feel terrible. You think maybe this is all your fault and now it's time to face the consequences[or]Mom's ready to go home, but what do you want?[or]Maybe you can just be quiet in the car and things will simmer down.[or]What if Mark hurts your mom and you're not there to stop him?[or]Can you just stay here with Honey and Grandpa?[cycling]" with priority 1.
+
+Instead of waiting during Scene_Parents_Arrive:
+	say "[one of]The moment seems to balance on a knife's edge.[or]Seconds tick by.[or]The world holds its breath.[in random order]".
 
 [Things that make us decide to go home:
 	getting in car, saying yes]
@@ -5006,14 +5037,16 @@ To decide_to_go_home:
 	else:
 		increment index of seq_parents_arrive;
 		now going_home_decision of player is _decided_yes;
+		now player is protective;
 		say "You don't want to go, but you want to keep your mom safe. You turn to hug Grandpa who then lets you go. Honey looks sad and worried. You slowly get in the back of the Camaro.".
 
 [Things that make us decide not to go home:
 	Saying no, yelling, attacking Mark]
 Instead of yelling or saying no during Scene_Parents_Arrive:
 	decide_not_to_go_home.
+
 Instead of attacking stepdad when going_home_decision of player is _uncertain:
-  say "Oh, how you want to hurt him. But you are sure it would give him an excuse to hurt you back worse. You decide to use words instead.";
+	say "Oh, how you want to hurt him. But you are sure it would give him an excuse to hurt you back worse. You decide to use words instead. [run paragraph on]";
 	decide_not_to_go_home.
 
 To decide_not_to_go_home:
@@ -5021,8 +5054,9 @@ To decide_not_to_go_home:
 		say "It seems that everyone is focused elsewhere";
 	else:
 		increment index of seq_parents_arrive;
+		now player is courageous;
 		now going_home_decision of player is _decided_no;
-		say "You stand up straight. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]staying[roman type] here,' you say firmly. You can feel Grandpa's arms tighten around you.".
+		say "You stand up straight and take a deep breath. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]staying[roman type] here,' you say firmly. You can feel Grandpa's arms tighten around you.".
 
 test parents with "test long-arm / z/z/z/yell/z"
 
@@ -5080,6 +5114,10 @@ When Scene_Fallout_Staying ends:
 
 Section - Actions and Sequences
 
+[ Prevent player from going anywhere during this imporant scene ]
+Instead of room_navigating or going during Scene_Parents_Arrive:
+	say "There's no way you are leaving now that you are safe at home with Honey and Grandpa.";
+
 seq_staying_w_grandpa is a sequence.
 	The action_handler is the seq_staying_w_grandpa_handler rule.
 	The interrupt_test is seq_staying_w_grandpa_interrupt_test rule.
@@ -5134,12 +5172,21 @@ To add_stuff_to_special_box:
 	else:
 		now photos_from_home is in special_box;
 
+After examining photos_from_grampas two times:
+	say "You return the photos to the box and contemplate the sinuous line of your life. While not always easy, your experiences made you who you are, [permanent_attributes]. You wouldn't change a thing.";
+	now photos_from_grampas is in special_box;
+
+After examining photos_from_home two times:
+	say "You return the photos to the box and contemplate the sinuous line of your life. While not always easy, your experiences made you who you are, [permanent_attributes]. You wouldn't change a thing.";
+	now photos_from_home is in special_box;
+
 Instead of going down during Scene_Epilogue:
 	if player is not photo_experienced:
 		say "It's been years since you looked at the stuff in your special box. You might want to take a moment.";
 	else:
 		say "You shut all your memories away in the box and return it to where you found it. You take a moment, close your eyes, and let out a long deep breath. Then you go back down and resume your life.";
 		end_the_story.
+
 
 Book - Regions & Rooms
 
@@ -6435,7 +6482,7 @@ The description is "This tea is barely worthy of the name, a lukewarm watery som
 
 The sharons_tv is an improper-named scenery device in Room_Sharons_Trailer.
 	The printed name is "TV".
-	The description is "This is a standard color set, but not as big and fancy as Honey's.".
+	The description is "This is a standard color set, but not as big and fancy as Honey's[if sharons_tv is not switched on]. It's off at the moment[else]. It's showing a soap opera you don't know[one of]. Two women are talking[or]. A man is holding a woman who is crying[or]. Two men are talking angrily[at random].".
 	Understand "standard/color/-- television/tv set/--", "tv/television/-- station/dial/channel" as sharons_tv.
 	The indefinite article is "the".
 
@@ -6469,9 +6516,24 @@ Does the player mean doing anything to tea things: it is unlikely.
 Understand "get --/more tea", "fill teacup" as a mistake ("It would be rude for a guest to fill their own teacup. Honey's efforts to teach you manners were not wasted.").
 
 Instead of switching on the sharons_tv:
-	if sharons_tv is not switched on:
+	if sharon is not watching-tv:
 		say "[first time][description of sharons_tv]
 		[paragraph break][only]The moment you start to turn it on, the Cat Lady comes in and says, 'Let's keep that off for now. My shows are on soon. You can watch with me then.'";
+	else:
+		say "The TV is already showing a soap opera. 'Dearie, you're wwelcome to sit down and watch with me,' the Cat Lady says.";
+
+
+Instead of switching off the sharons_tv:
+	if sharon is not watching-tv:
+		say "The TV set is already off.";
+	else:
+		say "The Cat Lady is watching her show. You don't want to be rude.";
+
+Instead of tuning when player is in Room_Sharons_Trailer:
+	if sharon is not watching-tv:
+		say "The TV set is off.";
+	else:
+		say "The Cat Lady is watching her show. You don't want to be rude.";
 
 Instead of taking Mika:
 	if player is in Room_Sharons_Trailer:
@@ -7321,16 +7383,16 @@ The downpath_dest of Region_Dreams is Limbo.
 Section - Rules and Actions
 
 
-Chapter - Room_Car_With_Mom
+Chapter - Room_Cfar_With_Mom
 
 Section - Description
 
 Room_Car_With_Mom is a room.
 The printed name is "In The Car at the Drive-In".
 The casual_name is "at the drive-in in a dream".
-The description is "[one of]It's Friday and your mom picked you up from school to take you to the drive-in. You know all of this, but not how you got here. You can still smell your take out dinner from Del Taco. You love these times with mom, though some part of your mind notes that they stopped when she met your stepdad. The movie is The Omen, which probably isn't a kids movie[or]You are watching a movie with mom at the drive-in[stopping]."
+The description is "[one of]It's Friday and your mom picked you up from school to take you to the drive-in. You know all of this, but not how you got here. You can still smell your takeout dinner from Del Taco. You love these times with mom, though some part of your mind notes that they stopped when she met your stepdad. The movie is The Omen, which probably isn't a kids movie[or]You are watching a movie with mom at the drive-in[stopping]."
 The scent is "bean burritos and taco sauce".
-The outside_view is "the movie. [description of movie]".
+The outside_view is "the movie. [description of movie_backdrop]".
 Understand "Car With Mom" as Room_Car_With_Mom.
 
 
@@ -7351,9 +7413,9 @@ Understand "dollar/cash/bill" as money.
 
 Section - Backdrops and Scenery
 
-The movie is backdrop in Room_Car_With_Mom.
+The movie_backdrop is backdrop in Room_Car_With_Mom.
 The description is "The movie is playing on the big screen. In the last of the sunset light, you can still see the figures of kids running around at the playground at the front of the drive-in. It seems unsettling that some parents would let their kids run around in the dark.[paragraph break]Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Bengi. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who kills people by looking at them."
-Understand "film/drive-in/omen", "drive in" as movie.
+Understand "film/drive-in/omen", "drive in" as movie_backdrop.
 
 The camaro_backdrop is backdrop in Room_Car_With_Mom.
 The printed name is "Mom's Camaro".
@@ -7405,7 +7467,7 @@ Virtual_snack_bar is undescribed fixed in place enterable container in Room_Driv
 
 Section - Backdrops and Scenery
 
-The movie is backdrop in Room_Drive_In.
+The movie_backdrop is backdrop in Room_Drive_In.
 
 Speaker poles are scenery in Room_Drive_In.
 The description is "These are the poles that hold the speakers that you put on your window. Once mom almost drove off without putting the speaker back."
@@ -7613,7 +7675,7 @@ The printed name is "The Camaro".
 The casual_name is "in a dream".
 The description is "You are in mom's Camaro, but your stepdad is driving. He focuses on the road and you can sense an edge of anger just beneath the surface.[first time] How did you get here? Where's mom?[only]".
 The scent is "fear".
-The outside_view is "the highway. [description of road]".
+The outside_view is "the highway. [description of road_backdrop]".
 Understand "Camaro/car" as Room_Camaro_With_Stepdad.
 
 
@@ -7977,7 +8039,7 @@ The printed name is "Car on the Ride Home".
 The casual_name is "in the car".
 The description is "You are in the car with mom and your stepdad. There is a vicious silence that you don't dare break. The road rolls by but you don't really see it. You are concentrating on making yourself invisible.".
 The scent is "fear".
-The outside_view is "the highway. [description of road]".
+The outside_view is "the highway. [description of road_backdrop]".
 Understand "Camaro/car" as Room_In_Car_With_Parents.
 
 Section - Navigation
@@ -8018,13 +8080,13 @@ The scent is "cigars still, even after all these years".
 
 Some photos_from_grampas is a thing.
 The printed name is "photos".
-The description is "These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you Honey hated that picture. They look like they are just about to crack up laughing.[paragraph break]Here's your Grandpa and you getting ready to hike part of the Pacific Crest Trail. You were maybe 15. This is just a few yeaars before he died. You both were woefully unprepared for late fall freezing temperatures. Though you were miserable at night, Grandpa toughed it out.[paragraph break]This is you and your best friend at your 6th grade graduation in your new school. You kind of lost touch when you both went into Middle School but became friends again in high school.[paragraph break]Here's a photo your mom sent after she and Mark moved to Idaho. She's smiling, but it looks strained. Or maybe that's just your imagination. She's standing on the edge of a giant volcanic crater.[paragraph break]Here's a blurry photo of a lizard on a rock in Death Valley you took on a trip with Honey and Grandpa.[paragraph break]This is mom, Honey, and you at your high school graduation. Mark probably took this photo. You don't look happy to be there.[paragraph break]Oh and here's a memorial card from Honey's funeral. You said something at the service, but you have no idea what you said. By then you were in college.[paragraph break]
-There's a whole series of photos of pets that you had through the years, mostly cats, including some of Sharon's cats. There's even a photo of you with the dog down by Bear Creek who you eventually made friends with.[paragraph break]That's it. A young life in a dozen photos."
+The description is "[one of]These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you Honey hated that picture. They look like they are just about to crack up laughing.[paragraph break]Here's your Grandpa and you getting ready to hike part of the Pacific Crest Trail. You were maybe 15. This is just a few yeaars before he died. You both were woefully unprepared for late fall freezing temperatures. Though you were miserable at night, Grandpa toughed it out.[paragraph break]This is you and your best friend at your 6th grade graduation in your new school. You kind of lost touch when you both went into Middle School but became friends again in high school.[paragraph break]Here you pause for a second to linger on a memory. You can look again to examine the rest of the photos.[or]You look through the remainder of the photos:[paragraph break]Here's a photo your mom sent after she and Mark moved to Idaho. She's smiling, but it looks strained. Or maybe that's just your imagination. She's standing on the edge of a giant volcanic crater.[paragraph break]Here's a blurry photo of a lizard on a rock in Death Valley you took on a trip with Honey and Grandpa.[paragraph break]This is mom, Honey, and you at your high school graduation. Mark probably took this photo. You don't look happy to be there.[paragraph break]Oh and here's a memorial card from Honey's funeral. You said something at the service, but you have no idea what you said. By then you were in college.[paragraph break]
+There's a whole series of photos of pets that you had through the years, mostly cats, including some of Sharon's cats. There's even a photo of you with the dog down by Bear Creek who you eventually made friends with.[paragraph break]That's it. A young life in a dozen photos[cycling]".
 Understand "photos/photo/honey/grandpa/mom/friend/lizard/cat/cats/dog" as photos_from_grampas.
 
 Some photos_from_home is a thing.
 The printed name is "photos".
-The description is "These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's you, Honey, and Grandpa on a visit to their house. You look like you're about 10. This must have been just before Mark and mom moved you to Idaho. After that, you saw Honey and Grandpa only in summers and sometimes Christmas.[paragraph break]This is you and your best friend from 6th grade. You both had a crush on the same person, but decided if you had to, you would share them.[paragraph break]Here's a photo Honey and Grandpa sent from a trip they took to visit family in Kansas City, Missouri.[paragraph break]Here's a photo of your dog Dodo, smiling with his tougue out, as always. When you moved to Idaho, your stepdad said there would be no room for a dog and took him to the pound.[paragraph break]Here's mom and you at Christmas. She looks so old though you don't look much older than 15.[paragraph break]Here's Grandpa, Honey, and you at the Craters of the Moon when they came to visit. You have your arms around your Grandpa. This couldn't have been too many years before he died.[paragraph break]This is whatshisname? Greg? and you in your first car, a yellow Corolla before leaving home on your cross-country trip when you were 17. You never did come back except to briefly visit your mom.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you she hated that picture. They look like they are just about to crack up laughing. You miss them.[paragraph break]That's it. A young life in a dozen photos."
+The description is "[one of]These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's you, Honey, and Grandpa on a visit to their house. You look like you're about 10. This must have been just before Mark and mom moved you to Idaho. After that, you saw Honey and Grandpa only in summers and sometimes Christmas.[paragraph break]This is you and your best friend from 6th grade. You both had a crush on the same person, but decided if you had to, you would share them.[paragraph break]Here's a photo Honey and Grandpa sent from a trip they took to visit family in Kansas City, Missouri.[paragraph break]Here's a photo of your dog Dodo, smiling with his tougue out, as always. When you moved to Idaho, your stepdad said there would be no room for a dog and took him to the pound.[paragraph break]You have to stop for a minute. You can look again to examine the rest of the photos.[or]You look through the remainder of the photos:[paragraph break]Here's mom and you at Christmas. She looks so old although you don't look much older than 15. This must be the year before mom left Mark after the fight.[paragraph break]Here's Grandpa, Honey, and you at the Craters of the Moon when they came to visit. You have your arms around your Grandpa. This couldn't have been too many years before he died.[paragraph break]This is whatshisname? Greg? and you in your first car, a yellow Corolla before leaving home on your cross-country trip when you were 17. You never did come back except to visit your mom.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you she hated that picture. They look like they are just about to crack up laughing. You miss them.[paragraph break]That's it. A young life in a dozen photos.[cycling]".
 Understand "photos/photo/honey/grandpa/mom/friend/dodo/dog" as photos_from_home.
 
 Your_keys is an improper-named thing.
@@ -8070,7 +8132,7 @@ The description of player is "[if Scene_Epilogue is not happening][nine_year_old
 Understand "jody/Jodi/Jojo/jodie", "you", "me" as yourself.
 
 To say nine_year_old_description:
-	say "What's to say? You are nine and a half, and you are going into 5th grade in the fall. [one of]And you like watching TV with your grandpa[or]And you and your mom play car games when you drive to Honey and Grandpa's house on the weekends[or]And you've lived in more different places than you are years old, so it's hard for you to make friends[or]And you like riding your bike on dirt roads around Honey and Grandpa's house[or]And you love cats, most of all, your cat Mika[or]And you have a crush on someone in school but you'd never in a million billion qazillion years tell anybody[in random order][other_attributes][permanent_attributes]";
+	say "What's to say? You are nine and a half, and you are going into 5th grade in the fall. [one of]And you like watching TV with your grandpa[or]And you and your mom play car games when you drive to Honey and Grandpa's house on the weekends[or]And you've lived in more different places than you are years old, so it's hard for you to make friends[or]And you like riding your bike on dirt roads around Honey and Grandpa's house[or]And you love cats, most of all, your cat Mika[or]And you have a crush on someone in school but you'd never in a million billion qazillion years tell anybody[in random order][other_attributes] Thinking about it a bit, you conclude you are [permanent_attributes]";
 
 To say adult_description:
 	say "What's to say? You were nine years old a lifetime ago. And though you've gone through a lot and have responsibilities and now live thousands of miles away from that place, sometimes you still feel like that little kid";
@@ -8086,6 +8148,7 @@ Yourself can be affectionate.
 Yourself can be tenacious.
 Yourself can be compassionate.
 Yourself can be courageous.
+Yourself can be protective.
 
 [ Temporary qualities ]
 
@@ -8230,7 +8293,9 @@ To say other_attributes:
 To say permanent_attributes:
 	let list_of_attributes be a list of indexed text;
 	if player is intrepid:
-		add "intrepid like [one of]Miss Bianca in The Rescuers[or]Charlotte the spider[or]Benji[or]Pippi Longstockings[or]Sinbad[or]Huck Finn[in random order]" to list_of_attributes;
+		add "intrepid[if scene_epilogue is not happening] like [one of]Miss Bianca in The Rescuers[or]Charlotte the spider[or]Benji[or]Pippi Longstockings[or]Sinbad[or]Huck Finn[in random order][end if]" to list_of_attributes;
+	if player is protective:
+		add "protective" to list_of_attributes;
 	if player is perceptive:
 		add "perceptive" to list_of_attributes;
 	if player is resourceful:
@@ -8238,13 +8303,13 @@ To say permanent_attributes:
 	if player is affectionate:
 		add "affectionate" to list_of_attributes;
 	if player is tenacious:
-		add "tenacious (that means you don't give up)" to list_of_attributes;
+		add "tenacious[if scene_epilogue is not happening] (that means you don't give up)[end if]" to list_of_attributes;
 	if player is compassionate:
 		add "compassionate" to list_of_attributes;
 	if player is courageous:
 		add "courageous" to list_of_attributes;
 	if the number of entries of list_of_attributes is greater than 0:
-		say ". Thinking about it a bit, you conclude you are [list_of_attributes]";
+		say list_of_attributes;
 	
 
 Instead of smelling player:
@@ -8856,13 +8921,13 @@ Part - Sharon
 The Sharon is an improper-named _female woman in Room_D_Loop.
 	The printed name is "Cat Lady".
 	The initial appearance is "[sharons_initial_appearance]. ".
-	The description is "[sharon_description].".
+	The description is "[sharon_description].[paragraph break][sharons_initial_appearance].".
 	Understand "cat lady", "Sharon", "lady", "Sharon", "Shannon", "curls/makeup", "high heels", "evening/-- dress" as Sharon.
 	The indefinite article is "the".
 
 To say sharons_initial_appearance:
 	if Scene_Day_One is happening:
-		say "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of a soap opera on her old black and white TV[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She is staring briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs";
+		say "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of her TC watching a soap opera[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She stares briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs";
 	else:
 		say "The Cat Lady is here";
 
@@ -8887,82 +8952,82 @@ Sharon is tending-garden.
 [TODO: these should be scenes instead, since they can contradict each other]
 
 When play begins:
-	Sharon feeds cats at sometime in the hour of 12:00 PM;
-	Sharon tends garden at sometime in the hour of 2:00 PM;
-	Sharon watches TV at sometime in the hour of 3:30 PM;
+	sharon_feeds_cats at sometime around 11:30 AM;
+	sharon_tends_garden at sometime around 1:30 PM;
+	sharon_watches_tv at sometime around 3:30 PM;
 
-To prepare Sharon for Tea Time:
-	Move Sharon into her trailer;
-	Now Sharon is ready-for-tea-time;
-
-At the time when Sharon tends garden:
+At the time when sharon_tends_garden:
 	if dramatic scene is happening:
-		Sharon tends garden in 10 minutes from now;
+		sharon_tends_garden in 10 turns from now;
 		stop;
 	if Sharon is ready-for-tea-time:
 		Report Sharon saying "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'I was going to water the garden, but we're having so much fun, I'll do it later.'";
-		Sharon tends garden in 15 minutes from now;
+		sharon_tends_garden in 15 turns from now;
 	Otherwise:
-		Report Sharon saying "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], I have to go water the garden.' [run paragraph on]";
-		Move Sharon out of her trailer;
+		if Sharon is touchable:
+			queue_report "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], I have to go water the garden.'" at priority 4;
+		Move_sharon_out_of_her_trailer;
 		Now Sharon is tending-garden;
-		if Sharon is visible:
-			queue_report "[line break]She uncoils the hose and starts watering her sad little garden in front of her trailer." at priority 2;
+		if player is in Room_D_Loop:
+			queue_report "She uncoils the hose and starts watering her little garden in front of her trailer." at priority 2;
 
-At the time when Sharon resumes gardening:
+At the time when sharon_resumes_gardening:
 	if sharon is not in Room_D_Loop:
-		move Sharon out of her trailer;
+		Move_sharon_out_of_her_trailer;
 	now Sharon is tending-garden;
 
-At the time when Sharon watches TV:
+At the time when sharon_watches_tv:
 	if dramatic scene is happening:
-		Sharon watches TV in 10 minutes from now;
+		sharon_watches_tv in 10 turns from now;
 		stop;
 	if Sharon is ready-for-tea-time:
 		Report Sharon saying "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'One of my shows is on, but it is so much fun talking to you, I'll skip it.'";
-		Sharon watches TV in 15 minutes from now;
+		sharon_watches_tv in 15 turns from now;
 	Otherwise:
-		Report Sharon saying "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], my favorite show is on. You can join me if you want.' [run paragraph on]";
-		Move Sharon into her trailer;
+		if Sharon is touchable:
+			queue_report "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], my favorite show is on. You can join me if you want.'" at priority 4;
+		move_sharon_into_her_trailer;
 		Now Sharon is watching-tv;
-		if Sharon is visible:
-			queue_report "She sits down in front of her old black and white TV and turns on a soap opera." at priority 2;
+		Now sharons_tv is switched on;
+		if player is in Room_Sharons_Trailer:
+			queue_report "She sits down in front of her TV and turns on a soap opera." at priority 2;
 
-At the time when Sharon feeds cats:
+[TODO: Convert anything dealing with minutes to turns]
+
+At the time when sharon_feeds_cats:
 	if dramatic scene is happening:
-		Sharon feeds cats in 10 minutes from now;
+		sharon_feeds_cats in 10 turns from now;
 		stop;
 	if Sharon is ready-for-tea-time:
 		Report Sharon saying "The Cat Lady [sharon_stuff] and says, 'The little dearies are hungry, but we're having so much fun, aren't we?'";
-		Sharon feeds cats in 15 minutes from now;
+		sharon_feeds_cats in 15 turns from now;
 	Otherwise:
-		Report Sharon saying "The Cat Lady [sharon_stuff] and says, 'Well, [sharons_nickname], I have to go feed the kitties.' [run paragraph on]";
-		Move Sharon into her trailer;
+		if Sharon is touchable:
+			queue_report "The Cat Lady [sharon_stuff] and says, 'Well, [sharons_nickname], I have to go feed the kitties.' [run paragraph on]" at priority 4;
+		move_sharon_into_her_trailer;
 		Now Sharon is feeding-cats;
-		if Sharon is visible:
-			queue_report "She moves into the kitchen and starts cooking up smelly fish for her cats." at priority 2;
+		if player is in Room_Sharons_Trailer:
+			queue_report "The Cat Lady moves into the kitchen and starts cooking up smelly fish for her cats." at priority 2;
 
-To move Sharon out of her trailer:
+To move_sharon_out_of_her_trailer:
 	if player is in Room_D_Loop:
 		queue_report "The Cat Lady steps out of her trailer, going slowly down the steps. The tabby shoots out the door ahead of her, almost tripping her." at priority 3;
-	otherwise if player is in Room_Sharons_Trailer:
-		queue_report "She steps outside. The tabby shoots out the door soon as it is open." at priority 3;
+	otherwise if player is contained by Room_Sharons_Trailer:
+		queue_report "The Cat Lady steps outside. The tabby shoots out the door soon as it is open." at priority 3;
 	Now Sharon is in Room_D_Loop;
 	Now Tabby is in Room_D_Loop;
 
-To move Sharon into her trailer:
+To move_sharon_into_her_trailer:
 	if player is in Room_D_Loop:
-		queue_report "She goes into her trailer, going slowly up the steps. The tabby cat licks its paw and, after a bit, follows through the cat door." at priority 3;
+		queue_report "The Cat Lady goes into her trailer, going slowly up the steps. The tabby cat licks its paw and, after a bit, follows through the cat door." at priority 3;
 	otherwise if player is in Room_Sharons_Trailer:
-		Report Sharon saying "The Cat Lady comes into the trailer and sees you, 'Hi, [sharons_nickname].' The tabby cat follows through the cat door.";
+		queue_report "The Cat Lady comes into the trailer and sees you, 'Hi, [sharons_nickname].' The tabby cat follows through the cat door." at priority 3;
 	Now Sharon is in Room_Sharons_Trailer;
 	Now yellow tabby is in Room_Sharons_Trailer;
 
 Chapter - Responses
 
-[
-	Preliminaries and greetings
-]
+[ Preliminaries and greetings ]
 
 Greeting response for Sharon:
 	say "[one of]'Oh, hello, [sharons_nickname],' the Cat Lady says, 'So good to see you. Out for an adventure today?'[or]'Oh, hi again, [sharons_nickname]. Will you spend a few minutes talking to your old neighbor?' the Cat Lady says[if a random chance of 1 in 3 succeeds] who [sharon_stuff][end if].[stopping]";
@@ -8982,9 +9047,7 @@ To say sharons_nickname:
 To say sharon_stuff:
 		say "[one of]carelessly ruffles the fur of a cat you'd be scared to get near[or]pats the yellow tabby on the head so heavily you can see it squash down like a shock absorber[or]gently removes a kitten trying to climb her like a tree[or]picks off clumps of cat hair that have settled on you[at random]";
 
-[
-	Defaults
-]
+[ Defaults ]
 
 Default give-show response for Sharon:
 	say "'Thanks, dearie, not sure I'd know what to do with it,' says the Cat Lady[if a random chance of 1 in 3 succeeds] as she [sharon_stuff][end if].";
@@ -9011,9 +9074,7 @@ Instead of touching Sharon:
 	say "'What a sweet one you are,' she says.";
 	Now player is affectionate;
 
-[
-	Responses
-]
+[ Responses ]
 
 Response of Sharon when asked-or-told about player:
 	say "'Well [sharons_nickname], you are the sweetest child and my very favorite neighbor,' the Cat Lady says patting you on the head affectionately.".
@@ -9054,7 +9115,7 @@ Response of Sharon when asked-or-told about topic_tea:
 Response of Sharon when asked for topic_tea [or implicit-asked for tea]:
 	if Scene_Tea_Time is happening:
 		say "'Oh sure, dearie.' [run paragraph on]";
-		refill the teacups;
+		refill_teacups;
 	else:
 		continue the action;
 
@@ -9074,7 +9135,7 @@ Response of Sharon when asked about topic_love or asked about Joseph or asked ab
 	say "The Cat Lady looks wistful for a moment, 'When my Joseph was alive...' and she just kind of drifts off and doesn't finish.";
 
 To say cat lady prattle:
-	say "[one of]The Cat Lady leans toward you. 'Tell me about your [one of]explorations[or]adventures[or]wanderings[at random]. What about [one of]the train tracks[or]the creek[or]blackberries[or]the swimming hole[or]the big pine tree[at random]?'[run paragraph on][or]What is the news with your [one of]grandpa[or]Aunt Mary[or]mom[at random]?' the Cat Lady asks.[run paragraph on][or]The Cat Lady gestures at your cup, 'Do you like your tea?' she asks[one of][or] again[stopping].[run paragraph on][or]The Cat Lady looks serious. 'Are things going okay with your new step-dad? Is that going okay?'[run paragraph on][or]'Is your grandmother still mad at me?' the Cat Lady asks.'She's been angry at me for years. Ever since I spoke up about her and Joseph's friendship.' The Cat Lady is lost in thought.[run paragraph on][in random order]".
+	say "[one of]The Cat Lady leans toward you. 'Tell me about your [one of]explorations[or]adventures[or]wanderings[at random]. Have you explored [one of]the train tracks[or]the creek[or]blackberries[or]the swimming hole[or]the big pine tree[at random]?'[run paragraph on][or]What is the news with your [one of]grandpa[or]Aunt Mary[or]mom[at random]?' the Cat Lady asks.[run paragraph on][or]The Cat Lady gestures at your cup, 'Do you like your tea?' she asks[one of][or] again[stopping].[run paragraph on][or]The Cat Lady looks serious. 'Are things going okay with your new step-dad? Is that going okay?'[run paragraph on][or]'Is your grandmother still mad at me?' the Cat Lady asks.'She's been angry at me for years. Ever since I spoke up about her and Joseph's friendship.' The Cat Lady is lost in thought.[run paragraph on][in random order]".
 
 Chapter - Rants
 
@@ -9168,13 +9229,13 @@ At the time when lee_resumes_smoking:
 To move_lee_into_his_trailer:
 	now Lee is in Room_Lees_Trailer;
 	if player is in Room_Lees_Trailer:
-		Report Lee saying "Lee comes in stubbing out his cigarette in an ashtray and says, 'Hey, Jody.'";
+		queue_report "Lee comes in stubbing out his cigarette in an ashtray and says, 'Hey, Jody.'" at priority 3;
 	else:
 		queue_report "Lee gives you a wave and heads inside his trailer." at priority 3;
 
 To move_lee_out_of_his_trailer:
-	now Lee is on the lawn chair;
-	if player is in Room_Lees_Trailer:
+	now Lee is in Room_C_Loop;
+	if player is contained by Room_Lees_Trailer:
 		queue_report "Lee gives you a wave and heads out the door, grabbing a pack of smokes on the way outside." at priority 3;
 	else:
 		Report Lee saying "Lee comes out of his trailer, gives you a nod, sits down in his chair, and lights up a smoke.";
@@ -9496,10 +9557,6 @@ Chapter - Properties
 
 Chapter - Rules and Actions
 
-[
-	Scene_Sheriffs_Drive_By
-]
-
 The sheriffs_car is an undescribed unopenable open vehicle in Limbo. 
 The printed name is "Sheriff's patrol car".
 The description is "It is dark green, mostly, with white doors, and a big black and gold badge on the door that says 'Sierra County Sheriff.' It has red lights along the top. This is a big boxy car that looks kinda muscular and mean like the yellow dog."
@@ -9507,17 +9564,6 @@ Understand "police/sheriff/sheriffs/sheriff's/sherriff/sherriffs/sherriff's/depu
 The scent is "burnt oil".
 
 test drive-by with "teleport to stone bridge/ go to b loop/g/g/g/g/g/g/g/z/z/z/z/z".
-
-Instead of going during Scene_Sheriffs_Drive_By:
-	if Scene_Sheriffs_Drive_By has been happening for less than 2 turns:
-		say "But you're curious what the police are here for, so you change your mind and keep listening.";
-		stop the action;
-	else if Scene_Sheriffs_Drive_By has been happening for less than 4 turns:
-		say "You quietly back away while the Cat Lady and the Sheriff are still talking about something. A quick look back. Did the Cat Lady just point over toward you? Are they talking about you for some reason? You want to hear what they are saying, so you creep closer.";
-		stop the action;
-	otherwise:
-		continue the action;
-
 
 Chapter - Responses
 
@@ -9553,10 +9599,16 @@ Part - Mom
 Mom is a _female woman.
 Mom is in Room_Car_With_Mom.
 The initial appearance is "[if player is in Room_Car_With_Mom]Your mom is watching the movie[first time]. Sensing you looking, she smiles at you[only][else]Your mom is here looking very worried[end if].".
-The description is "Mom is, well mom. She's silly and smart and plays with you and you know she works hard at her job. [first time]Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you saying 'I'm sorry' until your tears stopped. [only]She's strict and good and understanding. All you know is she loves you more than you know how to say.[if a random chance of 1 in 3 succeeds]
-[paragraph break]While you are looking at her, she catches your eye and smiles sweetly.[end if]".
+The description is "[moms_description].".
 Understand "mommy/ma/mother/rachel/rach" as Mom.
 The scent is "home".
+
+To say moms_description:
+	if Scene_Fallout_Going_Home is not happening:
+		say "Mom is, well mom. She's silly and smart and plays with you and you know she works hard at her job. [first time]Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you saying 'I'm sorry' until your tears stopped. [only]She's strict and good and understanding. All you know is she loves you more than you know how to say[if a random chance of 1 in 3 succeeds][paragraph break]. While you are looking at her, she catches your eye and smiles sweetly[end if]";
+	else:
+		say "Mom is, well mom. She's silly and smart and plays with you and you know she works hard at her job. She's strict and good and understanding. All you know is she loves you more than you know how to say. And right now she's grim and quiet";
+
 
 Chapter - Properties
 
@@ -9709,7 +9761,7 @@ Response of mom when asked-or-told about dog:
 Response of mom when asked-or-told about  topic_forest:
 	say "'I like to walk in the woods with your grandpa, but sometimes those woods seem scary to me. But I know I'm just being silly,' mom laughs.".
 
-Response of mom when asked-or-told about movie:
+Response of mom when asked-or-told about movie_backdrop:
 	say "'I love going to the drive-in with you. My favorite Friday date,' then mom looks more serious, 'I have my doubts about this movie though.'".
 
 Response of mom when asked about topic_tree:
