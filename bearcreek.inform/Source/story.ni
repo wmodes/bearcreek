@@ -1,8 +1,5 @@
 "Bear Creek" by Wes Modes
 
-[Include Bearcreek by Wes Modes.
-Bearcreek by Wes Modes begins here.]
-
 [header levels are volume, book, part, chapter and section]
 
 Volume - Meta
@@ -52,7 +49,7 @@ Part - Notes
 	Aaron Reed
 	Sia Delacosta
 	Mari Jacobson
-	Katherine Dalgleish
+	Kai Dalgleish
 	Jennifer Bushard
 ]
 
@@ -237,7 +234,7 @@ The asking unparseable questions rule is not listed in the Smarter Parser rulebo
 
 [Table of Smarter Parser Messages (continued)
 rule name	message
-asking unparseable questions rule	"[as the parser]Stick with imperitives. It might be more effective to offer verb - noun command like EXAMINE [get_noun_example] to interact with the story, or LOOK to get a description of your surroundings.[as normal][paragraph break]"]
+asking unparseable questions rule	"[as the parser]Stick with imperatives. It might be more effective to offer verb - noun command like EXAMINE [get_noun_example] to interact with the story, or LOOK to get a description of your surroundings.[as normal][paragraph break]"]
 
 Chapter - the stripping adverbs rule
 
@@ -361,7 +358,7 @@ The can't go that way rule response (A) is "Which direction is that? You might w
 
 The can't eat unless edible rule response (A) is "[one of]Blecch[or]Ugh[or]Bleurgh[or]Ew[at random].".
 
-The examine undescribed things rule response (A) is "[one of]It is what it is[or]Eh, nothing specialfo[at random]."
+The examine undescribed things rule response (A) is "[one of]It is what it is[or]Eh, nothing special[at random]."
 
 The can't reach inside rooms rule response (A) is "You can't get there from here."
 
@@ -437,7 +434,7 @@ Replace PrintInferredCommand;
 
 Chapter - Printing Descriptions
 
-The examine undescribed things rule response (A) is "[if Scene_Dreams is not happening][We] [see] nothing [one of]interesting[or]noteworthy[or]special[at random] about [the noun][else]You look at [the noun], but the details are[one of] foggy[or] indestinct[or] fuzzy[at random][end if]."
+The examine undescribed things rule response (A) is "[if Scene_Dreams is not happening][We] [see] nothing [one of]interesting[or]noteworthy[or]special[at random] about [the noun][else]You look at [the noun], but the details are[one of] foggy[or] indistinct[or] fuzzy[at random][end if]."
 
 Part - New commands
 
@@ -795,23 +792,23 @@ Carry out dressing:
 
 To put_clothes_back_on:
 	if player is in Room_Swimming_Hole:
-		let gettin-stuff be false;
-		let gettin-clothes be false;
+		let getting_stuff be false;
+		let getting_clothes be false;
 		[say "stuff: [list of everything that has been carried].";]
 		repeat with item running through stuff_you_brought_here:
 			if item is visible and item is not held:
 				move item to player;
-				now gettin-stuff is true;
+				now getting_stuff is true;
 		if clothes are not worn by player:
-			now gettin-clothes is true;
+			now getting_clothes is true;
 		if tennis_shoes are not worn by player:
-			now gettin-stuff is true;
+			now getting_stuff is true;
 		now clothes are worn by player;
 		now tennis_shoes are worn by player;
 		if grandpas_shirt is visible:
 			now grandpas_shirt is worn by player;
-		if gettin-stuff is true or gettin-clothes is true:
-			say "You[one of] slowly[or] leisurely[or][at random] gather your stuff[if gettin-clothes is true] and pull your clothes back on[end if]. [run paragraph on]";
+		if getting_stuff is true or getting_clothes is true:
+			say "You[one of] slowly[or] leisurely[or][at random] gather your stuff[if getting_clothes is true] and pull your clothes back on[end if]. [run paragraph on]";
 		change stuff_you_brought_here to have 0 entries;
 	else:
 		say "You are already dressed!";
@@ -3362,7 +3359,7 @@ This is the seq_grandparents_chat_handler rule:
 			else if index is 6:
 				Report Grandpa saying "'Well, you know Rach, she can take care of herself,' Grandpa says to Honey, 'She's a big girl.' And after a moment, 'But I'll tell ya...'";
 			else if index is 7:
-				Report Grandpa saying "You wander a little distance away, but close enough that you can still hear. 'I do not like the way he treats, ah, the little one. At all.' Grampa says.";
+				Report Grandpa saying "You wander a little distance away, but close enough that you can still hear. 'I do not like the way he treats, ah, the little one. At all.' Grandpa says.";
 			else if index is 8:
 				queue_report "[grandparent_random]" at priority 1;
 			else if index is 9:
@@ -3463,7 +3460,7 @@ journey_gpa_walk_after_waiting rule:
 
 This is the
 	journey_gpa_walk_catching_up rule:
-	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzolas,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
+	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzales,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
 
 This is the
 		journey_gpa_walk_end rule:
@@ -3471,7 +3468,7 @@ This is the
 		Report Mary saying "'Mornin['], Mary,' Grandpa says.[paragraph break]'How's the berry picking?' Mary asks.";
 		rule fails;
 	else if time_here of journey_gpa_walk is 2:
-		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketfull for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
+		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketful for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
 		now bucket is empty;
 		rule fails;
 	else if time_here of journey_gpa_walk is 3:
@@ -4431,12 +4428,12 @@ This is the seq_grandparents_tracks_handler rule:
 		else if index is 4:
 			Report Honey saying "Honey leans over and whispers, 'Try as we might, we may not always be able to keep you safe, [honeys_nickname].' She takes a deep breath, 'But I know you can take care of yourself when you need to.'";
 		else if index is 5:
-			Report Grandpa saying "'Let's see where this journey takes us', Grandpa says, inviting you with his hand to follow the tracks.";
+			Report Grandpa saying "'Let's see where this journey takes us,' Grandpa says, inviting you with his hand to follow the tracks.";
 			now grandparents_track_done is true;
 		else if index is 5:
 			Report Honey saying "Grandpa says, 'Let's get going. I think we're meant to follow these,' he says gesturing at the tracks. [paragraph break]Honey laughs, 'There's a metaphor there somewhere.'";
 		else if index is 6:
-			Report Grandpa saying "[one of]'Time to go,' says Grandpa.[or]Honey says, 'Let's see what's next, [honeys_nickname],' pointing at the tracks.[or]'Time to make like a hobo', says Grandpa looking at the tracks.[at random]";
+			Report Grandpa saying "[one of]'Time to go,' says Grandpa.[or]Honey says, 'Let's see what's next, [honeys_nickname],' pointing at the tracks.[or]'Time to make like a hobo,' says Grandpa looking at the tracks.[at random]";
 			[We do the following, because we want this step tp repeat]
 			decrease index of seq_grandparents_tracks by one;
 			[we make sure this ends when Scene_Dream_Tracks ends]
@@ -4765,7 +4762,7 @@ journey_lee_walk_after_waiting rule:
 
 This is the
 	journey_lee_walk_catching_up rule:
-	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya', [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
+	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya, [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
 
 This is the journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
@@ -5079,7 +5076,7 @@ When Scene_Fallout_Going_Home begins:
 
 At the time when fallout_home_ends:
 	now end_fallout_flag is true;
-	say "Mom tries to keep it light, and when that fails, she sheilds you by keeping the focus on herself.[paragraph break]Mark who was simmering at the start of the drive, is mellowed two beers in and says several nice things including how worried he was about you.[paragraph break]For the rest of the ride home, you keep your head down and speak only when spoken to which is mercifully seldom.";
+	say "Mom tries to keep it light, and when that fails, she shields you by keeping the focus on herself.[paragraph break]Mark who was simmering at the start of the drive, is mellowed two beers in and says several nice things including how worried he was about you.[paragraph break]For the rest of the ride home, you keep your head down and speak only when spoken to which is mercifully seldom.";
 	pause_the_game;
 	say Title_Card_Epilogue;
 	say "Despite everything, the years roll by.";
@@ -5330,7 +5327,7 @@ The big_bucket is scenery unopenable open container in Room_Grassy_Clearing.
 
 The honeys_radio is improper-named scenery in Room_Grassy_Clearing.
 	It is familiar, switched on, device.
-	The printed name is "transitor radio".
+	The printed name is "transistor radio".
 	The description is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
 	Understand "honey's/honeys/grandma's/grandmas/-- portable/-- transistor/-- radio", "radio/-- station/dial/channel", "knob/cube/woodgrain/plastic/wax", "music" as the honeys_radio.
 	The scent is "ozone".
@@ -6046,7 +6043,7 @@ Carry out gate_going:
 	else if player is in Room_Picnic_Area:
 		try room_navigating Room_Grassy_Field;
 	else if player is in Room_Dream_Grassy_Field:
-		say "It feels fuzzy and indistict, the details blury.[line break]";
+		say "It feels fuzzy and indistinct, the details blurry.[line break]";
 	else:
 		say "You don't see the gate here."]
 
@@ -6287,7 +6284,7 @@ To say sun_through_the_windows_description:
 	if current_time_period is not night:
 		say "[if current_time_period is not evening]The [current_time_period] sun streams through the windows dappled by the trees outside[otherwise]It is growing darker outside[end if]";
 	else:
-		say "It is dark outside, turning the windows into mirros reflecting your worried face.;"
+		say "It's dark outside, turning the windows into mirrors reflecting your worried face.;"
 
 Section - Navigation
 
@@ -6441,9 +6438,11 @@ North from Room_Sharons_Trailer is Room_D_Loop.
 
 Section - Objects
 
-The Mika figurine is an undescribed special thing in Room_Sharons_Trailer. The description of Mika is "It looks just like your cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear.".
-Understand "figurine", "statue", "sculpture", or "toy" as Mika.
-The Mika figurine can be palmed.
+The Mika_figurine is an undescribed sinking special thing in Room_Sharons_Trailer. 
+The printed name is "Mika figurine".
+The description is "It looks just like your cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear.".
+Understand "Mika/-- figurine/statue/sculpture/toy", "Mika" as Mika_figurine.
+The Mika_figurine can be palmed.
 The indefinite article is "the".
 
 Your teacup is on Cat Lady's kitchen table. It is an unopenable open container. The description is "[one of]This is a teacup -- not at all like the coffee mugs at home -- made of china, complete with a delicate little handle. The complicated rose-colored pattern may be dogs and fancy men on horses. Your teacup is [or]Your teacup is [stopping][if your teacup is unfilled]empty[else]full of tea barely worthy of the name, a lukewarm watery somewhat tea-flavored liquid[end if]."
@@ -6488,13 +6487,8 @@ The sharons_tv is an improper-named scenery device in Room_Sharons_Trailer.
 
 Knickknacks are scenery.
 	They are in Room_Sharons_Trailer.
-	The description of knickknacks is "The house is full of this stuff. Especially little porcelain figurines of cats. On little shelves, in glass cabinets, everywhere[if player does not hold the Mika figurine][one of]. You notice[or]. You are especially taken with[stopping] one that looks exactly like Mika[end if].".
+	The description of knickknacks is "The house is full of this stuff. Especially little porcelain figurines of cats. On little shelves, in glass cabinets, everywhere[if player does not hold the Mika_figurine][one of]. You notice[or]. You are especially taken with[stopping] one that looks exactly like Mika[end if].".
 	Understand "Porcelain", "figurines", "figures", "sculpture", "lace", "doilies", "shelves", "shelf", "glass", "cabinets", "cabinet" as knickknacks.
-
-The Mika figurine is an undescribed sinking thing in Room_Sharons_Trailer.
-	The description of Mika is "It looks just like your cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear.".
-	Understand "figurine", "statue", "sculpture", or "toy" as Mika.
-The Mika figurine can be palmed.
 
 Section - Rules and Actions
 
@@ -6520,7 +6514,7 @@ Instead of switching on the sharons_tv:
 		say "[first time][description of sharons_tv]
 		[paragraph break][only]The moment you start to turn it on, the Cat Lady comes in and says, 'Let's keep that off for now. My shows are on soon. You can watch with me then.'";
 	else:
-		say "The TV is already showing a soap opera. 'Dearie, you're wwelcome to sit down and watch with me,' the Cat Lady says.";
+		say "The TV is already showing a soap opera. 'Dearie, you're welcome to sit down and watch with me,' the Cat Lady says.";
 
 
 Instead of switching off the sharons_tv:
@@ -6535,29 +6529,29 @@ Instead of tuning when player is in Room_Sharons_Trailer:
 	else:
 		say "The Cat Lady is watching her show. You don't want to be rude.";
 
-Instead of taking Mika:
+Instead of taking Mika_figurine:
 	if player is in Room_Sharons_Trailer:
-		say "[one of]You quickly palm the figurine, but the Cat Lady[if Sharon is in Room_D_Loop] comes in at just that moment and [end if] immediately notices it missing. 'Oh be careful with that, Dear,' she says, plucking the Mika figurine out of your hand. 'That was made all the way in Ohio.' She places it back on the shelf in the exact same place. [if Sharon is in Room_D_Loop]
-		[paragraph break]She looks back at you one more time before going back out to her garden[end if][or]You're not sure you want to risk it again[stopping].";
-		now Mika figurine is palmed;
-		now Mika is familiar;
+		say "[one of]You quickly palm the figurine, but the Cat Lady[if Sharon is in Room_D_Loop] comes in at just that moment and [end if] immediately notices it missing. 'Oh be careful with that, Dear,' she says, plucking the Mika figurine out of your hand. 'That was made all the way in Ohio.' She places it back on the shelf in the exact same place[if Sharon is in Room_D_Loop]
+		[paragraph break]. She looks back at you one more time before going back out to her garden[end if][or]You're not sure you want to risk it again[stopping].";
+		now Mika_figurine is palmed;
+		now Mika_figurine is familiar;
 	otherwise:
 		continue the action;
 
-Instead of going north when player is in Room_Sharons_Trailer and (Mika has been palmed):
+Instead of going north when player is in Room_Sharons_Trailer and (Mika_figurine has been palmed):
 	say "You look at the Cat Lady[if Sharon is in Room_D_Loop] outside watering her plants[otherwise] who's not paying attention for one moment[end if] and[paragraph break]with your heart pounding in your throat, you pocket the little Mika figurine.";
-	Now player holds Mika;
+	Now player holds Mika_figurine;
 	Continue the action.
 
-[Instead of doing anything except object_navigating or examining or taking or quizzing or informing or implicit-quizzing or implicit-informing Mika, say "Best to just keep that in your pocket for now."]
+[Instead of doing anything except object_navigating or examining or taking or quizzing or informing or implicit-quizzing or implicit-informing Mika_figurine, say "Best to just keep that in your pocket for now."]
 
-Instead of touching Mika,
-	try examining Mika.
+Instead of touching Mika_figurine,
+	try examining Mika_figurine.
 
-Instead of showing Mika to Sharon,
-	try giving Mika to Sharon.
+Instead of showing Mika_figurine to Sharon,
+	try giving Mika_figurine to Sharon.
 
-Instead of giving Mika to Sharon:
+Instead of giving Mika_figurine to Sharon:
 	Say "[one of]'Well, I'll be. You are an honest, sweet little child.' she says. 'That little black and white cat was given me by my Joseph, God rest his soul. But, dearie, I want you to have it now. It belongs with you.' There are tears in her eyes. She closes your fist around the figurine and pats your hand, 'And you keep that little kitty safe now, you hear?' A shiver seems to pass though the Cat Lady, and she says seriously, 'And yourself too.'[or]She shakes her head, no.[stopping]";
 	Now player is compassionate;
 	Now player is mika_experienced;
@@ -6665,7 +6659,7 @@ The lees_tv is an improper-named undescribed fixed in place device in Room_Lees_
 
 The purple_heart is an improper-named familiar special thing in Limbo.
 	The printed name is "Purple Heart".
-	The description is "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like Geroge Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break][paragraph break][italic type]What will happen if your mom discovers this? You determine to hide the medal and not let her find out.[roman type][only].".
+	The description is "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like George Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break][paragraph break][italic type]What will happen if your mom discovers this? You determine to hide the medal and not let her find out.[roman type][only].".
 	Understand "war/service/purple/-- medal/heart/ribbon" as purple_heart.
 	The indefinite article is "the".
 
@@ -7157,9 +7151,10 @@ Some meadow grass is lie-able surface in Room_Forest_Meadow.
 	The description is "Here there is tall dry grass up to your waist. You try not to think about ticks."
 	Understand "tall/high/dry/meadow/-- grass/weeds", "meadow" as meadow grass.
 
-A fallen tree is a fixed in place undescribed climbable enterable container in Room_Forest_Meadow.
-	The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
-	Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under fallen/-- tree" as fallen tree.
+A fallen_tree is a fixed in place undescribed climbable enterable container in Room_Forest_Meadow.
+The printed name is "protected hollow".
+The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
+Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under fallen/-- tree" as fallen_tree.
 
 Some crickets are backdrop in Room_Forest_Meadow.
 	The description is "You can hear the clear sound of crickets even if you can't see them. Fun fact: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
@@ -7182,13 +7177,13 @@ Instead of going to Room_Protected_Hollow when Room_Forest_Meadow is not observe
 Instead of climbing virtual_sentinel_tree:
 	try room_navigating Room_Sentinel_Tree;
 
-Instead of entering fallen tree:
+Instead of entering fallen_tree:
 	try room_navigating Room_Protected_Hollow.
 
-Instead of climbing fallen tree:
+Instead of climbing fallen_tree:
 	try room_navigating Room_Protected_Hollow.
 
-Instead of climbing in fallen tree:
+Instead of climbing in fallen_tree:
 	try room_navigating Room_Protected_Hollow.
 
 Instead of listening when player is in Region_Woods_Area and Scene_Night_In_The_Woods is happening:
@@ -7414,7 +7409,7 @@ Understand "dollar/cash/bill" as money.
 Section - Backdrops and Scenery
 
 The movie_backdrop is backdrop in Room_Car_With_Mom.
-The description is "The movie is playing on the big screen. In the last of the sunset light, you can still see the figures of kids running around at the playground at the front of the drive-in. It seems unsettling that some parents would let their kids run around in the dark.[paragraph break]Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Bengi. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who kills people by looking at them."
+The description is "The movie is playing on the big screen. In the last of the sunset light, you can still see the figures of kids running around at the playground at the front of the drive-in. It seems unsettling that some parents would let their kids run around in the dark.[paragraph break]Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Benji. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who kills people by looking at them."
 Understand "film/drive-in/omen", "drive in" as movie_backdrop.
 
 The camaro_backdrop is backdrop in Room_Car_With_Mom.
@@ -7482,7 +7477,7 @@ Understand "berms/berm" as bumps.
 
 Spilled_popcorn is scenery in Room_Drive_In.
 The printed name is "spilled popcorn".
-The description is "There is popcorn blowing in drifts on the ground turning the drive-in into a winter wonderland. The popcorn squeeks when you step on it."
+The description is "There is popcorn blowing in drifts on the ground turning the drive-in into a winter wonderland. The popcorn squeaks when you step on it."
 Understand "spilled/-- popcorn/snow", "popcorn" as spilled_popcorn.
 
 Some paper trash is scenery in Room_Drive_In.
@@ -7594,7 +7589,7 @@ Instead of eating popcorn:
 		now popcorn is empty;
 	else if popcorn_countdown is less than 7:
 		now popcorn is half-full;
-	say "You stuff several handfulls of popcorn in your mouth getting lost in the buttery goodness. [if popcorn is full]There is still a good bit left[else if popcorn is half-full]There is still some left[else]Alas, now it is empty[end if]."
+	say "You stuff several handfuls of popcorn in your mouth getting lost in the buttery goodness. [if popcorn is full]There is still a good bit left[else if popcorn is half-full]There is still some left[else]Alas, now it is empty[end if]."
 
 [Candy]
 
@@ -7619,7 +7614,7 @@ To say snack_bar_interaction:
 		[paragraph break]You take a deep breath and gather up your courage to say loudly and clearly what you want. You glance back at the line that has formed behind you and get a [nervous] feeling and chicken out. You hold up the dollar bill and silently point to what you want. The Cat Lady smiles.[paragraph break]"
 
 Instead of eating Milk Duds,
-	say "You take [one of]two[or]three[at random] Milk Duds from the box and [one of]chew them[or]savor their chocolatey caramely goodness[or]decide to just suck them until they are gone which lasts until you forget and chew them anyway[at random]."
+	say "You take [one of]two[or]three[at random] Milk Duds from the box and [one of]chew them[or]savor their chocolatey caramelly goodness[or]decide to just suck them until they are gone which lasts until you forget and chew them anyway[at random]."
 
 [Counter Lady]
 
@@ -7760,7 +7755,7 @@ The back fence is backdrop in Room_Grassy_Field.
 Section - Rules and Actions
 
 Instead of doing anything to dream_back_gate:
-	say "It feels fuzzy and indistict, the details blury."
+	say "It feels fuzzy and indistinct, the details blurry."
 
 Instead of going to Room_Dream_Grassy_Field when player is in Room_Camaro_With_Stepdad:
 	say "You open the car door and look at the surface of the road speeding by. You gather your courage and prepare to jump. Mark's hand shoots out to stop you. You duck the hand, glancing back at Mark's startled face, and jump.
@@ -8086,7 +8081,7 @@ Understand "photos/photo/honey/grandpa/mom/friend/lizard/cat/cats/dog" as photos
 
 Some photos_from_home is a thing.
 The printed name is "photos".
-The description is "[one of]These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's you, Honey, and Grandpa on a visit to their house. You look like you're about 10. This must have been just before Mark and mom moved you to Idaho. After that, you saw Honey and Grandpa only in summers and sometimes Christmas.[paragraph break]This is you and your best friend from 6th grade. You both had a crush on the same person, but decided if you had to, you would share them.[paragraph break]Here's a photo Honey and Grandpa sent from a trip they took to visit family in Kansas City, Missouri.[paragraph break]Here's a photo of your dog Dodo, smiling with his tougue out, as always. When you moved to Idaho, your stepdad said there would be no room for a dog and took him to the pound.[paragraph break]You have to stop for a minute. You can look again to examine the rest of the photos.[or]You look through the remainder of the photos:[paragraph break]Here's mom and you at Christmas. She looks so old although you don't look much older than 15. This must be the year before mom left Mark after the fight.[paragraph break]Here's Grandpa, Honey, and you at the Craters of the Moon when they came to visit. You have your arms around your Grandpa. This couldn't have been too many years before he died.[paragraph break]This is whatshisname? Greg? and you in your first car, a yellow Corolla before leaving home on your cross-country trip when you were 17. You never did come back except to visit your mom.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you she hated that picture. They look like they are just about to crack up laughing. You miss them.[paragraph break]That's it. A young life in a dozen photos.[cycling]".
+The description is "[one of]These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's you, Honey, and Grandpa on a visit to their house. You look like you're about 10. This must have been just before Mark and mom moved you to Idaho. After that, you saw Honey and Grandpa only in summers and sometimes Christmas.[paragraph break]This is you and your best friend from 6th grade. You both had a crush on the same person, but decided if you had to, you would share them.[paragraph break]Here's a photo Honey and Grandpa sent from a trip they took to visit family in Kansas City, Missouri.[paragraph break]Here's a photo of your dog Dodo, smiling with his tongue out, as always. When you moved to Idaho, your stepdad said there would be no room for a dog and took him to the pound.[paragraph break]You have to stop for a minute. You can look again to examine the rest of the photos.[or]You look through the remainder of the photos:[paragraph break]Here's mom and you at Christmas. She looks so old although you don't look much older than 15. This must be the year before mom left Mark after the fight.[paragraph break]Here's Grandpa, Honey, and you at the Craters of the Moon when they came to visit. You have your arms around your Grandpa. This couldn't have been too many years before he died.[paragraph break]This is whatshisname? Greg? and you in your first car, a yellow Corolla before leaving home on your cross-country trip when you were 17. You never did come back except to visit your mom.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you she hated that picture. They look like they are just about to crack up laughing. You miss them.[paragraph break]That's it. A young life in a dozen photos.[cycling]".
 Understand "photos/photo/honey/grandpa/mom/friend/dodo/dog" as photos_from_home.
 
 Your_keys is an improper-named thing.
@@ -8583,7 +8578,7 @@ Table of gma_sharon_rant
 Quote
 "'That crazy old coot. I told your mom the other day I caught her standing out in her garden in the middle of the night talking to the flowers,' Honey says, 'but that's not all.[run paragraph on][if Grandpa is visible]' She turns toward Grandpa, 'John, did I tell you this?[end if]'"
 "'I couldn't sleep because your grandpa's snoring was keeping me up and I was taking a walk,' Honey says, 'and that's when I caught Sharon talking to her flowers.'"
-"Honey says: 'I asked the cat lady, [']What are you doing?['] and she said, [']I'm keeping my babies safe from slugs.['] And then she gives me the nuttiest smile. Okay, I told her, most of us just put snailbait out in the daytime.'"
+"Honey says: 'I asked the cat lady, [']What are you doing?['] and she said, [']I'm keeping my babies safe from slugs.['] And then she gives me the nuttiest smile. Okay, I told her, most of us just put snail bait out in the daytime.'"
 "Honey shakes her head, 'That cat lady is a crazy old nut.'"
 
 Response of Honey when asked-or-told about Dad:
@@ -8643,6 +8638,11 @@ To say grandpas_initial_appearance:
 Instead of touching Grandpa:
 	say "Grandpa gives you a big hug.";
 	Now player is affectionate;
+
+[ Grandpa picking berries ]
+
+Every turn when player is in Room_Grassy_Clearing and Grandpa is in Room_Grassy_Clearing and a random chance of 1 in 20 succeeds:
+	queue_report "Grandpa pauses for a minute from his berry picking and [one of]wipes his forehead with his handkerchief and rests against a tree[or]lights a cigarette and smokes for a bit[at random]." with priority 2.
 
 Chapter - Responses
 
@@ -8848,12 +8848,8 @@ Response of Grandpa when asked-or-told about topic_war:
 Response of Grandpa when asked-or-told about ants:
 	say "'You better watch out, [grandpas_nickname],' Grandpa says. 'Those red ants pack a mean bite.'".
 
-[
-	Grandpa picking berries
-]
-
-Every turn when player is in Room_Grassy_Clearing and Grandpa is in Room_Grassy_Clearing and a random chance of 1 in 20 succeeds:
-	queue_report "Grandpa pauses for a minute from his berry picking and [one of]wipes his forehead with his handkerchief and rests against a tree[or]lights a cigarette and smokes for a bit[at random]." with priority 2.
+Response of Grandpa when asked-or-told about fallen_tree:
+	say "'[grandpas_nickname], you are one resourceful kid,' Grandpa says. 'I was worried about you, but now I see I shouldn't have been.'".
 
 Chapter - Rants
 
@@ -9101,7 +9097,7 @@ Response of Sharon when asked-or-told about Dad:
 	say "'I didn't know your dad, [sharons_nickname], but I heard he was a very charming man,' the Cat Lady says.".
 
 Response of Sharon when asked-or-told about topic_jam or topic_berries or backdrop_berries or berries_in_pail:
-	say "'I love your grandmother's preserves,' says the Cat Lady.";
+	say "'I love your Aunt Mary's preserves,' says the Cat Lady. 'Joseph and I used to pick berries every summer.'";
 
 Response of Sharon when asked-or-told about topic_trailer:
 	say "'I've lived here for 20 years, [sharons_nickname]. I've seen people come and go,' says the Cat Lady.";
@@ -9122,10 +9118,10 @@ Response of Sharon when asked for topic_tea [or implicit-asked for tea]:
 Response of Sharon when asked-or-told about flattened_penny or given-or-shown flattened_penny:
 	say "'A lucky train penny,' the Cat Lady says admiring it and handing it back to you. 'You made that right out here by the tracks?'".
 
-Response of Sharon when asked-or-told about mika:
-	say "'That little black and white cat figurine was given me by my Joseph, when we went to Dakron, Ohio for our thirtieth anniversary,' the Cat Lady says.".
+Response of Sharon when asked-or-told about Mika_figurine:
+	say "'That little black and white cat figurine was given me by my Joseph, when we went to Akron, Ohio for our thirtieth anniversary,' the Cat Lady says.".
 
-[Response of Sharon when given-or-shown mika:
+[Response of Sharon when given-or-shown Mika_figurine:
 	I'm just going to leave this as an instead rule for now, since it is well-tested.]
 
 Response of Sharon when asked about topic_work:
@@ -9133,6 +9129,15 @@ Response of Sharon when asked about topic_work:
 
 Response of Sharon when asked about topic_love or asked about Joseph or asked about topic_family:
 	say "The Cat Lady looks wistful for a moment, 'When my Joseph was alive...' and she just kind of drifts off and doesn't finish.";
+
+Response of Sharon when asked-or-told about train_track:
+	say "'Oh!' the Cat Lady exclaims, 'I love the train. Joseph and I used to ride the train when we visited family in Chicago. The sleeper cars, the porters, sitting in the dining car and watching the world go by. So romantic.'";
+
+Response of Sharon when asked-or-told about topic_tree:
+	say "'That big pine tree is the king of the forest,' she says, 'It overlooks the whole valley.'";
+
+Response of Sharon when asked-or-told about backdrop_creek:
+	say "'That creek,' she says, 'is what made me fall in love with this place. Joseph used to catch trout in the stream bring them home for dinner.'";
 
 To say cat lady prattle:
 	say "[one of]The Cat Lady leans toward you. 'Tell me about your [one of]explorations[or]adventures[or]wanderings[at random]. Have you explored [one of]the train tracks[or]the creek[or]blackberries[or]the swimming hole[or]the big pine tree[at random]?'[run paragraph on][or]What is the news with your [one of]grandpa[or]Aunt Mary[or]mom[at random]?' the Cat Lady asks.[run paragraph on][or]The Cat Lady gestures at your cup, 'Do you like your tea?' she asks[one of][or] again[stopping].[run paragraph on][or]The Cat Lady looks serious. 'Are things going okay with your new step-dad? Is that going okay?'[run paragraph on][or]'Is your grandmother still mad at me?' the Cat Lady asks.'She's been angry at me for years. Ever since I spoke up about her and Joseph's friendship.' The Cat Lady is lost in thought.[run paragraph on][in random order]".
@@ -9206,7 +9211,7 @@ To say lees_description:
 	if Scene_Day_One is happening:
 		say "You think maybe Lee is your mom's age, but looks much older, like he's already lived a lot. He has long black hair pulled back in an untidy ponytail. He's wearing a tank top and green army pants. Honey tells you to stay clear of him, but he always says hi to you politely and might be the only person you know who calls you by your name";
 	else if Scene_Dreams is happening:
-		say "Lee has his long black hair pulled back in a neat ponytail. He's not wearing his army pants, but a fancy tuxedo and a bowtie. He looks quite handsome. He's staring intensely at the Cat Lady[if sheriff is not visible]. What is happening? You keep watching[else] as they tango[end if]";
+		say "Lee has his long black hair in two neat braids that makes him look like an Indian warrior. He's not wearing his army pants, but a fancy tuxedo and a bowtie. He looks quite handsome. He's staring intensely at the Cat Lady[if sheriff is not visible]. What is happening? You keep watching[else] as they tango[end if]";
 	else if Scene_Long_Arm_of_the_Law is happening:
 		say "Lee looks beat up, sitting in the cruiser. Something about him says he expected nothing less";
 	else:
@@ -9249,7 +9254,7 @@ Chapter - Responses
 ]
 
 Greeting response for Lee:
-	say "[one of]'Hey, Jody,' Lee says, 'How you doin[']?'.[or]'Hi again, Jody,' Lee says.[stopping]";
+	say "[one of]'Aho, Jody,' Lee says, 'How you doin[']?'.[or]'Hi again, Jody,' Lee says.[stopping]";
 
 Implicit greeting response for Lee:
 	do nothing;
@@ -9317,7 +9322,7 @@ Response of Lee when asked-or-told about Sharon:
 	say "Lee glances toward D Loop. 'I don't have nothin['] to say about that lady,' Lee says, 'but don't even get me started on her cats.'".
 
 Response of Lee when asked-or-told about Sheriff:
-	say "'Ah, man, don't even get me started on that fat pig,' Lee says. 'I don't have beef with every cop like some guys, but this sheriff is always trying to bust my chops. Reminds me of some of the Em-Fics we had in Nam. Some of them, good guys. Some of them, a-holes trying to make a point. Excuse my language.".
+	say "'Ah, man, don't even get me started on that fat pig,' Lee says. 'I don't have beef with every cop like some guys, but this sheriff is always trying to bust my chops. Reminds me of some of the Em-Fics we had in [']Nam. Some of them, good guys. Some of them, a-holes trying to make a point. Excuse my language.".
 
 Response of Lee when asked-or-told about Mom:
 	say "[one of]'I know your mom. Rachel,' Lee says seriously. 'She's good people. I get people up in my face all the time. People avoiding me. Your mom, she smiles nicely at me and tells me hello.
@@ -9349,7 +9354,7 @@ Response of Lee when asked-or-told about flattened_penny or given-or-shown flatt
 	say "'Oh, hey that's neat,' Lee says with authentic wonder. 'I used to do that. Train pennies, we called [']em.'".
 
 Response of Lee when asked-or-told about train_track:
-	say "'Oh hey, you be careful, man,' Lee says seriously.".
+	say "'Oh hey, you be careful, man,' Lee says seriously. 'Not to give you ideas, but I used to ride the rails when I was a kid trying to get around on no money.'".
 
 Response of Lee when asked about topic_work:
 	say "'I ain't working right now. I tried to take a few jobs when I got back, but I'm still, I don't know. Too jumpy. And too angry. That's what one boss said when they fired me,' Lee says and takes a drag. 'Now Uncle Sam pays me to sit around and be a broken army toy.'".
@@ -9369,6 +9374,8 @@ Response of Lee when asked-or-told about purple_heart:
 To say lee_purple_heart_story:
 	say "'It was nothing,' Lee says, though you can tell he's pleased to be able to give you the gift. 'You hold on to that. That's for your courage and endurance.'[paragraph break]'You know, they gave me that when I got hurt in the war,' Lee says, 'I wasn't even shot. I just crashed a jeep,' Lee laughs. 'I was a driver at the base in Da Nang and there was a rocket attack. A fuel tank went up and I turned to look. Hit a Jersey barrier. Add so I got a purple heart like a hero.'[paragraph break]";
 
+Response of Lee when asked-or-told about fallen_tree:
+	say "'You created a survival shelter?' Lee asks admiringly. 'You are really something.'".
 
 Chapter - Rants
 
@@ -9416,8 +9423,8 @@ lee_indian_rant is a rant.
 
 Table of lee_indian_rant
 Quote
-"'This whole area, hell, this whole country, is Indian land, Jody.', Lee says, 'I grew up here, but my mom grew up on the rez. I don't think she ever wanted to go back. She was full blood Dakota. They took her out for Indian School and erased her culture, man. I knew I was Indian, but had no connection to it, you know?' Lee takes a drag of his cigarette."
-"Lee continues. 'I met more Indians in name than I ever did in the World,' Lee laughs bitterly. 'I mean they like to send poor people to war, don't they? And that means Blacks and Chicanos and Indians.'"
+"'This whole area, hell, this whole country, is Indian land, Jody,' Lee says, 'I grew up here, but my mom grew up on the rez. I don't think she ever wanted to go back. She was full blood Dakota. They took her out for Indian School and erased her culture, man. I knew I was Indian, but had no connection to it, you know?' Lee takes a drag of his cigarette."
+"Lee continues. 'I met more Indians in [']Nam than I ever did in the World,' Lee laughs bitterly. 'I mean they like to send poor people to war, don't they? And that means Blacks and Chicanos and Indians.'"
 "'That's why we're seeing all that stuff on the news about the Indian Movement,' Lee continues, 'They're fed up, man. You watch, Jody, someday the Indians are gonna take back this whole country.'"
 
 
@@ -9689,7 +9696,7 @@ Default yes-no response for mom:
 	if saying yes:
 		say "[one of]'Good,' mom says, smiling[or]Mom nods[at random].";
 	else:
-		say "[one of]'No?,' mom says lookng worried[or]'I'm sorry to hear that,' mom says looking at you carefully[cycling].";
+		say "[one of]'No?,' mom says looking worried[or]'I'm sorry to hear that,' mom says looking at you carefully[cycling].";
 
 Default response for mom:
 	say "'Okay, [moms_nickname],' mom says.";
@@ -9741,7 +9748,7 @@ Response of mom when asked about train_track:
 	say "[moms_train_ask_response].";
 
 To say moms_train_ask_response:
-	say "'Your grandpa used to work on the railroad and when they bought their house, he was happy that there was a train that passed nearby', mom says".
+	say "'Your grandpa used to work on the railroad and when they bought their house, he was happy that there was a train that passed nearby,' mom says".
 
 Response of mom when told about train_track:
 	if player is not train_experienced:
