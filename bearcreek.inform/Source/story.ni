@@ -2463,9 +2463,10 @@ topic_creek is a subject.
 	The printed name is "Bear Creek".
 	Understand "bear/-- river/creek/crick/stream" as topic_creek.
 
-topic_bridge is a subject.
-	The printed name is "old stone ridge".
+The topic_bridge is a subject.
+	The printed name is "old stone bridge".
 	Understand "old/-- stone/-- bridge" as topic_bridge.
+	The indefinite article is "the".
 
 Grandpa's-Virtual-Trailer is familiar.
 
@@ -3517,6 +3518,25 @@ When Scene_Sheriffs_Drive_By begins:
 	now sheriffs_car is in Room_D_Loop;
 	now seq_sheriffs_drive_by is in-progress;
 
+Section - Actions
+
+[ Prevent small talk during this important scene ]
+Instead of quizzing or informing or implicit-quizzing or implicit-informing during Scene_Sheriffs_Drive_By:
+	if Scene_Sheriffs_Drive_By has been happening for at least 1 turn:
+		say "The sheriff and the Cat Lady are talking.";
+	else:
+		continue the action;
+
+Instead of going during Scene_Sheriffs_Drive_By:
+	if Scene_Sheriffs_Drive_By has been happening for less than 2 turns:
+		say "But you're curious what the police are here for, so you change your mind and keep listening.";
+		stop the action;
+	else if Scene_Sheriffs_Drive_By has been happening for less than 4 turns:
+		say "You quietly back away while the Cat Lady and the Sheriff are still talking about something. A quick look back. Did the Cat Lady just point over toward you? Are they talking about you for some reason? You want to hear what they are saying, so you creep closer.";
+		stop the action;
+	otherwise:
+		continue the action;
+
 Section - Sequences
 
 [ Sequence: Sheriffs_Drive_By
@@ -3572,28 +3592,12 @@ This is the seq_sheriffs_drive_by_handler rule:
 		now sheriffs_car is in Limbo;
 
 This is the seq_sheriffs_drive_by_interrupt_test rule:
-	[ We don't worry about interrupting seq if NPCs are not visible because the seq accounts for that. ]
-	if we are speaking to Sharon, rule succeeds;
-	if we are speaking to Sheriff, rule succeeds;
+	[ if we are speaking to Sharon, rule succeeds;
+	if we are speaking to Sheriff, rule succeeds; ]
+	[ nothing interrupts this sequence. ]
 	rule fails.
 
 Test long-arm with "test day2 / get up / climb pine tree / d / w / w / go to grassy field / again / again / again / again / again / z / z / z".
-
-Section - Actions
-
-[ Prevent small talk during this important scene ]
-Instead of quizzing or informing or implicit-quizzing or implicit-informing during Scene_Sheriffs_Drive_By:
-	say "The sheriff and the Cat Lady are talking.";
-
-Instead of going during Scene_Sheriffs_Drive_By:
-	if Scene_Sheriffs_Drive_By has been happening for less than 2 turns:
-		say "But you're curious what the police are here for, so you change your mind and keep listening.";
-		stop the action;
-	else if Scene_Sheriffs_Drive_By has been happening for less than 4 turns:
-		say "You quietly back away while the Cat Lady and the Sheriff are still talking about something. A quick look back. Did the Cat Lady just point over toward you? Are they talking about you for some reason? You want to hear what they are saying, so you creep closer.";
-		stop the action;
-	otherwise:
-		continue the action;
 
 
 Chapter - Scene_Visit_With_Sharon
@@ -4434,7 +4438,7 @@ This is the seq_grandparents_tracks_handler rule:
 		if index is 1:
 			Report Grandpa saying "'Hey, [grandpas_nickname]. We've been waiting for you,' Grandpa says gently. Honey smiles at you.";
 		else if index is 2:
-			Report Grandpa saying "Grandpa puts his hand on your shoulder, 'You've had quite a time, haven't you? Don't you worry about it, about him.' Who is Grandpa talking about?";
+			Report Grandpa saying "Grandpa puts his hand on your shoulder, 'You've had quite a time, haven't you? Don't you worry about it, about him.' Who is Grandpa talking about? Your stepdad?";
 		else if index is 3:
 			Report Grandpa saying "'Sometimes we worry about you,  [grandpas_nickname],' Grandpa says, 'But it'll be okay, I promise.'";
 		else if index is 4:
@@ -6785,7 +6789,7 @@ Section - Objects
 
 Section - Backdrops & Scenery
 
-The pot_of_blackberry_jam is scenery in Room_Grandpas_Trailer.
+The pot_of_blackberry_jam is nonfamiliar scenery in Room_Grandpas_Trailer.
 	The printed name is "pot of blackberry jam".
 	The description of the pot_of_blackberry_jam is "The pot of blackberry jam is bubbling blackly on low heat like the La Brea Tar Pits -- but better smelling. Aunt Mary is staring off into space and stirring the pot continuously. There are jam_jars and lids set out ready to receive the jam when it is ready. Generally, Aunt Mary shoos you  away when she is making jam.".
 	Understand "pot of blackberry/-- jam", "pot/pan", "blackberry/-- goo/jelly/jam/preserves", "stove/kitchen/burner" as pot_of_blackberry_jam.
@@ -8723,7 +8727,8 @@ To say grandpa_stuff:
 
 Default tell response for Grandpa:
 	if the second noun is not nothing:
-		say "'Hm, [The second noun]? [one of]Yep[or]Alright[or]You're the expert[or]You know it[at random], [grandpas_nickname],' Grandpa smiles.";
+		let object be "[The second noun]" in sentence case;
+		say "'[object]? [one of]Yep[or]Alright[or]You're the expert[or]You know it[at random], [grandpas_nickname],' Grandpa smiles.";
 	else:
 		say "'Hm, [one of]you don't say[or]you think[or]are you sure[at random]?' Grandpa says, [one of]distracted[or]looking for his cigarettes[or]mopping his forehead with his [']kerchief[at random].";
 
@@ -9330,7 +9335,7 @@ Default response for Lee:
 	say "'Hmm, yeah cool,' Lee says.";
 
 Default ask response for Lee:
-	say "'Well, like a lot of things, I don't know much about that[one of][or] either[stopping], [lees_nickname],' Lee says.";
+	say "'Well, like a lot of things, [one of]I don't know much about that[or]I don't have much to say about that[at random][one of][or] either[stopping], [lees_nickname],' Lee says.";
 
 Default thanks response for Lee:
 	say "'Don't mention it,' Lee says and looks away.";
@@ -9383,10 +9388,13 @@ Response of Lee when asked-or-told about topic_tree:
 	say "'I must have spent half my time up in the treetops when I was a kid,' Lee says. 'Fell out of some too. I even built a treehouse deep in the woods. Not much to look at, but it was a great hideout. I made friends with squirrels and birds. I liked to think I was part of the Squirrel clan.' Lee takes a drag from his cigarette.[if player is tree_experienced] 'I guess you might be part of that clan too.'[end if]".
 
 Response of Lee when asked-or-told about topic_jam or asked-or-told about topic_berries or asked-or-told about backdrop_berries or asked-or-told about berries_in_pail:
-	say "'You know, I grew up around here. Guess that's why I came back here,' Lee says mostly to himself. 'I used to pick blackberries in August too. Me and my brother used to pick berries and eat every single one until our tongues and our fingers were purple and our bellies were sore.'".
+	say "'You know, I grew up around here. Guess that's why I came back,' Lee says mostly to himself. 'I used to pick blackberries in August too. Me and my brother used to pick berries and eat every single one until our tongues and our fingers were purple and our bellies were sore.'".
 
 Response of Lee when asked-or-told about topic_trailer:
 	say "'Ah, I don't know,' Lee says. 'This is where I hang my hat. It could be any place. It could be somewhere else tomorrow.'".
+
+Response of Lee when asked-or-told about topic_creek:
+	say "'My brother and I used to play in the creeks when I was a kid,' he says, 'We used to catch stripers and frogs and even crayfish. Whatever it was, my mom could turn it into dinner.'".
 
 Response of Lee when asked-or-told about dog:
 	say "'I can't stand dogs now,' Lee says. 'There were some dogs in our unit and, lemme tell you, they weren't your pet Spot. Nah, they were mean machines. It just about broke my heart to see them at first because I used to love dogs. But they'd just as happily take your arm off as look at you.".
@@ -9403,6 +9411,9 @@ Response of Lee when asked about topic_work:
 Response of Lee when asked about topic_love:
 	say "'I don't know a thing about it,' Lee says. 'Not a single goddamn thing. Pardon my language.'".
 
+Response of Lee when asked about topic_death:
+	say "'I don't know, [lees_nickname],' Lee says. 'I know what my mom believed. She believed the dead walk on to the spirit world where they don't suffer and have good food and fair weather. That sounds suspiciously like Christian heaven to me. So I don't know. Sounds like wishful thinking to me.'[paragraph break]'But it's a nice thought, huh?'".
+
 Response of Lee when asked-or-told about topic_family:
 	say "'Ah, my family. Yeah, I don't talk to [']em much anymore. My mom. My dad. My brother,' Lee says, 'My mom grew up in Pine Ridge. That's a genuine Indian rez, man.'[paragraph break]'Did you know I was married? Might even still be. When I came back, she couldn't take it and split.' Lee lights another cigarette. 'I guess good for her. Get out while the gettin's good.'".
 
@@ -9413,7 +9424,7 @@ Response of Lee when asked-or-told about purple_heart:
 		continue the action;
 
 To say lee_purple_heart_story:
-	say "'It was nothing,' Lee says, though you can tell he's pleased to be able to give you the gift. 'You hold on to that. That's for your courage and endurance.'[paragraph break]'You know, they gave me that when I got hurt in the war,' Lee says, 'I wasn't even shot. I just crashed a jeep,' Lee laughs. 'I was a driver at the base in Da Nang and there was a rocket attack. A fuel tank went up and I turned to look. Hit a Jersey barrier. Add so I got a purple heart like a hero.'[paragraph break]";
+	say "'It was nothing,' Lee says, though you can tell he's pleased to be able to give you the gift. 'You hold on to that. That's for your courage and endurance.'[paragraph break]'You know, they gave me that when I got hurt in the war,' Lee says, 'I wasn't even shot. I just crashed a jeep,' Lee laughs. 'I was a driver at the base in Da Nang and there was a rocket attack. A fuel tank went up and I turned to look. Hit a Jersey barrier,' Lee laughs 'So I got a purple heart like a hero.'[paragraph break]";
 
 Response of Lee when asked-or-told about fallen_tree:
 	say "'You created a survival shelter?' Lee asks admiringly. 'You are really something.'".
@@ -9429,7 +9440,7 @@ lee_cat_rant is a rant.
 Table of lee_cat_rant
 Quote
 "'Honestly, I don't mind cats. I like them really,' Lee says, taking a long drag off of his cigarette. 'They're independent. They're smart. They're survivors. They're only interested in people as long as they feed them.' Lee glances toward D Loop."
-"'But over there,' Lee says, 'That's not a lady who loves cats. That's a lady who collects things. And it happens to be cats."
+"'But over there,' Lee says, 'That's not a lady who loves cats. That's a lady who collects things. And it happens to be cats.'"
 "Lee is angry and stubs out his cigarette in a coffee can. 'They're living things, man! They need to be loved. And petted. And each one needs a name and to be cared for and to feel unique in the whole world.' He wipes his eyes angrily."
 "'Sorry, I get carried away,' Lee says. 'I really like cats.'"
 
@@ -9467,6 +9478,12 @@ Quote
 "'This whole area, hell, this whole country, is Indian land, Jody,' Lee says, 'I grew up here, but my mom grew up on the rez. I don't think she ever wanted to go back. She was full blood Dakota. They took her out for Indian School and erased her culture, man. I knew I was Indian, but had no connection to it, you know?' Lee takes a drag of his cigarette."
 "Lee continues. 'I met more Indians in [']Nam than I ever did in the World,' Lee laughs bitterly. 'I mean they like to send poor people to war, don't they? And that means Blacks and Chicanos and Indians.'"
 "'That's why we're seeing all that stuff on the news about the Indian Movement,' Lee continues, 'They're fed up, man. You watch, Jody, someday the Indians are gonna take back this whole country.'"
+
+Chapter - Tests
+
+test lee-ask with "teleport to C Loop / z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/go to c loop/ ask lee about Aunt Mary / ask lee about Dad / ask lee about Grandpa / ask lee about Honey / ask lee about Joseph / ask lee about Lee / ask lee about Me / ask lee about Mika / ask lee about Mom / ask lee about Sharon / ask lee about Sheriff / ask lee about Stepdad / ask lee about ants / ask lee about berries / ask lee about bridge / ask lee about bucket / ask lee about cat / z / z / z / ask lee about cigarettes / ask lee about creek / ask lee about death / ask lee about dog / ask lee about dream dog / ask lee about dreams / ask lee about family / ask lee about forest / ask lee about grandpas shirt / ask lee about indians / z / z / z / ask lee about jam / ask lee about life / ask lee about love / ask lee about lucky penny / ask lee about lunch / ask lee about movie / ask lee about nest / ask lee about pail / ask lee about penny / ask lee about purple heart / ask lee about radio / ask lee about swimming / ask lee about tea / ask lee about trailer / ask lee about train / ask lee about big tree / ask lee about war / z / z / z / ask lee about work / ".
+
+test lee-tell with "teleport to C Loop / z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/go to c loop/ tell lee about Aunt Mary / tell lee about Dad / tell lee about Grandpa / tell lee about Honey / tell lee about Joseph / tell lee about Lee / tell lee about Me / tell lee about Mika / tell lee about Mom / tell lee about Sharon / tell lee about Sheriff / tell lee about Stepdad / tell lee about ants / tell lee about berries / tell lee about bridge / tell lee about bucket / tell lee about cat / z / z / z / tell lee about cigarettes / tell lee about creek / tell lee about death / tell lee about dog / tell lee about dream dog / tell lee about dreams / tell lee about family / tell lee about forest / tell lee about grandpas shirt / tell lee about indians / z / z / z / tell lee about jam / tell lee about life / tell lee about love / tell lee about lucky penny / tell lee about lunch / tell lee about movie / tell lee about nest / tell lee about pail / tell lee about penny / tell lee about purple heart / tell lee about radio / tell lee about swimming / tell lee about tea / tell lee about trailer / tell lee about train / tell lee about big tree / tell lee about war / z / z / z / tell lee about work / ".
 
 
 Part - Aunt Mary
@@ -9558,7 +9575,7 @@ Response of Mary when asked-or-told about backdrop_berries or asked-or-told abou
 	say "'Every year,' she smiles. 'Every year, we pick the berries and the jam lasts until the next summer.'"
 
 Response of Mary when asked-or-told about bucket:
-	say "Your grandpa [if Scene_Bringing_Lunch is happening]will be bringing[else]brought[end if] that bucket up for me to make more jam."
+	say "Your grandpa [if Scene_Bringing_Lunch is not happening]will be bringing[else]brought[end if] that bucket up for me to make more jam."
 
 Response of Mary when asked-or-told about topic_jam:
 	say "'That's your grandma's recipe,' she says proudly. 'No,' she looks worried, 'No. Mama is your great-grandmother. It's your great-grandma's recipe.'".
@@ -9568,9 +9585,9 @@ Response of Mary when asked-or-told about topic_train:
 
 Response of Mary when asked-or-told about topic_lunch:
 	if Scene_Bringing_Lunch is happening:
-		say "'Oh, you go and take lunch to your Honey and lee,' she says. 'That's hungry work.'";
+		say "'Oh, you go and take lunch to your Honey and grandpa,' she says. 'That's hungry work.'";
 	else:
-		say "'Later we'll make some lunch for you and your Honey and lee,' she says.";
+		say "'Later we'll make some lunch for you and your Honey and grandpa,' she says.";
 
 Response of Mary when asked about topic_life:
 	say "'I've had a pretty good life and a wonderful family,' she says.".
@@ -9579,7 +9596,7 @@ Response of Mary when asked about topic_love:
 	say "'I love you,' Mary says.".
 
 Response of Mary when asked about topic_death:
-	say "'Why are you being so morose? I don't like to talk about it,' Mary says curtly.".
+	say "'They say it's part of life, and I guess that's true,' Mary says. 'My brother John died while I was still young and I don't think I ever got over that.'".
 
 Response of Mary when asked about topic_war:
 	say "'Those were hard times. I don't like to talk much about that,' she looks sad. 'Better to just let some thing go, I think.'".
@@ -9588,8 +9605,13 @@ Response of Mary when asked about topic_work:
 	say "'I helped your great uncle Charlie with his rock shop in Grass Valley years ago, but now he's gone,' she says sadly.".
 
 Response of Mary when asked about topic_family:
-	say "'I come from a big family,' she says. 'Not as many of them left anymore. Your great uncle Charlie died a couple years ago. Ethel is still in Portland. Your great uncle John died before you were even born, when I was still a girl. That just about broke Mama and Papa's hearts.".
+	say "'I come from a big family,' she says. 'Not as many of them left anymore. Your great uncle Charlie died a couple years ago. Ethel is still in Portland. Your great uncle John died before you were even born, when I was still a girl. That just about broke Mama and Papa's hearts.'".
 
+Chapter - Tests
+
+test mary-ask with "teleport to D Loop / z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/teleport to Grandpas Trailer / ask aunt mary about Aunt Mary / ask aunt mary about Dad / ask aunt mary about Grandpa / ask aunt mary about Honey / ask aunt mary about Joseph / ask aunt mary about Lee / ask aunt mary about Me / ask aunt mary about Mika / ask aunt mary about Mom / ask aunt mary about Sharon / ask aunt mary about Sheriff / ask aunt mary about Stepdad / ask aunt mary about ants / ask aunt mary about berries / ask aunt mary about bridge / ask aunt mary about bucket / ask aunt mary about cat / ask aunt mary about cigarettes / ask aunt mary about creek / ask aunt mary about death / ask aunt mary about dog / ask aunt mary about dream dog / ask aunt mary about dreams / ask aunt mary about family / ask aunt mary about forest / ask aunt mary about grandpas shirt / ask aunt mary about indians / ask aunt mary about jam / ask aunt mary about life / ask aunt mary about love / ask aunt mary about lucky penny / ask aunt mary about lunch / ask aunt mary about movie / ask aunt mary about nest / ask aunt mary about pail / ask aunt mary about penny / ask aunt mary about purple heart / ask aunt mary about radio / ask aunt mary about swimming / ask aunt mary about tea / ask aunt mary about trailer / ask aunt mary about train / ask aunt mary about big tree / ask aunt mary about war / ask aunt mary about work / ".
+
+test mary-tell with "teleport to D Loop / z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/teleport to Grandpas Trailer / tell aunt mary about Aunt Mary / tell aunt mary about Dad / tell aunt mary about Grandpa / tell aunt mary about Honey / tell aunt mary about Joseph / tell aunt mary about Lee / tell aunt mary about Me / tell aunt mary about Mika / tell aunt mary about Mom / tell aunt mary about Sharon / tell aunt mary about Sheriff / tell aunt mary about Stepdad / tell aunt mary about ants / tell aunt mary about berries / tell aunt mary about bridge / tell aunt mary about bucket / tell aunt mary about cat / tell aunt mary about cigarettes / tell aunt mary about creek / tell aunt mary about death / tell aunt mary about dog / tell aunt mary about dream dog / tell aunt mary about dreams / tell aunt mary about family / tell aunt mary about forest / tell aunt mary about grandpas shirt / tell aunt mary about indians / tell aunt mary about jam / tell aunt mary about life / tell aunt mary about love / tell aunt mary about lucky penny / tell aunt mary about lunch / tell aunt mary about movie / tell aunt mary about nest / tell aunt mary about pail / tell aunt mary about penny / tell aunt mary about purple heart / tell aunt mary about radio / tell aunt mary about swimming / tell aunt mary about tea / tell aunt mary about trailer / tell aunt mary about train / tell aunt mary about big tree / tell aunt mary about war / tell aunt mary about work / ".
 
 Part - the Sheriff
 
@@ -9713,9 +9735,10 @@ To say looks_away_from_movie:
 
 Default tell response for mom:
 	if the second noun is not nothing:
-		say "'[The second noun]?' mom says.";
+		let object be "[The second noun]" in sentence case;
+		say "'[object]?' mom says.";
 	else:
-		say "'What do you mean?' mom says";
+		say "'What do you mean?' mom says.";
 
 Default ask response for mom:
 	say "'I don't know, [moms_nickname],' mom shrugs.";
@@ -9749,7 +9772,7 @@ Response of mom when asked-or-told about player:
 	say "Mom looks serious. 'You don't need me to tell you anything. You know who you are, and you always have from the time you were a baby,' mom says.".
 
 Response of mom when asked-or-told about mom:
-	say "'Me?' mom asks, 'You know everything about me already.' I should be asking you!'".
+	say "'Me?' mom asks, 'You know everything about me already. I should be asking you!'".
 
 Response of mom when asked-or-told about Honey:
 	say "'Your Honey?' mom says, 'She really loves you, even if she's strict with you. You know that, don't you?'".
@@ -9821,7 +9844,7 @@ Response of mom when told about topic_tree:
 	say "'[if player has not been in Room_Top_of_Pine_Tree]Grandpa said you climbed that tree before. You be careful[else]You climbed all the way to the top? [moms_serious_name]! You're scaring me![end if],' mom says.".
 
 Response of mom when asked-or-told about topic_creek:
-	say "'Your grandpa used to take me fishing when I was little. All I wanted to do is play in the water and chase tadpoles. He used to get mad at me because I couldn't sit still. He never caught a fish when I was there.' mom says laughing.'".
+	say "'Your grandpa used to take me fishing when I was little. All I wanted to do is play in the water and chase tadpoles. He used to get mad at me because I couldn't sit still. He never caught a fish when I was there.' mom says laughing.".
 
 Response of mom when asked-or-told about topic_swimming:
 	say "[one of]'I know you are almost a grown up, but you be careful down at that old swimming hole,' mom says.[or]'If you really want to go swimming, you go with your grandpa,' mom says, 'I don't want you to go swimming by yourself.'[at random]".
@@ -9844,8 +9867,11 @@ Response of mom when asked-or-told about topic_family:
 Response of mom when asked-or-told about topic_war:
 	say "'That's a question for your grandpa,' mom says, 'though he doesn't like to talk about it.'".
 
-Chapter - Rants
+Chapter - Tests
 
+test mom-ask with "teleport to Car With Mom / ask mom about Aunt Mary / ask mom about Dad / ask mom about Grandpa / ask mom about Honey / ask mom about Joseph / ask mom about Lee / ask mom about Me / ask mom about Mika / ask mom about Mom / ask mom about Sharon / ask mom about Sheriff / ask mom about Stepdad / ask mom about ants / ask mom about berries / ask mom about bridge / ask mom about bucket / ask mom about cat / ask mom about cigarettes / ask mom about creek / ask mom about death / ask mom about dog / ask mom about dream dog / ask mom about dreams / ask mom about family / ask mom about forest / ask mom about grandpas shirt / ask mom about indians / ask mom about jam / ask mom about life / ask mom about love / ask mom about lucky penny / ask mom about lunch / ask mom about movie / ask mom about nest / ask mom about pail / ask mom about penny / ask mom about purple heart / ask mom about radio / ask mom about swimming / ask mom about tea / ask mom about trailer / ask mom about train / ask mom about big tree / ask mom about war / ask mom about work / ".
+
+test mom-tell with "teleport to Car With Mom / tell mom about Aunt Mary / tell mom about Dad / tell mom about Grandpa / tell mom about Honey / tell mom about Joseph / tell mom about Lee / tell mom about Me / tell mom about Mika / tell mom about Mom / tell mom about Sharon / tell mom about Sheriff / tell mom about Stepdad / tell mom about ants / tell mom about berries / tell mom about bridge / tell mom about bucket / tell mom about cat / tell mom about cigarettes / tell mom about creek / tell mom about death / tell mom about dog / tell mom about dream dog / tell mom about dreams / tell mom about family / tell mom about forest / tell mom about grandpas shirt / tell mom about indians / tell mom about jam / tell mom about life / tell mom about love / tell mom about lucky penny / tell mom about lunch / tell mom about movie / tell mom about nest / tell mom about pail / tell mom about penny / tell mom about purple heart / tell mom about radio / tell mom about swimming / tell mom about tea / tell mom about trailer / tell mom about train / tell mom about big tree / tell mom about war / tell mom about work / ".
 
 
 Part - Stepdad
@@ -9955,6 +9981,12 @@ Response of stepdad when asked-or-told about topic_family:
 
 Response of stepdad when asked-or-told about topic_war:
 	say "'I was never in the war,' Mark says, 'I served between wars. On a torpedo boat in the Pacific.'".
+
+Chapter - Tests
+
+test stepdad-ask with "teleport to Camaro / ask stepdad about Mary / ask stepdad about Dad / ask stepdad about Grandpa / ask stepdad about Honey / ask stepdad about Joseph / ask stepdad about Lee / ask stepdad about Me / ask stepdad about Mika / ask stepdad about Mom / ask stepdad about Sharon / ask stepdad about Sheriff / ask stepdad about Stepdad / ask stepdad about ants / ask stepdad about berries / ask stepdad about bridge / ask stepdad about bucket / ask stepdad about cat / ask stepdad about cigarettes / ask stepdad about creek / ask stepdad about death / ask stepdad about dog / ask stepdad about dream dog / ask stepdad about dreams / ask stepdad about family / ask stepdad about forest / ask stepdad about grandpas shirt / ask stepdad about indians / ask stepdad about jam / ask stepdad about life / ask stepdad about love / ask stepdad about lucky penny / ask stepdad about lunch / ask stepdad about movie / ask stepdad about nest / ask stepdad about pail / ask stepdad about penny / ask stepdad about purple heart / ask stepdad about radio / ask stepdad about swimming / ask stepdad about tea / ask stepdad about trailer / ask stepdad about train / ask stepdad about big tree / ask stepdad about war / ask stepdad about work / ".
+
+test stepdad-tell with "teleport to Camaro / tell stepdad about Mary / tell stepdad about Dad / tell stepdad about Grandpa / tell stepdad about Honey / tell stepdad about Joseph / tell stepdad about Lee / tell stepdad about Me / tell stepdad about Mika / tell stepdad about Mom / tell stepdad about Sharon / tell stepdad about Sheriff / tell stepdad about Stepdad / tell stepdad about ants / tell stepdad about berries / tell stepdad about bridge / tell stepdad about bucket / tell stepdad about cat / tell stepdad about cigarettes / tell stepdad about creek / tell stepdad about death / tell stepdad about dog / tell stepdad about dream dog / tell stepdad about dreams / tell stepdad about family / tell stepdad about forest / tell stepdad about grandpas shirt / tell stepdad about indians / tell stepdad about jam / tell stepdad about life / tell stepdad about love / tell stepdad about lucky penny / tell stepdad about lunch / tell stepdad about movie / tell stepdad about nest / tell stepdad about pail / tell stepdad about penny / tell stepdad about purple heart / tell stepdad about radio / tell stepdad about swimming / tell stepdad about tea / tell stepdad about trailer / tell stepdad about train / tell stepdad about big tree / tell stepdad about war / tell stepdad about work / ".
 
 
 Book - Animals

@@ -9,17 +9,17 @@ characters = [
     {"name": "Grandpa", "location": "Grassy Clearing"},
     {"name": "Sharon", "location": "D Loop"},
     {"name": "Lee", "location": "C Loop"},
-    {"name": "Aunt Mary", "location": "Grandpas Trailer"},
+    {"name": "Mary", "location": "Grandpas Trailer"},
     {"name": "Sheriff", "location": "Limbo"},
     {"name": "Mom", "location": "Car With Mom"},
-    {"name": "Stepdad", "location": "Car With Stepdad"},
+    {"name": "Stepdad", "location": "Camaro"},
     {"name": "dog", "location": "Dirt Road"},
     {"name": "dream_dog", "location": "Dream Dirt Road"},
     {"name": "yellow tabby", "location": "D Loop"}
 ]
 
 topics = [
-    "Aunt Mary",
+    "Mary",
     "Dad",
     "Grandpa",
     "Honey",
