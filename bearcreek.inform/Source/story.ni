@@ -99,6 +99,9 @@ Part - Epistemology
 [Keeping track of what the player character knows and sees]
 
 Include Epistemology by Eric Eve.
+ 
+A thing can be nonfamiliar. 
+
 
 Part - Smarter Parser
 
@@ -1158,7 +1161,7 @@ Carry out taking inventory (this is the print non-standard inventory rule):
 		if number of marked for listing things worn by the player is greater than 0:
 			say " and wearing ";
 			list the contents of the player, as a sentence, including contents, listing marked items only;
-		say "[other_attributes] Thinking about it a bit, you conclude you are [permanent_attributes].";
+		say "[other_attributes][permanent_attributes].";
 
 Chapter - New Can't See That Report
 
@@ -2339,6 +2342,18 @@ Does the player mean requesting for a subject: it
 Does the player mean implicit-requesting a subject:
 	it is very likely.
 
+A thing can be nonfamiliar.
+
+Does the player mean quizzing about a nonfamiliar thing:
+	it is very unlikely.
+Does the player mean implicit-quizzing a nonfamiliar thing:
+	it is very unlikely.
+Does the player mean informing about a nonfamiliar thing:
+	it is very unlikely.
+Does the player mean implicit-informing a nonfamiliar thing:
+	it is very unlikely.
+
+
 Part - Talk to Someone
 
 Instead of saying hello to someone (called the target):
@@ -2436,11 +2451,9 @@ topic_forest is a subject.
 	The printed name is "woods".
 	Understand "dark/-- forest/woods" as topic_forest.
 
-[topic_swimming is a subject. Understand "swim/swimming/diving" as topic_swimming.
-Does the player mean quizzing about topic_swimming: it is likely.
-Does the player mean informing about topic_swimming: it is likely.]
-
-The deep pool is familiar.
+topic_swimming is a subject. 
+	The printed name is "swimming".
+	Understand "swim/swimming/diving", "swimming/deep/-- hole/pool" as topic_swimming.
 
 topic_trailer is a subject.
 	The printed name is "trailer".
@@ -2448,7 +2461,7 @@ topic_trailer is a subject.
 
 topic_creek is a subject.
 	The printed name is "Bear Creek".
-	Understand "creek/river/stream", "Bear Creek" as topic_creek.
+	Understand "bear/-- river/creek/crick/stream" as topic_creek.
 
 topic_bridge is a subject.
 	The printed name is "old stone ridge".
@@ -2456,15 +2469,14 @@ topic_bridge is a subject.
 
 Grandpa's-Virtual-Trailer is familiar.
 
-train_track are familiar.
+topic_train is a subject.
+	The printed name is "train".
+	Understand "train/railroad/-- track/tracks", "rail/rails/traintracks", "train/railroad", "rail road" as topic_train.
 
 topic_tree is a subject.
 	The printed name is "tall Doug fir".
-	Understand "big/pine/fir/tall/-- doug/-- fir/tree/branches" as topic_tree.
+	Understand "big/tall/-- pine/doug/douglas/-- fir/ tree" as topic_tree.
 
-[topic_creek is a subject.
-	The printed name is "Bear Creek".
-	Understand "bear/-- river/creek/crick/water/stream" as topic_creek.]
 
 Chapter - Big Topics
 
@@ -2502,11 +2514,7 @@ topic_indians is a subject.
 
 Chapter - Various Objects
 
-The cigarettes are familiar.
-
-The dog is familiar.
-
-The radio is familiar.
+[ The dog is familiar. ]
 
 topic_cat is a subject.
 	The printed name is "cats".
@@ -2549,7 +2557,7 @@ A supporter can be sit-at-able. Supporters are usually not sit-at-able.
 A thing is either climbable or unclimbable. a thing is usually unclimbable.
 
 [A thing can be familiar or unfamiliar. A thing is usually unfamiliar.]
-A subject is a kind of thing. A subject is usually familiar.
+[ A subject is a kind of thing. A subject is usually familiar. ]
 
 Definition: a container is empty if the number of things in it is zero.
 Definition: a supporter is empty if the number of things on it is zero.
@@ -2574,7 +2582,7 @@ Things have a number called dry count.
 
 Every turn when the number of wet things is greater than 0:
 	Repeat with item running through wet things:
-		if item is not in Bear Creek and item is not in deep pool:
+		if item is not in Bear Creek and item is not in deep_pool:
 			Decrease the dry count of item by one;
 		If dry count of item is less than one:
 			Now item is dry;
@@ -2662,7 +2670,7 @@ Section - Berries in the pail
 
 [that is, the berries in the pail (or the big_bucket) ]
 
-A berries_in_pail is a undescribed sinking edible thing.
+A berries_in_pail is a nonfamiliar undescribed sinking edible thing.
 	The printed name is "bunch of ripe berries".
 	A berries_in_pail are in pail.
 	The description of berries_in_pail is "You've picked a big bunch of blackberries. [looking_closely_at_berries].".
@@ -3021,7 +3029,7 @@ To report_new_song_begins:
 	queue_report "[one of]On [distant_radio], a new song begins: [current_song][or]You hear [distant_radio] playing a new song: [current_song][or]The song [current_song], begins playing on [distant_radio][or]After a DJ break, [distant_radio]'s playing [current_song][in random order]." with priority 4;
 
 To say what_song_is_playing:
-	if radio is visible:
+	if honeys_radio is visible:
 		say "Honey's transistor radio is sitting on the bank playing [current_song]";
 	otherwise:
 		say "You hear [distant_radio] playing [current_song]";
@@ -3572,6 +3580,10 @@ This is the seq_sheriffs_drive_by_interrupt_test rule:
 Test long-arm with "test day2 / get up / climb pine tree / d / w / w / go to grassy field / again / again / again / again / again / z / z / z".
 
 Section - Actions
+
+[ Prevent small talk during this important scene ]
+Instead of quizzing or informing or implicit-quizzing or implicit-informing during Scene_Sheriffs_Drive_By:
+	say "The sheriff and the Cat Lady are talking.";
 
 Instead of going during Scene_Sheriffs_Drive_By:
 	if Scene_Sheriffs_Drive_By has been happening for less than 2 turns:
@@ -4308,7 +4320,7 @@ Every turn during Scene_Dream_Have_To_Pee:
 Chapter - Scene_Dream_About_Stepdad
 
 There is a scene called Scene_Dream_About_Stepdad.
-Scene_Dream_About_Stepdad begins when player is in Room_Camaro_With_Stepdad.
+Scene_Dream_About_Stepdad begins when player is in Room_Car_With_Stepdad.
 Scene_Dream_About_Stepdad ends when player is in Room_Dream_Grassy_Field.
 
 stepdad_free_to_go is a truth state that varies.
@@ -5228,11 +5240,11 @@ Some backdrop_blackberry_brambles is backdrop in Region_Blackberry_Area.
 	The description is "[if player is in Room_Willow_Trail]The blackberry brambles are thinner here, forming prickly walls on either side of the trail[otherwise]The brambles are as high as you are, higher actually[end if]. They are heavy with berries, the very ripest ones always just out of reach."
 	Understand "berry/-- brambles/bramble/bushes/bush/thicket/vines/plant" as backdrop_blackberry_brambles.
 
-Some backdrop_berries are backdrop in Region_Blackberry_Area.
-	The printed name is "bunch of ripe berries".
-	The description is "There are some big, ripe berries over there. If you could reach just a little bit farther or maybe get in there, maybe you could reach them."
-	Understand "bunch/handful/lots/-- of/-- ripe/big/-- black/-- blackberries/blackberry/berries/berry" as backdrop_berries.
-	The scent is "mmm, blackberry jam, blackberry pie, yum".
+Some backdrop_berries are nonfamiliar backdrop in Region_Blackberry_Area.
+The printed name is "bunch of ripe berries".
+The description is "There are some big, ripe berries over there. If you could reach just a little bit farther or maybe get in there, maybe you could reach them."
+Understand "bunch/handful/lots/-- of/-- ripe/big/-- black/-- blackberries/blackberry/berries/berry" as backdrop_berries.
+The scent is "mmm, blackberry jam, blackberry pie, yum".
 
 [TODO: Somewhere there is a "radio" "out of play" but it really should be "honey's_radio"]
 
@@ -5252,7 +5264,7 @@ To say sunshine_description:
 	else:
 		say "The sun has set and the trees loom darkly above";
 
-Backdrop_creek is backdrop in Region_Blackberry_Area.
+Backdrop_creek is a backdrop in Region_Blackberry_Area.
 	The printed name is "Bear Creek".
 	The description is "You can't see the creek through the tall brambles, but you can hear it.".
 	Understand "bear/-- river/creek/crick/stream" as backdrop_creek.
@@ -5350,7 +5362,7 @@ grandpas_cigarettes are scenery in Room_Grassy_Clearing.
 	The description is "These are Grandpa's cigarettes. Lucky Strikes. He's been smoking since World War Two.
 	[paragraph break][italic type]You didn't know it then, but you had less than ten more years with Grandpa. It turns out, two packs a day for three or four decades can kill a man.[roman type]".
 	Understand "cig/cigs/cigarette/cigarettes/smokes/pack/tobacco", "lucky strikes/strike", "pack of cig/cigs/smokes/cigarettes" as grandpas_cigarettes.
-	The scent is "mmm, tobacco. You've always liked the smell".
+	The scent is "Mmm, tobacco. You've always liked the smell".
 
 Section - Backdrops and Scenery
 
@@ -5599,7 +5611,7 @@ The casual_name is "at the swimming hole".
 The description is "[if player was in Room_Long_Stretch]Down a long wooded trail that zigs down the bank, you emerge from the thick woods, and the trees open up to the sky. [end if]The swimming hole lies before you, a deep pool carved out of and surrounded by smooth granite rocks. It is big enough that you can swim like they taught you at the YWCA from one end to the other, and deep enough to dive off the rocks.
 [paragraph break][available_exits]".
 The scent is "cool creek water and mossy rocks".
-Understand "swimming/-- hole/pool", "hole/pool", "zigzag/steep trail" as Room_Swimming_Hole.
+Understand "swimming/deep/-- hole/pool", "zigzag/steep trail" as Room_Swimming_Hole.
 
 
 Section - Navigation
@@ -5617,9 +5629,10 @@ A pool_log is a thing in Room_Swimming_Hole.
 
 Section - Backdrops and Scenery
 
-The deep pool is a waterbody in Room_Swimming_Hole.
-	The description is "The creek tumbles down some big granite rocks here and forms a deep pool. You can't see the bottom. And that makes you [nervous]."
-	Understand "deep pool", "swimming hole", "Bear/-- river/creek/crick/water/stream" as deep pool.
+The deep_pool is a waterbody in Room_Swimming_Hole.
+The printed name is "deep pool".
+The description is "The creek tumbles down some big granite rocks here and forms a deep pool. You can't see the bottom. And that makes you [nervous]."
+Understand "swimming/deep/-- hole/pool", "Bear/-- river/creek/crick/water/stream" as deep_pool.
 
 Some smooth granite rocks are a lie-able surface in Room_Swimming_Hole.
 
@@ -5654,17 +5667,17 @@ Instead of taking off tennis_shoes in Room_Swimming_Hole:
 	say "You take off your shoes and put them on the rocks.";
 	move tennis_shoes to location;
 
-Instead of entering deep pool:
+Instead of entering deep_pool:
 	try doing_some_swimming.
 
 Instead of jumping in Room_Swimming_Hole:
  	try doing_some_swimming.
 
-Deep pool has a number called swim attempts. Swim attempts is 0.
+deep_pool has a number called swim attempts. Swim attempts is 0.
 
 Instead of doing_some_swimming in Room_Swimming_Hole:
-	increase swim attempts of deep pool by 1;
-	if swim attempts of deep pool is greater than 1:
+	increase swim attempts of deep_pool by 1;
+	if swim attempts of deep_pool is greater than 1:
 		say "On this hot day, you are eager to get back in the water[if clothes are worn]. You look around again to see if you are alone[one of]. The path from the dirt road is deep forest and there is no one else at the swimming hole[or] and there is no one in sight[stopping]. So you carefully strip down to your skivvies, folding your clothes on the rocks[end if]. [one of][swimming_payoff][or]You leap in! Cold! But you get used to it, and it feels good. Actually, it feels great, as you swim around for a bit[or]You try diving like they taught you at the YWCA, but you're scared of conking your head. So your uncommitted dive turns into a belly flop[or]You make a huge splash[or]The water feels refreshing on this hot day[or]You dip in the cool water and swim about[stopping]. When you get out of the water, [one of]the warm air feels good on your skin[or]you dry quickly in the warm air[or]you stand in the cool shade, and you get a sudden chill[in random order].";
 		now player is intrepid;
 		now player is swim_experienced;
@@ -5933,7 +5946,7 @@ Section - Objects
 Train_track is an undescribed fixed in place enterable supporter in Room_Railroad_Tracks.
 The printed name is "train tracks".
 The description is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock.".
-Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as train_track.
+Understand "train/railroad/-- track/tracks", "rail/rails/traintracks", "train/railroad", "rail road", "ties" as train_track.
 
 A lost_penny is a special thing in Room_Railroad_Tracks.
 The printed name is "penny".
@@ -6531,16 +6544,22 @@ Instead of tuning when player is in Room_Sharons_Trailer:
 
 Instead of taking Mika_figurine:
 	if player is in Room_Sharons_Trailer:
-		say "[one of]You quickly palm the figurine, but the Cat Lady[if Sharon is in Room_D_Loop] comes in at just that moment and [end if] immediately notices it missing. 'Oh be careful with that, Dear,' she says, plucking the Mika figurine out of your hand. 'That was made all the way in Ohio.' She places it back on the shelf in the exact same place[if Sharon is in Room_D_Loop]
-		[paragraph break]. She looks back at you one more time before going back out to her garden[end if][or]You're not sure you want to risk it again[stopping].";
+		say "[one of]You quickly palm the figurine, but the Cat Lady[if Sharon is in Room_D_Loop] comes in at just that moment and [end if] immediately notices it missing. 'Oh be careful with that, Dear,' she says, plucking the Mika figurine out of your hand. 'That was made all the way in Ohio.' She places it back on the shelf in the exact same place[if Sharon is in Room_D_Loop]. She looks back at you one more time before going back out to her garden[end if][or]You're not sure you want to risk it again[stopping].";
 		now Mika_figurine is palmed;
 		now Mika_figurine is familiar;
 	otherwise:
 		continue the action;
 
-Instead of going north when player is in Room_Sharons_Trailer and (Mika_figurine has been palmed):
-	say "You look at the Cat Lady[if Sharon is in Room_D_Loop] outside watering her plants[otherwise] who's not paying attention for one moment[end if] and[paragraph break]with your heart pounding in your throat, you pocket the little Mika figurine.";
+Instead of going outside when player is in Room_Sharons_Trailer and (Mika_figurine has been palmed):
+	joink_mika;
+
+Instead of room_navigating Room_D_Loop when player is in Room_Sharons_Trailer and (Mika_figurine has been palmed):
+	joink_mika;
+
+To joink_mika:
+	say "You look at the Cat Lady[if Sharon is in Room_D_Loop] outside watering her plants[otherwise] who's not paying attention for one moment[end if] and with your heart pounding in your throat, you pocket the little Mika figurine.";
 	Now player holds Mika_figurine;
+	Now player is resourceful;
 	Continue the action.
 
 [Instead of doing anything except object_navigating or examining or taking or quizzing or informing or implicit-quizzing or implicit-informing Mika_figurine, say "Best to just keep that in your pocket for now."]
@@ -6552,7 +6571,7 @@ Instead of showing Mika_figurine to Sharon,
 	try giving Mika_figurine to Sharon.
 
 Instead of giving Mika_figurine to Sharon:
-	Say "[one of]'Well, I'll be. You are an honest, sweet little child.' she says. 'That little black and white cat was given me by my Joseph, God rest his soul. But, dearie, I want you to have it now. It belongs with you.' There are tears in her eyes. She closes your fist around the figurine and pats your hand, 'And you keep that little kitty safe now, you hear?' A shiver seems to pass though the Cat Lady, and she says seriously, 'And yourself too.'[or]She shakes her head, no.[stopping]";
+	Say "[one of]A complex mixture of expressions passes over her face. 'Well, I'll be. Aren't you an honest, sweet little child?' she wonders looking at the figurine in your palm. 'That little black and white cat was given me by my Joseph, God rest his soul,' she pauses for a second. 'But, dearie, I want you to have it now. It belongs with you.' There are tears in her eyes. She closes your fist around the figurine and pats your hand, 'And you keep that little kitty safe now, you hear?' A shiver seems to pass though the Cat Lady, and she adds seriously, 'And yourself too.'[or]She shakes her head, no. 'It's yours now, [sharons_nickname].'[stopping]";
 	Now player is compassionate;
 	Now player is mika_experienced;
 
@@ -7154,7 +7173,7 @@ Some meadow grass is lie-able surface in Room_Forest_Meadow.
 A fallen_tree is a fixed in place undescribed climbable enterable container in Room_Forest_Meadow.
 The printed name is "protected hollow".
 The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
-Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under fallen/-- tree" as fallen_tree.
+Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under/-- fallen/-- tree" as fallen_tree.
 
 Some crickets are backdrop in Room_Forest_Meadow.
 	The description is "You can hear the clear sound of crickets even if you can't see them. Fun fact: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
@@ -7244,7 +7263,7 @@ To say fallen_leaves_appearance:
 	else:
 		say "You are in the middle of a warm, dry pile of leaves.[run paragraph on]"
 
-A pet_rock is a special _critter animal.
+A pet_rock is a special _critter animal in Limbo.
 	The printed name is "round rock".
 	The description is "[if pet_rock is _critter]This round rock[else]George[end if] is almost perfectly round and a satisfying granite gray. [sub_pronoun_cap of pet_rock] looks smooth like [sub_pronoun of pet_rock] spent some time rolling around in a river.".
 	Understand "pet/round/river/gray/-- rock", "george" as pet_rock.
@@ -7344,7 +7363,7 @@ Section - Description
 
 Region_Dreams is a region.
 Room_Car_With_Mom, Room_Drive_In, Room_Snack_Bar, Room_Restroom,
-Room_Camaro_With_Stepdad, Room_Dream_Grassy_Field, Room_Dream_Railroad_Tracks, Room_Mars, Room_Chryse_Planitia, Room_Dream_Dirt_Road are in Region_Dreams.
+Room_Car_With_Stepdad, Room_Dream_Grassy_Field, Room_Dream_Railroad_Tracks, Room_Mars, Room_Chryse_Planitia, Room_Dream_Dirt_Road are in Region_Dreams.
 
 Section - Backdrops and Scenery
 
@@ -7355,7 +7374,7 @@ Dream_sky is backdrop in Room_Car_With_Mom.
 Dream_sky is backdrop in Room_Drive_In.
 Dream_sky is backdrop in Room_Snack_Bar.
 Dream_sky is backdrop in Room_Restroom.
-Dream_sky is backdrop in Room_Camaro_With_Stepdad.
+Dream_sky is backdrop in Room_Car_With_Stepdad.
 Dream_sky is backdrop in Room_Dream_Grassy_Field.
 Dream_sky is backdrop in Room_Dream_Railroad_Tracks.
 Dream_sky is backdrop in Room_Dream_Dirt_Road.
@@ -7442,7 +7461,7 @@ Understand "drive-in/lot", "drive in", "parking lot" as Room_Drive_In.
 Section - Navigation
 
 East of Room_Drive_In is Room_Snack_Bar.
-Inside from Room_Drive_In is Room_Camaro_With_Stepdad.
+Inside from Room_Drive_In is Room_Car_With_Stepdad.
 
 The available_exits of Room_Drive_In are "You can get back in the car or head to the snack bar from which waves of popcorn smell are emerging."
 
@@ -7494,9 +7513,9 @@ Instead of climbing or climbing in moms_camaro,
 	try entering moms_camaro.
 
 Instead of entering moms_camaro:
-	Try room_navigating Room_Camaro_With_Stepdad.
+	Try room_navigating Room_Car_With_Stepdad.
 
-Instead of room_navigating Room_Camaro_With_Stepdad when Room_Restroom is unvisited:
+Instead of room_navigating Room_Car_With_Stepdad when Room_Restroom is unvisited:
 	say "You really have to go. Better visit the restroom first."
 
 Instead of entering Virtual_Snack_Bar,
@@ -7624,7 +7643,7 @@ Instead of doing anything to counter lady when player is in Room_Snack_Bar:
 	else:
 		say "She's helping other customers and doesn't seem to hear you."
 
-Instead of going to Room_Camaro_With_Stepdad when player is in Room_Drive_In:
+Instead of going to Room_Car_With_Stepdad when player is in Room_Drive_In:
 	if Scene_Dream_About_Drive_In is happening:
 		say "[one of]Before you get in the car, you remember there's something you have to do.[or]The dollar in your pocket reminds you that you still want to visit the snack bar.[stopping]";
 		stop the action;
@@ -7661,44 +7680,44 @@ Section - Rules and Actions
 
 
 
-Chapter - Room_Camaro_With_Stepdad
+Chapter - Room_Car_With_Stepdad
 
 Section - Description
 
-Room_Camaro_With_Stepdad is a room.
+Room_Car_With_Stepdad is a room.
 The printed name is "The Camaro".
 The casual_name is "in a dream".
 The description is "You are in mom's Camaro, but your stepdad is driving. He focuses on the road and you can sense an edge of anger just beneath the surface.[first time] How did you get here? Where's mom?[only]".
 The scent is "fear".
 The outside_view is "the highway. [description of road_backdrop]".
-Understand "Camaro/car" as Room_Camaro_With_Stepdad.
+Understand "Camaro/car" as Room_Car_With_Stepdad.
 
 
 Section - Navigation
 
-Outside from Room_Camaro_With_Stepdad is Room_Dream_Grassy_Field.
+Outside from Room_Car_With_Stepdad is Room_Dream_Grassy_Field.
 
 Section - Objects
 
 Section - Backdrops and Scenery
 
-The camaro_backdrop is backdrop in Room_Camaro_With_Stepdad.
+The camaro_backdrop is backdrop in Room_Car_With_Stepdad.
 
-The cigarette lighter is scenery in Room_Camaro_With_Stepdad.
+The cigarette lighter is scenery in Room_Car_With_Stepdad.
 
-The road_backdrop is backdrop in Room_Camaro_With_Stepdad.
+The road_backdrop is backdrop in Room_Car_With_Stepdad.
 	The description is "The road and the trees zoom by as the car barrels down the highway.".
 	Understand "trees/road/window/highway/outside" as road_backdrop.
 
-Virtual_Mom is scenery in Room_Camaro_With_Stepdad.
+Virtual_Mom is scenery in Room_Car_With_Stepdad.
 	The printed name is "Mom".
 	The description is "Mom is no longer here."
-	Understand "mom" as Virtual_Mom.
+	Understand "mom/rach/rachel" as Virtual_Mom.
 
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Camaro_With_Stepdad when player is in Room_Drive_In:
+Instead of going to Room_Car_With_Stepdad when player is in Room_Drive_In:
 	say "With the logic of dreams, you're in the car speeding down the road.";
 	Continue the action.
 
@@ -7708,10 +7727,10 @@ Instead of searching road:
 Instead of doing anything except examining to cigarette lighter:
 	say "No way. Touching that is a good way to lose a hand."
 
-Instead of jumping when player is in Room_Camaro_With_Stepdad:
+Instead of jumping when player is in Room_Car_With_Stepdad:
 	try room_navigating Room_Dream_Grassy_Field.
 
-Instead of going to Room_Dream_Grassy_Field when player is in Room_Camaro_With_Stepdad:
+Instead of going to Room_Dream_Grassy_Field when player is in Room_Car_With_Stepdad:
 	if stepdad_free_to_go is false:
 		say "[one of]Are you sure? The car's still moving.[or]You've got to get out of here, but how and when?[or]Wait. Maybe he will stop or slow down up ahead.[stopping]";
 		stop the action;
@@ -7734,7 +7753,7 @@ Understand "Dream grassy/-- field" as Room_Dream_Grassy_Field.
 
 Section - Navigation
 
-Room_Dream_Grassy_Field is east of Room_Camaro_With_Stepdad.
+Room_Dream_Grassy_Field is east of Room_Car_With_Stepdad.
 
 The available_exits of Room_Dream_Grassy_Field are "The gate to the trailer park seems fuzzy and out of focus. The railroad crossing is a little clearer.[if sheriff is visible] The only way from here is to go on.[end if]";
 
@@ -7757,7 +7776,7 @@ Section - Rules and Actions
 Instead of doing anything to dream_back_gate:
 	say "It feels fuzzy and indistinct, the details blurry."
 
-Instead of going to Room_Dream_Grassy_Field when player is in Room_Camaro_With_Stepdad:
+Instead of going to Room_Dream_Grassy_Field when player is in Room_Car_With_Stepdad:
 	say "You open the car door and look at the surface of the road speeding by. You gather your courage and prepare to jump. Mark's hand shoots out to stop you. You duck the hand, glancing back at Mark's startled face, and jump.
 	[paragraph break][line break][line break]...And land surprisingly softly, with no more force than if you had fallen down from a standstill. You pick yourself up to familiar surroundings.";
 	Now player is courageous;
@@ -8035,7 +8054,7 @@ The casual_name is "in the car".
 The description is "You are in the car with mom and your stepdad. There is a vicious silence that you don't dare break. The road rolls by but you don't really see it. You are concentrating on making yourself invisible.".
 The scent is "fear".
 The outside_view is "the highway. [description of road_backdrop]".
-Understand "Camaro/car" as Room_In_Car_With_Parents.
+Understand "Room_In_Car_With_Parents" as Room_In_Car_With_Parents.
 
 Section - Navigation
 
@@ -8304,7 +8323,7 @@ To say permanent_attributes:
 	if player is courageous:
 		add "courageous" to list_of_attributes;
 	if the number of entries of list_of_attributes is greater than 0:
-		say list_of_attributes;
+		say "[if scene_epilogue is not happening]. Thinking about it a bit, you conclude you are  [end if][list_of_attributes]";
 	
 
 Instead of smelling player:
@@ -8492,6 +8511,9 @@ Response of Honey when asked-or-told about Aunt Mary:
 Response of Honey when asked-or-told about Lee:
 	say "'Stay away from him,' Honey looks up seriously. Is she mad at you? 'I mean it. He's not right. Something about him's not quite right.'".
 
+Response of Honey when asked-or-told about Joseph:
+	say "'He was a good man,' Honey says. 'I have no idea how he ended up with that batty woman. Your grandpa and I were sorry when he died.'".
+
 [Response of Honey when asked-or-told about Sheriff:
 	say "".]
 
@@ -8499,29 +8521,30 @@ Response of Honey when asked-or-told about Mom:
 	say "[one of]'Don't worry about your mom,' Honey says, 'She'll be fine. Why don't you go over and help your grandpa some.'[or]'I said, she'll be fine,' Honey snaps.[stopping]".
 
 Response of Honey when asked-or-told about topic_dreams:
-	say "'What do you think, [honeys_nickname]?' Honey asks, 'Your grandpa only dreams about fishing. Me, I don't sleep enough these days to dream. But I get pretty good at crosswords.'".
+	say "'What do [italic type]you[roman type] think, [honeys_nickname]?' Honey asks, 'Your grandpa only dreams about fishing. Me, I don't sleep enough these days to dream. But I get pretty good at crosswords.'".
 
-Response of Honey when asked-or-told about backdrop_berries or topic_berries:
+Response of Honey when asked-or-told about backdrop_berries or asked-or-told about topic_berries:
 	say "'I'd like you to pick one more pail before you go wondering off,' she says.".
 
-Response of Honey when asked-or-told about bucket:
+Response of Honey when asked-or-told about pail or asked-or-told about big_bucket:
 	say "[if Scene_Picking_Berries is happening]'After you pick a pail, you can dump it into our bucket,' Honey says.[else if Scene_Bringing_Lunch is happening]'Your grandpa is taking that up to your Aunt Mary to get started on the jam,' Honey says.[else]'Not sure what you are talking about, [honeys_nickname],' she says.[end if]".
 
-Response of Honey when asked-or-told about radio:
+Response of Honey when asked-or-told about honeys_radio:
 	say "'You keep your little hands off of it,' Honey says.".
 
 Response of Honey when asked-or-told about topic_jam:
 	say "'Mary and I are using Mama's recipe. That's why it's so good,' Honey smiles. 'Let's see, I guess Mama's your great-grandmother.'".
 
-Response of Honey when asked-or-told about cigarettes:
+Response of Honey when asked-or-told about grandpas_cigarettes:
 	say "'You keep away from those,' Honey says.".
 
 Response of Honey when asked-or-told about topic_trailer:
 	say "'You wanting to go back? If you head back to the house, you try and help your Aunt Mary out,' Honey says.".
 
-Response of Honey when asked about train_track:
+Response of Honey when asked about topic_train:
 	say "'Don't you let me catch you playing anywhere near those tracks, or I'll paddle your bottom,' Honey says.".
-Response of Honey when told about train_track:
+
+Response of Honey when told about topic_train:
 	if player is not train_experienced:
 		say "'Don't you let me catch you playing anywhere near those tracks, or I'll paddle your bottom,' Honey says.";
 	else:
@@ -8536,16 +8559,16 @@ Response of Honey when asked-or-told about flattened_penny or given-or-shown fla
 Response of Honey when asked-or-told about dog:
 	say "'Keep away from that dog,' Honey says. 'He tried to bite your grandpa once and then the owner yelled at your grandpa for it. Can you imagine that?'".
 
-[Response of Honey when asked-or-told about forest:
-	say "".]
+Response of Honey when asked-or-told about topic_forest:
+	say "'These forests are beautiful,' she says looking around. 'I go out with your grandpa sometimes and we take pictures, then I go back and paint them. You've seen the paintings at our house.'".
 
-Response of Honey when asked-or-told about topic_creek:
+Response of Honey when asked-or-told about topic_creek or asked-or-told about backdrop_creek:
 	say "'You can wade in the creek down by the bridge,' Honey says. 'Make sure you take your tennies off first though. I don't want you tracking wet shoes and mud into the house.'".
 
 Response of Honey when asked-or-told about topic_bridge:
 	say "'I love that old bridge. It's over a hundred years old. You can see ferns and stones and little fish under the bridge,' Honey says rather sweetly.".
 
-Response of Honey when asked-or-told about deep pool or asked-or-told about deep pool:
+Response of Honey when asked-or-told about topic_swimming:
 	say "'I don't want you swimming without your grandpa there,' Honey says.".
 
 Response of Honey when asked about topic_life:
@@ -8607,12 +8630,16 @@ Quote
 "'If I get a call from your mom in the middle of the night one more time, I'm going to drive there myself and your step-dad's gonna have some real problems,' Honey says in a rush[if Grandpa is visible]. Grandpa gives her another Look[end if]."
 "Honey clenches her teeth and growls but says no more."
 
-
-
 To say grandparent_random:
 	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[or]'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.[or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both!' Honey laughs.[or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[or]'Hey, [honeys_nickname],' Honey calls to you. 'When you go with Grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[in random order]".
 
 [TODO in a long list of random utterances, make it so new interlocutor is set]
+
+Chapter - Tests
+
+test honey-ask with "teleport to Grassy Clearing / ask honey about Aunt Mary / ask honey about Dad / z / z / z / ask honey about Grandpa / ask honey about Honey / ask honey about Joseph / ask honey about Lee / ask honey about Me / ask honey about Mika / ask honey about Mom / ask honey about Sharon / z / z / z / ask honey about Sheriff / ask honey about Stepdad / z / z / z / ask honey about ants / ask honey about berries / ask honey about bridge / ask honey about bucket / ask honey about cat / ask honey about cigarettes / ask honey about creek / ask honey about death / ask honey about dog / ask honey about dream dog / ask honey about dreams / ask honey about family / ask honey about forest / ask honey about grandpas shirt / ask honey about indians / ask honey about jam / ask honey about life / ask honey about love / ask honey about lucky penny / ask honey about lunch / ask honey about movie / ask honey about nest / ask honey about pail / ask honey about penny / ask honey about purple heart / ask honey about radio / ask honey about swimming / ask honey about tea / ask honey about trailer / ask honey about train / ask honey about tree / ask honey about war / ask honey about work / ".
+
+test honey-tell with "teleport to Grassy Clearing / tell honey about Aunt Mary / tell honey about Dad / z / z / z / tell honey about Grandpa / tell honey about Honey / tell honey about Joseph / tell honey about Lee / tell honey about Me / tell honey about Mika / tell honey about Mom / tell honey about Sharon / z / z / z / tell honey about Sheriff / tell honey about Stepdad / z / z / z / tell honey about ants / tell honey about berries / tell honey about bridge / tell honey about bucket / tell honey about cat / tell honey about cigarettes / tell honey about creek / tell honey about death / tell honey about dog / tell honey about dream dog / tell honey about dreams / tell honey about family / tell honey about forest / tell honey about grandpas shirt / tell honey about indians / tell honey about jam / tell honey about life / tell honey about love / tell honey about lucky penny / tell honey about lunch / tell honey about movie / tell honey about nest / tell honey about pail / tell honey about penny / tell honey about purple heart / tell honey about radio / tell honey about swimming / tell honey about tea / tell honey about trailer / tell honey about train / tell honey about tree / tell honey about war / tell honey about work / ".
 
 
 Part - Grandpa
@@ -8696,7 +8723,7 @@ To say grandpa_stuff:
 
 Default tell response for Grandpa:
 	if the second noun is not nothing:
-		say "'[The second noun]? [one of]Yep[or]Alright[or]You're the expert[or]You know it[at random], [grandpas_nickname],' Grandpa smiles.";
+		say "'Hm, [The second noun]? [one of]Yep[or]Alright[or]You're the expert[or]You know it[at random], [grandpas_nickname],' Grandpa smiles.";
 	else:
 		say "'Hm, [one of]you don't say[or]you think[or]are you sure[at random]?' Grandpa says, [one of]distracted[or]looking for his cigarettes[or]mopping his forehead with his [']kerchief[at random].";
 
@@ -8755,13 +8782,13 @@ Response of Grandpa when asked-or-told about stepdad:
 Response of Grandpa when asked-or-told about topic_dreams:
 	say "'We all have dreams, [grandpas_nickname]. Sometimes as you get older, or if you get to be an old man like me, you have different dreams than you did when you were a young man,' Grandpa says, 'These days, I dream about a quiet river with a fishing pole.'".
 
-Response of Grandpa when asked-or-told about topic_creek:
+Response of Grandpa when asked-or-told about topic_creek or asked-or-told about backdrop_creek:
 	say "'Well, I love that old creek. It's one of the reasons we bought our house here,' Grandpa says, 'You know we call it [']Bear Creek,['] but the Miwok people who lived here long before us had another name for it. I've never known this creek's true name.'".
 
 Response of Grandpa when asked-or-told about topic_indians:
 	say "'The Miwok people used to live in these hills along Bear Creek,' Grandpa says, 'You know, there are still remains of houses and petroglyphs, those are drawings on rocks, made by Indians who lived here long before we came here.'".
 
-Response of Grandpa when asked-or-told about backdrop_berries or topic_berries:
+Response of Grandpa when asked-or-told about backdrop_berries or asked-or-told about topic_berries:
 	say "'How you doing, [grandpas_nickname]?' Grandpa [grandpa_stuff]. 'You helping your Honey and Grandpa make blackberry jam?'".
 
 [TODO: Grandpa doesn't respond here]
@@ -8780,16 +8807,16 @@ Response of Grandpa when asked-or-told about topic_jam:
 Response of Grandpa when asked-or-told about grandpas_shirt or given-or-shown grandpas_shirt:
 	say "[if player does not hold grandpas_shirt]'You can wear it if you want, [grandpas_nickname][else]'You hold on to that for me, [grandpas_nickname][end if],' Grandpa says.".
 
-Response of Grandpa when asked-or-told about cigarettes:
+Response of Grandpa when asked-or-told about grandpas_cigarettes:
 	say "'That's grown-up business, [grandpas_nickname]' Grandpa says seriously. 'And I hope you never never smoke.'".
 
 Response of Grandpa when asked-or-told about topic_trailer:
 	say "Our house? We've been living there since you were knee-high to a grasshopper. Do you remember when the big truck moved our trailer into place? No, you wouldn't remember that. You were a babe in your mama's arms.".
 
-Response of Grandpa when asked about train_track:
+Response of Grandpa when asked about topic_train:
 	say "'You be careful around those train tracks, a train could roll right over you and not even blink,' Grandpa says.".
 
-Response of Grandpa when told about train_track:
+Response of Grandpa when told about topic_train:
 	if player is not train_experienced:
 		say "'Yeah? The one that runs by the trailer park? You can hear it going by if you listen,' Grandpa says. 'Maybe later we can put pennies on the track again.'";
 	else:
@@ -8821,7 +8848,7 @@ Response of Grandpa when asked-or-told about topic_creek:
 Response of Grandpa when asked-or-told about topic_bridge:
 	say "[one of]'This old bridge has probably been here a hundred years. Maybe miners drove their carts over that bridge to get to their claims up in the hills,' Grandpa says.[or]'Have you waded down in the creek?' Grandpa says.[stopping]".
 
-Response of Grandpa when asked-or-told about deep pool:
+Response of Grandpa when asked-or-told about topic_swimming:
 	say "[one of]'I know you are almost a grown up, but you be careful down at that old swimming hole,' Grandpa says. 'Maybe tomorrow we can go swimming.'[or]'If you really want to go swimming, maybe we can go and get your swimsuit and go down there together,' Grandpa says, 'I don't want you to go swimming by yourself.'[stopping]".
 
 Response of Grandpa when asked-or-told about topic_lunch:
@@ -8904,6 +8931,12 @@ Chapter - Journeys
 		* turn n+1: one turn after you arrive, Grandpa says something to you and goes one step closer
 		* turn n+m: if you take more than m turns to get to him and you are a location away, Grandpa comes to get you and ask if you are coming
 ]
+
+Chapter - Tests
+
+test grandpa-ask with "teleport to Grassy Clearing / ask grandpa about Aunt Mary / ask grandpa about Dad / z / z / z / ask grandpa about Grandpa / ask grandpa about Honey / ask grandpa about Joseph / ask grandpa about Lee / ask grandpa about Me / ask grandpa about Mika / ask grandpa about Mom / z / z / z / ask grandpa about Sharon / z / z / z / ask grandpa about Sheriff / ask grandpa about Stepdad / ask grandpa about ants / ask grandpa about berries / ask grandpa about bridge / ask grandpa about bucket / ask grandpa about cat / ask grandpa about cigarettes / ask grandpa about creek / ask grandpa about death / ask grandpa about dog / ask grandpa about dream dog / ask grandpa about dreams / ask grandpa about family / ask grandpa about forest / ask grandpa about grandpas shirt / ask grandpa about indians / ask grandpa about jam / ask grandpa about life / ask grandpa about love / ask grandpa about lucky penny / ask grandpa about lunch / ask grandpa about movie / ask grandpa about nest / ask grandpa about pail / ask grandpa about penny / ask grandpa about purple heart / ask grandpa about radio / ask grandpa about swimming / ask grandpa about tea / ask grandpa about trailer / ask grandpa about train / ask grandpa about big tree / ask grandpa about war / ask grandpa about work / ".
+
+test grandpa-tell with "teleport to Grassy Clearing / tell grandpa about Aunt Mary / tell grandpa about Dad / z / z / z / tell grandpa about Grandpa / tell grandpa about Honey / tell grandpa about Joseph / tell grandpa about Lee / tell grandpa about Me / tell grandpa about Mika / tell grandpa about Mom / z / z / z / tell grandpa about Sharon / z / z / z / tell grandpa about Sheriff / tell grandpa about Stepdad / tell grandpa about ants / tell grandpa about berries / tell grandpa about bridge / tell grandpa about bucket / tell grandpa about cat / tell grandpa about cigarettes / tell grandpa about creek / tell grandpa about death / tell grandpa about dog / tell grandpa about dream dog / tell grandpa about dreams / tell grandpa about family / tell grandpa about forest / tell grandpa about grandpas shirt / tell grandpa about indians / tell grandpa about jam / tell grandpa about life / tell grandpa about love / tell grandpa about lucky penny / tell grandpa about lunch / tell grandpa about movie / tell grandpa about nest / tell grandpa about pail / tell grandpa about penny / tell grandpa about purple heart / tell grandpa about radio / tell grandpa about swimming / tell grandpa about tea / tell grandpa about trailer / tell grandpa about train / tell grandpa about big tree / tell grandpa about war / tell grandpa about work / ".
 
 test gw with "teleport to grandpas trailer / teleport to grassy clearing / teleport to willow trail".
 
@@ -9096,14 +9129,14 @@ Response of Sharon when asked-or-told about Mom:
 Response of Sharon when asked-or-told about Dad:
 	say "'I didn't know your dad, [sharons_nickname], but I heard he was a very charming man,' the Cat Lady says.".
 
-Response of Sharon when asked-or-told about topic_jam or topic_berries or backdrop_berries or berries_in_pail:
+Response of Sharon when asked-or-told about topic_jam or asked-or-told about topic_berries or asked-or-told about backdrop_berries or asked-or-told about berries_in_pail:
 	say "'I love your Aunt Mary's preserves,' says the Cat Lady. 'Joseph and I used to pick berries every summer.'";
 
 Response of Sharon when asked-or-told about topic_trailer:
 	say "'I've lived here for 20 years, [sharons_nickname]. I've seen people come and go,' says the Cat Lady.";
 
 Response of Sharon when asked-or-told about dog:
-	say "Oh dogs, they absolutely terrorize my babies. Just the other day, several of my kitties had to defend their very lives from a ferocious doggy that someone brought in to the park on a leash. It served that bad dog right and he had to be taken to the vet.";
+	say "'Oh dogs, they absolutely terrorize my babies. Just the other day, several of my kitties had to defend their very lives from a ferocious doggy that someone brought in to the park on a leash. It served that bad dog right and he had to be taken to the vet.'";
 
 Response of Sharon when asked-or-told about topic_tea:
 	say "'Oh, I dearly love tea time, don't you, [sharons_nickname]?' the Cat Lady asks.";
@@ -9124,19 +9157,25 @@ Response of Sharon when asked-or-told about Mika_figurine:
 [Response of Sharon when given-or-shown Mika_figurine:
 	I'm just going to leave this as an instead rule for now, since it is well-tested.]
 
+Response of Sharon when asked-or-told about topic_forest:
+	say "'Oh,' she says, clutching her hands to her breast, 'I love this forest, [sharons_nickname]. Joseph and I used to walk in the woods and hunt mushrooms. You know,' she leans in to say conspiratorially, 'foragers are [italic type]quite[roman type] protective and secretive of their spots.'".
+
 Response of Sharon when asked about topic_work:
 	say "'My job, [sharons_nickname], is taking care of all my babies,' the Cat Lady says.";
 
 Response of Sharon when asked about topic_love or asked about Joseph or asked about topic_family:
 	say "The Cat Lady looks wistful for a moment, 'When my Joseph was alive...' and she just kind of drifts off and doesn't finish.";
 
-Response of Sharon when asked-or-told about train_track:
+Response of Sharon when asked-or-told about topic_train:
 	say "'Oh!' the Cat Lady exclaims, 'I love the train. Joseph and I used to ride the train when we visited family in Chicago. The sleeper cars, the porters, sitting in the dining car and watching the world go by. So romantic.'";
 
 Response of Sharon when asked-or-told about topic_tree:
 	say "'That big pine tree is the king of the forest,' she says, 'It overlooks the whole valley.'";
 
-Response of Sharon when asked-or-told about backdrop_creek:
+Response of Sharon when asked-or-told about topic_swimming:
+	say "'You may not see it now, but I used to swim like a fish,' she says, 'I used to spend every summer day at that old swimming hole.'";
+
+Response of Sharon when asked-or-told about topic_creek:
 	say "'That creek,' she says, 'is what made me fall in love with this place. Joseph used to catch trout in the stream bring them home for dinner.'";
 
 To say cat lady prattle:
@@ -9165,7 +9204,7 @@ sharon_stepdad_rant is a rant.
 
 Table of sharon_stepdad_rant
 Quote
-"'Well, your mom just got married and we all wished her the best of luck,' the Cat Lady says, 'It hasn't always been easy for her.' And in spite of himself, that man really does love your mom.[paragraph break]She looks off into the distance and gets a funny look on her face, 'I see it will be very tough for a while as well.'[paragraph break][Sharon_Stepdad_Premonition][paragraph break]You almost start to cry, but hold it in."
+"'Well, your mom just got married and we all wished her the best of luck,' the Cat Lady says, 'It hasn't always been easy for her. And in spite of himself, that man really does love your mom.'[paragraph break]She looks off into the distance and gets a funny look on her face, 'I see it will be very tough for a while as well.'[paragraph break][Sharon_Stepdad_Premonition][paragraph break]You almost start to cry, but hold it in."
 "'Don't worry about that,' the Cat Lady says, 'Your mom is an [italic type]angel[roman type]. I've never seen a mother who loved her child more than her.'"
 
 Response of Sharon when asked-or-told about topic_cat:
@@ -9183,10 +9222,16 @@ Quote
 
 Chapter - Sequences
 
+Chapter - Tests
 
+test sharon-ask with "teleport to D Loop / z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/ ask sharon about Aunt Mary / ask sharon about Dad / ask sharon about Grandpa / ask sharon about Honey / ask sharon about Joseph / ask sharon about Lee / z / z / z / ask sharon about Me / ask sharon about Mika / ask sharon about Mom / ask sharon about Sharon / ask sharon about Sheriff / ask sharon about Stepdad / z / z / z / ask sharon about ants / ask sharon about berries / ask sharon about bridge / ask sharon about bucket / ask sharon about cat / z / z / z / ask sharon about cigarettes / ask sharon about creek / ask sharon about death / ask sharon about dog / ask sharon about dream dog / ask sharon about dreams / ask sharon about family / ask sharon about forest / ask sharon about grandpas shirt / ask sharon about indians / ask sharon about jam / ask sharon about life / ask sharon about love / ask sharon about lucky penny / ask sharon about lunch / ask sharon about movie / ask sharon about nest / ask sharon about pail / ask sharon about penny / ask sharon about purple heart / ask sharon about radio / ask sharon about swimming / ask sharon about tea / ask sharon about trailer / ask sharon about train / ask sharon about big tree / ask sharon about war / ask sharon about work / ".
 
+test sharon-tell with "teleport to D Loop / z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/ tell sharon about Aunt Mary / tell sharon about Dad / tell sharon about Grandpa / tell sharon about Honey / tell sharon about Joseph / tell sharon about Lee / z / z / z / tell sharon about Me / tell sharon about Mika / tell sharon about Mom / tell sharon about Sharon / tell sharon about Sheriff / tell sharon about Stepdad / z / z / z / tell sharon about ants / tell sharon about berries / tell sharon about bridge / tell sharon about bucket / tell sharon about cat / z / z / z / tell sharon about cigarettes / tell sharon about creek / tell sharon about death / tell sharon about dog / tell sharon about dream dog / tell sharon about dreams / tell sharon about family / tell sharon about forest / tell sharon about grandpas shirt / tell sharon about indians / tell sharon about jam / tell sharon about life / tell sharon about love / tell sharon about lucky penny / tell sharon about lunch / tell sharon about movie / tell sharon about nest / tell sharon about pail / tell sharon about penny / tell sharon about purple heart / tell sharon about radio / tell sharon about swimming / tell sharon about tea / tell sharon about trailer / tell sharon about train / tell sharon about big tree / tell sharon about war / tell sharon about work / ".
 
-	Chapter - Sequences
+[TODO: Oops
+>tell sharon about berries
+Which do you mean, blackberries, the bunch of ripe berries, or the bunch of ripe berries?
+It might be good to choose one to be familiar and the others are not familiar]
 
 
 
@@ -9337,12 +9382,8 @@ Response of Lee when asked-or-told about stepdad:
 Response of Lee when asked-or-told about topic_tree:
 	say "'I must have spent half my time up in the treetops when I was a kid,' Lee says. 'Fell out of some too. I even built a treehouse deep in the woods. Not much to look at, but it was a great hideout. I made friends with squirrels and birds. I liked to think I was part of the Squirrel clan.' Lee takes a drag from his cigarette.[if player is tree_experienced] 'I guess you might be part of that clan too.'[end if]".
 
-Response of Lee when asked-or-told about topic_jam or topic_berries or backdrop_berries or berries_in_pail:
+Response of Lee when asked-or-told about topic_jam or asked-or-told about topic_berries or asked-or-told about backdrop_berries or asked-or-told about berries_in_pail:
 	say "'You know, I grew up around here. Guess that's why I came back here,' Lee says mostly to himself. 'I used to pick blackberries in August too. Me and my brother used to pick berries and eat every single one until our tongues and our fingers were purple and our bellies were sore.'".
-
-[ TODO: Oops
->ask lee about berries
-Which do you mean, blackberries, the bunch of ripe berries, or the bunch of ripe berries?]
 
 Response of Lee when asked-or-told about topic_trailer:
 	say "'Ah, I don't know,' Lee says. 'This is where I hang my hat. It could be any place. It could be somewhere else tomorrow.'".
@@ -9353,7 +9394,7 @@ Response of Lee when asked-or-told about dog:
 Response of Lee when asked-or-told about flattened_penny or given-or-shown flattened_penny:
 	say "'Oh, hey that's neat,' Lee says with authentic wonder. 'I used to do that. Train pennies, we called [']em.'".
 
-Response of Lee when asked-or-told about train_track:
+Response of Lee when asked-or-told about topic_train:
 	say "'Oh hey, you be careful, man,' Lee says seriously. 'Not to give you ideas, but I used to ride the rails when I was a kid trying to get around on no money.'".
 
 Response of Lee when asked about topic_work:
@@ -9513,7 +9554,7 @@ Response of Mary when asked-or-told about Dad:
 Response of Mary when asked-or-told about stepdad:
 	say "Her eyes look sharp for a moment, 'I know he and your grandmother have their differences, but I can tell you that he looks like he really loves your mom. When she leaves the room, that man looks like someone just let the air out of him.'"
 
-Response of Mary when asked-or-told about backdrop_berries or topic_berries:
+Response of Mary when asked-or-told about backdrop_berries or asked-or-told about topic_berries:
 	say "'Every year,' she smiles. 'Every year, we pick the berries and the jam lasts until the next summer.'"
 
 Response of Mary when asked-or-told about bucket:
@@ -9522,7 +9563,7 @@ Response of Mary when asked-or-told about bucket:
 Response of Mary when asked-or-told about topic_jam:
 	say "'That's your grandma's recipe,' she says proudly. 'No,' she looks worried, 'No. Mama is your great-grandmother. It's your great-grandma's recipe.'".
 
-Response of Mary when asked-or-told about train_track:
+Response of Mary when asked-or-told about topic_train:
 	say "'I can hear that old train,' she says. 'Reminds me before any of us had cars - if you wanted to get somewhere, you rode a train.'".
 
 Response of Mary when asked-or-told about topic_lunch:
@@ -9603,8 +9644,7 @@ Instead of touching Sheriff:
 
 Part - Mom
 
-Mom is a _female woman.
-Mom is in Room_Car_With_Mom.
+Mom is a familiar _female woman in Room_Car_With_Mom.
 The initial appearance is "[if player is in Room_Car_With_Mom]Your mom is watching the movie[first time]. Sensing you looking, she smiles at you[only][else]Your mom is here looking very worried[end if].".
 The description is "[moms_description].".
 Understand "mommy/ma/mother/rachel/rach" as Mom.
@@ -9738,19 +9778,19 @@ Response of mom when asked-or-told about stepdad:
 Response of mom when asked-or-told about topic_dreams:
 	say "'I think dreams have meaning,' mom says, 'I choose to think they are trying to speak to us in some way, to wake up our brains, to alert us, or to confirm something we’re wondering about.'".
 
-Response of mom when asked-or-told about backdrop_berries or topic_berries:
+Response of mom when asked-or-told about backdrop_berries or asked-or-told about topic_berries:
 	say "'Were you helping your Honey and Grandpa pick berries?' she asks.".
 
 Response of mom when asked-or-told about topic_trailer:
 	say "'Honey and Grandpa's house? I love that trailer. Your grandpa has worked so hard to make that place beautiful for us,' mom says.".
 
-Response of mom when asked about train_track:
+Response of mom when asked about topic_train:
 	say "[moms_train_ask_response].";
 
 To say moms_train_ask_response:
 	say "'Your grandpa used to work on the railroad and when they bought their house, he was happy that there was a train that passed nearby,' mom says".
 
-Response of mom when told about train_track:
+Response of mom when told about topic_train:
 	if player is not train_experienced:
 		say "[moms_train_ask_response].";
 	else:
@@ -9765,7 +9805,7 @@ Response of mom when asked-or-told about flattened_penny or given-or-shown flatt
 Response of mom when asked-or-told about dog:
 	say "'Be careful around that dog, [moms_nickname],' mom says, 'It tried to bite your grampa once.'".
 
-Response of mom when asked-or-told about  topic_forest:
+Response of mom when asked-or-told about topic_forest:
 	say "'I like to walk in the woods with your grandpa, but sometimes those woods seem scary to me. But I know I'm just being silly,' mom laughs.".
 
 Response of mom when asked-or-told about movie_backdrop:
@@ -9783,7 +9823,7 @@ Response of mom when told about topic_tree:
 Response of mom when asked-or-told about topic_creek:
 	say "'Your grandpa used to take me fishing when I was little. All I wanted to do is play in the water and chase tadpoles. He used to get mad at me because I couldn't sit still. He never caught a fish when I was there.' mom says laughing.'".
 
-Response of mom when asked-or-told about deep pool:
+Response of mom when asked-or-told about topic_swimming:
 	say "[one of]'I know you are almost a grown up, but you be careful down at that old swimming hole,' mom says.[or]'If you really want to go swimming, you go with your grandpa,' mom says, 'I don't want you to go swimming by yourself.'[at random]".
 
 Response of mom when asked about topic_life:
@@ -9810,9 +9850,8 @@ Chapter - Rants
 
 Part - Stepdad
 
-Stepdad is an undescribed _male man.
+Stepdad is an undescribed _male man in Room_Car_With_Stepdad.
 The printed name is "Mark".
-Stepdad is in Room_Camaro_With_Stepdad.
 The description is "[first time]Your stepdad's name is Mark. You call him 'dad' because your mom asked if you wanted to call him dad when she first got re-married. So you did. Who knows what the rules are here? You have an inkling that your mom married him because she thought you needed a father. He was nice to you at first, but now it seems like you just make him mad. [paragraph break]If you are honest, you're scared of him. You never know whether he will be nice or angry. He's nicer when he drinks beer, but if he has too much, your mom and stepdad get in arguments. One night there was yelling and someone broke the glass clock that used to sit on the end table in the living room.[paragraph break]You know this though: if he ever hurt your mom, you don't know how, but you would kill him.[paragraph break][only][if Scene_Dream_About_Stepdad is happening or Scene_Fallout_Going_Home is happening]He is intensely focused on the road in a way that you know is seething anger[else]He is gritting his teeth and is folding and unfolding his fist[end if].".
 Understand "step-dad/step-father/stepdad/stepfather/mark", "step dad/father" as stepdad.
 
@@ -9899,7 +9938,7 @@ Response of stepdad when asked-or-told about Lee:
 [Response of stepdad when asked-or-told about Sheriff:
 	say "".]
 
-Response of stepdad when asked-or-told about virtual_mom:
+Response of stepdad when asked-or-told about mom or asked-or-told about virtual_mom:
 	say "'We're working things out, but that's none of your business,' Mark says.".
 
 Response of stepdad when asked-or-told about topic_forest:
@@ -9922,7 +9961,7 @@ Book - Animals
 
 Part - Dog
 
-The dog is an improper-named _critter animal in Room_Dirt_Road.
+The dog is a familiar improper-named _critter animal in Room_Dirt_Road.
 	The initial appearance is "[if not loose]There's a dog behind the fence, alternately digging and barking[otherwise]The dog is wandering in the road[end if].".
 	The description of the dog is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. [one of][sub_pronoun_cap of dog] reminds you of Uncle Buddy's dog that mom was taking care of and how when you tried to feed it and get the spoon, it bit you.
 	[paragraph break][sub_pronoun_cap of dog] makes you [nervous]. But there's something about this dog.[or]
