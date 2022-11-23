@@ -1939,8 +1939,8 @@ To say Title_Card_Epilogue:
 
 To pause_the_game:
 	say "[paragraph break]Press any key to continue.";
-	[ wait for any key;
-	clear the screen. ]
+	wait for any key;
+	clear the screen;
 	[ pause the game; ]
 
 To section_break:
@@ -1949,16 +1949,15 @@ To section_break:
 
 To end_the_story:
 	say paragraph break;
-	say line break;
 	end the story;
 
-[ Section - Fake waiting - Not for release
+Section - Fake waiting - Not for release
 
 To wait for any key:
 	do nothing.
 
 To clear the screen:
-	do nothing. ]
+	do nothing.
 
 Part - Premonitions
 
