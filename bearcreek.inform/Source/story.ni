@@ -3670,23 +3670,23 @@ This is the seq_sharon_teatime_handler rule:
 		now sharon is ready-for-tea-time;
 		queue_report "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest." at priority 2;
 	else if index is 2:
-		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Oh, [sharons_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
+		Report Sharon saying "'[if player is not on sharons_table]Oh, [sharons_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
 		do Sharon_Teatime_Premonition;
 	else if index is 3:
-		Report Sharon saying "'[if player is not on Cat Lady's kitchen table]Please, [sharons_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharons_nickname]. What adventures have you had since we talked last?'";
+		Report Sharon saying "'[if player is not on sharons_table]Please, [sharons_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharons_nickname]. What adventures have you had since we talked last?'";
 	else if index is 4:
 		if sharon is visible:
-			if player is not on Cat Lady's kitchen table:
+			if player is not on sharons_table:
 				queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3;
-				try silently entering the Cat Lady's kitchen table;
+				try silently entering the sharons_table;
 			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharons_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
-			now your teacup is filled;
+			now players_teacup is filled;
 			Now player is sharon_experienced;
 	else if index is 5:
-		if turns_so_far of seq_sharon_teatime is less than 40 and player is on Cat Lady's kitchen table:
+		if turns_so_far of seq_sharon_teatime is less than 40 and player is on sharons_table:
 			decrease index of seq_sharon_teatime by one;
 			if sharon is visible:
-				if your teacup is unfilled and a random chance of 2 in 3 succeeds:
+				if players_teacup is unfilled and a random chance of 2 in 3 succeeds:
 					refill_teacups;
 				queue_report "[cat lady prattle]" at priority 2;
 		else:
@@ -3694,15 +3694,15 @@ This is the seq_sharon_teatime_handler rule:
 			now index is 6;
 	if index is 6:
 		Report Sharon saying "'Oh [sharons_nickname], it's been so nice talking to you. I can see you're ready to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you. 'I better go water my garden.'";
-		if player holds your teacup:
+		if player holds players_teacup:
 			queue_report "You return your teacup to the table." at priority 1;
-			now your teacup is on the Cat Lady's kitchen table;
+			now players_teacup is on the sharons_table;
 		sharon_resumes_gardening in two turns from now;
 		Now player is compassionate;
 
 This is the seq_sharon_teatime_interrupt_test rule:
 	[ If player walks away, pause the seq. ]
-	if player is not in Room_Sharons_Trailer and player is not on Cat Lady's kitchen table:
+	if player is not in Room_Sharons_Trailer and player is not on sharons_table:
 		[a condition so if player leaves, the cat lady doesn't get stuck waiting]
 		[TODO: Add a similar condition to other seq? ]
 		if turns_so_far of seq_sharon_teatime is greater than 40:
@@ -3716,7 +3716,7 @@ Section - Actions
 
 To refill_teacups:
 	say "The Cat Lady re-fills [if a random chance of 1 in 2 succeeds]both of your cups[else]your cup[end if] with more tepid tea.";
-	now your teacup is filled;
+	now players_teacup is filled;
 
 Chapter - Scene_Visit_With_Lee
 
@@ -5571,13 +5571,14 @@ Some floating_stuff is scenery in Bear Creek.
 	Understand "leaf/leaves/skeeters/shimmering/flash/little/minnow/minnows/branch/branches/stick/sticks/stars/star/reflection/reflections/pebble/pebbles" as floating_stuff.
 
 A boulder is a lie-able surface in Room_Stone_Bridge.
-	The printed name is "boulder in the creek".
-	The description is "Near the grassy bank, there is a rounded boulder in the creek. It looks like a turtle emerging from the water." Understand "boulders/rounded/turtle/rock/rocks" or "big rock" as boulder.
+The printed name is "boulder in the creek".
+The description is "Near the grassy bank, there is a rounded boulder in the creek. It looks like a turtle emerging from the water." 
+Understand "boulders/rounded/turtle/rock/rocks" or "big rock" as boulder.
 
 The grassy bank is a lie-able surface in Room_Stone_Bridge.
 	Understand "grassy/-- shore/bank" as grassy bank.
 
-Moss is scenery in  Room_Stone_Bridge.
+Moss is scenery in Room_Stone_Bridge.
 	The description of moss is "Thanks to science camp, you're able to identify plants in the Riparian Zone. That means the area around the banks of a river."
 	Understand "horsetail/horsetails/fern/ferns/moss/mosses", "horse tails" as moss.
 
@@ -6462,39 +6463,44 @@ Understand "Mika/-- figurine/statue/sculpture/toy", "Mika" as Mika_figurine.
 The Mika_figurine can be palmed.
 The indefinite article is "the".
 
-Your teacup is on Cat Lady's kitchen table. It is an unopenable open container. The description is "[one of]This is a teacup -- not at all like the coffee mugs at home -- made of china, complete with a delicate little handle. The complicated rose-colored pattern may be dogs and fancy men on horses. Your teacup is [or]Your teacup is [stopping][if your teacup is unfilled]empty[else]full of tea barely worthy of the name, a lukewarm watery somewhat tea-flavored liquid[end if]."
-Understand "cup/teacup/tea/mug/glass/lukewarm/watery/tea-flavored/liquid", "tea cup" as teacup.
-Your teacup can be filled or unfilled. It is unfilled.
+The players_teacup is an undescribed edible thing.
+The players_teacup is on sharons_table. 
+The printed name is "teacup".
+It is an unopenable open container. 
+The description is "[one of]This is a teacup -- not at all like the coffee mugs at home -- made of china, complete with a delicate little handle. The complicated rose-colored pattern may be dogs and fancy men on horses. Your teacup is [or]Your teacup is [stopping][if players_teacup is unfilled]empty[else]full of tea barely worthy of the name, a lukewarm watery somewhat tea-flavored liquid[end if]."
+Understand "lukewarm/watery/-- cup/teacup/tea/liquid", "tea cup" as players_teacup.
+The indefinite article is "your".
+
+players_teacup can be filled or unfilled. It is unfilled.
+
+[Some tepid tea is an undescribed edible thing.
+The description is "This tea is barely worthy of the name, a lukewarm watery somewhat tea-flavored liquid."]
+
 [Some tepid tea is an undescribed edible thing.
 The description is "This tea is barely worthy of the name, a lukewarm watery somewhat tea-flavored liquid."]
 
 Section - Backdrops & Scenery
 
-Cat Lady's couch is a lie-able surface in Room_Sharons_Trailer.
-	The indefinite article is "".
-	The printed name is "what was formerly a loveseat".
-	The description is "This once was a loveseat. Now it is a pile of cat-shredded upholstery and stuffing, and smells like cat pee.".
-	Understand "sofa", "loveseat", "couches", "divan", "cat pee", "shredded", "upholstery", "stuffing" as Cat Lady's couch.
+sharons_loveseat is a lie-able surface in Room_Sharons_Trailer.
+The printed name is "what was formerly a loveseat".
+The description is "This once was a loveseat. Now it is a pile of cat-shredded upholstery and stuffing, and smells like cat pee.".
+Understand "shredded/-- sofa/loveseat/couch/couches/divan/upholstery/stuffing", "cat pee" as sharons_loveseat.
+The indefinite article is "Cat Lady's".
 
-The Cat Lady's kitchen table is an undescribed fixed in place enterable sit-at-able supporter  in Room_Sharons_Trailer.
-	It is an enterable sit-at-able supporter.
-	The description is "This is the kitchen table, half buried in cat food cans and bags and other stuff. There is a space cleared off for teacups, teapot, tea cozies, and tea things which occupy a corner. There are a few chairs around the table, some are even clear enough to sit on.".
-	Understand "kitchen", "cat food", "can/cans", "bag/bags", "chairs", "chair" as Cat Lady's kitchen table.
+[TODO: Oops
+>get up
+You get off kitchen table.]
 
-Some tea things are scenery on Cat Lady's kitchen table.
-	The description is "A china teapot, a tea cozy, teacups and saucers, and other mysterious tea things occupy a corner of the table. All the china is in a dizzyingly complex rose-colored pattern."
-	Understand "tea cups/pot/pots/cozy/cozies/strainer/saucer/saucers/thing", "teapot/teacup/teacozy/teacozies/teastrainer/pattern/dizzying", "cups/pot/pots/cozy/cozies/strainer/saucer/saucers/china/rose/rose-colored/mysterious/thing" as tea things.
+The sharons_table is an undescribed fixed in place enterable sit-at-able supporter in Room_Sharons_Trailer.
+The printed name is "kitchen table".
+The description is "This is the kitchen table, half buried in cat food cans and bags and other stuff. There is a space cleared off for teacups, teapot, tea cozies, and tea things which occupy a corner. There are a few chairs around the table, some are even clear enough to sit on.".
+Understand "table/kitchen/chair/chairs", "cat food", "can/cans", "bag/bags" as sharons_table.
+[ The indefinite article is "Cat Lady's". ]
 
-Your teacup is an undescribed unopenable open container on Cat Lady's kitchen table.
-	The description is "[one of]This is a teacup -- not at all like the coffee mugs at home -- made of china, complete with a delicate little handle. The complicated rose-colored pattern may be dogs and fancy men on horses. Your teacup is [or]Your teacup is [stopping][if your teacup is unfilled]empty[else]full of tea barely worthy of the name, a lukewarm watery somewhat tea-flavored liquid[end if]."
-	Understand "cup/teacup/tea/mug/glass/lukewarm/watery/tea-flavored/liquid", "tea cup" as teacup.
-
-Your teacup can be filled or unfilled. It is unfilled.
-
-[Some tepid tea is an undescribed edible thing.
-The description is "This tea is barely worthy of the name, a lukewarm watery somewhat tea-flavored liquid."]
-
-[Instead of taking tea things,... what? the default's not good enough?]
+Some tea_things are scenery on sharons_table.
+The printed name is "tea things".
+The description is "A china teapot, a tea cozy, teacups and saucers, and other mysterious tea things occupy a corner of the table. All the china is in a dizzyingly complex rose-colored pattern."
+Understand "tea/-- cups/pot/pots/cozy/cozies/strainer/saucer/saucers/pattern", "teapot/teacozy/teacozies/teastrainer", "tea things" as tea_things.
 
 The sharons_tv is an improper-named scenery device in Room_Sharons_Trailer.
 	The printed name is "TV".
@@ -6509,20 +6515,18 @@ Knickknacks are scenery.
 
 Section - Rules and Actions
 
-Instead of drinking teacup:
-	if player does not hold teacup:
-		try silently taking teacup;
-	if player holds teacup:
-		if teacup is filled:
+Instead of drinking players_teacup:
+	if player does not hold players_teacup:
+		try silently taking players_teacup;
+	if player holds players_teacup:
+		if players_teacup is filled:
 			say "You bring the tiny teacup to your lips and drain it in a sip or two. The tea is lukewarm and watery, but okay.";
-			now your teacup is unfilled;
+			now players_teacup is unfilled;
 		else:
 			say "You bring the cup to your lips only to find that it's empty.";
 
-Instead of taking tea things:
+Instead of taking tea_things:
 	say "Best not to mess with that.";
-
-Does the player mean doing anything to tea things: it is unlikely.
 
 Understand "get --/more tea", "fill teacup" as a mistake ("It would be rude for a guest to fill their own teacup. Honey's efforts to teach you manners were not wasted.").
 
@@ -6578,7 +6582,6 @@ Instead of giving Mika_figurine to Sharon:
 	Say "[one of]A complex mixture of expressions passes over her face. 'Well, I'll be. Aren't you an honest, sweet little child?' she wonders looking at the figurine in your palm. 'That little black and white cat was given me by my Joseph, God rest his soul,' she pauses for a second. 'But, dearie, I want you to have it now. It belongs with you.' There are tears in her eyes. She closes your fist around the figurine and pats your hand, 'And you keep that little kitty safe now, you hear?' A shiver seems to pass though the Cat Lady, and she adds seriously, 'And yourself too.'[or]She shakes her head, no. 'It's yours now, [sharons_nickname].'[stopping]";
 	Now player is compassionate;
 	Now player is mika_experienced;
-
 
 
 Chapter - Room_C_Loop
@@ -6643,7 +6646,6 @@ The scent is "Lee's cigarette smoke lingering in the air".
 The outside_view is "C Loop".
 Understand "Lee's/lees/-- trailer/house/place/home" as Room_Lees_Trailer.
 
-
 Section - Navigation
 
 Outside from Room_Lees_Trailer is Room_C_Loop.
@@ -6668,11 +6670,12 @@ An article is an undescribed part of the newspaper.
 	[paragraph break]You spend a few minutes thinking about being an explorer on the Martian surface, where you'd weigh less than half of what you do on Earth and would be able to jump high in the air like a superhero. If you could do that here, you would leap out of the trailer park, up into the top of the big pine tree.[end if]".
 	Understand "article/story/viking/lander/mars/comics/comic" as article.
 
-A coffee mug is an undescribed unopenable open container on lees_table.
-	The indefinite article is "Lee's".
-	The description is "The mug has some kind of blue and yellow coat of arms on it, and says underneath in fancy letters 'Brave and True.'[run paragraph on] [if coffee mug is empty]There is nothing in Lee's coffee mug except gross.[end if][line break]".
-	Understand "mug/cup/glass", "coffee mug/cup" as coffee mug.
-	The scent is "stale bitter coffee".
+A lees_coffee_mug is an undescribed unopenable open container on lees_table.
+The printed name is "coffee mug".
+The description is "The mug has some kind of blue and yellow coat of arms on it, and says underneath in fancy letters 'Brave and True.'[run paragraph on] [if lees_coffee_mug is empty]There is nothing in Lee's coffee mug except gross.[end if][line break]".
+Understand "coffee/lee's/lees/-- mug/cup" as lees_coffee_mug.
+The indefinite article is "Lee's".
+The scent is "stale bitter coffee".
 
 The lees_tv is an improper-named undescribed fixed in place device in Room_Lees_Trailer.
 	The printed name is "TV".
@@ -6693,7 +6696,7 @@ Section - Rules and Actions
 Instead of inserting newspaper into pail:
 	say "That's a good idea if you want to get berry stains all over it. You think better of it."
 
-Instead of taking coffee mug:
+Instead of taking lees_coffee_mug:
 	say "Your manners suggest that it is better to leave Lee's coffee cup alone.";
 
 Instead of switching on lees_tv:
@@ -8453,11 +8456,7 @@ To say Honey stuff:
 	if a random chance of 1 in 3 succeeds:
 		say " and [one of]gives you a tight little smile[or]pats her head to see if her hair is still up[or]rubs her lips firmly[at random]";
 
-[
-	Defaults
-]
-
-[TODO: Make sure all of the NPCs' responses are appropriate not just for Day 1, but in the dream, and in the endgame.]
+[ Defaults ]
 
 Default tell response for Honey:
 	if the second noun is not nothing:
@@ -8528,7 +8527,7 @@ Response of Honey when asked-or-told about topic_dreams:
 	say "'What do [italic type]you[roman type] think, [honeys_nickname]?' Honey asks, 'Your grandpa only dreams about fishing. Me, I don't sleep enough these days to dream. But I get pretty good at crosswords.'".
 
 Response of Honey when asked-or-told about backdrop_berries or asked-or-told about topic_berries:
-	say "'I'd like you to pick one more pail before you go wondering off,' she says.".
+	say "[if Scene_Day_One is happening]'I'd like you to pick one more pail before you go wondering off,' she says.[else]'Those berries are sure good,' Honey says.[end if]".
 
 Response of Honey when asked-or-told about pail or asked-or-told about big_bucket:
 	say "[if Scene_Picking_Berries is happening]'After you pick a pail, you can dump it into our bucket,' Honey says.[else if Scene_Bringing_Lunch is happening]'Your grandpa is taking that up to your Aunt Mary to get started on the jam,' Honey says.[else]'Not sure what you are talking about, [honeys_nickname],' she says.[end if]".
@@ -8794,9 +8793,7 @@ Response of Grandpa when asked-or-told about topic_indians:
 	say "'The Miwok people used to live in these hills along Bear Creek,' Grandpa says, 'You know, there are still remains of houses and petroglyphs, those are drawings on rocks, made by Indians who lived here long before we came here.'".
 
 Response of Grandpa when asked-or-told about backdrop_berries or asked-or-told about topic_berries:
-	say "'How you doing, [grandpas_nickname]?' Grandpa [grandpa_stuff]. 'You helping your Honey and Grandpa make blackberry jam?'".
-
-[TODO: Grandpa doesn't respond here]
+	say "[if Scene_Day_One is happening]'How you doing, [grandpas_nickname]?' Grandpa [grandpa_stuff]. 'You helping your Honey and Grandpa make blackberry jam?'[else]'You sure love eating those berries, huh, [grandpas_nickname]?' Grandpa asks.[end if]".
 
 Response of Grandpa when asked-or-told about big_bucket:
 	say "[if Scene_Bringing_Lunch has not happened]'That's our berry pickin' bucket, [grandpas_nickname]. Soon as we get that filled up I'm gonna take it up to your Aunt Mary,' Grandpa says. 'You going to help me?'[else if Scene_Bringing_Lunch is happening]'Got to take this up to Mary, so she can turn this into jam,' Grandpa says. 'You gonna help your old Grandpa get this up to the house?'[else]'I gotta get this down to your Honey before she needs to dump her pail,' Grandpa says. 'You wanna walk with me?'[end if]".
@@ -8948,10 +8945,6 @@ test gw with "teleport to grandpas trailer / teleport to grassy clearing / telep
 
 Part - Sharon
 
-[TODO: To invite introspection and examining ones self, Sharon (as with Lee) should ask sincerely about the player]
-
-[TODO: Double check the entire teatime seq]
-
 The Sharon is an improper-named _female woman in Room_D_Loop.
 	The printed name is "Cat Lady".
 	The initial appearance is "[sharons_initial_appearance]. ".
@@ -8983,7 +8976,6 @@ Chapter - Rules and Actions
 
 Sharon can be tending-garden, feeding-cats, watching-tv, or ready-for-tea-time.
 Sharon is tending-garden.
-[TODO: these should be scenes instead, since they can contradict each other]
 
 When play begins:
 	sharon_feeds_cats at sometime around 11:30 AM;
@@ -9025,8 +9017,6 @@ At the time when sharon_watches_tv:
 		Now sharons_tv is switched on;
 		if player is in Room_Sharons_Trailer:
 			queue_report "She sits down in front of her TV and turns on a soap opera." at priority 2;
-
-[TODO: Convert anything dealing with minutes to turns]
 
 At the time when sharon_feeds_cats:
 	if dramatic scene is happening:
@@ -9233,12 +9223,6 @@ test sharon-ask with "teleport to D Loop / z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/ ask sh
 
 test sharon-tell with "teleport to D Loop / z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/ tell sharon about Aunt Mary / tell sharon about Dad / tell sharon about Grandpa / tell sharon about Honey / tell sharon about Joseph / tell sharon about Lee / z / z / z / tell sharon about Me / tell sharon about Mika / tell sharon about Mom / tell sharon about Sharon / tell sharon about Sheriff / tell sharon about Stepdad / z / z / z / tell sharon about ants / tell sharon about berries / tell sharon about bridge / tell sharon about bucket / tell sharon about cat / z / z / z / tell sharon about cigarettes / tell sharon about creek / tell sharon about death / tell sharon about dog / tell sharon about dream dog / tell sharon about dreams / tell sharon about family / tell sharon about forest / tell sharon about grandpas shirt / tell sharon about indians / tell sharon about jam / tell sharon about life / tell sharon about love / tell sharon about lucky penny / tell sharon about lunch / tell sharon about movie / tell sharon about nest / tell sharon about pail / tell sharon about penny / tell sharon about purple heart / tell sharon about radio / tell sharon about swimming / tell sharon about tea / tell sharon about trailer / tell sharon about train / tell sharon about big tree / tell sharon about war / tell sharon about work / ".
 
-[TODO: Oops
->tell sharon about berries
-Which do you mean, blackberries, the bunch of ripe berries, or the bunch of ripe berries?
-It might be good to choose one to be familiar and the others are not familiar]
-
-
 
 Part - Lee
 
@@ -9267,7 +9251,6 @@ To say lees_description:
 	else:
 		say "Lee looks like his usual self, ready to march with a platoon through the jungle";
 
-[TODO: Handle listing multiple people in one location]
 
 Chapter - Properties
 
@@ -9299,9 +9282,7 @@ To move_lee_out_of_his_trailer:
 
 Chapter - Responses
 
-[
-	Lee's Preliminaries and greetings
-]
+[ Lee's Preliminaries and greetings ]
 
 Greeting response for Lee:
 	say "[one of]'Aho, Jody,' Lee says, 'How you doin[']?'.[or]'Hi again, Jody,' Lee says.[stopping]";
@@ -9321,9 +9302,7 @@ To say lees_nickname:
 To say Lee stuff:
 	say "[one of]looking awkward[or]watching you[or]hanging out[at random]";
 
-[
-	Defaults
-]
+[ Defaults ]
 
 Default give response for Lee:
 	say "'Hey, man, thanks. You keep it though,' says Lee[if a random chance of 1 in 3 succeeds] [Lee stuff][end if].";
@@ -9349,9 +9328,9 @@ Response of Lee when saying no:
 Response of Lee when saying sorry:
 	say "'Ah no, don't be sorry,' Lee says, 'I'm sorry. I'm the one who should be sorry.'";
 
-[
-	Responses
-]
+[ Responses ]
+
+[TODO: To invite introspection and examining ones self, Lee should ask sincerely about the player]
 
 Response of Lee when asked-or-told about player:
 	say "'What's to tell?' Lee asks. 'You are one badass little trooper who ain't gonna let nothing get you down. Nah, you got [']em licked, believe me.'".
