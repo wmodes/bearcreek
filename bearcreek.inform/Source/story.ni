@@ -3227,14 +3227,14 @@ At the time when train_comes:
 	train_hits_crossing in 5 turns from now;
 
 To train_enters_area:
-	if Scene_Dreams is not happening and Scene_Epilogue is not happening:
+	if Scene_Dreams is not happening and Scene_Epilogue is not happening and Scene_Fallout_Going_Home is not happening:
 		if current_time_period is not evening and current_time_period is not night:
 			queue_report "[one of]You think you hear the train blowing its whistle way off in the hills[or]You hear the train, pretty far off still[in random order]." with priority 3;
 		else:
 			queue_report "Was that a train whistle or just the wind whooshing through the tree tops?" with priority 3.
 
 At the time when train_is_nearby:
-	if Scene_Dreams is not happening and Scene_Epilogue is not happening:
+	if Scene_Dreams is not happening and Scene_Epilogue is not happening and Scene_Fallout_Going_Home is not happening:
 		if current_time_period is not evening and current_time_period is not night:
 			queue_report "[one of]You hear a train whistle in the distance[or]You hear the train whistle blowing as it goes through town[in random order]." with priority 3;
 			if player is in Room_Top_of_Pine_Tree:
@@ -3244,7 +3244,7 @@ At the time when train_is_nearby:
 			queue_report "You hear a train whistle in the distance, a lonely far off sorta sound." with priority 3;
 
 At the time when train_hits_crossing:
-	if Scene_Dreams is not happening and Scene_Epilogue is not happening:
+	if Scene_Dreams is not happening and Scene_Epilogue is not happening and Scene_Fallout_Going_Home is not happening:
 		if current_time_period is not evening and current_time_period is not night:
 			queue_report "[one of]You hear the train whistle, loud and close, as it hits the crossing[or]The train whistle screams as it hits the crossing[in random order]." with priority 6;
 		else:
@@ -6673,7 +6673,7 @@ An article is an undescribed part of the newspaper.
 A lees_coffee_mug is an undescribed unopenable open container on lees_table.
 The printed name is "coffee mug".
 The description is "The mug has some kind of blue and yellow coat of arms on it, and says underneath in fancy letters 'Brave and True.'[run paragraph on] [if lees_coffee_mug is empty]There is nothing in Lee's coffee mug except gross.[end if][line break]".
-Understand "coffee/lee's/lees/-- mug/cup" as lees_coffee_mug.
+Understand "lee's/lees/-- coffee/-- mug/cup" as lees_coffee_mug.
 The indefinite article is "Lee's".
 The scent is "stale bitter coffee".
 
