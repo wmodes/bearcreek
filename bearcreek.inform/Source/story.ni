@@ -1830,7 +1830,6 @@ This is the show reports rule:
 		now all turnevents in coming_events are in Limbo;
 		now some things said of coming_events is false;
 
-[TODO: Find a new rulebook for the above rule that triggers every turn. As it is, some every turn rules that queue_reports get shown one after another.]
 
 Part - Reporting People Speaking
 
@@ -3410,16 +3409,28 @@ Chapter - Scene_Walk_With_Grandpa
 	* when player is near blackberry clearing ]
 
 There is a scene called Scene_Walk_With_Grandpa.
-Scene_Walk_With_Grandpa begins when player has been in Region_Trailer_Indoors and player is in Room_Grassy_Clearing.
+
+Scene_Walk_With_Grandpa begins when player has been in Region_Trailer_Indoors and player is in Region_Dirt_Road.
+
 Scene_Walk_With_Grandpa ends when Grandpa has been in Room_Grandpas_Trailer and Grandpa is not in Room_Grandpas_Trailer.
 
 When Scene_Walk_With_Grandpa begins:
 		now big_bucket is full;
 		now seq_grandparents_chat is not in-progress;
-		now journey_gpa_walk is in-progress;
 
 When Scene_Walk_With_Grandpa ends:
 	now big_bucket is empty.
+
+Chapter - Actions
+
+Every turn when Scene_Walk_With_Grandpa is happening and journey_gpa_walk is not in-progress:
+	if player is in Room_Grassy_Clearing:
+		now journey_gpa_walk is in-progress;
+	else if player is in Region_Blackberry_Area:
+		queue_report "[one of]You hear Grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
+	else if player is in Region_River_Area or player is in Region_Dirt_Road:
+		if a random chance of 1 in 2 succeeds:
+			queue_report "[one of]You think you hear your Grandpa calling you[or]Is that Grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think Grandpa's calling.[at random]" at priority 1;
 
 Chapter - Sequenes & Journeys
 
@@ -3442,21 +3453,13 @@ This is the journey_gpa_walk_interrupt_test rule:
 	rule fails.
 
 This is the journey_gpa_walk_start rule:
-	if Grandpa is not visible:
-		if player is in Region_Blackberry_Area:
-			queue_report "[one of]You hear Grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
-		else if player is in Region_River_Area or player is in Region_Dirt_Road:
-			if a random chance of 1 in 2 succeeds:
-				queue_report "[one of]You think you hear your Grandpa calling you[or]Is that Grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think Grandpa's calling.[at random]" at priority 1;
+	if time_here of journey_gpa_walk is 1:
+		Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old Grandpa?'";
 		rule fails;
-	else:
-		if time_here of journey_gpa_walk is 1:
-			Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old Grandpa?'";
-			rule fails;
-		else if time_here of journey_gpa_walk is 2:
-			Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge.";
-			now Grandpa holds bucket;
-		rule succeeds;
+	else if time_here of journey_gpa_walk is 2:
+		Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge.";
+		now Grandpa holds bucket;
+	rule succeeds;
 
 This is the
 journey_gpa_walk_before_moving rule:
@@ -3545,6 +3548,8 @@ Section - Sequences
 	trigger: the scene Scene_Sheriffs_Drive_By starts
 ]
 
+[ TODO: Player can hear sharon and sheriff talking even if they leave the area ]
+
 seq_sheriffs_drive_by is a sequence.
 	The action_handler is the seq_sheriffs_drive_by_handler rule.
 	The interrupt_test is seq_sheriffs_drive_by_interrupt_test rule.
@@ -3603,14 +3608,14 @@ Chapter - Scene_Visit_With_Sharon
 
 There is a recurring scene called Scene_Visit_With_Sharon.
 
-Scene_Visit_With_Sharon begins when player is in Room_D_Loop and Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening.
+Scene_Visit_With_Sharon begins when Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening and player is in Room_D_Loop or Room_Sharons_Trailer encloses player.
 
 Scene_Visit_With_Sharon ends when Scene_Sheriffs_Drive_By begins.
 
-Scene_Visit_With_Sharon ends when player is not in Room_D_Loop and player is not in Room_Sharons_Trailer.
+Scene_Visit_With_Sharon ends when player is not in Room_D_Loop and Room_Sharons_Trailer does not enclose player.
 
 When Scene_Visit_With_Sharon begins:
-	if Scene_Visit_With_Sharon has not happened:
+	if Sharon is visible:
 		try saying hello to Sharon;
 	if Scene_Tea_Time has not happened:
 		now seq_sharon_invite is in-progress.
@@ -3644,7 +3649,7 @@ Chapter - Scene_Tea_Time
 
 Scene_Tea_Time is a dramatic scene.
 
-Scene_Tea_Time begins when player has been in Room_Sharons_Trailer for two turns and Scene_Sheriffs_Drive_By is not happening.
+Scene_Tea_Time begins when Room_Sharons_Trailer has enclosed player for two turns and Scene_Sheriffs_Drive_By is not happening.
 
 Scene_Tea_Time ends when seq_sharon_teatime is run and seq_sharon_teatime is not in-progress.
 
@@ -3701,9 +3706,8 @@ This is the seq_sharon_teatime_handler rule:
 
 This is the seq_sharon_teatime_interrupt_test rule:
 	[ If player walks away, pause the seq. ]
-	if player is not in Room_Sharons_Trailer and player is not on sharons_table:
+	if player is not enclosed by Room_Sharons_Trailer:
 		[a condition so if player leaves, the cat lady doesn't get stuck waiting]
-		[TODO: Add a similar condition to other seq? ]
 		if turns_so_far of seq_sharon_teatime is greater than 40:
 			rule fails;
 		else:
@@ -3720,13 +3724,19 @@ To refill_teacups:
 Chapter - Scene_Visit_With_Lee
 
 There is a recurring scene called Scene_Visit_With_Lee.
-Scene_Visit_With_Lee begins when player is in Room_C_Loop and Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening.
-Scene_Visit_With_Lee ends when player is not in Room_C_Loop and player is not in Room_Lees_Trailer.
+
+Scene_Visit_With_Lee begins when Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening and player is in Room_C_Loop or Room_Lees_Trailer encloses player.
+
+Scene_Visit_With_Lee ends when Scene_Sheriffs_Drive_By begins.
+
+Scene_Visit_With_Lee ends when player is not in Room_C_Loop and Room_Lees_Trailer does not enclose player.
 
 When Scene_Visit_With_Lee begins:
-	try saying hello to Lee;
+	if Lee is visible:
+		try saying hello to Lee;
 	if Scene_Hangout_With_Lee has not happened:
 		now seq_lee_invite is in-progress.
+
 
 Section - Sequences
 
@@ -3771,7 +3781,7 @@ Chapter - Scene_Hangout_With_Lee
 
 Scene_Hangout_With_Lee is a dramatic scene.
 
-Scene_Hangout_With_Lee begins when player has been in Room_Lees_Trailer for one turn and Scene_Sheriffs_Drive_By is not happening.
+Scene_Hangout_With_Lee begins when Room_Lees_Trailer has enclosed player for one turn and Scene_Sheriffs_Drive_By is not happening.
 
 Scene_Hangout_With_Lee ends when seq_lee_hangout is run and seq_lee_hangout is not in-progress.
 
