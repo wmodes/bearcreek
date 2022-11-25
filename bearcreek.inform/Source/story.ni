@@ -99,9 +99,6 @@ Part - Epistemology
 [Keeping track of what the player character knows and sees]
 
 Include Epistemology by Eric Eve.
- 
-A thing can be nonfamiliar. 
-
 
 Part - Smarter Parser
 
@@ -361,7 +358,7 @@ The can't go that way rule response (A) is "Which direction is that? You might w
 
 The can't eat unless edible rule response (A) is "[one of]Blecch[or]Ugh[or]Bleurgh[or]Ew[at random].".
 
-The examine undescribed things rule response (A) is "[one of]It is what it is[or]Eh, nothing special[at random]."
+The examine undescribed things rule response (A) is "[if Scene_Dreams is not happening][We] [see] nothing [one of]It is what it is[or]Eh, nothing special[at random][else]You look at [the noun], but the details are[one of] foggy[or] indistinct[or] fuzzy[at random][end if]."
 
 The can't reach inside rooms rule response (A) is "You can't get there from here."
 
@@ -435,9 +432,6 @@ Replace PrintInferredCommand;
 -) before “Parser.i6t”.
 
 
-Chapter - Printing Descriptions
-
-The examine undescribed things rule response (A) is "[if Scene_Dreams is not happening][We] [see] nothing [one of]interesting[or]noteworthy[or]special[at random] about [the noun][else]You look at [the noun], but the details are[one of] foggy[or] indistinct[or] fuzzy[at random][end if]."
 
 Part - New commands
 
@@ -517,17 +511,56 @@ Understand "swim", "wade", "dive"
 Instead of doing_some_swimming when waterbody is not visible:
 	say "Good idea. You might want to go down to the creek.";
 
-Doing_some_swimming_in is an action applying to one thing.
+Doing_some_swimming_in is an action applying to one touchable thing.
 Understand
-	"go to/in/into [visible waterbody]",
-	"swim in/into [visible waterbody]",
-	"wade in/into [visible waterbody]",
-	"dive in/into [visible waterbody]",
-	"jump in/into [visible waterbody]"
+	"go to/in/into [touchable waterbody]",
+	"swim in/into [touchable waterbody]",
+	"wade in/into [touchable waterbody]",
+	"dive in/into [touchable waterbody]",
+	"jump in/into [touchable waterbody]"
 	as doing_some_swimming_in.
 
 Instead of Doing_some_swimming_in:
 	try doing_some_swimming;
+
+Chapter - Jumping_across
+
+[This is laregely for attempting to cross the river in Room_Crossing, understanding that the player will try to get across before the bridge log appears ]
+
+Jumping_across is an action applying to nothing.
+Understand
+	"jump across/over",
+	"leap across/over",
+	"hop across/over",
+	"step across/over",
+	"cross across/over"
+	as jumping_across.
+
+Instead of jumping_across:
+	if player is in Room_Crossing:
+		try room_navigating Room_Other_Shore;
+	else if player is in Room_Other_Shore:
+		try room_navigating Room_Crossing;
+	else:
+		try jumping;
+
+Jumping_across_something is an action applying to one touchable thing.
+Understand
+	"jump across/over [touchable thing]",
+	"leap across/over [touchable thing]",
+	"hop across/over [touchable thing]",
+	"step across/over [touchable thing]",
+	"cross across/over [touchable thing]"
+	as jumping_across_something.
+
+Instead of jumping_across_something:
+	if player is in Room_Crossing:
+		try room_navigating Room_Other_Shore;
+	else if player is in Room_Other_Shore:
+		try room_navigating Room_Crossing;
+	else:
+		try jumping;
+
 
 Chapter - Sitting/Lying
 
@@ -1161,7 +1194,11 @@ Carry out taking inventory (this is the print non-standard inventory rule):
 		if number of marked for listing things worn by the player is greater than 0:
 			say " and wearing ";
 			list the contents of the player, as a sentence, including contents, listing marked items only;
-		say "[other_attributes][permanent_attributes].";
+		say ".[no line break] [other_attributes][permanent_attributes][line break]";
+	else:
+		say ".[line break]";
+
+test inventory with "i / abstract pail to limbo / i / purloin shirt / wear it / i / purloin pail / i / teleport to stone bridge / swim / i / examine arm / i / teleport to long stretch / u.u.u.u.u.u. / i / teleport to attic / i"
 
 Chapter - New Can't See That Report
 
@@ -1253,7 +1290,7 @@ After deciding the scope of the player:
 		place X in scope.
 
 [Uses before rules to intervene ahead of visibility checks]
-Before doing something when the noun is unavailable:
+Before doing something except person_navigating when the noun is unavailable:
 	[say "[The noun] [are] nowhere to be seen." instead.]
 	say "You look around, but don't see [the noun]. Last you remember, [they] [was-were of noun] [at the remembered location of noun].[line break]" instead.
 
@@ -1370,7 +1407,9 @@ Understand
 	"go back/- to/around/near/by/-- [any reachable room]",
 	"return to [any reachable room]",
 	"walk to/-- [any reachable room]",
-	"run to/-- [any reachable room]" as room_navigating.
+	"run to/-- [any reachable room]",
+	"follow [any reachable room]" 
+	as room_navigating.
 
 Check room_navigating:
 	[say "(DEBUG: go from [location of player] to [the noun])[line break]";]
@@ -1382,7 +1421,7 @@ Carry out room_navigating:
 	if the initial location is the destination,
 		say "." instead;
 	let heading be the best route from the initial location to the destination;
-	[say "(DEBUG: heading toward [noun] is [heading])[line break]";]
+	[ say "(DEBUG: heading toward [noun] is [heading])[line break]"; ]
 	if heading is nothing:
 		say cant_find_that instead;
 	else:
@@ -1397,7 +1436,8 @@ Understand
 	"go back/- to/-- [any not reachable room]",
 	"return to [any not reachable room]",
 	"walk to/-- [any not reachable room]",
-	"run to/-- [any not reachable room]"
+	"run to/-- [any not reachable room]",
+	"follow [any not reachable room]"
 	as fail_navigating.
 
 Carry out fail_navigating:
@@ -2036,7 +2076,7 @@ To say treetop_payoff:
 	say "Looking around, you can see the [italic type]whole world[roman type].
 	[paragraph break]Directly under you, you can see the dirt road and Bear Creek and the stone bridge, and you notice there is a place you might cross the creek below the swimming hole.
 	[paragraph break]In the distance, you can see the mountains, brown and green, edged with trees all the way around, and not just Bear Creek below you, but the river a ways over there. And out that way is town, barely visible through trees.  And the forest stretching out endlessly in every direction.
-	[paragraph break]The railroad tracks which wind gently from one direction pass almost beneath you and disappear in gentle S-curves in the other direction. You can see the trailer park and that might be Honey and Grandpa's trailer. Everything looks so small, like looking at an ant hill. A giddy feeling pushes up out of you, and you can't stop laughing.";
+	[paragraph break]The railroad tracks which wind gently from one direction pass almost beneath you and disappear in gentle S-curves in the other direction. You can see the trailer park and that might be Honey and Grandpa's trailer. Everything looks so small, like looking at an ant hill. A giddy feeling pushes up out of you, and you can't stop laughing";
 
 To say lost_in_the_woods_payoff:
 	say "The afternoon shadows are lengthening and it is slowly getting on toward evening. You should be home by now. Honey and Grandpa will be worried. You fight back a brief wave of misery and trudge on. But it's no use. Part of the time you are pretty sure you are going in circles. The rest of the time you are scared you are getting lost deeper in the forest.
@@ -2459,7 +2499,7 @@ topic_trailer is a subject.
 
 topic_creek is a subject.
 	The printed name is "Bear Creek".
-	Understand "bear/-- river/creek/crick/stream" as topic_creek.
+	Understand "river/creek/crick/stream",  "bear creek/crick" as topic_creek.
 
 The topic_bridge is a subject.
 	The printed name is "old stone bridge".
@@ -2523,7 +2563,7 @@ topic_jam is a subject.
 	The printed name is "jam".
 	Understand "blackberries/blackberry/berries/berry/-- jam/jelly/preserves/pot/pan/goo/stove/kitchen", "black berry jam/jelly/preserves" as topic_jam.
 
-The bucket is familiar.
+[ The bucket is familiar. ]
 
 topic_berries is a subject.
 	The printed name is "blackberries".
@@ -2544,10 +2584,19 @@ Part - Complicated Properties
 
 Chapter - Some Things and Their Properties
 
-A thing can be unmentionable. [reserved for underwear, clothing, and shoes]
+[ A property that overrides familiar or unfamiliar, making them less likely to be subjects of conversation when quizzing or informing, ie, it makes topics more likely to be selected in disambiguation. ]
+A thing can be nonfamiliar. 
 
+[ Replacing the dodgy undescribed property ]
+A thing can be unmentioned.
+
+[ A property used for underwear, clothing, and shoes ]
+A thing can be unmentionable.
+
+[ A property that determines what happens when you toss it in a waterbody ]
 A thing can be floating or sinking. Things are usually sinking.
 
+[ I don't rememember what this is. lol]
 A thing can be special.
 
 A supporter can be lie-able. Supporters are usually not lie-able.
@@ -2570,7 +2619,7 @@ A surface has a room called destination. Destination is Limbo.
 
 Chapter - Waterbodies
 
-A waterbody is a kind of fixed in place undescribed enterable container.
+A waterbody is a kind of fixed in place nonfamiliar enterable scenery container.
 
 Chapter - Wet Things
 
@@ -2581,7 +2630,7 @@ Things have a number called dry count.
 
 Every turn when the number of wet things is greater than 0:
 	Repeat with item running through wet things:
-		if item is not in Bear Creek and item is not in deep_pool:
+		if item is not in creek_at_bridge and item is not in deep_pool:
 			Decrease the dry count of item by one;
 		If dry count of item is less than one:
 			Now item is dry;
@@ -2616,15 +2665,15 @@ Check picking:
 Carry out picking:
 	try taking backdrop_berries.
 
-Does the player mean picking backdrop_berries:
+[ Does the player mean picking backdrop_berries:
 	it is very likely.
 Does the player mean doing anything except picking backdrop_berries:
-	it is unlikely.
+	it is unlikely. ]
 [TODO: "Does the player mean" rules clarify the noun, not the verb. I think the following are unneeded, but not sure]
-Does the player mean doing anything except taking or picking handful_of_berries:
+[ Does the player mean doing anything except taking handful_of_berries or picking handful_of_berries:
 	it is very likely.
 Does the player mean doing anything to berries_in_pail:
-	it is likely.
+	it is likely. ]
 
 Section - backdrop_berries
 
@@ -3010,8 +3059,6 @@ Carry out tuning:
 
 Chapter - The Radio
 
-[Instead of doing anything except object-navigating or examining or listening or smelling or quizzing or informing or implicit-quizzing or implicit-informing radio, say "[one of]Better leave it alone or Honey will kill you.[or]Seriously, you know not to touch Honey's stuff.[or]Not a good idea.[stopping]"]
-
 Every turn during Scene_Day_One:
  	if location of player is in Region_Blackberry_Area or location of player is Room_Stone_Bridge:
 		if time_for_a_new_song,
@@ -3204,11 +3251,11 @@ The description is "[first time]You are looking down at the train from above! Ki
 Understand "train", "railroad", "far away", "distant", "crossing", "tracks" as distant_train.
 
 [Does the player mean doing anything to distant_train when player is in top of pine tree: It is likely.]
-Does the player mean doing anything to distant_train when player is not in Room_Top_of_Pine_Tree:
-	It is very unlikely.
+[ Does the player mean doing anything to distant_train when player is not in Room_Top_of_Pine_Tree:
+	It is very unlikely. ]
 
-Does the player mean doing anything to distant_train when player is in Room_Top_of_Pine_Tree:
-	It is very likely.
+[ Does the player mean doing anything to distant_train when player is in Room_Top_of_Pine_Tree:
+	It is very likely. ]
 
 The next_train_interval is a number that varies.
 
@@ -3321,8 +3368,11 @@ Scene_Picking_Berries ends when Scene_Explorations begins.
 Chapter - Scene_Grandparents_Conversation
 
 There is a scene called Scene_Grandparents_Conversation.
-Scene_Grandparents_Conversation begins when player is in Room_Grassy_Clearing for the first time.
+
+Scene_Grandparents_Conversation begins when play begins.
+
 Scene_Grandparents_Conversation ends when Scene_Explorations begins.
+Scene_Grandparents_Conversation ends when Scene_Walk_With_Grandpa begins.
 
 When Scene_Grandparents_Conversation begins:
 	try saying hello to Grandpa;
@@ -3417,6 +3467,7 @@ Scene_Walk_With_Grandpa ends when Grandpa has been in Room_Grandpas_Trailer and 
 When Scene_Walk_With_Grandpa begins:
 		now big_bucket is full;
 		now seq_grandparents_chat is not in-progress;
+		now player is free_to_wander;
 
 When Scene_Walk_With_Grandpa ends:
 	now big_bucket is empty.
@@ -3427,10 +3478,10 @@ Every turn when Scene_Walk_With_Grandpa is happening and journey_gpa_walk is not
 	if player is in Room_Grassy_Clearing:
 		now journey_gpa_walk is in-progress;
 	else if player is in Region_Blackberry_Area:
-		queue_report "[one of]You hear Grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing[or]Grandpa's calling you[at random]" at priority 1;
+		queue_report "[one of]You hear Grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing.[or]Grandpa's calling you.[at random]" at priority 1;
 	else if player is in Region_River_Area or player is in Region_Dirt_Road:
 		if a random chance of 1 in 2 succeeds:
-			queue_report "[one of]You think you hear your Grandpa calling you[or]Is that Grandpa calling you?[or]That sounds like Grandpa calling you.[or]From over by the blackberry clearing, you think Grandpa's calling.[at random]" at priority 1;
+			queue_report "[one of]You think you hear your Grandpa calling you.[or]Is that Grandpa calling you?[or]That sounds like Grandpa calling you.[at random]" at priority 1;
 
 Chapter - Sequenes & Journeys
 
@@ -3457,8 +3508,8 @@ This is the journey_gpa_walk_start rule:
 		Report Grandpa saying "'Hey, [grandpas_nickname],' Grandpa says looking at you, 'I'm gonna take this bucket of berries up to your Aunt Mary. You gonna help your old Grandpa?'";
 		rule fails;
 	else if time_here of journey_gpa_walk is 2:
-		Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa says. He picks up the big bucket with one hand that you probably couldn't even budge.";
-		now Grandpa holds bucket;
+		Report Grandpa saying "'Okay, I'm headed back to the house, [grandpas_nickname]. Why don't ya come with me?' Grandpa picks up the big bucket with one hand that you probably couldn't even budge.";
+		now Grandpa holds big_bucket;
 	rule succeeds;
 
 This is the
@@ -3480,7 +3531,7 @@ This is the
 		rule fails;
 	else if time_here of journey_gpa_walk is 2:
 		Report Grandpa saying "'Pretty good,' Grandpa says, gesturing at the bucket, 'We got a whole bucketful for you. Old Whistle Britches here, picked most of these and ate twice as many more.' Grandpa winks at you.[paragraph break]Grandpa helps your Aunt Mary pour the bucket of berries slowly into several giant pots with a series of juicy plops.";
-		now bucket is empty;
+		now big_bucket is empty;
 		rule fails;
 	else if time_here of journey_gpa_walk is 3:
 		Report Mary saying "Your grandpa gets a big glass of water from the sink and drinks it.
@@ -3930,7 +3981,7 @@ Section - Sequences
 Some sandwich_ingredients are a fixed in place thing.
 	The printed name is "sandwich makin's".
 	The initial appearance is "Aunt Mary has gotten out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread for making tuna sandwiches.". The description is "Several cans of Chicken of the Sea, Miracle Whip, and Wonder Bread are out for making tuna sandwiches."
-	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonnaise/whip/can/cans/bags", "sandwich bags" as sandwich_ingredients.
+	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonaise/mayonnaise/can/cans/bags", "miracle whip",  "sandwich bags" as sandwich_ingredients.
 
 The brown paper bag is a unopenable open container.
 	The printed name is "[if brown paper bag is torn]torn up [end if]brown paper bag".
@@ -3946,7 +3997,7 @@ A tuna_sandwich is a kind of thing.
 	The printed name is "tuna sandwich".
 	Rule for printing the plural name of a tuna_sandwich: say "tuna sandwiches".
 	The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
-	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spead/mayonaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna_sandwiches.
+	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonnaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna_sandwiches.
 
 Instead of dropping tuna_sandwich during Scene_Day_One:
 	if raccoons are in Region_Woods_Area:
@@ -3987,7 +4038,7 @@ This is the seq_mary_sandwich_handler rule:
 		Report Mary saying "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makings. 'Okay, you take those sandwiches down to your grandparents. She hands you the paper bag. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles.";
 		now all tuna_sandwiches are in brown paper bag;
 		now brown paper bag is held by player;
-		now sandwich_ingredients are off-stage;
+		now sandwich_ingredients are in Limbo;
 
 This is the seq_mary_sandwich_interrupt_test rule:
 	if we are speaking to Mary, rule succeeds;
@@ -4005,23 +4056,35 @@ Scene_Bringing_Lunch ends when Scene_Across_the_Creek begins.
 When Scene_Bringing_Lunch begins:
 	now dog is loose;
 	[now Grandpa is navbiguous;]
-	the log_bridge_forms in 10 turns from now.
+	the log_bridge_forms in 3 turns from now.
 
 At the time when the log_bridge_forms:
 	now bridge_log_west is in Room_Crossing;
 	now pool_log is in Limbo
 
+Test bringing-lunch with "teleport to sharons trailer / teleport to dirt road / teleport to grassy clearing / teleport to grandpas trailer / z/z/z/z/z"
+
+Section - Actions
+
+Instead of going down when location of player is Room_Dirt_Road during Scene_Bringing_Lunch:
+	say "[dog alert] and growls. It's clear [one of]the dog is not going to let you by[or]you are not going to get by this dog[or]you are going to have to find another way around this dog[cycling]."
 
 Chapter - Scene_Across_the_Creek
 
 There is a scene called Scene_Across_the_Creek.
+
 Scene_Across_the_Creek begins when player has been in Room_Wooded_Trail.
+
 Scene_Across_the_Creek ends when Scene_Night_In_The_Woods begins.
 
 [ Now the time of day is 4:10 AM. ]
 When Scene_Across_the_Creek begins:
 	set_the_time_to late_afternoon.
 
+Section -Actions
+
+Does the player mean landmark_navigating sound_of_the_creek during Scene_Across_the_Creek:
+	It is very likely.
 
 Part - Scene_Night_In_The_Woods
 
@@ -4083,7 +4146,7 @@ seq_jody_stop is a sequence.
 This is the seq_jody_stop_handler rule:
 	let index be index of seq_jody_stop;
 	if index is 3:
-		queue_report "You think of how worried Honey and Grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say outloud to yourself." at priority 1;
+		queue_report "You think of how worried Honey and Grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say out loud to yourself." at priority 1;
 	else if index is 4:
 		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
 	else if index is 5:
@@ -4501,7 +4564,7 @@ This is the seq_grandparents_bounce_handler rule:
 		else if index is 6:
 			Report Grandpa saying "'Watch this!' Grandpa says like a little kid and leaps high into the air yelling 'Woo!' while Honey laughs.";
 		else if index is 7:
-			queue_report "Grandpa gathers up his strength, squating down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'John!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
+			queue_report "Grandpa gathers up his strength, squatting down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'John!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
 			now seq_grandparents_bounce is not in-progress;
 			now mars_free_to_go is true;
 			now Honey is in Limbo;
@@ -4619,7 +4682,7 @@ When Scene_Foraging_for_Breakfast begins:
 
 Every turn during Scene_Foraging_for_Breakfast:
 	if the remainder after dividing the turn count by 2 is 0:
-		queue_report "[one of]You are quite hungry[or]You didn't have dinner (or lunch!) yesterday, so you are really quite famished[or]You find you are really hungry. Perhaps you can forage something like a good Exporer Scout[cycling]." with priority 1.
+		queue_report "[one of]You are quite hungry[or]You didn't have dinner (or lunch!) yesterday, so you are really quite famished[or]You find you are really hungry. Perhaps you can forage something like a good Explorer Scout[cycling]." with priority 1.
 
 [ If player eats berries on brambles or in pail, they should no longer be hungry. ]
 After eating during Scene_Foraging_for_Breakfast:
@@ -4793,7 +4856,7 @@ This is the journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
 		Now Honey is in Room_Grassy_Field;
 		Now Grandpa is in Room_Grassy_Field;
-		Report Grandpa saying "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutchs her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more queitly looking at Lee, 'Thank you.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Lee: 'I found him out in the blackberry brambles.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your embarrassment, you start to cry.";
+		Report Grandpa saying "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutches her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more quietly looking at Lee, 'Thank you.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Lee: 'I found him out in the blackberry brambles.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your embarrassment, you start to cry.";
 		rule fails;
 		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
 	else if time_here of journey_lee_walk is 2:
@@ -4892,7 +4955,7 @@ This is the seq_long_arm_of_the_law_handler rule:
 		queue_report "Honey and Grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask Grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][bold type][location][roman type][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
 	else if index is 4:
 		[Sheriff tries to bully narator into implicating Lee]
-		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Shefiff says a little out of breath to Honey and Grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
+		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Sheriff says a little out of breath to Honey and Grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
 		now lee_support of player is _uncertain;
 	else if index is 5:
 	  [we hang at this step until either player talks to sheriff or leaves]
@@ -5153,7 +5216,7 @@ This is the seq_staying_w_grandpa_handler rule:
 		now Grandpa is in Room_Grandpas_Trailer;
 		now honey is in Room_Grandpas_Trailer;
 	else if index is 2:
-		say "'Let's get some breakfest together for [grandpas_nickname],' Grandpa says to Aunt Mary who starts rummaging in the fridge.[paragraph break]Grandpa and Honey retreat to the kitchen to talk quietly.";
+		say "'Let's get some breakfast together for [grandpas_nickname],' Grandpa says to Aunt Mary who starts rummaging in the fridge.[paragraph break]Grandpa and Honey retreat to the kitchen to talk quietly.";
 	else if index is 3:
 		say "Honey and Grandpa are still talking intensely in the kitchen.";
 	else if index is 4:
@@ -5195,11 +5258,11 @@ To add_stuff_to_special_box:
 		now photos_from_home is in special_box;
 
 After examining photos_from_grampas two times:
-	say "You return the photos to the box and contemplate the sinuous line of your life. While not always easy, your experiences made you who you are, [permanent_attributes]. You wouldn't change a thing.";
+	say "[run paragraph on]You return the photos to the box and contemplate the sinuous line of your life. While not always easy, your experiences made you who you are, [permanent_attributes]You wouldn't change a thing.[paragraph break]";
 	now photos_from_grampas is in special_box;
 
 After examining photos_from_home two times:
-	say "You return the photos to the box and contemplate the sinuous line of your life. While not always easy, your experiences made you who you are, [permanent_attributes]. You wouldn't change a thing.";
+	say "[run paragraph on]You return the photos to the box and contemplate the sinuous line of your life. While not always easy, your experiences made you who you are, [permanent_attributes]You wouldn't change a thing.[paragraph break]";
 	now photos_from_home is in special_box;
 
 Instead of going down during Scene_Epilogue:
@@ -5277,10 +5340,11 @@ To say sunshine_description:
 	else:
 		say "The sun has set and the trees loom darkly above";
 
-Backdrop_creek is a backdrop in Region_Blackberry_Area.
-	The printed name is "Bear Creek".
-	The description is "You can't see the creek through the tall brambles, but you can hear it.".
-	Understand "bear/-- river/creek/crick/stream" as backdrop_creek.
+	Backdrop_creek is a nonfamiliar backdrop in Region_Blackberry_Area.
+		The printed name is "Bear Creek".
+		The description is "You can't see the creek through the tall brambles, but you can hear it.".
+		Understand "river/creek/crick/stream/water",  "bear creek/crick" as backdrop_creek.
+[TODO: This causes confusion with disambugation throughout]
 
 Section - Rules and Actions
 
@@ -5333,7 +5397,6 @@ The description is "[one of]The water churgles in the nearby creek but you can't
 [paragraph break][first time]Looking around, you see places you can go: [only][available_exits]".
 Understand "grassy/-- clearing" as Room_Grassy_Clearing.
 
-
 Section - Navigation
 
 Room_Grassy_Clearing is south of Room_Lost_in_the_Brambles and down from Room_Lost_in_the_Brambles.
@@ -5343,12 +5406,12 @@ The available_exits of Room_Grassy_Clearing is "If you [italic type]follow the p
 Section - Objects and People
 
 The big_bucket is scenery unopenable open container in Room_Grassy_Clearing.
-	The printed name is "big bucket".
-	The description is "There's a big bucket that Honey and Grandpa have been putting their berries into, about half full now.".
-	Understand "big/-- bucket" as big_bucket.
-	The big_bucket can be empty, quarter-full, half-full, three-quarter-full, or full.
-	The big_bucket is quarter-full.
-	The scent is "ripe berries".
+The printed name is "big bucket".
+The description is "There's a big bucket that Honey and Grandpa have been putting their berries into, about half full now.".
+Understand "big/-- bucket" as big_bucket.
+The big_bucket can be  empty, quarter-full, half-full, three-quarter-full, or full.
+The big_bucket is half-full.
+The scent is "ripe berries".
 
 The honeys_radio is improper-named scenery in Room_Grassy_Clearing.
 	It is familiar, switched on, device.
@@ -5358,7 +5421,7 @@ The honeys_radio is improper-named scenery in Room_Grassy_Clearing.
 	The scent is "ozone".
 	The indefinite article is "Honey's".
 
-Instead of doing anything except examining to honeys_radio:
+Instead of doing anything except examining or listening or smelling or quizzing or informing or implicit-quizzing or implicit-informing to honeys_radio:
 	say "[one of]Honey will kill you if you mess with her radio.[or]You better leave the radio alone.[or]Honey gives you a [italic type]look[roman type], and you leave the radio alone.[cycling]".
 
 Grandpas_shirt is an undescribed thing in Room_Grassy_Clearing.
@@ -5439,7 +5502,7 @@ The printed name is "Willow Trail".
 The casual_name is "on the willow trail".
 The description is "This is a trail running roughly parallel the creek with tall blackberry brambles on either side. In one place, there are [willows] hanging down over the trail that tickle the back of your neck as you duck under them.
 [paragraph break][available_exits]".
-Understand "blackberry/willow/willows trail/--" as Room_Willow_Trail.
+Understand "blackberry/willow/willows path/trail/--" as Room_Willow_Trail.
 
 
 Section - Navigation
@@ -5550,8 +5613,7 @@ The casual_name is "at the stone bridge".
 The description is "[one of]The trail crosses an old stone bridge -- an excellent place to sit on a sunny day -- from which you can look down into Bear Creek[or]The road may have crossed the creek over an old stone bridge at one time but is now just a narrow trail. From here you can peer down into Bear Creek[stopping]. Movement in the sparkling water and the old mossy bridge catch your eye. [stuff_about_the_creek].
 [paragraph break][available_exits]".
 The scent is "cool creek water and mossy stone".
-Understand "old/-- stone/-- bridge", "river/creek/stream" as Room_Stone_Bridge.
-
+Understand "old/-- stone/-- bridge", "river/creek/crick/stream/water", "bear creek/crick" as Room_Stone_Bridge.
 
 Section - Navigation
 
@@ -5568,14 +5630,15 @@ The old stone bridge is scenery in Room_Stone_Bridge.
 	The description is "The trail goes over the old bridge that was probably part of some old road. The stones of the old bridge are covered with moss. Horsetails and ferns are growing at the shady base of the bridge.".
 	Understand "base/bridge/trail" as old stone bridge.
 
-Bear Creek is a waterbody in Room_Stone_Bridge.
+Creek_at_bridge is a waterbody in Room_Stone_Bridge.
+The printed name is "Bear Creek".
 	The description is "In places, the creek seems like just a trickle, then other places it is as wide as a river. Here, it is broad and shallow as it [if player is in Room_Stone_Bridge]goes under the bridge[otherwise]flows over and around the rocky creek bed[end if]. There are bright stars twinkling on the water with pebbles and tiny minnows below. It smells like wet rocks.
 	[paragraph break][stuff_about_the_creek]."
-	Understand "bear/-- river/crick/water/stream" as Bear Creek.
+	Understand "river/creek/crick/stream/water",  "bear creek/crick" as Creek_at_bridge.
 	The scent is "cool creek water. It tingles your nose sort of".
 
 [TODO: Make sure all names with an underscore have a printed name. Otherwise, they show up in disabugation]
-Some floating_stuff is scenery in Bear Creek.
+Some floating_stuff is scenery in Creek_at_bridge.
 	The printed name is "floating stuff".
 	Understand "leaf/leaves/skeeters/shimmering/flash/little/minnow/minnows/branch/branches/stick/sticks/stars/star/reflection/reflections/pebble/pebbles" as floating_stuff.
 
@@ -5600,11 +5663,11 @@ Instead of taking floating_stuff:
 	say "You reach for them, [one of]but they drift on down the river[or]and they move just out of reach[or]but they sink out of sight below the water[at random]."
 
 Instead of examining floating_stuff,
-	try examining bear creek.
+	try examining creek_at_bridge.
 
 Instead of taking moss, say "Best to leave the native plants for the health of the Riparian Ecosystem. (Thanks, Nature Camp.)"
 
-Instead of entering Bear Creek,
+Instead of entering Creek_at_bridge,
 	try doing_some_swimming.
 
 Instead of doing_some_swimming in Room_Stone_Bridge:
@@ -5627,7 +5690,6 @@ The description is "[if player was in Room_Long_Stretch]Down a long wooded trail
 The scent is "cool creek water and mossy rocks".
 Understand "swimming/deep/-- hole/pool", "zigzag/steep trail" as Room_Swimming_Hole.
 
-
 Section - Navigation
 
 Room_Swimming_Hole is east of Room_Long_Stretch, and down from Room_Long_Stretch.
@@ -5646,7 +5708,7 @@ Section - Backdrops and Scenery
 The deep_pool is a waterbody in Room_Swimming_Hole.
 The printed name is "deep pool".
 The description is "The creek tumbles down some big granite rocks here and forms a deep pool. You can't see the bottom. And that makes you [nervous]."
-Understand "swimming/deep/-- hole/pool", "Bear/-- river/creek/crick/water/stream" as deep_pool.
+Understand "swimming/deep/-- hole/pool", "river/creek/crick/stream/water", "bear creek/crick" as deep_pool.
 
 Some smooth granite rocks are a lie-able surface in Room_Swimming_Hole.
 
@@ -5705,17 +5767,13 @@ Chapter - Room_Crossing
 
 Section - Description
 
-[ oops -
->cross creek
-You look around, but don't see Backdrop_creek. Last you remember, it was ]
-
 Room_Crossing is a room.
 The printed name is "The Crossing".
 The casual_name is "at the river crossing".
 The description is "Here the creek broadens out a little and, except for a place in the middle where the current is swift, there are big stones, boulders really, scattered about in the river.
 [paragraph break][available_exits]".
 The scent is "cool creek water and mossy rocks".
-Understand "crossing" as Room_Crossing.
+Understand "crossing/thecrossing" as Room_Crossing.
 
 Section - Navigation
 
@@ -5741,12 +5799,14 @@ Instead of jumping when player is in Room_Crossing:
 
 Section - Objects
 
-A bridge_log_west is a surface in Limbo.
+A bridge_log_west is a described surface in Limbo.
 	The printed name is "a floating length of log".
-	The initial appearance is "A log has floated down the creek and is wedged in the boulders in the middle of the creek.".
 	The description is "A log has floated downstream in the swift current. It is wedged between two boulders forming a kind of bridge."
+	The initial appearance is "A log has floated down the creek and is wedged in the boulders in the middle of the creek."
 	The destination is Room_Other_Shore.
 	Understand "floating/-- length/-- of/-- bridge/wood/driftwood/log west/--", "drift wood" as bridge_log_west.
+
+Test crossing with "abstract log west to thecrossing/teleport to swimming hole/go to rocky shore"
 
 Section - Backdrops and Scenery
 
@@ -5762,18 +5822,21 @@ Some boulders_west are a surface in Room_Crossing.
 	The destination is Room_Other_Shore.
 	Understand "scattered/-- boulder/boulders/stones/rocks" as boulders_west.
 
-The swift_current_west is a undescribed enterable container in Room_Crossing.
+The swift_current_west is a waterbody in Room_Crossing.
 	The printed name is "swift current".
 	It is a enterable unopenable open container.
 	The description is "The river here narrows to a swift current, too broad to jump across and too swift to wade or swim -- or in any case, you're not willing to risk drowning here."
-	Understand "bear/swift/-- river/creek/crick/water/stream/gap/chasm/current" as swift_current_west.
+	Understand "river/creek/crick/stream/water",  "bear creek/crick", "gap/chasm", "swift/-- current" as swift_current_west.
+
+[TODO: Shouldn't this be the same as swift_current_east? ]
+[TODO: Oops - in Other Shore
+>cross creek
+You look around, but don't see Bear Creek. Last you remember, it was lost in the brambles.]
 
 A steep bank is scenery in Room_Crossing.
 	The description of steep bank is "It's pretty steep. And covered in poison oak."
 
 Section - Rules and Actions
-
-Test crossing with "test bridge/ go to crossing/ g/g/g".
 
 [Transition text]
 Instead of going to Room_Crossing when player was in Room_Swimming_Hole:
@@ -5786,7 +5849,7 @@ Instead of going east when player is in Room_Crossing:
  	if bridge_log_west is not visible:
 		say "You [one of]get part way across on the boulders[or]hop from boulder to boulder out into the broad river[in random order], but there is an sizeable gap in the middle and a really swift current. You consider jumping across, but the slippery rocks make you reconsider.";
 	else:
-		say "You hop from boulder to boulder to the middle of the broad river and take a tentative step onto the floating log. Though it bobs a bit, you find that it is wedged quite firmly between the rocks. A few quick steps and you are across[first time][paragraph break][crossing_payoff][only].";
+		say "You hop from boulder to boulder to the middle of the broad river and take a tentative step onto the floating log. Though it bobs a bit, you find that it is wedged quite firmly between the rocks. A few quick steps and you are across.[first time][paragraph break][crossing_payoff].[only]";
 		continue the action;
 
 Instead of taking bridge_log_west, say "Too heavy."
@@ -5794,9 +5857,8 @@ Instead of taking bridge_log_west, say "Too heavy."
 Instead of climbing steep bank:
 	say "You try to climb the bank, but slide back down. Too steep. Maybe you can cross the creek to the other side."
 
-Understand "jump across" as jumping when player is in Room_Crossing.
-
-Understand "cross [visible thing]" as climbing when player is in Room_Crossing.
+Instead of jumping in Room_Crossing:
+ 	try doing_some_swimming.
 
 Instead of searching swift_current_west:
 	try examining swift_current_west;
@@ -5848,7 +5910,6 @@ The description is "[one of]The trail over the stone bridge turns into a dirt ro
 The scent is "sunshine and dust".
 Understand "dirt/-- road", "end", "end of the/-- dirt/-- road" as Room_Dirt_Road.
 
-
 Section - Navigation
 
 Room_Dirt_Road is up from Room_Stone_Bridge and west of Room_Stone_Bridge.
@@ -5857,9 +5918,9 @@ The available_exits of Room_Dirt_Road are "The old dirt road continues on uphill
 
 Section - Objects and People
 
+[There is a dog here defined in her own section below.]
 The dog is in Room_Dirt_Road
 
-[There is a dog here defined in her own section below.]
 
 Section - Backdrops and Scenery
 
@@ -5887,7 +5948,6 @@ The description of Room_Long_Stretch is "This is a really long stretch of the di
 [paragraph break][available_exits]".
 The scent is "sunshine and dust".
 Understand "long stretch" as Room_Long_Stretch.
-
 
 Section - Navigation
 
@@ -5945,7 +6005,7 @@ The casual_name is "at the railroad tracks".
 The description of Room_Railroad_Tracks is "Railroad tracks cross the old dirt road here in a small rise. The tracks run alongside the trailer park fence in one direction and into a tunnel of green in the other. As you cross the tracks, you see a sign that says 'Property of Southern Pacific.'[first time] Your grandpa sometimes takes you down here to watch the train go by. He taught you the name of all the cars and used to work on the railroad.[only]
 [paragraph break][available_exits][penny_status]".
 The scent is "dust and grease".
-Understand "railroad/train/sp/-- tracks", "southern pacific tracks", "railroad/train/sp crossing" as Room_Railroad_Tracks.
+Understand "railroad/train/sp/-- track/tracks", "southern pacific track/tracks", "railroad/train/sp crossing" as Room_Railroad_Tracks.
 
 
 Section - Navigation
@@ -6024,7 +6084,6 @@ The description of Room_Grassy_Field is "This is the grassy field behind the tra
 [paragraph break][available_exits]".
 The scent is "the sweet smell of dried hay".
 Understand "grassy/-- field" as Room_Grassy_Field.
-
 
 Section - Navigation
 
@@ -6178,7 +6237,7 @@ Section - Description
 Room_Top_of_Pine_Tree is a room.
 The printed name is "Top of the Pine Tree".
 The casual_name is "at the top of the big pine tree".
-The description is "This is very close to the very top. You are holding on to the narrow trunk of the tree. You can feel it sway in the faint breeze. It is slightly cooler up here. [treetop_payoff]".
+The description is "This is very close to the very top. You are holding on to the narrow trunk of the tree. You can feel it sway in the faint breeze. It is slightly cooler up here. [treetop_payoff].".
 Understand "top of/-- pine/doug/-- tree/fir/--" as Room_Top_of_Pine_Tree.
 The scent is "pine sap".
 
@@ -6198,12 +6257,12 @@ A Doug_Fir2 is backdrop in Room_Top_of_Pine_Tree.
 The distant_creek is scenery in Room_Top_of_Pine_Tree.
 		The printed name is "Bear Creek".
 		The description is "Except for near the stone bridge and the swimming hole, you can only see tiny snatches of Bear Creek. Mostly, it is a dense line of trees that crosses under you.".
-		Understand "creek/water/stream", "Bear Creek" as distant_creek.
+		Understand "creek/crick/stream",  "bear creek/crick" as distant_creek.
 
 The distant_river is scenery in Room_Top_of_Pine_Tree.
 	The printed name is "faraway river".
 	The description is "You can barely see it in the summer haze. Looking beyond the faraway highway where the foothills flatten out, you can see a ribbon of green that you think is the river.".
-	Understand "faraway river", "river/valley/ribbon/highway/foothills" as distant_river.
+	Understand "faraway/-- river/valley/ribbon/highway/foothills" as distant_river.
 
 The distant_town is scenery in Room_Top_of_Pine_Tree.
 	The printed name is "distant town".
@@ -6337,7 +6396,7 @@ Section - Description
 Room_Picnic_Area is a room.
 The printed name is "Picnic Area".
 The casual_name is "in the picnic area of the trailer park".
-The description of Room_Picnic_Area is "At the back of the trailer park, there is a scraggly little Room_Picnic_Area with a patchy lawn that smells like mowed grass. A little cluster of tall trees is against the back fence.
+The description of Room_Picnic_Area is "At the back of the trailer park, there is a scraggly little  picnic area with a patchy lawn that smells like mowed grass. A little cluster of tall trees is against the back fence.
 [paragraph break][available_exits]".
 The scent is "dust and mowed grass".
 Understand "picnic area" as Room_Picnic_Area.
@@ -6356,16 +6415,18 @@ Section - Backdrops & Scenery
 The picnic_back_gate is an undescribed enterable container in Room_Picnic_Area.
 	The printed name is "back gate".
 	The description is "This wooden gate is at the back of the tailer park is used to go to the grassy field, across the tracks, and down to the creek. It is usually open in the daytime."
-	Understand "back/-- gate" as picnic_back_gate.
+	Understand "back/wooden/-- gate" as picnic_back_gate.
 
 The back fence is backdrop in Room_Picnic_Area.
 	The description is "This is the back fence of the trailer park."
 
 A patchy lawn is backdrop in Room_Picnic_Area.
 	The description is "The scraggly lawn is down to bare dirt in spots and around the edges, but near the picnic table is green and freshly mowed."
-	Understand "patchy", "mowed", "mown", "grass" as patchy lawn.
+	Understand "patchy/mowed/mown/-- grass/lawn/dirt" as patchy lawn.
 
-A picnic table is backdrop in Room_Picnic_Area.
+A picnic table is an sit-at-able enterable supporter in Room_Picnic_Area.
+	The description is "A beat-up old redwood picnic table sits on the grass near an interesting ant hill."
+	Understand "beat-up/redwood/old/-- picnic/-- table" as picnic table.
 
 A little cluster of tall trees is backdrop in Room_Picnic_Area.
 	The description is "This little cluster of tall trees is huddled at the back of the Room_Picnic_Area against the back fence. The branches don't start until half way up the tree."
@@ -6382,6 +6443,9 @@ A huge Jerusalem cricket is scenery in Room_Picnic_Area.
 The description is "This huge translucent brown bug is totally gross when it is alive, so now that it is half smashed, half decayed and swarming with red ants, it is indescribably disgusting. You are totally fascinated.";
 
 Section - Rules and Actions
+
+Instead of taking the ants:
+	say "That's what started all the trouble. No thank you.";
 
 Instead of doing anything except entering or examining to picnic_back_gate:
 	say "You better leave that alone. You don't want to get in trouble."
@@ -6578,8 +6642,6 @@ To joink_mika:
 	Now player holds Mika_figurine;
 	Now player is resourceful;
 	Continue the action.
-
-[Instead of doing anything except object_navigating or examining or taking or quizzing or informing or implicit-quizzing or implicit-informing Mika_figurine, say "Best to just keep that in your pocket for now."]
 
 Instead of touching Mika_figurine,
 	try examining Mika_figurine.
@@ -6893,7 +6955,6 @@ The description is "[if Scene_Day_Two has not happened]You are on the far side o
 The scent is "cool creek water and mossy rocks".
 Understand "other/-- shore" as Room_Other_Shore.
 
-
 [TODO: >cross river
 You look around, but don't see Bear Creek. Last you remember, it was .]
 
@@ -6921,7 +6982,7 @@ Instead of jumping when player is in Room_Other_Shore:
 
 Section - Objects
 
-A bridge_log_east is a surface in Room_Other_Shore.
+A bridge_log_east is a described surface in Room_Other_Shore.
 	The printed name is "a floating length of log".
 	The initial appearance is "A log has floated down the creek and is wedged in the boulders in the middle of the creek.".
 	The description is "A log has floated downstream in the swift current. It is wedged between two boulders forming a kind of bridge."
@@ -6940,7 +7001,7 @@ The swift_current_east is a waterbody in Room_Other_Shore.
 	The printed name is "swift current".
 	It is a enterable unopenable open container.
 	The description is "The river here narrows to a swift current, too broad to jump across and too swift to wade or swim -- or in any case, you're not willing to risk drowning here."
-	Understand "bear/swift/-- river/creek/crick/water/stream/gap/chasm/current" as swift_current_east.
+	Understand "river/creek/crick/stream/water",  "bear creek/crick", "gap/chasm", "swift/-- current" as swift_current_east.
 
 Section - Rules and Actions
 
@@ -6965,7 +7026,7 @@ Instead of entering swift_current_east,
 Instead of doing_some_swimming in Room_Other_Shore:
 	say current_swim_refusal.
 
-test shore with "teleport to other shore /abstract bridge west to crossing";
+test shore with "teleport to other shore /abstract bridge west to Room_Crossing";
 
 Chapter - Room_Wooded_Trail
 
@@ -7123,7 +7184,7 @@ South of Room_Dark_Woods_North is nowhere.
 	South of Room_Dark_Woods_North is Room_Dark_Woods_South.
 	Northwest of Room_Dark_Woods_North is Room_Dappled_Forest_Path.]
 
-The available_exits of Room_Dark_Woods_North are "[if Scene_Day_Two is not happening]But finally, through a thinning in the trees, you see the golden grass of what looks like a forest meadow glowing in the last of the sunset light.[else]There isn't exactly a path, but it is easier to keep going in a consistent direction. You believe you are steering rougly parallel to the creek and the road you saw from the sentinel tree. You can go back to the forest meadow which you figure is north, or you can continue south through the woods to see if you can reach the wooded trail.[end if]".
+The available_exits of Room_Dark_Woods_North are "[if Scene_Day_Two is not happening]But finally, through a thinning in the trees, you see the golden grass of what looks like a forest meadow glowing in the last of the sunset light.[else]There isn't exactly a path, but it is easier to keep going in a consistent direction. You believe you are steering roughly parallel to the creek and the road you saw from the sentinel tree. You can go back to the forest meadow which you figure is north, or you can continue south through the woods to see if you can reach the wooded trail.[end if]".
 
 Section - Objects
 
@@ -7337,7 +7398,6 @@ The description is "This is a tall pine tree, though not as tall as the massive 
 [paragraph break][available_exits]".
 The scent is "tangy pine".
 Understand "tall/-- pine/-- tree", "pine", "sentinel tree" as Room_Sentinel_Tree.
-
 
 Section - Navigation
 
@@ -8104,7 +8164,7 @@ Section - Objects and People
 
 The special_box is an closed openable container in Room_Attic.
 The printed name is "cigar box".
-The description is "This is a cigar box that you have decorated over the years. Maps and photos of animals cut from National Geographic are glued on every side[first time]. You called this your 'special box' because it contained special stuff[only][if special_box is closed]. The contents of the box rattles inside[else]. The miscelaneous keepsakes of your childhood are revealed inside[end if]."
+The description is "This is a cigar box that you have decorated over the years. Maps and photos of animals cut from National Geographic are glued on every side[first time]. You called this your 'special box' because it contained special stuff[only][if special_box is closed]. The contents of the box rattles inside[else]. The miscellaneous keepsakes of your childhood are revealed inside[end if]."
 Understand "cigar/special/keepsake/-- box", "animals/maps/decoration" as special_box.
 The scent is "cigars still, even after all these years".
 
@@ -8112,12 +8172,14 @@ Some photos_from_grampas is a thing.
 The printed name is "photos".
 The description is "[one of]These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you Honey hated that picture. They look like they are just about to crack up laughing.[paragraph break]Here's your Grandpa and you getting ready to hike part of the Pacific Crest Trail. You were maybe 15. This is just a few yeaars before he died. You both were woefully unprepared for late fall freezing temperatures. Though you were miserable at night, Grandpa toughed it out.[paragraph break]This is you and your best friend at your 6th grade graduation in your new school. You kind of lost touch when you both went into Middle School but became friends again in high school.[paragraph break]Here you pause for a second to linger on a memory. You can look again to examine the rest of the photos.[or]You look through the remainder of the photos:[paragraph break]Here's a photo your mom sent after she and Mark moved to Idaho. She's smiling, but it looks strained. Or maybe that's just your imagination. She's standing on the edge of a giant volcanic crater.[paragraph break]Here's a blurry photo of a lizard on a rock in Death Valley you took on a trip with Honey and Grandpa.[paragraph break]This is mom, Honey, and you at your high school graduation. Mark probably took this photo. You don't look happy to be there.[paragraph break]Oh and here's a memorial card from Honey's funeral. You said something at the service, but you have no idea what you said. By then you were in college.[paragraph break]
 There's a whole series of photos of pets that you had through the years, mostly cats, including some of Sharon's cats. There's even a photo of you with the dog down by Bear Creek who you eventually made friends with.[paragraph break]That's it. A young life in a dozen photos[cycling]".
-Understand "photos/photo/honey/grandpa/mom/friend/lizard/cat/cats/dog" as photos_from_grampas.
+Understand "photos/photo/friend/lizard/cat/cats/dog" as photos_from_grampas.
+[ Understand "photos/photo/honey/grandpa/mom/friend/lizard/cat/cats/dog" as photos_from_grampas. ]
 
 Some photos_from_home is a thing.
 The printed name is "photos".
 The description is "[one of]These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's you, Honey, and Grandpa on a visit to their house. You look like you're about 10. This must have been just before Mark and mom moved you to Idaho. After that, you saw Honey and Grandpa only in summers and sometimes Christmas.[paragraph break]This is you and your best friend from 6th grade. You both had a crush on the same person, but decided if you had to, you would share them.[paragraph break]Here's a photo Honey and Grandpa sent from a trip they took to visit family in Kansas City, Missouri.[paragraph break]Here's a photo of your dog Dodo, smiling with his tongue out, as always. When you moved to Idaho, your stepdad said there would be no room for a dog and took him to the pound.[paragraph break]You have to stop for a minute. You can look again to examine the rest of the photos.[or]You look through the remainder of the photos:[paragraph break]Here's mom and you at Christmas. She looks so old although you don't look much older than 15. This must be the year before mom left Mark after the fight.[paragraph break]Here's Grandpa, Honey, and you at the Craters of the Moon when they came to visit. You have your arms around your Grandpa. This couldn't have been too many years before he died.[paragraph break]This is whatshisname? Greg? and you in your first car, a yellow Corolla before leaving home on your cross-country trip when you were 17. You never did come back except to visit your mom.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you she hated that picture. They look like they are just about to crack up laughing. You miss them.[paragraph break]That's it. A young life in a dozen photos.[cycling]".
-Understand "photos/photo/honey/grandpa/mom/friend/dodo/dog" as photos_from_home.
+Understand "photos/photo/friend/dodo/dog" as photos_from_home.
+[ Understand "photos/photo/honey/grandpa/mom/friend/dodo/dog" as photos_from_home. ]
 
 Your_keys is an improper-named thing.
 The printed name is "keys".
@@ -8157,12 +8219,12 @@ Part - Jody (the Player Character)
 
 The player is a _neutrois person.
 The player is in Room_Lost_in_the_Brambles.
-The description of player is "[if Scene_Epilogue is not happening][nine_year_old_description][else][adult_description][end if]."
+The description of player is "[if Scene_Epilogue is not happening][nine_year_old_description][else][adult_description].[end if]".
 [Understand "jody/Jodi/Jojo/jodie" as me.]
 Understand "jody/Jodi/Jojo/jodie", "you", "me" as yourself.
 
 To say nine_year_old_description:
-	say "What's to say? You are nine and a half, and you are going into 5th grade in the fall. [one of]And you like watching TV with your grandpa[or]And you and your mom play car games when you drive to Honey and Grandpa's house on the weekends[or]And you've lived in more different places than you are years old, so it's hard for you to make friends[or]And you like riding your bike on dirt roads around Honey and Grandpa's house[or]And you love cats, most of all, your cat Mika[or]And you have a crush on someone in school but you'd never in a million billion qazillion years tell anybody[in random order][other_attributes] Thinking about it a bit, you conclude you are [permanent_attributes]";
+	say "What's to say? You are nine and a half, and you are going into 5th grade in the fall. [one of]And you like watching TV with your grandpa[or]And you and your mom play car games when you drive to Honey and Grandpa's house on the weekends[or]And you've lived in more different places than you are years old, so it's hard for you to make friends[or]And you like riding your bike on dirt roads around Honey and Grandpa's house[or]And you love cats, most of all, your cat Mika[or]And you have a crush on someone in school but you'd never in a million billion gazillion years tell anybody[in random order].[no line break] [other_attributes][permanent_attributes]";
 
 To say adult_description:
 	say "What's to say? You were nine years old a lifetime ago. And though you've gone through a lot and have responsibilities and now live thousands of miles away from that place, sometimes you still feel like that little kid";
@@ -8259,7 +8321,7 @@ Players_hands are an improper-named undescribed unmentionable thing.
 Players_arm is an improper-named undescribed unmentionable thing.
 Players_arm is part of the player.
 The printed name is "arm".
-The description is "Looking carefully, you can see marks on your arm where your step-dad grabbed you, and it's still a little tender".
+The description is "Looking carefully, you can see marks on your arm where your step-dad grabbed you, and it's still a little tender.".
 The indefinite article is "your".
 Understand "arm/arms/forearm/forearms" as Players_arm.
 
@@ -8312,11 +8374,11 @@ To say other_attributes:
 	if player is viewed_arm_injury:
 		add "your arm hurts a little" to list_of_attributes;
 	if the number of entries of list_of_attributes is greater than 0:
-		say ". And [list_of_attributes]";
+		say "And [list_of_attributes]. ";
 	if the number of entries of list_of_attributes is greater than 2:
-		say ". You are going to get in such big trouble";
+		say "You are going to get in such big trouble. ";
 	if player is aware_of_arm_injury:
-		say ". Looking carefully, you can see marks on your arm where your step-dad grabbed you, and it's still a little tender";
+		say "Looking carefully, you can see marks on your arm where your step-dad grabbed you, and it's still a little tender. ";
 		now player is perceptive;
 		now player is viewed_arm_injury;
 
@@ -8339,8 +8401,17 @@ To say permanent_attributes:
 	if player is courageous:
 		add "courageous" to list_of_attributes;
 	if the number of entries of list_of_attributes is greater than 0:
-		say "[if scene_epilogue is not happening]. Thinking about it a bit, you conclude you are  [end if][list_of_attributes]";
-	
+		say "[if scene_epilogue is not happening]Thinking about it a bit, you conclude you are [end if][list_of_attributes]. ";
+
+Section - Test - Not for release
+
+Understand "test_other" as a mistake ("[other_attributes]")
+
+Understand "test_perm" as a mistake ("[permanent_attributes]")
+
+test x-me with "x me / abstract pail to limbo / x me / purloin shirt / wear it / x me / purloin pail / x me / teleport to stone bridge / swim / x me / examine arm / x me / teleport to long stretch / u.u.u.u.u.u. / x me / teleport to attic / x me / open box / x photos / again"
+
+Section - Smelling player
 
 Instead of smelling player:
 	if tennis_shoes are wet or underwear are wet:
@@ -8574,7 +8645,7 @@ Response of Honey when asked-or-told about dog:
 Response of Honey when asked-or-told about topic_forest:
 	say "'These forests are beautiful,' she says looking around. 'I go out with your grandpa sometimes and we take pictures, then I go back and paint them. You've seen the paintings at our house.'".
 
-Response of Honey when asked-or-told about topic_creek or asked-or-told about backdrop_creek:
+Response of Honey when asked-or-told about topic_creek:
 	say "'You can wade in the creek down by the bridge,' Honey says. 'Make sure you take your tennies off first though. I don't want you tracking wet shoes and mud into the house.'".
 
 Response of Honey when asked-or-told about topic_bridge:
@@ -8643,7 +8714,9 @@ Quote
 "Honey clenches her teeth and growls but says no more."
 
 To say grandparent_random:
-	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[or]'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.[or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both!' Honey laughs.[or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[or]'Hey, [honeys_nickname],' Honey calls to you. 'When you go with Grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[in random order]".
+	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[or]'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.[or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both.' Honey laughs.[or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[or]'Hey, [honeys_nickname],' Honey calls to you. 'When you go with Grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[in random order]".
+
+[TODO: when grandparents_random is queued, it adds an extra line feed. Tried almost every combo of [no line feed] and [run paragraph on] here and it it's call]
 
 [TODO in a long list of random utterances, make it so new interlocutor is set]
 
@@ -8657,7 +8730,7 @@ test honey-tell with "teleport to Grassy Clearing / tell honey about Aunt Mary /
 Part - Grandpa
 
 Grandpa is an undescribed _male man in Room_Grassy_Clearing.
-	The initial appearance is "[grandpas_initial_appearance]".
+	The initial appearance is "[grandpas_initial_appearance].".
 	The description of Grandpa is "Grandpa is, well, Grandpa. He's not tall. He's not fat. He has a bald spot right on top of his head like a little hat. He's like a bull, kind of, but skinnier and wears a warm plaid shirt. Today he's in a t-shirt, but usually. He smells good, like cigarettes and that stuff he puts on his face when he shaves.[if a random chance of 1 in 3 succeeds]
 	[paragraph break]While you are looking, he sees you and smiles.[end if]".
 	Understand "grampa/granpa/grandfather/gramp/pa/gramps/John" as Grandpa.
@@ -8668,11 +8741,7 @@ Chapter - Properties
 Chapter - Rules and Actions
 
 To say grandpas_initial_appearance:
-	[if location of player is Room_Grassy_Clearing:
-		now Grandpa is not marked for listing;
-		now Grandpa is undescribed;
-	else:]
-		say "Your Grandpa is here[if Grandpa holds big_bucket and big_bucket is full] with the big bucket full of berries[else if Grandpa holds big_bucket and big_bucket is empty] with the empty bucket[end if].";
+		say "Your Grandpa is here[if Grandpa holds big_bucket and big_bucket is full] with the big bucket full of berries[else if Grandpa holds big_bucket and big_bucket is empty] with the empty bucket[end if]";
 
 Instead of touching Grandpa:
 	say "Grandpa gives you a big hug.";
@@ -8680,7 +8749,7 @@ Instead of touching Grandpa:
 
 [ Grandpa picking berries ]
 
-Every turn when player is in Room_Grassy_Clearing and Grandpa is in Room_Grassy_Clearing and a random chance of 1 in 20 succeeds:
+Every turn when player is in Room_Grassy_Clearing and Grandpa is in Room_Grassy_Clearing and a random chance of 1 in 10 succeeds:
 	queue_report "Grandpa pauses for a minute from his berry picking and [one of]wipes his forehead with his handkerchief and rests against a tree[or]lights a cigarette and smokes for a bit[at random]." with priority 2.
 
 Chapter - Responses
@@ -8795,8 +8864,8 @@ Response of Grandpa when asked-or-told about stepdad:
 Response of Grandpa when asked-or-told about topic_dreams:
 	say "'We all have dreams, [grandpas_nickname]. Sometimes as you get older, or if you get to be an old man like me, you have different dreams than you did when you were a young man,' Grandpa says, 'These days, I dream about a quiet river with a fishing pole.'".
 
-Response of Grandpa when asked-or-told about topic_creek or asked-or-told about backdrop_creek:
-	say "'Well, I love that old creek. It's one of the reasons we bought our house here,' Grandpa says, 'You know we call it [']Bear Creek,['] but the Miwok people who lived here long before us had another name for it. I've never known this creek's true name.'".
+Response of Grandpa when asked-or-told about topic_creek:
+	say "'The water in that creek came from up in the mountains. Maybe it was snow yesterday on the top of some mountain peak,' Grandpa looks toward the creek. 'When I came here the first time and saw that creek, and smelled these pines and heard the wind rustle through the tops of the trees, I knew I would live here someday. Beautiful, isn't it?'[paragraph break]'You know we call it [']Bear Creek,[']' Grandpa says thoughtfully, 'but the Miwok people who lived here long before us had another name for it. I've never known this creek's true name.'".
 
 Response of Grandpa when asked-or-told about topic_indians:
 	say "'The Miwok people used to live in these hills along Bear Creek,' Grandpa says, 'You know, there are still remains of houses and petroglyphs, those are drawings on rocks, made by Indians who lived here long before we came here.'".
@@ -8805,7 +8874,7 @@ Response of Grandpa when asked-or-told about backdrop_berries or asked-or-told a
 	say "[if Scene_Day_One is happening]'How you doing, [grandpas_nickname]?' Grandpa [grandpa_stuff]. 'You helping your Honey and Grandpa make blackberry jam?'[else]'You sure love eating those berries, huh, [grandpas_nickname]?' Grandpa asks.[end if]".
 
 Response of Grandpa when asked-or-told about big_bucket:
-	say "[if Scene_Bringing_Lunch has not happened]'That's our berry pickin' bucket, [grandpas_nickname]. Soon as we get that filled up I'm gonna take it up to your Aunt Mary,' Grandpa says. 'You going to help me?'[else if Scene_Bringing_Lunch is happening]'Got to take this up to Mary, so she can turn this into jam,' Grandpa says. 'You gonna help your old Grandpa get this up to the house?'[else]'I gotta get this down to your Honey before she needs to dump her pail,' Grandpa says. 'You wanna walk with me?'[end if]".
+	say "[if Scene_Bringing_Lunch has not happened]'That's our berry pickin['] bucket, [grandpas_nickname]. Soon as we get that filled up I'm gonna take it up to your Aunt Mary,' Grandpa says. 'You going to help me?'[else if Scene_Bringing_Lunch is happening]'Got to take this up to Mary, so she can turn this into jam,' Grandpa says. 'You gonna help your old Grandpa get this up to the house?'[else]'I gotta get this down to your Honey before she needs to dump her pail,' Grandpa says. 'You wanna walk with me?'[end if]".
 
 [TODO ensure that response is approp for day 2]
 
@@ -8852,9 +8921,6 @@ Response of Grandpa when asked about topic_tree:
 	say "'The big tree up by the road? That's called a Doug Fir,' Grandpa says. 'They're tall and straight, but sometimes blow down if there's a big storm.'".
 Response of Grandpa when told about topic_tree:
 	say "'The big tree up by the road? [if player has not been in Room_Top_of_Pine_Tree]I heard you climbed that tree before. You be careful[else]You climbed all the way to the top? When did you get so big and strong[end if],' Grandpa says, smiling.".
-
-Response of Grandpa when asked-or-told about topic_creek:
-	say "[one of]'The water in that creek came from up in the mountains. Maybe it was snow yesterday on the top of some mountain peak,' Grandpa looks toward the creek. 'When I came here the first time and saw that creek, and smelled these pines and heard the wind rustle through the tops of the trees, I knew I would live here someday.'[or]'Beautiful, isn't it?' Grandpa says.[stopping]".
 
 Response of Grandpa when asked-or-told about topic_bridge:
 	say "[one of]'This old bridge has probably been here a hundred years. Maybe miners drove their carts over that bridge to get to their claims up in the hills,' Grandpa says.[or]'Have you waded down in the creek?' Grandpa says.[stopping]".
@@ -9562,7 +9628,7 @@ Response of Mary when asked-or-told about stepdad:
 Response of Mary when asked-or-told about backdrop_berries or asked-or-told about topic_berries:
 	say "'Every year,' she smiles. 'Every year, we pick the berries and the jam lasts until the next summer.'"
 
-Response of Mary when asked-or-told about bucket:
+Response of Mary when asked-or-told about big_bucket:
 	say "Your grandpa [if Scene_Bringing_Lunch is not happening]will be bringing[else]brought[end if] that bucket up for me to make more jam."
 
 Response of Mary when asked-or-told about topic_jam:
@@ -10273,13 +10339,15 @@ The ants can be stirred up. Ants have a number called angry timer.
 Every turn when angry timer of ants is greater than 0:
 	Decrease angry timer of ants by 1;
 	if angry timer of ants is less than 1:
-		now ants are not stirred up.
+		now ants are not stirred up;
+		queue_report "It looks like thfsadfsafe red ants have calmed down." at priority 3;
+	else if Room_Picnic_Area encloses player:
+		queue_report "[ant stuff]." at priority 3.
 
 Instead of attacking ants:
 	now angry timer of ants is 5;
 	now ants are stirred up;
-	say "[one of]You kick the ant hill with your foot and then jump back to watch[or]You crush a few of the nearby ants with your foot. Take that[or]You throw a dirt clod at the ant hill. Direct hit[or]You kick the ant hill, but now several ants are on your shoes and, oh no! on your leg! You dance around for a while swatting at yourself until you are satisfied that you are safe[at random]!
-	[paragraph break][ant stuff]."
+	say "[one of]You kick the ant hill with your foot and then jump back to watch[or]You crush a few of the nearby ants with your foot. Take that[or]You throw a dirt clod at the ant hill. Direct hit[or]You kick the ant hill, but now several ants are on your shoes and, oh no! on your leg! You dance around for a while swatting at yourself until you are satisfied that you are safe[in random order]!"
 Understand "kick [something]" as attacking.
 Understand "stomp [something]" as attacking.
 Understand "squish [something]" as attacking.
@@ -10311,7 +10379,7 @@ Instead of touching yellow tabby,
 Instead of taking yellow tabby,
 	say "When you try to pick it up, the yellow tabby cat squirms out of your arms[if Sharon is visible] 'He's never been much of a cuddle bug,' the [Sharon] says[end if]."
 
-[Instead of doing anything except object-navigating or examining housecats,
+[Instead of doing anything except examining housecats,
 	say "The Cat Lady's cats are nearly feral. That's a good way to lose an eye or a finger."]
 
 To say random-cat:
