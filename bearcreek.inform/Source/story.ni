@@ -85,6 +85,10 @@ style name 	justification 	italic 	indentation 	first line indentation 	font wei
 special-style-1 	center-justified 	false 	0 	0 	bold-weight 	false 	0 	--
 special-style-2 	center-justified 	true 	0 	0 	regular-weight 	false 	0 	--
 
+To say em: say "[italic type]".
+To say /em: say "[roman type]".
+To say b: say "[bold type]".
+To say /b: say "[roman type]".
 
 Part - Conversation Frameworks
 
@@ -99,6 +103,14 @@ Part - Epistemology
 [Keeping track of what the player character knows and sees]
 
 Include Epistemology by Eric Eve.
+
+Part - Response Assistant
+
+Include Response Assistant by Aaron Reed.
+
+[Type "track responses" to append each response seen with a numbered tag. 
+You can then type "response 1" (and so on) to see details about the current form of the message, and a template you can copy and paste in your source text to change it. 
+Type "track off" to stop tracking responses.]
 
 Part - Smarter Parser
 
@@ -127,13 +139,29 @@ To say get_noun_example:
 			now fake_example is true;
 	say "[noun_example in lower case]".
 
-Part - Response Assistant
+Chapter - TRY AGAIN
 
-Include Response Assistant by Aaron Reed.
+[This is an attempted work around for a bug with Smarter Parser that hangs the parser in Lectrote: "Try AGAIN"]
 
-[Type "track responses" to append each response seen with a numbered tag. 
-You can then type "response 1" (and so on) to see details about the current form of the message, and a template you can copy and paste in your source text to change it. 
-Type "track off" to stop tracking responses.]
+[Trying_again is an action applying to nothing.
+Understand "try again" as trying_again.
+
+Carry out trying_again:
+	[wtf do I use to automatically try the previous command??]]
+
+Understand "try again" as a mistake ("(Try using the command [em]again[/em] or it's shortcut [em]g[/em].)")
+
+To discard the/-- again buffer: (- DiscardAgain(); -).
+
+Include (-
+[ DiscardAgain ;
+    #ifdef TARGET_ZCODE;
+    buffer3->1 = 0;
+    #ifnot;
+    buffer3-->0 = 0;
+    #endif;
+];
+-).
 
 Chapter - Configuration
 
@@ -170,7 +198,7 @@ This is the new_where_can_I_go rule:
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-where can I go rule	"While compass directions won't always work (especially if you don't know which directions are which without a compass), you can usually go to landmarks you can see ([italic type]go to clearing  [roman type] or [italic type]  follow creek [roman type] or [italic type]  enter trailer[roman type]). Exits and landmarks are usually listed in the descriptions.[as normal][command clarification break]"
+where can I go rule	"While compass directions won't always work (especially if you don't know which directions are which without a compass), you can usually go to landmarks you can see ([em]go to clearing  [/em] or [em]  follow creek [/em] or [em]  enter trailer[/em]). Exits and landmarks are usually listed in the descriptions.[as normal][command clarification break]"
 
 Chapter - the signs of confusion rule
 
@@ -178,7 +206,7 @@ Chapter - the signs of confusion rule
 
 Table of Smarter Parser Messages (continued)
 rule name		message
-signs of confusion rule		"Try typing [italic type] look [roman type] for a description of your surroundings. While compass directions won't always work (especially if you don't know which directions are which), you can usually go to landmarks you can see ([italic type]go to clearing [roman type] or [italic type] follow creek [roman type] or [italic type] enter trailer[roman type]). Exits and landmarks are usually listed in the descriptions. [paragraph break]Some of the objects mentioned in the description might be worth a closer look with a command like [italic type] examine [get_noun_example][roman type]. You can also [italic type] take [roman type] or [italic type] drop [roman type] some things, take [italic type] inventory [roman type] to see what you're carrying, [italic type] open [roman type] or [italic type] close [roman type] containers or doors, and so on.[as normal][command clarification break]"
+signs of confusion rule		"Try typing [em] look [/em] for a description of your surroundings. While compass directions won't always work (especially if you don't know which directions are which), you can usually go to landmarks you can see ([em]go to clearing [/em] or [em] follow creek [/em] or [em] enter trailer[/em]). Exits and landmarks are usually listed in the descriptions. [paragraph break]Some of the objects mentioned in the description might be worth a closer look with a command like [em] examine [get_noun_example][/em]. You can also [em] take [/em] or [em] drop [/em] some things, take [em] inventory [/em] to see what you're carrying, [em] open [/em] or [em] close [/em] containers or doors, and so on.[as normal][command clarification break]"
 
 Chapter - stripping niceties
 
@@ -250,7 +278,7 @@ Chapter - the making assertions rule
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-making assertions rule	"You might want to rephrase that to start with an imperative verb, like [italic type] look[roman type].[command clarification break]"
+making assertions rule	"You might want to rephrase that to start with an imperative verb, like [em] look[/em].[command clarification break]"
 
 Chapter - the unnecessary movement rule
 
@@ -260,7 +288,7 @@ The unnecessary movement rule is not listed in the Smarter Parser rulebook.
 
 Table of Smarter Parser Messages (continued)
 rule name		message
-unnecessary movement rule		"If you can see an object, you can usually just interact with it directly without worrying about your position[if player is enclosed by something] (although since you're in or on something, you may need to type [italic type] exit [roman type] first)[end if]. Try a command like [italic type] examine [get_noun_example] [roman type] for a closer look at something, [italic type] look [roman type] to get a new description of this location, or [italic type] which way [roman type] to see where you can go[as normal].[line break]"
+unnecessary movement rule		"If you can see an object, you can usually just interact with it directly without worrying about your position[if player is enclosed by something] (although since you're in or on something, you may need to type [em] exit [/em] first)[end if]. Try a command like [em] examine [get_noun_example] [/em] for a closer look at something, [em] look [/em] to get a new description of this location, or [em] which way [/em] to see where you can go[as normal].[line break]"
 
 Chapter - the stripping vague words rule
 
@@ -268,15 +296,25 @@ Chapter - the stripping vague words rule
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-stripping vague words rule	"You might want to be more specific. Try typing [italic type] look [roman type] to get a description of your surroundings.[as normal][command clarification break]"
+stripping vague words rule	"You might want to be more specific. Try typing [em] look [/em] to get a description of your surroundings.[as normal][command clarification break]"
 
 Chapter - the stripping pointless words rule
 
 [Rejects commands containing hedges like ANYWAY, ALMOST, SO, or JUST, as well as generally meaningless sequential or quantitative words like NOW, NEXT, or MORE, and reparses the command if any words remain, otherwise rejecting it.]
 
+The new stripping pointless words rule substitutes for the stripping pointless words rule.
+
+A smarter parser rule when sp_normal (this is the new stripping pointless words rule):
+	if stripping "(anyway|instead|very|almost|this|so|just|ye)" is fruitful or stripping "(now|next|more)" is fruitful:
+		identify error as stripping pointless words rule;
+		discard again buffer;
+		if the number of words in the reborn command > 0, reparse the command;
+		else reject the command; [If there are no more words to deal with.]
+
 Table of Smarter Parser Messages (continued)
 rule name	message
 stripping pointless words rule	"Most connecting and comparative words are not necessary.[command clarification break]"
+
 
 Chapter - the stripping failed with rule
 
@@ -316,15 +354,13 @@ Chapter - the too many words rule
 
 Table of Smarter Parser Messages (continued)
 rule name		message
-too many words rule		"You typed a rather long command. You might want to stick to simpler things like [italic type] take [get_noun_example][roman type].[as normal][paragraph break]"
+too many words rule		"You typed a rather long command. You might want to stick to simpler things like [em] take [get_noun_example][/em].[as normal][paragraph break]"
 
-[TODO: Remove line break when correcting a command]
-[TODO: [run paragraph on] is sus and makes the entire paragraph jacked. Find a better solution wherever it appears.]
 
 Chapter - Style
 
-To say as the parser: say italic type.
-To say as normal: say roman type.
+To say as the parser: say em.
+To say as normal: say /em.
 
 To display the active corrections introduction:
 	[say "[line break][as the parser]Retrying as:[as normal][line break]";]
@@ -393,7 +429,7 @@ The room description heading rule does nothing when turn count is 1 and player i
 Rule for printing room description details: do nothing.
 
 To say location heading:
-	say "[line break][bold type][location][roman type]".
+	say "[line break][b][location][/em]".
 
 Chapter - Taking Things
 
@@ -407,7 +443,7 @@ Chapter - Moving Player
 
 To move player to (new-location - a room) with little fuss:
 	Move player to new-location, without printing a room description;
-	say "[line break][bold type][location][roman type][line break]".
+	say "[line break][b][location][/em][line break]".
 
 Chapter - Waiting
 
@@ -1337,7 +1373,7 @@ Carry out exit_listing:
 		say looking_for_available_exits;
 
 To hint_at_navigation:
-	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [italic type]  go to clearing  [roman type][line break]Or try: [italic type]  follow trail  [roman type][line break]Or even: [italic type]  go back  [roman type] or [italic type]  go on  [roman type][line break]If you need a reminder of where you can go, try: [italic type]  which way  [roman type] or simply [italic type]  look[roman type][stopping].";
+	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [em]  go to clearing  [/em][line break]Or try: [em]  follow trail  [/em][line break]Or even: [em]  go back  [/em] or [em]  go on  [/em][line break]If you need a reminder of where you can go, try: [em]  which way  [/em] or simply [em]  look[/em][stopping].";
 
 Part - Compass Navigation
 
@@ -1917,43 +1953,43 @@ To say story_intro:
 To say Title_Card_Part_1:
 	clear the screen;
 	say paragraph break;
-	center "[bold type]Part 1     ";
+	center "[b]Part 1  ";
 	say roman type;
-	center "[italic type]A Fateful Day   ";
+	center "[em]A Fateful Day  ";
 	say paragraph break;
 	say line break;
-	center "[italic type]Memories may be beautiful and yet        ";
-	center "[italic type]What's too painful to remember           ";
-	center "[italic type]We simply choose to forget               ";
-	center "[italic type]      -- Gladys Knight And The Pips, 1975";
+	center "[em]Memories may be beautiful and yet";
+	center "[em]What's too painful to remember   ";
+	center "[em]We simply choose to forget       ";
+	center "[em]           -- Gladys Knight, 1975";
 	say paragraph break;
 	pause_the_game;
 
 To say Title_Card_Part_2:
 	clear the screen;
 	say paragraph break;
-	center "[bold type]Part 2     ";
-	center "[italic type]Lost   ";
+	center "[b]Part 2  ";
+	center "[em]Lost  ";
 	say paragraph break;
 	say line break;
-	center "[italic type]Now my old world is gone for dead    ";
-	center "[italic type]Cos I can't get it out of my head.    ";
-	center "[italic type]      -- Electric Light Orchestra, 1975";
+	center "[em]Now my old world is gone for dead ";
+	center "[em]Cos I can't get it out of my head.";
+	center "[em] -- Electric Light Orchestra, 1975";
 	say paragraph break;
 	pause_the_game;
 
 To say Title_Card_Part_3:
 	clear the screen;
 	say paragraph break;
-	center "[bold type]Part 3    ";
-	center "[italic type]Fallout   ";
+	center "[b]Part 3  ";
+	center "[em]Fallout  ";
 	say paragraph break;
 	say line break;
-	center "[italic type]Butterflies are free to fly    ";
-	center "[italic type]Fly away                       ";
-	center "[italic type]High away                      ";
-	center "[italic type]Bye bye                        ";
-	center "[italic type]         -- Elton John, 1975";
+	center "[em]Butterflies are free to fly";
+	center "[em]Fly away                   ";
+	center "[em]High away                  ";
+	center "[em]Bye bye                    ";
+	center "[em]        -- Elton John, 1975";
 	say paragraph break;
 	pause_the_game;
 
@@ -1965,8 +2001,8 @@ To say Sleep_Card:
 To say Title_Card_Epilogue:
 	clear the screen;
 	say paragraph break;
-	center "[bold type]Epilogue     ";
-	center "[italic type]The Special Box   ";
+	center "[b]Epilogue";
+	center "[em]The Special Box";
 	say paragraph break;
 	say line break;
 	say line break;
@@ -1983,7 +2019,7 @@ To pause_the_game:
 	[ pause the game; ]
 
 To section_break:
-	center "[italic type]***   ";
+	center "[em]***   ";
 	say paragraph break;
 
 To end_the_story:
@@ -2005,34 +2041,34 @@ Part - Premonitions
 ]
 
 When Scene_Grandparents_Conversation begins:
-	queue_report "[italic type]You get a funny, sad feeling out of nowhere, that this is the last time you will pick berries with Honey and Grandpa.[roman type]" with priority 1;
+	queue_report "[em]You get a funny, sad feeling out of nowhere, that this is the last time you will pick berries with Honey and Grandpa.[/em]" with priority 1;
 	continue the action.
 
 After going to Room_Dirt_Road for the first time:
-	queue_report "[italic type]This dog makes you suddenly queasy, though you couldn't have known then what part it would play in what happened.[roman type]" with priority 1;
+	queue_report "[em]This dog makes you suddenly queasy, though you couldn't have known then what part it would play in what happened.[/em]" with priority 1;
 	continue the action.
 
 To do Sharon_Teatime_Premonition:
-	queue_report "[italic type]A sudden thought: What if you are here talking to the Cat Lady and something happens to your Grandpa or Honey? Or worse, your mom? You struggle to think about something else.[roman type]" at priority 1.
+	queue_report "[em]A sudden thought: What if you are here talking to the Cat Lady and something happens to your Grandpa or Honey? Or worse, your mom? You struggle to think about something else.[/em]" at priority 1.
 
 To say Lee_Invite_Premonition:
-	say "[italic type]You remember your grandma's warning and suddenly feel [nervous], but something tells you it will be okay. You've visited him before and it was fine. You couldn't say why, but you trust Lee[roman type]".
+	say "[em]You remember your grandma's warning and suddenly feel [nervous], but something tells you it will be okay. You've visited him before and it was fine. You couldn't say why, but you trust Lee[/em]".
 
 When Scene_Bringing_Lunch begins:
 	Premonition_About_Something_Wrong in 30 turns from now;
 	continue the action.
 
 At the time when Premonition_About_Something_Wrong:
-	queue_report "[italic type]You get a feeling something is wrong. What if something happened to your grandpa?[roman type]" with priority 1;
+	queue_report "[em]You get a feeling something is wrong. What if something happened to your grandpa?[/em]" with priority 1;
 
 After going to Room_Long_Stretch during Scene_Bringing_Lunch:
 	if player is not dog_warned:
-		queue_report "[italic type]Something is different. The hairs on your arm and the back of your neck stand up.[roman type]" at priority 1;
+		queue_report "[em]Something is different. The hairs on your arm and the back of your neck stand up.[/em]" at priority 1;
 		now player is dog_warned;
 	continue the action.
 
 After going to Room_Crossing for the first time:
-	queue_report "[italic type]Something about the crossing makes you [nervous] like watching a glass fall off of a countertop in slow motion.[roman type]" at priority 1;
+	queue_report "[em]Something about the crossing makes you [nervous] like watching a glass fall off of a countertop in slow motion.[/em]" at priority 1;
 	continue the action.
 
 After going to Room_Dirt_Road during Scene_Bringing_Lunch:
@@ -2040,23 +2076,23 @@ After going to Room_Dirt_Road during Scene_Bringing_Lunch:
 	continue the action.
 
 At the time when Premonition_About_Another_Way:
-	queue_report "[italic type]You've got to get back to the clearing. There must be another way.[roman type]" at priority 1;
+	queue_report "[em]You've got to get back to the clearing. There must be another way.[/em]" at priority 1;
 
 To say Sharon_Stepdad_Premonition:
-	say "[italic type]For a moment, you share her vision -- a rocky shore stretching for miles and miles -- a child picking among the rocks completely and hopelessly alone. [roman type]".
+	say "[em]For a moment, you share her vision -- a rocky shore stretching for miles and miles -- a child picking among the rocks completely and hopelessly alone. [/em]".
 
 After going to Room_Dark_Woods_South during Scene_Across_the_Creek:
 	Woods_Premonition in one turn from now;
 	continue the action;
 
 At the time when Woods_Premonition:
-	say "[italic type]You get a funny feeling like the forest is looking back at you, and you shiver[roman type].";
+	say "[em]You get a funny feeling like the forest is looking back at you, and you shiver[/em].";
 
 Part - Payoffs
 
 To say blackberry_payoff:
 	say "That should be enough to satisfy Honey.
-	[paragraph break]Even though you love picking blackberries -- and you certainly love blackberry jam, blackberry pie, blackberries and cream, or just eating fresh blackberries -- you've been picking berries all morning. You must have picked a [italic type]million[roman type] pails already. And you want to see if the red ants ate the dead cricket you put near their hole. Oh, and you want to see if you can find a lucky penny. And you may even want to swim.".
+	[paragraph break]Even though you love picking blackberries -- and you certainly love blackberry jam, blackberry pie, blackberries and cream, or just eating fresh blackberries -- you've been picking berries all morning. You must have picked a [em]million[/em] pails already. And you want to see if the red ants ate the dead cricket you put near their hole. Oh, and you want to see if you can find a lucky penny. And you may even want to swim.".
 
 To say swimming_payoff:
 	say "You stand at the edge of the rocks curling your toes over the edge. You hesitate before jumping in. At the count of three. One. Two.
@@ -2073,14 +2109,14 @@ To say crossing_payoff:
 	[paragraph break]Now you can make it back to Grandpa and Honey. This is the other side of the river, an area you've never been, but you think it connects with the overgrown blackberry trail. it's darker here and a little cooler. The woods look kind of scary on this side, and it makes you [nervous]. But you remind yourself that trees are just trees, there is nothing to be afraid of in the woods".
 
 To say treetop_payoff:
-	say "Looking around, you can see the [italic type]whole world[roman type].
+	say "Looking around, you can see the [em]whole world[/em].
 	[paragraph break]Directly under you, you can see the dirt road and Bear Creek and the stone bridge, and you notice there is a place you might cross the creek below the swimming hole.
 	[paragraph break]In the distance, you can see the mountains, brown and green, edged with trees all the way around, and not just Bear Creek below you, but the river a ways over there. And out that way is town, barely visible through trees.  And the forest stretching out endlessly in every direction.
 	[paragraph break]The railroad tracks which wind gently from one direction pass almost beneath you and disappear in gentle S-curves in the other direction. You can see the trailer park and that might be Honey and Grandpa's trailer. Everything looks so small, like looking at an ant hill. A giddy feeling pushes up out of you, and you can't stop laughing";
 
 To say lost_in_the_woods_payoff:
 	say "The afternoon shadows are lengthening and it is slowly getting on toward evening. You should be home by now. Honey and Grandpa will be worried. You fight back a brief wave of misery and trudge on. But it's no use. Part of the time you are pretty sure you are going in circles. The rest of the time you are scared you are getting lost deeper in the forest.
-	[paragraph break]For a while there, you felt you were close to finding your way back, but now everything looks completely unfamiliar -- and to be honest, a bit sinister. Like the forest is trying to [italic type]keep[roman type] you here, to lead you astray, lead you deeper into the woods. The trees lean in toward you. The underbrush grabs as your clothing.
+	[paragraph break]For a while there, you felt you were close to finding your way back, but now everything looks completely unfamiliar -- and to be honest, a bit sinister. Like the forest is trying to [em]keep[/em] you here, to lead you astray, lead you deeper into the woods. The trees lean in toward you. The underbrush grabs as your clothing.
 	[paragraph break]But no, that's stupid. You fight back panic. It's nobody's fault but your own. You should have been more careful, more observant. A good Explorer Scout would never get lost like this. Stupid stupid stupid, you berate yourself. Again, you think about your Honey and Grandpa at home. The smell of blackberry jam cooking. Watching TV on the floor with your grandpa. And your mom.  It's all too much.
 	[paragraph break]You have to admit it: You are hopelessly lost.
 	[paragraph break]You sit down right where you are and sob miserably.";
@@ -2655,13 +2691,14 @@ Picking is an action applying to one thing.
 You look around, but don't see the bunch of ripe berries. Last you remember, they were at the grassy clearing.]
 
 Check picking:
-	if noun is handful_of_berries or noun is berries_in_pail:
+	if player is not in Region_Blackberry_Area:
+		say "You'll have to go back to the berry brambles.";
+		stop the action;
+	else if noun is handful_of_berries or noun is berries_in_pail:
 		try picking backdrop_berries;
 		stop the action;
 	else if noun is backdrop_berries:
-		if player is not in Region_Blackberry_Area:
-			say "You'll have to go back to the berry brambles.";
-			stop the action;
+		continue the action;
 	otherwise:
 		say "Silly, you can't pick that.";
 		stop the action;
@@ -4096,6 +4133,7 @@ When Scene_Across_the_Creek begins:
 
 Section -Actions
 
+[TODO: Needed?]
 Does the player mean landmark_navigating sound_of_the_creek during Scene_Across_the_Creek:
 	It is very likely.
 
@@ -4163,7 +4201,7 @@ This is the seq_jody_stop_handler rule:
 	else if index is 4:
 		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
 	else if index is 5:
-		queue_report "And suddenly a memory: [paragraph break][italic type]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[roman type][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break][italic type]Think.[roman type] You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break][italic type]Observe.[roman type] You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break][italic type]Plan.[roman type] The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
+		queue_report "And suddenly a memory: [paragraph break][em]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[/em][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break][em]Think.[/em] You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break][em]Observe.[/em] You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break][em]Plan.[/em] The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
 		Move player to the meadow grass, without printing a room description;
 		Now Room_Forest_Meadow is observed;
 	else if index is 6:
@@ -4800,7 +4838,7 @@ This is the journey_sharon_walk_end rule:
 		Now Honey is in Room_B_Loop;
 		Now Grandpa is in Room_B_Loop;
 		Move player to Room_B_Loop, without printing a room description;
-		queue_report "[bold type][location][roman type]" at priority 1;
+		queue_report "[b][location][/em]" at priority 1;
 		rule succeeds;
 
 [ Found by Lee
@@ -4877,7 +4915,7 @@ This is the journey_lee_walk_end rule:
 		Report Lee saying "'He was down on the other side of the creek, by the willows,' Lee says, carefully not looking at your tears.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
 		rule fails;
 	else if time_here of journey_lee_walk is 3:
-		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on Grandpa's shoulder. He carries you all the way to...[paragraph break][bold type][location][roman type]";
+		Report Lee saying "'I think it's time for a drink,' Lee says. 'I'm glad you made it home, Jody,' and ruffles your hair tenderly. 'You're a trouper.' [paragraph break]'I think I better head home and check on my darlings,' the Cat Lady says looking suddenly very tired. She heads back to the trailer park with Lee right behind her.[paragraph break]Grandpa is still carrying you and you're glad to be safe in his big sailor arms. He and Honey walk back to their trailer, Honey with her hand on Grandpa's shoulder. He carries you all the way to...[paragraph break][b][location][/em]";
 		Now Sharon is in Room_Sharons_Trailer;
 		Now Honey is in Room_B_Loop;
 		Now Grandpa is in Room_B_Loop;
@@ -4965,7 +5003,7 @@ This is the seq_long_arm_of_the_law_handler rule:
 		now honey is in Room_C_Loop;
 		now Grandpa is in Room_C_Loop;
 		now current interlocutor is Sheriff;
-		queue_report "Honey and Grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask Grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][bold type][location][roman type][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
+		queue_report "Honey and Grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask Grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][b][location][/em][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
 	else if index is 4:
 		[Sheriff tries to bully narator into implicating Lee]
 		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Sheriff says a little out of breath to Honey and Grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
@@ -4982,10 +5020,10 @@ This is the seq_long_arm_of_the_law_handler rule:
 		now Sheriff is in sheriffs_car;
 		now sheriffs_car is in Limbo;
 		if lee_support of player is _decided_no:
-			queue_report "The Sheriff closes the back door of the cruiser and goes around to the driver's side. As the car begins to roll away, you glance one more time at Lee who looks back without emotion.[paragraph break]Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a sad hug. 'He'll be okay,' Grandpa says. Something about everything that has happened catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 2;
+			queue_report "The Sheriff closes the back door of the cruiser and goes around to the driver's side. As the car begins to roll away, you glance one more time at Lee who looks back without emotion.[paragraph break]Grandpa and Honey lead you back to...[paragraph break][b][location][/em][paragraph break]Grandpa gives you a sad hug. 'He'll be okay,' Grandpa says. Something about everything that has happened catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 2;
 		else:
 			now Lee is in Room_Lees_Trailer;
-			queue_report "The Sheriff takes a long moment and looks you up and down. Both Honey and Grandpa tense. Honey starts to say something, stops herself, shifts, and moves behind you looking challengingly at the Sheriff. Grandpa moves to stand beside her.[paragraph break]The Sheriff looks from you to your grandparents. He hesitates, apparently making a decision.[paragraph break]'Okay, maybe you could have told me that earlier.' He opens the back door of the cruiser and guides Lee out. He spins him around and removes the cuffs. 'You're free to go, Mr. Skarbek. Stay out of trouble.' Lee rubs his wrists and wipes the blood off his nose and mouth.[paragraph break]The Sheriff gets into his car without another word and drives quickly away.[paragraph break]Lee says quietly, 'Thank you, Jody,' bows slightly, and disappears into his trailer. You let Grandpa and Honey lead you back to...[paragraph break][bold type][location][roman type][paragraph break]Grandpa gives you a tearful hug. 'I'm proud of you, [grandpas_nickname],' he says. Something about seeing the magnitude of what you did through his eyes, telling your own story for maybe the first time in your life catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 2;
+			queue_report "The Sheriff takes a long moment and looks you up and down. Both Honey and Grandpa tense. Honey starts to say something, stops herself, shifts, and moves behind you looking challengingly at the Sheriff. Grandpa moves to stand beside her.[paragraph break]The Sheriff looks from you to your grandparents. He hesitates, apparently making a decision.[paragraph break]'Okay, maybe you could have told me that earlier.' He opens the back door of the cruiser and guides Lee out. He spins him around and removes the cuffs. 'You're free to go, Mr. Skarbek. Stay out of trouble.' Lee rubs his wrists and wipes the blood off his nose and mouth.[paragraph break]The Sheriff gets into his car without another word and drives quickly away.[paragraph break]Lee says quietly, 'Thank you, Jody,' bows slightly, and disappears into his trailer. You let Grandpa and Honey lead you back to...[paragraph break][b][location][/em][paragraph break]Grandpa gives you a tearful hug. 'I'm proud of you, [grandpas_nickname],' he says. Something about seeing the magnitude of what you did through his eyes, telling your own story for maybe the first time in your life catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 2;
 
 This is the seq_long_arm_of_the_law_interrupt_test rule:
 	[ Nothing stops this rule. ]
@@ -5154,7 +5192,7 @@ To decide_not_to_go_home:
 		increment index of seq_parents_arrive;
 		now player is courageous;
 		now going_home_decision of player is _decided_no;
-		say "You stand up straight and take a deep breath. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [italic type]staying[roman type] here,' you say firmly. You can feel Grandpa's arms tighten around you.".
+		say "You stand up straight and take a deep breath. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [em]staying[/em] here,' you say firmly. You can feel Grandpa's arms tighten around you.".
 
 test parents with "test long-arm / z/z/z/yell/z"
 
@@ -5204,7 +5242,7 @@ When Scene_Fallout_Staying begins:
 
 When Scene_Fallout_Staying ends:
 	section_break;
-	say "Later that night, you watch [italic type]Bowling for Dollars[roman type] with Grandpa who lays on the carpet in front of the TV while you climb all over him. He occasionally gets up and shouts 'Brooklyn! Brooklyn!' (Grandpa explained that that's when a ball hits the wrong side of the pins.) You can smell dinner cooking in the other room and hear Honey and Aunt Mary talking and laughing.[paragraph break]After dinner, Honey and Grandpa watch [italic type]Wild World of Animals[roman type] and let you stay up to watch [italic type]The Wonderful World of Disney[roman type]. You fall asleep on the couch sitting between your Honey and Grandpa.";
+	say "Later that night, you watch [em]Bowling for Dollars[/em] with Grandpa who lays on the carpet in front of the TV while you climb all over him. He occasionally gets up and shouts 'Brooklyn! Brooklyn!' (Grandpa explained that that's when a ball hits the wrong side of the pins.) You can smell dinner cooking in the other room and hear Honey and Aunt Mary talking and laughing.[paragraph break]After dinner, Honey and Grandpa watch [em]Wild World of Animals[/em] and let you stay up to watch [em]The Wonderful World of Disney[/em]. You fall asleep on the couch sitting between your Honey and Grandpa.";
 	say paragraph break;
 	pause_the_game;
 	say Title_Card_Epilogue;
@@ -5372,7 +5410,7 @@ Section - Description
 Room_Lost_in_the_Brambles is a room.
 The printed name is "Lost in the Brambles".
 The casual_name is "lost in the brambles".
-The description is "[one of]You were sure that this was a better spot than where you've been picking all morning. But here too, the biggest ripest berries seem just out of reach. You pick a few ripe berries and drop them in your pail[or]This spot, a little ways from where Honey and Grandpa are picking, has some good berries[stopping]. Under the pine trees, the air [italic type]smells[roman type] good.
+The description is "[one of]You were sure that this was a better spot than where you've been picking all morning. But here too, the biggest ripest berries seem just out of reach. You pick a few ripe berries and drop them in your pail[or]This spot, a little ways from where Honey and Grandpa are picking, has some good berries[stopping]. Under the pine trees, the air [em]smells[/em] good.
 [paragraph break]Looking around for where you can go: [available_exits]
 [paragraph break][description of backdrop_sunlight]".
 Understand "lost/-- in/-- the/-- brambles" as Room_Lost_in_the_Brambles.
@@ -5381,7 +5419,7 @@ The scent is "sunshine and that dusty fragrance of pine trees that you remember 
 
 Section - Navigation
 
-The available_exits of Room_Lost_in_the_Brambles is "The grassy clearing where Honey and Grandpa have been picking is just [italic type]down the hill[roman type] from here."
+The available_exits of Room_Lost_in_the_Brambles is "To get to the grassy clearing where Honey and Grandpa have been picking, you can [em]go down[/em] the hill. You can also [em]look around[/em] again here or [em]examine[/em] anything in your surroundings[first time]. Or you can get some [em]help[/em][only]."
 
 Section - Objects
 
@@ -5407,14 +5445,14 @@ The Room_Grassy_Clearing is a room.
 The printed name is "Grassy Clearing".
 The casual_name is "at the grassy clearing".
 The description is "[one of]The water churgles in the nearby creek but you can't see it through the forest of blackberry brambles all around you. Every summer since you were little, you pick blackberries with your Honey and Grandpa down along Bear Creak[or]You are near the creek, but it can't be seen through the blackberry brambles[stopping]. This is a pleasant clearing carpeted with stubbly grass under a sycamore tree. There are paths and clearings beaten down among the brambles that allow you to squeeze in to get the ripest berries. [if big_bucket is visible]There is a big bucket in the middle of the clearing. [end if][if grandpas_shirt is in location]Grandpa's shirt and Honey's portable transistor radio are[else]Honey's portable transistor radio is[end if] on the bank under the tree playing music.
-[paragraph break][first time]Looking around, you see places you can go: [only][available_exits]".
+[paragraph break][first time]Looking around for [em]which way[/em] you can go: [only][available_exits]".
 Understand "grassy/-- clearing" as Room_Grassy_Clearing.
 
 Section - Navigation
 
 Room_Grassy_Clearing is south of Room_Lost_in_the_Brambles and down from Room_Lost_in_the_Brambles.
 
-The available_exits of Room_Grassy_Clearing is "If you [italic type]follow the path[roman type] or [italic type]go down the creek[roman type], there's a tangle of blackberry bushes. [italic type]Up the hill[roman type] is the blackberry brambles where you've been picking for a while.".
+The available_exits of Room_Grassy_Clearing is "If you [em]follow the creek[/em], there's a tangle of blackberry bushes. [em]Up the hill[/em] is the blackberry brambles where you've been picking for a while[first time]. You can examine items around you, for instance, [em]examine radio[/em][only].".
 
 Section - Objects and People
 
@@ -5435,7 +5473,7 @@ The honeys_radio is improper-named scenery in Room_Grassy_Clearing.
 	The indefinite article is "Honey's".
 
 Instead of doing anything except examining or listening or smelling or quizzing or informing or implicit-quizzing or implicit-informing to honeys_radio:
-	say "[one of]Honey will kill you if you mess with her radio.[or]You better leave the radio alone.[or]Honey gives you a [italic type]look[roman type], and you leave the radio alone.[cycling]".
+	say "[one of]Honey will kill you if you mess with her radio.[or]You better leave the radio alone.[or]Honey gives you a [em]look[/em], and you leave the radio alone.[cycling]".
 
 Grandpas_shirt is an undescribed thing in Room_Grassy_Clearing.
 	The printed name is "Grandpa's shirt".
@@ -5449,7 +5487,7 @@ grandpas_cigarettes are scenery in Room_Grassy_Clearing.
 	The printed name is "cigarettes".
 	The indefinite article is "Grandpa's".
 	The description is "These are Grandpa's cigarettes. Lucky Strikes. He's been smoking since World War Two.
-	[paragraph break][italic type]You didn't know it then, but you had less than ten more years with Grandpa. It turns out, two packs a day for three or four decades can kill a man.[roman type]".
+	[paragraph break][em]You didn't know it then, but you had less than ten more years with Grandpa. It turns out, two packs a day for three or four decades can kill a man.[/em]".
 	Understand "cig/cigs/cigarette/cigarettes/smokes/pack/tobacco", "lucky strikes/strike", "pack of cig/cigs/smokes/cigarettes" as grandpas_cigarettes.
 	The scent is "Mmm, tobacco. You've always liked the smell".
 
@@ -5466,9 +5504,6 @@ Some pine trees are backdrop in Room_Grassy_Clearing.
 
 A low bank is scenery in Room_Grassy_Clearing.
 	The description is "Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree.".
-
-Section - Rules and Actions
-
 
 
 Chapter - Room_Blackberry_Tangle
@@ -5489,7 +5524,7 @@ East of Room_Blackberry_Tangle is nowhere.
 [When Scene_Day_Two has begun:
 	East of Room_Blackberry_Tangle is Room_Dappled_Forest_Path.]
 
-The available_exits of Room_Blackberry_Tangle is "Through the blackberry tangle, you can [italic type]follow the trail[roman type] and [italic type]go down[roman type] along the creek shaded by lush green willow trees. Back the way you came, you can [italic type]go to the clearing[roman type] where Honey and Grandpa have been picking. ";
+The available_exits of Room_Blackberry_Tangle is "Through the blackberry tangle, you can [em]go on[/em] along the creek shaded by lush green willow trees. Back the way you came, you can [em]go back[/em] to the clearing where Honey and Grandpa have been picking. ";
 
 Section - Objects
 
@@ -5522,7 +5557,7 @@ Section - Navigation
 
 Room_Willow_Trail is south of Room_Blackberry_Tangle and down from Room_Blackberry_Tangle.
 
-The available_exits of Room_Willow_Trail are "The trail turns to cross the overgrown stone bridge across Bear Creek. [if Scene_Day_One has not ended]You came this way with Honey and Grandpa this morning. [end if]Or you can go back toward the grassy clearing upstream. It also looks like this trail used to continue on this side downstream, but is now hidden by underbrush. You could try to follow the lost trail."
+The available_exits of Room_Willow_Trail are "The trail turns to cross the overgrown stone bridge across Bear Creek and you can [em]go to the bridge[/em].[if Scene_Day_One has not ended]You came this way with Honey and Grandpa this morning. [end if]Or you can [em]go back[/em] toward the grassy clearing upstream. It also looks like this trail used to continue on this side downstream, but is now hidden by underbrush. You could try to [em]follow the lost trail[/em]."
 
 Section - Objects
 
@@ -6200,7 +6235,7 @@ Instead of going to Room_Halfway_Up when player is in Room_Long_Stretch:
 	Increase pinetree_tries_count of player by one;
 	if pinetree_tries_count of player is less than 3:
 		say "[one of]You jump to reach the lowest branch and hang there struggling for a few moments before dropping back to the ground frustrated[or]This time, you get a leg up and hang there like a monkey, but can't quite get up on the lowest branch. You drop down when your arms start shaking[stopping].
-		[paragraph break][one of]You [italic type]know[roman type] you've climbed this tree before and you were probably smaller then too. Maybe you should try again?[or]You pretty sure you've climbed this tree before. You remember that your grandpa always says that the most important character traits are courage, perseverance, and self-reliance.[stopping]";
+		[paragraph break][one of]You [em]know[/em] you've climbed this tree before and you were probably smaller then too. Maybe you should try again?[or]You pretty sure you've climbed this tree before. You remember that your grandpa always says that the most important character traits are courage, perseverance, and self-reliance.[stopping]";
 		rule fails;
 	else if pinetree_tries_count of player is not less than 3:
 		say "Using the rise on the uphill side of the tree, you are able to get a hold of a branch and swing your leg over, dangling precariously for a few moments, before pulling yourself upright. After that, the tree is pretty easy to climb[first time]. Although you've now got sap all over your hands[only].";
@@ -6284,7 +6319,7 @@ The distant_town is scenery in Room_Top_of_Pine_Tree.
 
 The distant_road is scenery in Room_Top_of_Pine_Tree.
 	The printed name is "dirt road".
-	The description is "You can see the long stretch of the dirt road under you from the train tracks to the stone bridge. [if dog is not loose]You can't quite see the dog and the fence[else]You see [italic type]something[roman type] moving around in the road[end if].".
+	The description is "You can see the long stretch of the dirt road under you from the train tracks to the stone bridge. [if dog is not loose]You can't quite see the dog and the fence[else]You see [em]something[/em] moving around in the road[end if].".
 	Understand "road/trail/path/stretch/dog", "dirt road", "long stretch" as distant_road.
 
 The distant_bridge is scenery in Room_Top_of_Pine_Tree.
@@ -6769,7 +6804,7 @@ The lees_tv is an improper-named undescribed fixed in place device in Room_Lees_
 
 The purple_heart is an improper-named familiar special thing in Limbo.
 	The printed name is "Purple Heart".
-	The description is "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like George Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break][paragraph break][italic type]What will happen if your mom discovers this? You determine to hide the medal and not let her find out.[roman type][only].".
+	The description is "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like George Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break][paragraph break][em]What will happen if your mom discovers this? You determine to hide the medal and not let her find out.[/em][only].".
 	Understand "war/service/purple/-- medal/heart/ribbon" as purple_heart.
 	The indefinite article is "the".
 
@@ -6889,7 +6924,7 @@ Some jam_jars are scenery in Room_Grandpas_Trailer.
 
 Honeys_tv is improper-named undescribed fixed in place device in Room_Grandpas_Trailer.
 	The printed name is "TV".
-	The description is "This is Honey's big color TV in its wooden case, pretty much like the one you have at home with mom, but with lighter wood. On weekend nights you lie on the floor with Grandpa and [one of]watch [italic type]Bowling for Dollars[roman type][or]watch [italic type]Wild World of Animals[roman type][or]sometimes, if you and mom aren't going home early on Sunday night, watch [italic type]Wonderful World of Disney[roman type][at random].".
+	The description is "This is Honey's big color TV in its wooden case, pretty much like the one you have at home with mom, but with lighter wood. On weekend nights you lie on the floor with Grandpa and [one of]watch [em]Bowling for Dollars[/em][or]watch [em]Wild World of Animals[/em][or]sometimes, if you and mom aren't going home early on Sunday night, watch [em]Wonderful World of Disney[/em][at random].".
 	Understand "honeys/honey's/-- big/color/-- television/tv set/--", "tv/television/-- station/dial/channel" as honeys_tv.
 	The indefinite article is "the".
 
@@ -8622,7 +8657,7 @@ Response of Honey when asked-or-told about Mom:
 	say "[one of]'Don't worry about your mom,' Honey says, 'She'll be fine. Why don't you go over and help your grandpa some.'[or]'I said, she'll be fine,' Honey snaps.[stopping]".
 
 Response of Honey when asked-or-told about topic_dreams:
-	say "'What do [italic type]you[roman type] think, [honeys_nickname]?' Honey asks, 'Your grandpa only dreams about fishing. Me, I don't sleep enough these days to dream. But I get pretty good at crosswords.'".
+	say "'What do [em]you[/em] think, [honeys_nickname]?' Honey asks, 'Your grandpa only dreams about fishing. Me, I don't sleep enough these days to dream. But I get pretty good at crosswords.'".
 
 Response of Honey when asked-or-told about backdrop_berries or asked-or-told about topic_berries:
 	say "[if Scene_Day_One is happening]'I'd like you to pick one more pail before you go wondering off,' she says.[else]'Those berries are sure good,' Honey says.[end if]".
@@ -8652,7 +8687,7 @@ Response of Honey when told about topic_train:
 		say Honey's train response;
 
 To say Honey's train response:
-	say "[one of]'You better not have,' Honey says menacingly.[or]Honey says nothing, but grabs your arm and spins you around and spanks your butt hard enough to really hurt while you are still struggling to protect yourself. 'I hope you remember [italic type]that[roman type], next time you think about going near those tracks.'[paragraph break]Your wails die down to hiccupy sobs after a few minutes.[or]'You want another dose of that memory medicine?' Honey says threateningly.[stopping]";
+	say "[one of]'You better not have,' Honey says menacingly.[or]Honey says nothing, but grabs your arm and spins you around and spanks your butt hard enough to really hurt while you are still struggling to protect yourself. 'I hope you remember [em]that[/em], next time you think about going near those tracks.'[paragraph break]Your wails die down to hiccupy sobs after a few minutes.[or]'You want another dose of that memory medicine?' Honey says threateningly.[stopping]";
 
 Response of Honey when asked-or-told about flattened_penny or given-or-shown flattened_penny:
 	say Honey's train response;
@@ -9246,7 +9281,7 @@ Response of Sharon when asked-or-told about Mika_figurine:
 	I'm just going to leave this as an instead rule for now, since it is well-tested.]
 
 Response of Sharon when asked-or-told about topic_forest:
-	say "'Oh,' she says, clutching her hands to her breast, 'I love this forest, [sharons_nickname]. Joseph and I used to walk in the woods and hunt mushrooms. You know,' she leans in to say conspiratorially, 'foragers are [italic type]quite[roman type] protective and secretive of their spots.'".
+	say "'Oh,' she says, clutching her hands to her breast, 'I love this forest, [sharons_nickname]. Joseph and I used to walk in the woods and hunt mushrooms. You know,' she leans in to say conspiratorially, 'foragers are [em]quite[/em] protective and secretive of their spots.'".
 
 Response of Sharon when asked about topic_work:
 	say "'My job, [sharons_nickname], is taking care of all my babies,' the Cat Lady says.";
@@ -9280,8 +9315,8 @@ sharon_lee_rant is a rant.
 Table of sharon_lee_rant
 Quote
 "'Now, that man,' the Cat Lady flutters her hands, 'I don't like to talk bad about anybody, but, oh, oh.'"
-"'One time, that man -- Lee -- he kicked one of my [italic type]babies[roman type] when she went into his trailer,' the Cat Lady says."
-"'Another time, Lee yelled at me, I thought he was going to [italic type]kill[roman type] me, when I accidentally scared him one night,' the Cat Lady's says. 'I didn't [italic type]mean[roman type] to scare him, I was just on an evening walk. I had to call the sheriff before he'd settle down.'"
+"'One time, that man -- Lee -- he kicked one of my [em]babies[/em] when she went into his trailer,' the Cat Lady says."
+"'Another time, Lee yelled at me, I thought he was going to [em]kill[/em] me, when I accidentally scared him one night,' the Cat Lady's says. 'I didn't [em]mean[/em] to scare him, I was just on an evening walk. I had to call the sheriff before he'd settle down.'"
 "'I know Lee had a hard time in Vietnam,' the Cat Lady says, 'but there is no call to take it out on me.'"
 
 Response of Sharon when asked-or-told about stepdad:
@@ -9293,7 +9328,7 @@ sharon_stepdad_rant is a rant.
 Table of sharon_stepdad_rant
 Quote
 "'Well, your mom just got married and we all wished her the best of luck,' the Cat Lady says, 'It hasn't always been easy for her. And in spite of himself, that man really does love your mom.'[paragraph break]She looks off into the distance and gets a funny look on her face, 'I see it will be very tough for a while as well.'[paragraph break][Sharon_Stepdad_Premonition][paragraph break]You almost start to cry, but hold it in."
-"'Don't worry about that,' the Cat Lady says, 'Your mom is an [italic type]angel[roman type]. I've never seen a mother who loved her child more than her.'"
+"'Don't worry about that,' the Cat Lady says, 'Your mom is an [em]angel[/em]. I've never seen a mother who loved her child more than her.'"
 
 Response of Sharon when asked-or-told about topic_cat:
 	now sharon_cat_rant is in-progress.
@@ -10000,7 +10035,7 @@ Default ask-for response for stepdad:
 		say "'That's not yours,' Mark says.";
 
 Default thanks response for stepdad:
-	say "'Don't be smart with [italic type]me[roman type],' Mark snaps.";
+	say "'Don't be smart with [em]me[/em],' Mark snaps.";
 
 Default yes-no response for stepdad:
 	if saying yes:
@@ -10181,7 +10216,7 @@ Part - Dream Dog
 The dream_dog is an improper-named _critter animal in Room_Dream_Dirt_Road.
 	The printed name is "dog".
 	The initial appearance is "Oh no. The dog is wandering in the road. The dog perks up [pos_pronoun of dog] ears as you approach.".
-	The description is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. Do you [italic type]still[roman type] have to get past this damn dog?".
+	The description is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. Do you [em]still[/em] have to get past this damn dog?".
 	Understand "dogs/bitch/mutt/canine/yellow/medium/pointy", "doberman/shepher/cujo/kujo/puppy", "german shepherd", "guard dog" as the dream_dog.
 	The indefinite article of dream_dog is "the".
 	Understand "yellow/guard/-- dog/bitch/mutt/canine/pup/puppy/doge/cujo/kujo", "german shepherd", "doberman", "pitbull" as the dream_dog.
@@ -10373,7 +10408,9 @@ Instead of attacking ants:
 Understand "kick [something]" as attacking.
 Understand "stomp [something]" as attacking.
 Understand "squish [something]" as attacking.
-Instead of attacking ant hill, try attacking ants.
+
+Instead of attacking ant hill:
+	try attacking ants.
 
 To say ant stuff:
 	if ants are not stirred up:
