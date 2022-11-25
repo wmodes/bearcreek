@@ -2650,6 +2650,10 @@ Test bb with "go to bridge/g/g/pick berries/g/g/eat berries/go to bridge/g/g".
 Understand "pick [a thing]" as picking.
 Picking is an action applying to one thing.
 
+[TODO: Oops
+>pick berries
+You look around, but don't see the bunch of ripe berries. Last you remember, they were at the grassy clearing.]
+
 Check picking:
 	if noun is handful_of_berries or noun is berries_in_pail:
 		try picking backdrop_berries;
@@ -2741,10 +2745,12 @@ Instead of drinking berries_in_pail:
 Instead of dropping berries_in_pail:
 	say "Now why would you want to drop all of those beautiful berries you picked? You can't bring yourself to do it.".
 
-[this allows us to things to the berries (dropping them, eating them, feeding them to dog, etc) without taking them out of pail]
+[this allows us to do things to the berries (dropping them, eating them, feeding them to dog, etc) without taking them out of pail]
 The carrying requirements rule does nothing if doing anything to the berries_in_pail.
 
 The can't show what you haven't got rule does nothing if doing anything to the berries_in_pail.
+
+The can't give what you haven't got rule does nothing if doing anything to the berries_in_pail.
 
 [What was this for??]
 [ Instead of inserting berries_in_pail into something:
@@ -2895,25 +2901,33 @@ Does the player mean inserting backdrop_berries into big_bucket:
 
 Section - Dropping Blackberries
 
+[TODO: Oops
+>drop berries
+You'll have to pick some first.]
+
+[TODO: COnsider removing all references to dropping berries. since there is a great denial message already: "Now why would you want to drop all of those beautiful berries" ]
+
+[TODO: Consider removing all refs to handful of berries ]
+
 Some dirty_mush is an undescribed edible thing.
 	The printed name is "dirty mush".
 
 Instead of doing anything to dirty_mush,
 	say "Ew, yuck.".
 
-Instead of dropping handful_of_berries:
+Instead of dropping berries_in_pail:
 	throw_berries_back.
 
-Instead of throwing handful_of_berries at something:
+Instead of throwing berries_in_pail at something:
 	throw_berries_back.
 
-Instead of inserting handful_of_berries into something:
+Instead of inserting berries_in_pail into something:
  	if second noun is big_bucket:
 		continue the action;
 	else:
 		throw_berries_back.
 
-Instead of putting handful_of_berries on something:
+Instead of putting berries_in_pail on something:
 	throw_berries_back.
 
 [ This rule will only apply if we do not have any berries ]
@@ -2922,8 +2936,7 @@ Check dropping backdrop_berries:
 	rule fails.
 
 To throw_berries_back:
-	say "The ripe berries hit the ground and immediately turn to dirty mush.";
-	move the noun to Limbo;
+	say "You throw a few ripe berries which hit the ground and immediately turn to dirty mush.";
 	now dirty_mush is in location;
 	[have the parser notice dirty_mush;]
 
@@ -7026,6 +7039,9 @@ Instead of entering swift_current_east,
 Instead of doing_some_swimming in Room_Other_Shore:
 	say current_swim_refusal.
 
+Instead of room_navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Other_Shore:
+	try room_navigating Room_Wooded_Trail;
+
 test shore with "teleport to other shore /abstract bridge west to Room_Crossing";
 
 Chapter - Room_Wooded_Trail
@@ -7040,7 +7056,6 @@ The description is "[if Scene_Day_Two has not happened]You are on a wooded trail
 The scent is "musty forest smell".
 Understand "wooded trail" as Room_Wooded_Trail.
 
-
 Section - Navigation
 
 North of Room_Wooded_Trail is Room_Dark_Woods_South.
@@ -7053,6 +7068,9 @@ Section - Objects
 Section - Backdrops
 
 Section - Rules and Actions
+
+Instead of room_navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Wooded_Trail:
+	try room_navigating Room_Dark_Woods_North.
 
 Instead of room_navigating Room_Willow_Trail when player is in Room_Wooded_Trail:
 	try room_navigating Room_Dark_Woods_North.
@@ -10283,6 +10301,10 @@ Response of dream_dog when asked-or-told about topic_dreams:
 
 Response of dream_dog when asked-or-told about topic_creek:
 	say "'Sometimes on hot days, if I can get out of that terrible fence,' the dog says, 'I run through the forest until I'm panting and hot, then I lie down in the cool water of the creek and watch the little swimmers.'";
+	now dream_dog is friendly.
+
+Response of dream_dog when given berries_in_pail:
+	say "'Oh thanks, kid, but I can't,' the dog says. 'They give me indigestion.'";
 	now dream_dog is friendly.
 
 Chapter - Rants
