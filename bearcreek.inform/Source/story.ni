@@ -10,7 +10,7 @@ The release number is 2.
 The story creation year is 2020.
 The story description is "Bear Creek, August 1975.
 
-Looking back, it was that summer, or maybe just that one day that changed everything. KC and the Sunshine Band was on the radio and you were eight years old. A curious daydreamer, on the verge of learning what lay beyond the boundaries of your own little world, and nothing was certain about whether you'd survive the journey."
+Looking back, it was that summer, or maybe just that one day that changed everything. KC and the Sunshine Band was on the radio and you were nine years old. A curious daydreamer, on the verge of learning what lay beyond the boundaries of your own little world, and nothing was certain about whether you'd survive the journey."
 
 Book - License
 
@@ -3272,8 +3272,6 @@ Show	Channel	Index	Reaction
 
 Chapter - The Train
 
-[TODO: Should we head the train in dreams? Should we hear it in epilogue? Probably not.]
-
 The distant_train is scenery. 
 The printed name is "distant train".
 It is in Limbo.
@@ -3628,8 +3626,6 @@ Section - Sequences
 	conditions: during explorations when player has been in trailer park region for a numer of turns
 	trigger: the scene Scene_Sheriffs_Drive_By starts
 ]
-
-[ TODO: Player can hear sharon and sheriff talking even if they leave the area ]
 
 seq_sheriffs_drive_by is a sequence.
 	The action_handler is the seq_sheriffs_drive_by_handler rule.
@@ -4023,7 +4019,6 @@ A tuna_sandwich is a kind of thing.
 	A tuna_sandwiches is edible.
 	[It is singular-named "tuna sandwich".]
 	Three tuna_sandwiches are in brown paper bag.
-	[TODO: Test plural name is correcct]
 	The printed name is "tuna sandwich".
 	Rule for printing the plural name of a tuna_sandwich: say "tuna sandwiches".
 	The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
@@ -5895,11 +5890,13 @@ Instead of entering swift_current_west,
 	try doing_some_swimming.
 
 Instead of doing_some_swimming in Room_Crossing:
-	say current_swim_refusal.
+	if bridge_log_west is not visible:
+		say current_swim_refusal;
+	else:
+		try room_navigating Room_Other_Shore;
 
 To say current_swim_refusal:
 	say "The current here is too strong and it scares you. You saw a TV show once with your grandpa about people in rafts and one man fell off and got caught under a rock and drowned. You think better of the idea.";
-
 
 
 Part - Region_Dirt_Road
@@ -6983,9 +6980,6 @@ The description is "[if Scene_Day_Two has not happened]You are on the far side o
 The scent is "cool creek water and mossy rocks".
 Understand "other/-- shore" as Room_Other_Shore.
 
-[TODO: >cross river
-You look around, but don't see Bear Creek. Last you remember, it was .]
-
 Section - Navigation
 
 West of Room_Other_Shore is Room_Crossing.
@@ -7083,6 +7077,11 @@ Section - Objects
 Section - Backdrops
 
 Section - Rules and Actions
+
+[Transition text]
+Instead of going to Room_Wooded_Trail when player is in Room_Other_Shore:
+	say "You think this is the right way back to the blackberry trail, right?";
+	continue the action;
 
 Instead of room_navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Wooded_Trail:
 	try room_navigating Room_Dark_Woods_North.
@@ -7476,8 +7475,6 @@ Room_Car_With_Stepdad, Room_Dream_Grassy_Field, Room_Dream_Railroad_Tracks, Room
 
 Section - Backdrops and Scenery
 
-[TODO: Replace default examine uninteresting object with fuzzy dream response.]
-
 [ Create an ambiguous sky backdrop. Is it day? Is it night? ]
 Dream_sky is backdrop in Room_Car_With_Mom.
 Dream_sky is backdrop in Room_Drive_In.
@@ -7594,6 +7591,7 @@ The movie_backdrop is backdrop in Room_Drive_In.
 
 Speaker poles are scenery in Room_Drive_In.
 The description is "These are the poles that hold the speakers that you put on your window. Once mom almost drove off without putting the speaker back."
+Understand "pole" as speaker poles.
 
 Some drive_in_cars are scenery in Room_Drive_In.
 The description is "There are millions of cars here. You memorize where your mom's car is so you don't get lost."
@@ -7608,7 +7606,7 @@ The printed name is "spilled popcorn".
 The description is "There is popcorn blowing in drifts on the ground turning the drive-in into a winter wonderland. The popcorn squeaks when you step on it."
 Understand "spilled/-- popcorn/snow", "popcorn" as spilled_popcorn.
 
-Some paper trash is scenery in Room_Drive_In.
+The movie, the screen, some speakers, some paper trash are scenery in Room_Drive_In.
 
 Section - Rules and Actions
 
