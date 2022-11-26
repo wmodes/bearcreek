@@ -2686,15 +2686,11 @@ Test bb with "go to bridge/g/g/pick berries/g/g/eat berries/go to bridge/g/g".
 Understand "pick [a thing]" as picking.
 Picking is an action applying to one thing.
 
-[TODO: Oops
->pick berries
-You look around, but don't see the bunch of ripe berries. Last you remember, they were at the grassy clearing.]
-
 Check picking:
 	if player is not in Region_Blackberry_Area:
 		say "You'll have to go back to the berry brambles.";
 		stop the action;
-	else if noun is handful_of_berries or noun is berries_in_pail:
+	else if noun is berries_in_pail:
 		try picking backdrop_berries;
 		stop the action;
 	else if noun is backdrop_berries:
@@ -2706,15 +2702,6 @@ Check picking:
 Carry out picking:
 	try taking backdrop_berries.
 
-[ Does the player mean picking backdrop_berries:
-	it is very likely.
-Does the player mean doing anything except picking backdrop_berries:
-	it is unlikely. ]
-[TODO: "Does the player mean" rules clarify the noun, not the verb. I think the following are unneeded, but not sure]
-[ Does the player mean doing anything except taking handful_of_berries or picking handful_of_berries:
-	it is very likely.
-Does the player mean doing anything to berries_in_pail:
-	it is likely. ]
 
 Section - backdrop_berries
 
@@ -2722,7 +2709,7 @@ Section - backdrop_berries
 
 Instead of taking the backdrop_berries:
 	[ pick into pail, if possible ]
-	if pail is visible or pail is held by player:
+	if pail is touchable or pail is held by player:
 		if pail is full:
 			say "Your pail is already full. You should probably dump it into Honey and Grandpa's bucket.";
 		otherwise:
@@ -2730,17 +2717,12 @@ Instead of taking the backdrop_berries:
 			put_berries_in_pail;
 			[have the parser notice the berries_in_pail;]
 	[ pick into big_bucket, if possible ]
-	else if big_bucket is visible:
+	else if big_bucket is touchable:
 		say "[pick_berries]. [run paragraph on]";
 		put_berries_in_bucket;
 	[ otherwise, we just got our hands ]
 	else:
-		if handful_of_berries is carried by player:
-			say "Your hands are already full of berries. Perhaps if you got your pail...";
-		else:
-			[otherwise we put berries in player's hand]
-			now player holds handful_of_berries;
-			say "[pick_berries].";
+		say "You have nowhere to put any berries except in your mouth, which you do.";
 
 To say pick_berries:
 	say "[one of]You stretch and manage to pick a few[or]By working on tiptoes, you are just able to pick a few[or]You gather up the easy ones right in front until you have a handful of[or]You notice some ripe ones down near your knees and grab a bunch of[at random] ripe blackberries";
@@ -2804,28 +2786,13 @@ To say eat_berries:
 	now player is not hungry;
 
 
-Section - Berries in Hand
-
-[the handful of ripe berries, that is, the berries we can hold ]
-
-[TODO: Consider eliminating the complexities of another berry object by making it so player cannot drop pail - then berries just go into the pail]
-
-A handful_of_berries is a sinking edible thing.
-	The printed name is "handful of ripe berries".
-	handful_of_berries are in Limbo.
-	The description of handful_of_berries is "You've picked a big handful of blackberries. [looking_closely_at_berries].".
-	The scent is "mmm, blackberry jam, blackberry pie, yum".
-	Understand "bunch/handful/lots/-- of/-- ripe/big/-- black/-- blackberries/blackberry/berries/berry" as handful_of_berries.
-
-Instead of eating handful_of_berries:
-	say "[eat_berries].";
-	now noun is in Limbo.
-
 Section - The Pail
 
 Instead of inserting anything into pail:
 	if noun is backdrop_berries:
 		put_berries_in_pail;
+	else if noun is berries_in_pail:
+		say "Well, luckily they're already there.";
 	else:
 		say "Yucky. Your pail is for picking blackberries.";
 
@@ -2853,7 +2820,6 @@ To put_berries_in_pail:
 	else if pail is full:
 		say "Your pail is already full. You should probably dump it into Honey and Grandpa's bucket.";
 		stop;
-	now handful_of_berries is in Limbo;
 
 To eat_berries_from_pail:
 	if pail is full:
@@ -2900,9 +2866,7 @@ To say bucket_is_heavy:
 	say "That's going to be pretty heavy. Better leave it for Grandpa to carry."
 
 Instead of inserting something into big_bucket:
- 	if noun is handful_of_berries:
-		put_berries_in_bucket;
-	else if noun is berries_in_pail or noun is pail:
+ 	if noun is berries_in_pail or noun is pail:
 		if pail is empty:
 			say "Your pail is empty. You may want to pick some more.";
 		else:
@@ -2919,7 +2883,6 @@ Instead of inserting something into big_bucket:
 		say "A glance from Honey and you realize you better not put that in there.".
 
 To put_berries_in_bucket:
-	Now handful_of_berries is in Limbo;
 	say "You drop the berries into the big bucket.";
 
 ["Does the player mean" rules, ref: http://inform7.com/book/WI_18_32.html]
@@ -2930,9 +2893,6 @@ Does the player mean inserting pail into big_bucket:
 Does the player mean inserting berries_in_pail into big_bucket:
 	It is very likely.
 
-Does the player mean inserting handful_of_berries into big_bucket:
-	It is likely.
-
 Does the player mean inserting backdrop_berries into big_bucket:
 	It is possible.
 
@@ -2940,42 +2900,62 @@ Section - Dropping Blackberries
 
 [TODO: Oops
 >drop berries
-You'll have to pick some first.]
-
-[TODO: COnsider removing all references to dropping berries. since there is a great denial message already: "Now why would you want to drop all of those beautiful berries" ]
-
-[TODO: Consider removing all refs to handful of berries ]
+You'll have to pick some first.
+This is because in Region_Blackberry_area it tends to want to match berry with backdrop_berries with both dropping and throwing at someone ]
 
 Some dirty_mush is an undescribed edible thing.
 	The printed name is "dirty mush".
+	The description is "A purple slurry of dirt and blackberry which the ants will no doubt enjoy."
+	Understand "dirty/-- mush" as dirty_mush.
 
-Instead of doing anything to dirty_mush,
+Instead of doing anything except examining to dirty_mush,
 	say "Ew, yuck.".
+
+[ dropping berries_in_pail]
 
 Instead of dropping berries_in_pail:
 	throw_berries_back.
 
 Instead of throwing berries_in_pail at something:
-	throw_berries_back.
+	if second noun is contained by waterbody:
+		throw_berries_in_water;
+	else:
+		throw_berries_back.
 
 Instead of inserting berries_in_pail into something:
  	if second noun is big_bucket:
 		continue the action;
+	else if second noun is waterbody:
+		throw_berries_in_water;
 	else:
 		throw_berries_back.
 
 Instead of putting berries_in_pail on something:
 	throw_berries_back.
 
+[ dropping backdrop_berries]
+
+Instead of dropping backdrop_berries:
+	throw_berries_back.
+
+Instead of throwing backdrop_berries at something:
+	throw_berries_back.
+
+Instead of putting backdrop_berries on something:
+	throw_berries_back.
+
 [ This rule will only apply if we do not have any berries ]
-Check dropping backdrop_berries:
+[ Check dropping backdrop_berries:
 	say "You'll have to pick some first.";
-	rule fails.
+	rule fails. ]
 
 To throw_berries_back:
 	say "You throw a few ripe berries which hit the ground and immediately turn to dirty mush.";
-	now dirty_mush is in location;
+	now dirty_mush is in location of player;
 	[have the parser notice dirty_mush;]
+
+To throw_berries_in_water:
+	say "The berries splash into the water and float for a bit. Then they slowly descend below the surface like a submarine and vanish."
 
 Chapter - Rocks
 
