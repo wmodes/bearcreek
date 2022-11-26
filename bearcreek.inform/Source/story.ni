@@ -206,7 +206,7 @@ Chapter - the signs of confusion rule
 
 Table of Smarter Parser Messages (continued)
 rule name		message
-signs of confusion rule		"Try typing [em] look [/em] for a description of your surroundings. While compass directions won't always work (especially if you don't know which directions are which), you can usually go to landmarks you can see ([em]go to clearing [/em] or [em] follow creek [/em] or [em] enter trailer[/em]). Exits and landmarks are usually listed in the descriptions. [paragraph break]Some of the objects mentioned in the description might be worth a closer look with a command like [em] examine [get_noun_example][/em]. You can also [em] take [/em] or [em] drop [/em] some things, take [em] inventory [/em] to see what you're carrying, [em] open [/em] or [em] close [/em] containers or doors, and so on.[as normal][command clarification break]"
+signs of confusion rule		"Try typing [em] look [/em] for a description of your surroundings. While compass directions won't always work (especially if you don't know which directions are which), you can usually go to landmarks you see ([em]go to clearing [/em] or [em] follow creek [/em] or [em] enter trailer[/em]). Exits and landmarks are usually listed in the descriptions. [paragraph break]Some of the objects mentioned in the description might be worth a closer look with a command like [em] examine [get_noun_example][/em]. You can even examine yourself. You can also [em] take [/em] or [em] drop [/em] some things, take [em] inventory [/em] to see what you're carrying, [em] open [/em] or [em] close [/em] containers or doors, and so on.[paragraph break]You can also talk with the folks you meet. Try to [em] ask [/em] or [em] tell [/em] about other people, things you encounter, or topics they bring up, like [em] ask grandpa about war[/em]. If you [em] wait [/em] or [em] listen[/em], you might learn something.[paragraph break]There is a lot you can do, some of it quite unexpected. Experiment, play around, and have fun. [as normal][command clarification break]"
 
 Chapter - stripping niceties
 
@@ -6779,7 +6779,7 @@ The lees_tv is an improper-named undescribed fixed in place device in Room_Lees_
 	Understand "lees/lee's/-- tiny/-- television/tv set/--", "tv/television/-- station/dial/channel/changer", "bent/-- rabbit ears" as lees_tv.
 	The indefinite article is "the".
 
-The purple_heart is an improper-named familiar special thing in Limbo.
+The purple_heart is an improper-named special thing in Limbo.
 	The printed name is "Purple Heart".
 	The description is "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like George Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break][paragraph break][em]What will happen if your mom discovers this? You determine to hide the medal and not let her find out.[/em][only].".
 	Understand "war/service/purple/-- medal/heart/ribbon" as purple_heart.
@@ -7642,7 +7642,6 @@ The scent is "fresh popped popcorn and melted butter".
 The outside_view is "the drive-in".
 Understand "snack bar", "snackbar", "snack-bar", "snack shack" as Room_Snack_Bar.
 
-
 Section - Navigation
 
 West of Room_Snack_Bar is Room_Drive_In.
@@ -7685,6 +7684,8 @@ Candy_selection is scenery in Room_Snack_Bar.
 The printed name is "candy".
 The description is "In the glass case, there is a wide variety of candies in large boxes, all printed in bright colors. But you only have eyes for your favorite, Milk Duds."
 Understand "candy/counter/case", "milk duds" as candy_selection.
+
+The checkerboard floor is scenery in Room_Snack_Bar.
 
 Section - Rules and Actions
 
@@ -7758,7 +7759,6 @@ Instead of going to Room_Car_With_Stepdad when player is in Room_Drive_In:
 		continue the action;
 
 
-
 Chapter - Room_Restroom
 
 Section - Description
@@ -7771,7 +7771,6 @@ The description is "[first time]Oh, what a relief. You use the facilities just b
 The scent is "the stuff they use to make it not smell bad which makes you feel like you have to sneeze. Still, that's better than the terrible pit toilets you had to use at the state park that you went to with Honey and Grandpa. One time you cried because you had to go but didn't want to go into the smelly toilets".
 Understand "restroom/bathroom/toilet/potty", "bath/rest room" as Room_Restroom.
 
-
 Section - Navigation
 
 West of Room_Restroom is Room_Snack_Bar.
@@ -7783,8 +7782,9 @@ Section - Objects
 
 Section - Backdrops and Scenery
 
-Section - Rules and Actions
+The toilet, sink, tile, facilities are scenery in Room_Restroom.
 
+Section - Rules and Actions
 
 
 Chapter - Room_Car_With_Stepdad
@@ -7799,12 +7799,9 @@ The scent is "fear".
 The outside_view is "the highway. [description of road_backdrop]".
 Understand "Camaro/car" as Room_Car_With_Stepdad.
 
-
 Section - Navigation
 
 Outside from Room_Car_With_Stepdad is Room_Dream_Grassy_Field.
-
-Section - Objects
 
 Section - Backdrops and Scenery
 
@@ -7813,8 +7810,9 @@ The camaro_backdrop is backdrop in Room_Car_With_Stepdad.
 The cigarette lighter is scenery in Room_Car_With_Stepdad.
 
 The road_backdrop is backdrop in Room_Car_With_Stepdad.
-	The description is "The road and the trees zoom by as the car barrels down the highway.".
-	Understand "trees/road/window/highway/outside" as road_backdrop.
+The printed name is "toad".
+The description is "The road and the trees zoom by as the car barrels down the highway.".
+Understand "trees/road/window/highway/outside" as road_backdrop.
 
 Virtual_Mom is scenery in Room_Car_With_Stepdad.
 	The printed name is "Mom".
@@ -7857,7 +7855,6 @@ The description is "This is the grassy field behind the trailer park. On either 
 The scent is "the sweet smell of dried hay".
 Understand "Dream grassy/-- field" as Room_Dream_Grassy_Field.
 
-
 Section - Navigation
 
 Room_Dream_Grassy_Field is east of Room_Car_With_Stepdad.
@@ -7866,22 +7863,11 @@ The available_exits of Room_Dream_Grassy_Field are "The gate to the trailer park
 
 Section - Objects and People
 
-
 Section - Backdrops & Scenery
 
-The dream_back_gate is an undescribed enterable container in Room_Dream_Grassy_Field.
-	The printed name is "back gate".
-	The description is "The trailer park is fuzzy and out of focus."
-	Understand "back/trailer/-- gate/park" as dream_back_gate.
-
-A grassy field is backdrop in Room_Dream_Grassy_Field.
-
-The back fence is backdrop in Room_Grassy_Field.
+A grassy field, the rutted dirt road, some golden grasses, the back fence, the back gate, the trailer park are scenery in Room_Dream_Grassy_Field.
 
 Section - Rules and Actions
-
-Instead of doing anything to dream_back_gate:
-	say "It feels fuzzy and indistinct, the details blurry."
 
 Instead of going to Room_Dream_Grassy_Field when player is in Room_Car_With_Stepdad:
 	say "You open the car door and look at the surface of the road speeding by. You gather your courage and prepare to jump. Mark's hand shoots out to stop you. You duck the hand, glancing back at Mark's startled face, and jump.
@@ -7940,7 +7926,6 @@ The description is "Railroad tracks cross the old dirt road here in a small rise
 The scent is "dust and grease".
 Understand "dream/-- railroad/train/sp/-- tracks/crossing", "southern pacific tracks", "railroad/train/sp crossing" as Room_Dream_Railroad_Tracks.
 
-
 Section - Navigation
 
 Room_Dream_Railroad_Tracks is east of Room_Dream_Grassy_Field.
@@ -7986,6 +7971,7 @@ Instead of taking dream_mound_of_rock:
 
 Test dream-tracks with "teleport to car with mom/go to bathroom/again/again/again/teleport to dream tracks"
 
+
 Chapter - Room_Mars
 
 Section - Description
@@ -7997,7 +7983,6 @@ The description is "This is the surface of Mars, the red planet, at least 100 mi
 [paragraph break][available_exits][end if]".
 The scent is "billion year old dust".
 Understand "Mars" as Room_Mars.
-
 
 Section - Navigation
 
@@ -8109,7 +8094,6 @@ The description is "The dirt road slopes down as it runs along the creek before 
 The scent is "sunshine and dust".
 Understand "Dream Dirt Road" as Room_Dream_Dirt_Road
 
-
 Section - Navigation
 
 Room_Dream_Dirt_Road is east of Room_Chryse_Planitia.
@@ -8124,17 +8108,7 @@ Section - Objects and People
 
 Section - Backdrops and Scenery
 
-Someone's field is backdrop in Room_Dream_Dirt_Road.
-
-The road is backdrop in Room_Dream_Dirt_Road.
-
-A chainlink fence is backdrop in Room_Dream_Dirt_Road.
-
-Some old junk cars are backdrop in Room_Dream_Dirt_Road.
-
-Some tall weeds are backdrop in Room_Dream_Dirt_Road.
-
-Some tall grass are backdrop in Room_Dream_Dirt_Road.
+Someone's field, ragged trail, the old dirt road, a chainlink fence, some junk cars, tall weeds, tall grass are scenery in Room_Dream_Dirt_Road.
 
 Section - Rules and Actions
 
@@ -8749,7 +8723,7 @@ To say grandparent_random:
 
 [TODO: when grandparents_random is queued, it adds an extra line feed. Tried almost every combo of [no line feed] and [run paragraph on] here and it it's call]
 
-[TODO in a long list of random utterances, make it so new interlocutor is set]
+[TODO: in a long list of random utterances, make it so new interlocutor is set]
 
 Chapter - Tests
 
@@ -8759,6 +8733,8 @@ test honey-tell with "teleport to Grassy Clearing / tell honey about Aunt Mary /
 
 
 Part - Grandpa
+
+[TODO: Grandpa says hello when the game starts rather than when you go to grassy clearing. ]
 
 Grandpa is an undescribed _male man in Room_Grassy_Clearing.
 	The initial appearance is "[grandpas_initial_appearance].".
@@ -9503,10 +9479,7 @@ Response of Lee when asked-or-told about topic_family:
 	say "'Ah, my family. Yeah, I don't talk to [']em much anymore. My mom. My dad. My brother,' Lee says, 'My mom grew up in Pine Ridge. That's a genuine Indian rez, man.'[paragraph break]'Did you know I was married? Might even still be. When I came back, she couldn't take it and split.' Lee lights another cigarette. 'I guess good for her. Get out while the gettin's good.'".
 
 Response of Lee when asked-or-told about purple_heart:
-	if purple_heart is not in Limbo:
-		say lee_purple_heart_story;
-	else:
-		continue the action;
+	say lee_purple_heart_story;
 
 To say lee_purple_heart_story:
 	say "'It was nothing,' Lee says, though you can tell he's pleased to be able to give you the gift. 'You hold on to that. That's for your courage and endurance.'[paragraph break]'You know, they gave me that when I got hurt in the war,' Lee says, 'I wasn't even shot. I just crashed a jeep,' Lee laughs. 'I was a driver at the base in Da Nang and there was a rocket attack. A fuel tank went up and I turned to look. Hit a Jersey barrier,' Lee laughs 'So I got a purple heart like a hero.'[paragraph break]";
