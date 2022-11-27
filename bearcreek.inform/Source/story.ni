@@ -104,13 +104,6 @@ Part - Epistemology
 
 Include Epistemology by Eric Eve.
 
-Part - Response Assistant
-
-Include Response Assistant by Aaron Reed.
-
-[Type "track responses" to append each response seen with a numbered tag. 
-You can then type "response 1" (and so on) to see details about the current form of the message, and a template you can copy and paste in your source text to change it. 
-Type "track off" to stop tracking responses.]
 
 Part - Smarter Parser
 
@@ -315,7 +308,6 @@ Table of Smarter Parser Messages (continued)
 rule name	message
 stripping pointless words rule	"Most connecting and comparative words are not necessary.[command clarification break]"
 
-
 Chapter - the stripping failed with rule
 
 [Reparses commands that contain unnecessary addenda like >ATTACK MONSTER WITH MY SWORD, >GO NORTH BY THE PATH, >TOUCH ROCK USING MY FINGERTIP, and so on. (Everything from the "with" word on is stripped.) If your story includes a command that legitimately uses "with," you may want to change the message to account for this, or remove this rule altogether. ]
@@ -386,6 +378,15 @@ To display the reborn command:
 	[say ">[reborn command in upper case]".]
 	do nothing.
 
+
+Part - Response Assistant
+
+Include Response Assistant by Aaron Reed.
+
+[Type "track responses" to append each response seen with a numbered tag. 
+You can then type "response 1" (and so on) to see details about the current form of the message, and a template you can copy and paste in your source text to change it. 
+Type "track off" to stop tracking responses.]
+
 Chapter - Smarter Messages
 
 The parser error internal rule response (E) is "Oh? Do you see that here?".
@@ -398,6 +399,9 @@ The examine undescribed things rule response (A) is "[if Scene_Dreams is not hap
 
 The can't reach inside rooms rule response (A) is "You can't get there from here."
 
+The block climbing rule response (A) is "You can't really figure out how to go about that."
+
+The can't take scenery rule response (A) is "You can't really figure out how to go about that."
 
 
 Book - Bibliographical information
@@ -504,7 +508,6 @@ Surface_going is an action applying to one thing.
 Understand
 	"go on/to [visible surface]",
 	"walk on/to [visible surface]",
-	"climb on/to [visible surface]",
 	"jump on/to [visible surface]",
 	"cross on/to [visible surface]"
 	as surface_going.
@@ -672,185 +675,91 @@ Carry out standing_up:
 
 Chapter - Climbing
 
-[Borrowed from Supplemental Actions by Al Gorden - Part 08 Climbing ]
-
-[TODO: This could be done MUCH more elegantly, e.g., climb [preposition] could all be treated as one ]
-
-[
-	climbing
-]
+[ climbing_something ]
 
 Understand the command "climb" as something new.
 
+Climbing_something is an action applying to one visible thing.
+
 Understand
-	"climb", "hop", "scale", "jump", "cross"
-	as climbing.
+	"climb up/on/onto/in/into/over/through/under/-- [something]", 
+	"hop up/on/onto/in/into/over/through/under/-- [something]", 
+	"scale up/on/onto/in/into/over/through/under/--  [something]", 
+	"jump up/on/onto/in/into/over/through/under/-- [something]", 
+	"cross up/on/onto/in/into/over/through/under/-- [something]"
+	as climbing_something.
 
-report climbing
-(this is the climbing rule):
-	if the noun is climbable:
-		say "You climb [the noun].";
-	else:
-		say "You can't climb [the noun]." instead.
-
-Does the player mean climbing an unclimbable thing:
-	it is unlikely.
-
-[
-	climbing up nada
-]
-
-climbing-up-nada is an action applying to nothing.
-Understand
-	"climb up"
-	as climbing-up-nada.
-
-Carry out climbing-up-nada:
-	try going up.
-
-Does the player mean climbing up an unclimbable thing:
-	it is unlikely.
-
-[
-	climbing up
-]
-
-climbing up is an action applying to one thing.
-understand
-	"climb [something]",
-	"climb up [something]"
-	as climbing.
-
-[
-	climbing down nada
-]
-
-climbing-down-nada is an action applying to nothing.
-Understand
-	"climb down"
-	as climbing-down-nada.
-
-Carry out climbing-down-nada:
-	try going down.
-
-Does the player mean climbing down an unclimbable thing:
-	it is unlikely.
-
-[
-	climbing down
-]
-
-climbing down is an action applying to one thing.
-understand
-	"climb down [something]"
-	as climbing down.
-
-instead of climbing down:
-	try going down.
-
-[
-	climbing in
-]
-
-climbing in is an action applying to one thing.
-Understand
-	"climb in/into [something]"
-	as climbing in.
-
-report climbing in
-(this is the climbing in rule):
+Carry out climbing_something:
 	if the noun is climbable:
 		say "You climb [the noun].";
 	else if the noun is an enterable container:
 		say "You climb into [the noun].";
 		now the player is in the noun;
-	else:
-		say "You can't climb in [the noun]." instead.
-
-Does the player mean climbing in an unclimbable thing:
-	it is unlikely.
-
-[TODO: Implement climbing_in_nothing where an assumption is made about climbing into enterable things in location, i.e., climb in]
-
-[
-climbing on
-]
-
-climbing on is an action applying to one thing.
-understand
-	"climb on/onto [something]"
-	as climbing on.
-
-report climbing on
-(this is the climbing on rule):
-	if the noun is climbable:
-		say "You climb [the noun].";
-	else if the noun is an enterable supporter:
+	else if the noun is a supporter:
 		say "You climb onto [the noun].";
 		now the player is on the noun;
 	else:
-		say "You can't climb onto [the noun]." instead.
+		let up_room be the room up from the location; 
+		if the up_room is a room:
+			try room_navigating up_room;
+		else:
+			try climbing the noun.
 
-Does the player mean climbing on an unclimbable thing:
+[ Does the player mean climbing_something an unclimbable thing:
 	it is unlikely.
 
-[
-climbing out
-]
-climbing_out_something is an action applying to one topic.
-Understand "climb out [text]"
-as climbing_out_something.
-Carry out climbing_out_something:
-	try exiting.
+Does the player mean climbing_something thing that is not an enterable container:
+	it is unlikely. ]
 
-climbing_out_nothing is an action applying to nothing.
-Understand "climb out"
-as climbing_out_nothing.
-Carry out climbing_out_nothing:
-	try exiting.
+Does the player mean climbing_something thing that is touchable:
+	it is likely.
 
-[
-climbing over
-]
+Does the player mean climbing_something thing that is not touchable:
+	it is very unlikely. 
 
-climbing over is an action applying to one thing.
-understand "climb over [something]" as climbing over.
+[ climbing_nothing ]
 
-report climbing over
-(this is the climbing over rule):
-	if the noun is climbable:
-		say "You climb over [the noun].";
-	else:
-		say "You can't climb over [the noun]." instead.
-
-Does the player mean climbing over an unclimbable thing:
-	it is unlikely.
-
-[
-climbing through
-]
-
-climbing through is an action applying to one thing.
-understand "climb through/thru [something]" as climbing through.
-
-report climbing through:
-say "You can't climb through [the noun].".
-
-[
-climbing under
-]
-
-climbing under is an action applying to one thing.
+Climbing_nothing is an action applying to nothing.
 Understand
-	"climb under [something]"
-	as climbing under.
+	"climb up/--", 
+	"hop up/--", 
+	"scale up/--", 
+	"jump up/--", 
+	"cross up/--"
+	as climbing_nothing.
 
-report climbing under
-(this is the climbing under rule):
-	say "You can't climb under [the noun]." instead.
+Carry out climbing_nothing:
+	try going up.
 
-Does the player mean climbing under an unclimbable thing:
-	it is unlikely.
+[ descending_something ]
+
+Descending_something is an action applying to one touchable thing.
+
+understand
+	"climb down/out of/-- [something]", 
+	"hop down/out of/-- [something]", 
+	"scale down/out of/-- [something]", 
+	"jump down/out of/-- [something]", 
+	"cross down/out of/-- [something]"
+	as descending_something.
+
+Carry out descending_something:
+	try going down.
+
+[ descending_nothing ]
+
+Descending_nothing is an action applying to nothing.
+
+Understand
+	"climb down/out of/--", 
+	"hop down/out of/--", 
+	"scale down/out of/--", 
+	"jump down/out of/--", 
+	"cross down/out of/--"
+	as descending_nothing.
+
+Carry out descending_nothing:
+	try going down.
 
 
 Chapter - Dressing
@@ -1238,8 +1147,11 @@ test inventory with "i / abstract pail to limbo / i / purloin shirt / wear it / 
 
 Chapter - New Can't See That Report
 
-[
-	Remembering last seen locations
+A room has some text called casual_name.
+
+[ TODO: Until I can fix the mods to scope, we will remove remembering altogether:
+
+[ Remembering last seen locations
 
 	From Aaron Reed's remembering
 
@@ -1292,11 +1204,7 @@ For saying the location name of a container (called the holder) (this is the Rem
 
 For saying the location name of a supporter (called the holder) (this is the Remembering saying supporter name rule): say "on [the holder]" (A).
 
-[
-	my mods to remembering
-]
-
-A room has some text called casual_name.
+[ my mods to remembering ]
 
 The Remembering saying room name rule response (A) is "[if casual_name of the place is not empty][the casual_name of the place][else][the printed name of the place][end if]".
 
@@ -1336,14 +1244,7 @@ Before doing something when the second noun is unavailable:
 	[say "[The second noun] [are] nowhere to be seen." instead.]
 	say "You look around, but don't see [the second noun]. Last you remember, [they] [was-were of noun] [at the remembered location of noun].[line break]" instead.
 
-
-Book - Hints
-
-Book - Default messages
-
-
-
-Book - Navigation
+]
 
 Part - Available Exits
 
@@ -1560,16 +1461,17 @@ Carry out going_on:
 You must supply a noun.
 regardless of what we do with the "block vaguely going rule]
 
+understand "x" as a mistake ("[description of location]").
+
 [ The block vaguely going rule is not listed in the for supplying a missing noun rules. ]
-The new vaguely going rule is listed instead of the block vaguely going rule in the for supplying a missing noun rules.
+[ The new vaguely going rule is listed instead of the block vaguely going rule in the for supplying a missing noun rules.
 
 This is the new vaguely going rule:
 	if examining:
 		try looking;
-		[ continue the action; ]
 	else:
   		try going_on;
-	rule fails.
+	rule fails. ]
 
 Going_upstream is an action applying to nothing.
 Understand
@@ -1650,7 +1552,7 @@ The printed name is "Lost Stuff Storage".
 lost_stuff_storage is in Limbo.
 
 An elusive_landmark is a kind of thing.
-An elusive_landmark is scenery.
+An elusive_landmark is mentioned scenery.
 
 [ Create richer generative Dark Woods locations with rises and downslopes, incidental details, etc. ]
 A landscape_feature is a kind of thing.
@@ -1662,7 +1564,8 @@ landmark_navigating is an action applying to one thing.
 Understand
 	"go to/near/by/-- [any distant elusive_landmark]",
 	"walk to/near/by/-- [any distant elusive_landmark]",
-	"run to/near/by/-- [any distant elusive_landmark]"
+	"run to/near/by/-- [any distant elusive_landmark]",
+	"landmark_navigate [any distant elusive_landmark]"
 	as landmark_navigating.
 
 Check landmark_navigating:
@@ -2844,10 +2747,10 @@ Instead of going when pail is full and pail is held by player:
 		Now pail is three-quarter-full;
 	continue the action;
 
-[Does player mean inserting backdrop_berries into pail:
+[Does the player mean inserting backdrop_berries into pail:
 	It is very likely.
 
-Does player mean inserting berries_in_pail into pail:
+Does the player mean inserting berries_in_pail into pail:
 	It is very unlikely. ]
 
 Section - The Bucket
@@ -2897,11 +2800,6 @@ Does the player mean inserting backdrop_berries into big_bucket:
 	It is possible.
 
 Section - Dropping Blackberries
-
-[TODO: Oops
->drop berries
-You'll have to pick some first.
-This is because in Region_Blackberry_area it tends to want to match berry with backdrop_berries with both dropping and throwing at someone ]
 
 Some dirty_mush is an undescribed edible thing.
 	The printed name is "dirty mush".
@@ -3640,7 +3538,7 @@ This is the seq_sheriffs_drive_by_handler rule:
 		if player is in Room_D_Loop:
 			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. As it drives through C Loop and passes Lee, the car slows way down but doesn't stop. It's coming straight toward where you stand in D Loop." with priority 2;
 		else if player is in Room_C_Loop:
-			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park, headed toward D Loop. As the car passes [if Lee was visible]Lee who is out in front of his trailer smoking, you see the policeman slow down and give him a Look[else]Lee's trailer, you see the policeman looking carefully at his trailer[end if]. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
+			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park, headed toward D Loop. As the car passes [if Lee is visible]Lee who is out in front of his trailer smoking, you see the policeman slow down and give him a Look[else]Lee's trailer, you see the policeman looking carefully at his trailer[end if]. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
 			Move player to Room_D_Loop, without printing a room description;
 		else if player is in Region_Trailer_Outdoors:
 			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
@@ -3893,6 +3791,7 @@ This is the seq_lee_hangout_handler rule:
 		[paragraph break]He holds out a purple medal. It has a purple ribbon and a gold heart-shaped medalion, purple around a gold figure in the middle. You want to hold it in your hand and feel its weight. You put out your hand and, for a moment, are scared Lee is going to snatch it back.
 		[paragraph break]But Lee puts the medal in your hand with a smile. It's heavier even than it appears.";
 		now player holds purple_heart;
+		now purple_heart is familiar;
 	else if index is 5:
 		Report Lee saying "You start to thank Lee, but he looks embarrassed even before you say it and cuts you off. 'I wonder what's on the tube,' He turns to the television and starts fiddling with the rabbit ears.";
 	else if index is 6:
@@ -4005,7 +3904,7 @@ Section - Sequences
 ]
 
 Some sandwich_ingredients are a fixed in place thing.
-	The printed name is "sandwich makin's".
+	The printed name is "sandwich makings".
 	The initial appearance is "Aunt Mary has gotten out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread for making tuna sandwiches.". The description is "Several cans of Chicken of the Sea, Miracle Whip, and Wonder Bread are out for making tuna sandwiches."
 	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonaise/mayonnaise/can/cans/bags", "miracle whip",  "sandwich bags" as sandwich_ingredients.
 
@@ -4016,10 +3915,10 @@ The brown paper bag can be torn.
 
 [Originally I thought to simplify this model, but it came in handy during Scene_Defend_the_Fort]
 A tuna_sandwich is a kind of thing.
+	The printed name is "tuna sandwich".
 	A tuna_sandwiches is edible.
 	[It is singular-named "tuna sandwich".]
 	Three tuna_sandwiches are in brown paper bag.
-	The printed name is "tuna sandwich".
 	Rule for printing the plural name of a tuna_sandwich: say "tuna sandwiches".
 	The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
 	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonnaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna_sandwiches.
@@ -4108,9 +4007,18 @@ When Scene_Across_the_Creek begins:
 
 Section -Actions
 
-[TODO: Needed?]
-Does the player mean landmark_navigating sound_of_the_creek during Scene_Across_the_Creek:
-	It is very likely.
+[TODO: The goal here is to make it so we can landmark_navigate to these elusive landmarks. When we say "go to tree" we want it to match "white tree" (an elusive landmark) rather than try to room_navigate to Room_Top_of_the_Tree
+
+This is harder than it looks:
+* "Does the player mean" rules don't seem to help
+* There is no easy way to remove the action and rebirth a command with landmark_navigating
+* I don't know how to disable the room_navigating action during this scene]
+
+[ Instead of room_navigating during Scene_Night_In_The_Woods:
+	now reborn command is "landmark_navigate [destination]". ]
+
+[ Does the player mean room_navigating during Scene_Night_In_The_Woods:
+	It is very unlikely. ]
 
 Part - Scene_Night_In_The_Woods
 
@@ -4728,6 +4636,8 @@ Every turn during Scene_Out_of_the_Woods:
 
 Chapter - Scene_Found
 
+[TODO: Arguably this should be broken into two scenes (as originally intended): Scene_Found and Scnee_Reunions. The end of the journey of both Sharon and Lee's walk is very similar (though subtley different). The main argument is that during Scene_Found, being chatty and asking questions of Lee or Sharon makes sense, but less so during the reunion. ]
+
 There is a scene called Scene_Found.
 Scene_Found begins when Scene_Day_Two is happening and (player is in Room_Blackberry_Tangle or player is in Room_Other_Shore).
 Scene_Found ends when player is in Room_Grassy_Field.
@@ -4801,7 +4711,6 @@ This is the journey_sharon_walk_end rule:
 		Now Grandpa is in Room_Grassy_Field;
 		Report Grandpa saying "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops and lets out a deep breath. He looks relieved. He looks at the Cat Lady for a long moment, 'You did it, Sharon. You have my gratitude.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your surprise, you start to cry.";
 		rule fails;
-		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
 	else if time_here of journey_sharon_walk is 2:
 		Now Lee is in Room_Grassy_Field;
 		Report Sharon saying "'He was on the other side of the creek, near the woods,' Sharon says.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
@@ -5053,10 +4962,6 @@ To decide_to_support_lee:
 		now player is protective;
 		say "You take a deep breath, and yell, 'No, wait!'[paragraph break]Everyone turns to you. And the words tumble out. Quick as you can, stumbling, messing up some of the details, you tell how you wandered into the woods by yourself, about the dog, about the nest, about the raccoons, about orienteering, every word chasing the previous word, and how you were found by Lee and the Cat Lady.[paragraph break]You stop and take a breath.".
 
-[TODO: Oops
->tell grandpa about dog
-Which do you mean, the dog, the dog, or the photos?
-Can we create a new clarifing the choice of the parser rule?]
 
 Chapter - Scene_Parents_Arrive
 
@@ -5108,9 +5013,6 @@ This is the seq_parents_arrive_handler rule:
 			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and Grandpa and raise a hand goodbye." with priority 2;
 		else:
 			queue_report "Mark starts to walk around the car toward you. Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you.[paragraph break]Mom glances warningly at Mark. 'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay, let's go.' She gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls angrily out of B Loop, you can see your mom look at Honey, Grandpa and you in turn and mouth, 'I love you.'" with priority 2;
-
-[ TODO: This scene should continue at least two more beats, as the decision seems super abrupt. ]
-[ TODO: Prohibit player from having normal conversations with the people here. This has happened enough times that perhaps it needs a more general handler. ]
 
 This is the seq_parents_arrive_interrupt_test rule:
 	[ Nothing stops this rule. ]
@@ -5348,8 +5250,6 @@ The description is "There are some big, ripe berries over there. If you could re
 Understand "bunch/handful/lots/-- of/-- ripe/big/-- black/-- blackberries/blackberry/berries/berry" as backdrop_berries.
 The scent is "mmm, blackberry jam, blackberry pie, yum".
 
-[TODO: Somewhere there is a "radio" "out of play" but it really should be "honey's_radio"]
-
 Some backdrop_paths are backdrop in Region_Blackberry_Area.
 	The printed name is "paths".
 	The description of backdrop_paths is "Berry pickers down here along Bear Creek have carved out paths through the brambles."
@@ -5366,11 +5266,10 @@ To say sunshine_description:
 	else:
 		say "The sun has set and the trees loom darkly above";
 
-	Backdrop_creek is a nonfamiliar backdrop in Region_Blackberry_Area.
-		The printed name is "Bear Creek".
-		The description is "You can't see the creek through the tall brambles, but you can hear it.".
-		Understand "river/creek/crick/stream/water",  "bear creek/crick" as backdrop_creek.
-[TODO: This causes confusion with disambugation throughout]
+Backdrop_creek is a nonfamiliar backdrop in Region_Blackberry_Area.
+	The printed name is "Bear Creek".
+	The description is "You can't see the creek through the tall brambles, but you can hear it.".
+	Understand "river/creek/crick/stream/water",  "bear creek/crick" as backdrop_creek.
 
 Section - Rules and Actions
 
@@ -5400,17 +5299,12 @@ Section - Objects
 
 Section - Backdrops
 
-[TODO: oops
->x pine trees
-You look around, but don't see the pine trees. Last you remember, they were .]
-
 Some pine trees are backdrop in Room_Lost_in_the_Brambles.
-	The description is "Pine trees fringe the tangle of berry brambles.". Understand "tree/pines/pine" as pine trees.
-	The scent is "sharp pine pitch".
+The description is "Pine trees fringe the tangle of berry brambles.". 
+Understand "tree/pines/pine" as pine trees.
+The scent is "sharp pine pitch".
 
 Section - Rules and Actions
-
-[Instead of climbing some pine trees, say "Hardly worth the effort.".	]
 
 Chapter - Room_Grassy_Clearing
 
@@ -5986,7 +5880,7 @@ Section - Objects
 Section - Backdrops & Scenery
 
 A Doug fir is [climbable] scenery. It is in Room_Long_Stretch. The description of the Doug Fir is "There is a hugely tall pine tree here. Grandpa said it was called Doug Fir (not fur like a dog, but fir, which is a kind of pine tree). The tree is on the uphill side of the road below a low bluff. The branches are almost low enough to climb which you've done a couple of times but never all the way to the top.".
-Understand "tree/trees/branches/pine/pines/tall/bluff/low/fir/fur", "doug fir/fur", "pine tree/trees", "doug fir tree/trees" as Doug Fir.
+Understand "tree/trees/branch/branches/pine/pines/tall/bluff/low/fir/fur", "doug fir/fur", "pine tree/trees", "doug fir tree/trees" as Doug Fir.
 The scent is "delightful piney fragrance".
 
 Section - Rules and Actions
@@ -6042,10 +5936,11 @@ The available_exits of Room_Railroad_Tracks is "Across the tracks is a grassy fi
 
 Section - Objects
 
-Train_track is an undescribed fixed in place enterable supporter in Room_Railroad_Tracks.
+The train_track is an undescribed fixed in place enterable supporter in Room_Railroad_Tracks.
 The printed name is "train tracks".
 The description is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock.".
 Understand "train/railroad/-- track/tracks", "rail/rails/traintracks", "train/railroad", "rail road", "ties" as train_track.
+The indefinite article is "the".
 
 A lost_penny is a special thing in Room_Railroad_Tracks.
 The printed name is "penny".
@@ -6224,13 +6119,15 @@ Instead of going to Room_Halfway_Up when player is in Room_Long_Stretch:
 Instead of climbing Doug_Fir2:
 	try going up.
 
-Instead of climbing up when player is in Room_Halfway_Up:
-	try going up.
+[TODO: nix]
+[ Instead of climbing_nothing when player is in Room_Halfway_Up:
+	try going up. ]
 
-Does the player mean climbing the Doug_Fir2 when player is in Room_Halfway_Up:
+[TODO: needed?]
+[ Does the player mean climbing the Doug_Fir2 when player is in Room_Halfway_Up:
 	It is very likely.
-Does the player mean climbing up the Doug_Fir2 when player is in Room_Halfway_Up:
-	It is very likely.
+Does the player mean climbing_up the Doug_Fir2 when player is in Room_Halfway_Up:
+	It is very likely. ]
 
 [Encourage retry and transition text]
 Instead of going to Room_Long_Stretch when player is in Room_Halfway_Up:
@@ -6958,7 +6855,10 @@ The downpath_dest of Region_Woods_Area is Room_Forest_Meadow.
 
 Section - Backdrops and Scenery
 
-Some backdrop_thick_trees are backdrop in Region_Woods_Area.
+Some backdrop_deep_woods are backdrop in Region_Woods_Area.
+	The printed name is "deep woods".
+	The description is "[thick_trees_description]."
+	Understand "deep/-- wood/woods/forest" as backdrop_deep_woods.
 
 Some backdrop_sunlight is backdrop in Region_Woods_Area.
 
@@ -7117,11 +7017,12 @@ South of Room_Dark_Woods_South is nowhere.
 The available_exits of Room_Dark_Woods_South are "[if Scene_Day_Two is not happening][day1_woods_exits][else][day2_woods_exits][end if].".
 
 To say day1_woods_exits:
-	say "[one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there[in random order] [a list of elusive_landmarks in the_distance][if a random chance of 1 in 2 succeeds]. [one of]This may be the way back to Honey and Grandpa. You long to give him a hug and never let go[or]Is that the way back to the blackberry trail? You hope so[in random order][end if]";
+	say "[one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there,[in random order] [a list of elusive_landmarks in the_distance][if a random chance of 1 in 2 succeeds]. [one of]This may be the way back to Honey and Grandpa. You long to give him a hug and never let go[or]Is that the way back to the blackberry trail? You hope so[in random order][end if]";
 
 To say day2_woods_exits:
 	say "There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail";
 
+[TODO: What does this do? ]
 Instead of room_navigating when player is in Room_Dark_Woods_South and Scene_Night_In_The_Woods is not happening:
 	say cant_find_that;
 
@@ -7243,7 +7144,6 @@ To say meadow_desc_day1:
 To say meadow_desc_day2:
 	say "This is the dark forest meadow you found last night, except in the morning light, it is bright and crispy cold. The meadow still makes you think of ticks, but you try not to as you push through the tall grass. You can see paths in a few different directions";
 
-
 Room_Forest_Meadow can be observed.
 
 Section - Navigation
@@ -7279,7 +7179,7 @@ Some meadow grass is lie-able surface in Room_Forest_Meadow.
 	The description is "Here there is tall dry grass up to your waist. You try not to think about ticks."
 	Understand "tall/high/dry/meadow/-- grass/weeds", "meadow" as meadow grass.
 
-A fallen_tree is a fixed in place undescribed climbable enterable container in Room_Forest_Meadow.
+A fallen_tree is a fixed in place undescribed enterable container in Room_Forest_Meadow.
 The printed name is "protected hollow".
 The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
 Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under/-- fallen/-- tree" as fallen_tree.
@@ -7311,7 +7211,7 @@ Instead of entering fallen_tree:
 Instead of climbing fallen_tree:
 	try room_navigating Room_Protected_Hollow.
 
-Instead of climbing in fallen_tree:
+Instead of climbing_something fallen_tree:
 	try room_navigating Room_Protected_Hollow.
 
 Instead of listening when player is in Region_Woods_Area and Scene_Night_In_The_Woods is happening:
@@ -7396,6 +7296,9 @@ Instead of going to Room_Forest_Meadow when player is in Room_Protected_Hollow a
 	say "You shake off the pile of leaves and crawl out of your nest.";
 	now Room_Protected_Hollow is not made_cozy;
 	continue the action.
+
+Instead of descending_nothing when player is in Room_Protected_Hollow:
+	try room_navigating Room_Forest_Meadow.
 
 Instead of listening when player is in Room_Protected_Hollow and Scene_Night_In_The_Woods is happening:
 	if raccoons are in Room_Forest_Meadow:
