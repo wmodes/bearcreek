@@ -1,0 +1,417 @@
+The_distance
+			"the distance".
+lost_stuff_storage
+			"Lost Stuff Storage".
+Dad
+Joseph
+topic_forest
+			"woods".
+topic_swimming
+			"swimming".
+topic_trailer
+			"trailer".
+topic_creek
+			"Bear Creek".
+topic_bridge
+			"old stone bridge".
+topic_train
+			"train".
+topic_tree
+			"tall Doug fir".
+topic_dreams
+			"dreams".
+topic_life
+			"life".
+topic_love
+			"love".
+topic_death
+			"death".
+topic_work
+			"work".
+topic_family
+			"family".
+topic_war
+			"war".
+topic_indians
+			"indians".
+topic_cat
+			"cats".
+topic_jam
+			"jam".
+topic_berries
+			"blackberries".
+topic_tea
+			"tea".
+topic_lunch
+			"lunch".
+berries_in_pail
+			"bunch of ripe berries".
+dirty_mush
+			"dirty mush".
+loose_rocks
+			"rock".
+distant_train
+			"distant train".
+sandwich_ingredients
+			"sandwich makings".
+brown paper bag
+			"[if brown paper bag is torn]torn up [end if]brown paper bag".
+			"tuna sandwich".
+Limbo
+			"some indistinct people".
+			"some indistinct things".
+			"in the brambles down by the creek".
+backdrop_blackberry_brambles
+			"berry brambles".
+backdrop_berries
+			"bunch of ripe berries".
+backdrop_paths
+			"paths".
+backdrop_sunlight
+			"sunlight".
+Backdrop_creek
+			"Bear Creek".
+Room_Lost_in_the_Brambles
+			"Lost in the Brambles".
+pine trees
+Room_Grassy_Clearing
+			"Grassy Clearing".
+big_bucket
+			"big bucket".
+honeys_radio
+			"transistor radio".
+Grandpas_shirt
+			"Grandpa's shirt".
+grandpas_cigarettes
+			"cigarettes".
+sycamore tree
+stubbly grass
+pine trees
+low bank
+Room_Blackberry_Tangle
+			"Blackberry Tangle".
+pine trees
+Room_Willow_Trail
+			"Willow Trail".
+Willows
+Room_Lost_Trail
+			"Lost Trail".
+Room_Dappled_Forest_Path
+			"Dappled Forest Path".
+backdrop_thick_trees
+			"thick trees".
+Room_Stone_Bridge
+			"Stone Bridge".
+old stone bridge
+Creek_at_bridge
+			"Bear Creek".
+floating_stuff
+			"floating stuff".
+boulder
+			"boulder in the creek".
+grassy bank
+Moss
+Room_Swimming_Hole
+			"Swimming hole".
+pool_log
+			"floating length of log".
+deep_pool
+			"deep pool".
+smooth granite rocks
+rocky_shore_north
+			"rocky shore".
+Room_Crossing
+			"The Crossing".
+bridge_log_west
+			"a floating length of log".
+rocky_shore_south
+			"rocky shore".
+boulders_west
+			"scattered boulders".
+swift_current_west
+			"swift current".
+steep bank
+rutted_road
+			"rutted dirt road".
+Room_Dirt_Road
+			"End of the Dirt Road".
+dog
+chainlink fence
+old junk cars
+Room_Long_Stretch
+			"Long Stretch".
+Room_Railroad_Tracks
+			"Southern Pacific Tracks"
+train_track
+			"train tracks".
+lost_penny
+			"penny".
+flattened_penny
+			"flattened train penny".
+green_tunnel
+			"green tunnel".
+sign
+Room_Grassy_Field
+			"Grassy Field"
+field_back_gate
+			"back gate".
+grassy field
+back fence
+crickets
+ticks
+Room_Halfway_Up
+			"Halfway Up".
+Room_Top_of_Pine_Tree
+			"Top of the Pine Tree".
+Doug_Fir2
+			"Doug Fir"`
+distant_creek
+			"Bear Creek".
+distant_river
+			"faraway river".
+distant_town
+			"distant town".
+distant_road
+			"dirt road".
+distant_bridge
+			"stone bridge".
+distant_pool
+			"swimming hole".
+distant_forest
+			"distant forest".
+distant_tracks
+			"distant railroad tracks".
+distant_trailers
+			"trailer park".
+sun_through_the_windows
+			"sun through the windows".
+Room_Picnic_Area
+			"Picnic Area".
+picnic_back_gate
+			"back gate".
+back fence
+patchy lawn
+picnic table
+little cluster of tall trees
+ant hill
+huge Jerusalem cricket
+Room_D_Loop
+			"D Loop".
+sharons_virtual_trailer
+			"Cat Lady's trailer".
+Sharon's garden
+			"Cat Lady's garden".
+Trailers
+gardens
+Big old cars
+Room_Sharons_Trailer
+			"Cat Lady's Trailer".
+Mika_figurine
+			"Mika figurine".
+players_teacup
+			"teacup".
+sharons_loveseat
+			"what was formerly a loveseat".
+sharons_table
+			"kitchen table".
+tea_things
+			"tea things".
+sharons_tv
+			"TV".
+Knickknacks
+Room_C_Loop
+			"C Loop".
+lees_virtual_trailer
+			"Lee's trailer".
+lawn chair
+coffee can
+			"coffee can filled with stinky cigarette butts".
+Trailers
+Gardens
+Big old cars
+Room_Lees_Trailer
+			"Lee's Trailer".
+lees_table
+			"table".
+newspaper
+lees_coffee_mug
+			"coffee mug".
+lees_tv
+			"TV".
+purple_heart
+			"Purple Heart".
+Room_B_Loop
+			"B Loop".
+grandpas_virtual_trailer
+			"Honey and Grandpa's trailer".
+Your bicycle
+Trailers
+Gardens
+Big old cars
+Room_Grandpas_Trailer
+			"Honey and Grandpa's Trailer".
+pot_of_blackberry_jam
+			"pot of blackberry jam".
+jam_jars
+			"jam jars".
+Honeys_tv
+			"TV".
+floral print couch
+carpet
+backdrop_deep_woods
+			"deep woods".
+Room_Other_Shore
+			"Other Shore".
+bridge_log_east
+			"a floating length of log".
+boulders_east
+			"scattered boulders".
+swift_current_east
+			"swift current".
+Room_Wooded_Trail
+			"Wooded Trail".
+Room_Dark_Woods_South
+			"Dark Woods".
+			"sound of the creek".
+Room_Dark_Woods_North
+			"Dark Woods".
+Room_Forest_Meadow
+			"Forest Meadow".
+meadow grass
+fallen_tree
+			"protected hollow".
+crickets
+ticks
+virtual_sentinel_tree
+			"tall pine tree".
+Room_Protected_Hollow
+			"Protected Hollow".
+fallen_leaves
+			"fallen leaves".
+pet_rock
+			"round rock".
+crickets
+Room_Sentinel_Tree
+			"Top of the Sentinel Tree".
+Dream_sky
+			"sky".
+Room_Car_With_Mom
+			"In The Car at the Drive-In".
+Del Taco wrappers on the floor
+money
+			"a dollar bill".
+movie_backdrop
+			"movie"
+camaro_backdrop
+			"Mom's Camaro".
+Room_Drive_In
+			"At the Drive-In".
+moms_camaro
+			"Mom's Camaro".
+Virtual_snack_bar
+			"the snack bar".
+Speaker poles
+drive_in_cars
+			"cars"`
+bumps
+Spilled_popcorn
+			"spilled popcorn".
+Room_Snack_Bar
+			"The Snack Bar".
+counter lady
+Popcorn
+Milk Duds
+			"a big box of Milk Duds".
+Some_people
+			"some people".
+Popcorn_maker
+			"popcorn".
+Candy_selection
+			"candy".
+checkerboard floor
+Room_Restroom
+			"Snack Bar Restroom".
+Room_Car_With_Stepdad
+			"The Camaro".
+cigarette lighter
+road_backdrop
+			"toad".
+Virtual_Mom
+			"Mom".
+Room_Dream_Grassy_Field
+			"Grassy Field".
+Room_Dream_Railroad_Tracks
+			"Train Crossing".
+dream_train_track
+			"train tracks".
+dream_mound_of_rock
+			"ballast rock".
+dream_green_tunnel
+			"green tunnel".
+dream_sign
+Room_Mars
+			"Life On Mars".
+black rock
+Martian_sky
+			"Martian sky".
+Thick red dust
+Room_Chryse_Planitia
+			"Chryse Planitia".
+Viking 1 Lander
+Room_Dream_Dirt_Road
+			"Dirt Road".
+Room_In_Car_With_Parents
+			"Car on the Ride Home".
+Room_Attic
+			"Up in the Attic".
+special_box
+			"cigar box".
+photos_from_grampas
+			"photos".
+photos_from_home
+			"photos".
+Your_keys
+			"keys".
+Your_wallet
+			"wallet".
+Various_clutter
+Keepsakes
+player
+player
+tennis_shoes
+			"tennis shoes".
+clothes
+underwear
+Players_hands
+			"hands".
+Players_arm
+			"arm".
+pail
+			"pail".
+Stuff_storage
+			"stuff storage".
+Honey
+Honey
+Grandpa
+Sharon
+			"Cat Lady".
+Lee
+Aunt Mary
+Sheriff
+			"The Sheriff".
+sheriffs_car
+			"Sheriff's patrol car".
+Mom
+Stepdad
+			"Mark".
+dog
+dream_dog
+			"dog".
+ants
+They
+yellow tabby
+			"yellow tabby".
+Housecats
+raccoons
+virtual_raccoons
+			"invaders".

@@ -403,6 +403,8 @@ The block climbing rule response (A) is "You can't really figure out how to go a
 
 The can't take scenery rule response (A) is "You can't really figure out how to go about that."
 
+[ The block vaguely going rule response (A) is "New response text." ]
+
 
 Book - Bibliographical information
 
@@ -502,7 +504,7 @@ Understand
 Carry out pouring_in:
 	try inserting the noun into the second noun.
 
-	Chapter - Surface_going
+[ Chapter - Surface_going
 
 Surface_going is an action applying to one thing.
 Understand
@@ -516,7 +518,7 @@ Carry out surface_going:
 	if destination of noun is Limbo:
 		Try entering noun;
 	else:
-		Try room_navigating destination of noun.
+		Try room_navigating destination of noun. ]
 
 Chapter - Looking_ouside
 
@@ -1096,9 +1098,10 @@ Instead of smelling a room:
 Chapter - Supporters
 
 Understand
-	"go on [supporter]",
-	"walk on [supporter]",
-	"balance on [supporter]"
+	"go on/onto/in/into [supporter]",
+	"walk on/onto/in/into [supporter]",
+	"balance on/onto/in/into [supporter]",
+	"get on/onto/in/into"
 	as entering
 
 Chapter - Tracks
@@ -1273,8 +1276,8 @@ Carry out exit_listing:
 	otherwise:
 		say looking_for_available_exits;
 
-To hint_at_navigation:
-	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [em]  go to clearing  [/em][line break]Or try: [em]  follow trail  [/em][line break]Or even: [em]  go back  [/em] or [em]  go on  [/em][line break]If you need a reminder of where you can go, try: [em]  which way  [/em] or simply [em]  look[/em][stopping].";
+To say navigation_hint:
+	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [em]  go to clearing  [/em][line break]Or try: [em]  follow trail  [/em][line break]Or even: [em]  go back  [/em] or [em]  go on  [/em][line break]If you need a reminder of where you can go, try: [em]  which way  [/em] or simply [em]  look[/em][stopping]";
 
 Part - Compass Navigation
 
@@ -1299,35 +1302,45 @@ Every turn when player is not aware_of_compass_directions:
 	now player is discouraged_from_compass_navigating.
 
 Check going north when player is discouraged_from_compass_navigating:
-	hint_at_navigation instead.
+	say "[navigation_hint].";
+	stop the action.
 
 Check going northeast when player is discouraged_from_compass_navigating:
-	hint_at_navigation instead.
+	say "[navigation_hint].";
+	stop the action.
 
 Check going east when player is discouraged_from_compass_navigating:
-	hint_at_navigation instead.
+	say "[navigation_hint].";
+	stop the action.
 
 Check going southeast when player is discouraged_from_compass_navigating:
-	hint_at_navigation instead.
+	say navigation_hint instead.
 
 Check going south when player is discouraged_from_compass_navigating:
-	hint_at_navigation instead.
+	say navigation_hint instead.
 
 Check going southwest when player is discouraged_from_compass_navigating:
-	hint_at_navigation instead.
+	say navigation_hint instead.
 
 Check going west when player is discouraged_from_compass_navigating:
-	hint_at_navigation instead.
+	say "[navigation_hint].";
+	stop the action.
 
 Check going northwest when player is discouraged_from_compass_navigating:
-	hint_at_navigation instead.
+	say "[navigation_hint].";
+	stop the action.
 
-Part - Room Navigation
+Part - room_navigating
 
 [Basically, if the player and the room are in Region_Dreams OR the player and the room are both not in Region_Dreams, than the room is reachable.]
 Definition: A room is reachable
 	if it is reachable_in_dreams or
 		it is reachable_IRL.
+
+[ Definition: A room is unreachable
+	if it is not reachable_in_dreams and
+		it is not reachable_IRL and
+		it is not unavailable_while_lost. ]
 
 [Everywhere within Region_Dreams is contiguous -- and discontiguous with everything outside of it.]
 Definition: A room is reachable_in_dreams
@@ -1339,6 +1352,10 @@ Definition: A room is reachable_IRL
 	if the map region of it is not Region_Dreams and
 		the map region of the location is not Region_Dreams.
 
+[During Scene_Across_the_Creek we will be using landmark_nagigating to advance through the woods, though actually we are held in Room_Dark_Woods_South]
+[ Definition: A room is unavailable_while_lost
+	if (location is Room_Dark_Woods_South or location is Room_Dark_Woods_North) and Scene_Across_the_Creek is happening. ]
+	
 Room_navigating is an action applying to one thing.
 Understand
 	"go back/- to/around/near/by/-- [any reachable room]",
@@ -1457,21 +1474,11 @@ Understand
 Carry out going_on:
 	long_range_navigate to forward_dest of the map region of the location of the player.
 
-[TODO: "go" or "x" without a noun causes this:
-You must supply a noun.
-regardless of what we do with the "block vaguely going rule]
+[ this handles the vaguely going rule ]
 
 understand "x" as a mistake ("[description of location]").
 
-[ The block vaguely going rule is not listed in the for supplying a missing noun rules. ]
-[ The new vaguely going rule is listed instead of the block vaguely going rule in the for supplying a missing noun rules.
-
-This is the new vaguely going rule:
-	if examining:
-		try looking;
-	else:
-  		try going_on;
-	rule fails. ]
+Understand "go" as a mistake ("[navigation_hint].").
 
 Going_upstream is an action applying to nothing.
 Understand
@@ -2954,13 +2961,17 @@ tuning_this is an action applying to one thing.
 Carry out tuning_this:
 	Try tuning;
 
+[ We have a tune varient that applies to nothing so player can type "change channel" without specifying which device ]
+
+Tuning is an action applying to nothing.
+
 Understand 
 	"tune radio/tv/-- station/stations/channel/channels/dial/dials/--", 
 	"adjust radio/tv/-- station/stations/channel/channels/dial/dials/--", 
 	"change radio/tv/-- station/stations/channel/channels/dial/dials/--", 
 	"turn radio/tv/-- station/stations/channel/channels/dial/dials/--" 
 	as tuning.
-Tuning is an action applying to nothing.
+
 
 Check tuning:
 	if sharons_tv is visible:
@@ -2983,7 +2994,6 @@ Carry out tuning:
 	else if lees_tv is visible:
 		change_TV_channel;
 
-[TODO: This probably doesn't need an "applying to nothing" varient]
 
 Chapter - The Radio
 
@@ -3474,15 +3484,11 @@ Chapter - Actions
 Instead of room_navigating or going when player is in Room_Grandpas_Trailer during Scene_Walk_With_Grandpa:
 	queue_report "'Hold your horses, [grandpas_nickname],' Grandpa says. 'Stay with us for now.'" at priority 3.
 
-Chapter - Scene_Helping_Grandpa
-
-There is a scene called Scene_Helping_Grandpa.
 
 Chapter - Scene_Helping_the_Cat_Lady
 
 There is a scene called Scene_Helping_the_Cat_Lady.
 
-[TODO: Implement helping Cat Lady get cat off roof.]
 
 Chapter - Scene_Sheriffs_Drive_By
 
@@ -4012,13 +4018,9 @@ Section -Actions
 This is harder than it looks:
 * "Does the player mean" rules don't seem to help
 * There is no easy way to remove the action and rebirth a command with landmark_navigating
-* I don't know how to disable the room_navigating action during this scene]
+* I don't know how to disable the room_navigating action during this scene
+* Changing the def'n of "reachable room" so it excludes rooms during this scene means "I don't understand the noun in this conext"]
 
-[ Instead of room_navigating during Scene_Night_In_The_Woods:
-	now reborn command is "landmark_navigate [destination]". ]
-
-[ Does the player mean room_navigating during Scene_Night_In_The_Woods:
-	It is very unlikely. ]
 
 Part - Scene_Night_In_The_Woods
 
@@ -4793,7 +4795,6 @@ This is the journey_lee_walk_end rule:
 		Now Grandpa is in Room_Grassy_Field;
 		Report Grandpa saying "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutches her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more quietly looking at Lee, 'Thank you.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Lee: 'I found him out in the blackberry brambles.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your embarrassment, you start to cry.";
 		rule fails;
-		[TODO: Make sure if player says something here, that everyone's responses make sense for this moment.]
 	else if time_here of journey_lee_walk is 2:
 		Now Sharon is in Room_Grassy_Field;
 		Report Lee saying "'He was down on the other side of the creek, by the willows,' Lee says, carefully not looking at your tears.[paragraph break]'Thank you,' Honey says quietly. 'We didn't know if...' She doesn't complete the thought.[paragraph break]Grandpa picks you up and gives you a giant bear hug. You are suddenly aware that everyone was out looking for you and worried to death.";
@@ -5554,7 +5555,6 @@ The printed name is "Bear Creek".
 	Understand "river/creek/crick/stream/water",  "bear creek/crick" as Creek_at_bridge.
 	The scent is "cool creek water. It tingles your nose sort of".
 
-[TODO: Make sure all names with an underscore have a printed name. Otherwise, they show up in disabugation]
 Some floating_stuff is scenery in Creek_at_bridge.
 	The printed name is "floating stuff".
 	Understand "leaf/leaves/skeeters/shimmering/flash/little/minnow/minnows/branch/branches/stick/sticks/stars/star/reflection/reflections/pebble/pebbles" as floating_stuff.
@@ -5919,7 +5919,7 @@ Chapter - Room_Railroad_Tracks
 Section - Description
 
 Room_Railroad_Tracks is a room.
-The printed name of Room_Railroad_Tracks is "Southern Pacific Tracks".
+The printed name is "Southern Pacific Tracks".
 The casual_name is "at the railroad tracks".
 The description of Room_Railroad_Tracks is "Railroad tracks cross the old dirt road here in a small rise. The tracks run alongside the trailer park fence in one direction and into a tunnel of green in the other. As you cross the tracks, you see a sign that says 'Property of Southern Pacific.'[first time] Your grandpa sometimes takes you down here to watch the train go by. He taught you the name of all the cars and used to work on the railroad.[only]
 [paragraph break][available_exits][penny_status]".
@@ -5998,7 +5998,7 @@ Chapter - Room_Grassy_Field
 Section - Description
 
 Room_Grassy_Field is a room.
-The printed name of Room_Grassy_Field is "Grassy Field".
+The printed name is "Grassy Field".
 The casual_name is "in the grassy field near the trailer park".
 The description of Room_Grassy_Field is "This is the grassy field behind the trailer park. On either side of the rutted dirt road, golden grasses rise to your waist. The grassy field is dried golden and catches the summer sun. You like to come out here and catch grasshoppers and crickets.
 [paragraph break][available_exits]".
@@ -6040,18 +6040,6 @@ Instead of doing anything except entering or examining to field_back_gate:
 Instead of entering field_back_gate:
 	try room_navigating Room_Picnic_Area;
 
-[gate_going is an action applying to nothing.
-Understand "go to/through/in/-- back/-- gate", "enter back/-- gate", "exit back/-- gate" as gate_going.
-
-Carry out gate_going:
-	if player is in Room_Grassy_Field:
-		try room_navigating Room_Picnic_Area;
-	else if player is in Room_Picnic_Area:
-		try room_navigating Room_Grassy_Field;
-	else if player is in Room_Dream_Grassy_Field:
-		say "It feels fuzzy and indistinct, the details blurry.[line break]";
-	else:
-		say "You don't see the gate here."]
 
 Part - Region_Up_In_Tall_Fir
 
@@ -6398,13 +6386,14 @@ The available_exits are "You can go to the C Loop on the way to Honey and Grandp
 
 Section - Objects
 
-The sharons_virtual_trailer is a fixed in place undescribed enterable container in Room_D_Loop. 	The printed name is "Cat Lady's trailer".
+The sharons_virtual_trailer is a fixed in place undescribed enterable container in Room_D_Loop. 	
+The printed name is "Cat Lady's trailer".
 	The description is "The most noteworthy thing on this loop is the Cat Lady's trailer, painted bright pink and white with an outrageously overflowing flower garden out in front."
 	Understand "catlady's/catladys/sharon's/sharons/shannon's/shannons/pink/-- trailer/house/place/home", "cat lady's/ladys trailer/house/place/home" as sharons_virtual_trailer.
 
 Section - Backdrops & Scenery
 
-The Sharon's garden is scenery. It is in Room_D_Loop.
+The Sharon's garden is scenery in Room_D_Loop.
 	The printed name is "Cat Lady's garden".
 	The description is "The Cat Lady's garden is overflowing with red and orange and white and yellow flowers."
 	Understand "cat lady's garden", "Sharon's/Shannon's/-- garden", "flowers/plants", "red/orange/white/yellow", "hose" as Sharon's garden.
@@ -7437,8 +7426,10 @@ Understand "dollar/cash/bill" as money.
 Section - Backdrops and Scenery
 
 The movie_backdrop is backdrop in Room_Car_With_Mom.
+The printed name is "movie".
 The description is "The movie is playing on the big screen. In the last of the sunset light, you can still see the figures of kids running around at the playground at the front of the drive-in. It seems unsettling that some parents would let their kids run around in the dark.[paragraph break]Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Benji. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who kills people by looking at them."
 Understand "film/drive-in/omen", "drive in" as movie_backdrop.
+The indefinite article is "the".
 
 The camaro_backdrop is backdrop in Room_Car_With_Mom.
 The printed name is "Mom's Camaro".
@@ -7497,6 +7488,7 @@ The description is "These are the poles that hold the speakers that you put on y
 Understand "pole" as speaker poles.
 
 Some drive_in_cars are scenery in Room_Drive_In.
+The printed name is "cars".
 The description is "There are millions of cars here. You memorize where your mom's car is so you don't get lost."
 Understand "cars" as drive_in_cars.
 
@@ -7713,7 +7705,7 @@ The camaro_backdrop is backdrop in Room_Car_With_Stepdad.
 The cigarette lighter is scenery in Room_Car_With_Stepdad.
 
 The road_backdrop is backdrop in Room_Car_With_Stepdad.
-The printed name is "toad".
+The printed name is "road".
 The description is "The road and the trees zoom by as the car barrels down the highway.".
 Understand "trees/road/window/highway/outside" as road_backdrop.
 
@@ -7880,7 +7872,7 @@ Chapter - Room_Mars
 Section - Description
 
 Room_Mars is a room.
-The printed name is "On Mars".
+The printed name is "Life On Mars".
 The casual_name is "in a dream about Mars".
 The description is "This is the surface of Mars, the red planet, at least 100 million miles from Earth. [if Grandpa is in Room_Mars	]You recognize it instantly from the Viking photos. Thick red dust scattered with various-sized dark rocks all under an orange-pink sky. You also know that it should be -80 degrees Fahrenheit, but you aren't feeling the cold. And though there is a very light unbreathable atmosphere, you aren't wearing a suit. You stumble, trying to get the hang of walking in the light gravity, only about a third of Earth's gravity. How high could you jump here?[else]Now you just feel lonely and alone. You are no longer excited at the prospect of this alien world.
 [paragraph break][available_exits][end if]".
@@ -8103,6 +8095,7 @@ The indefinite article is "your".
 Section - Backdrops and Scenery
 
 Various_clutter is scenery in Room_Attic.
+The printed name is "attic clutter".
 Description is "A decade of random stuff has ended up here. Boxes, furniture, skis, snowshoes, tents and other camping gear, holiday decorations, storm windows, extra blankets, a sewing machine, luggage, a typewriter, and hundreds of other things.".
 Understand "clutter/boxes/furniture/skis/snowshoes/tents/luggage/blankets/typewriter/decorations", "storm windows", "extra blankets", "sewing machine", "camping gear", "holiday decorations" as various_clutter.
 
