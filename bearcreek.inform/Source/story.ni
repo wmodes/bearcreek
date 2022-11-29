@@ -506,12 +506,14 @@ Carry out pouring_in:
 
 [ Chapter - Surface_going
 
+[TODO: nix. This has been consolidated into get_up_on_something ]
+
 Surface_going is an action applying to one thing.
 Understand
-	"go on/to [visible surface]",
-	"walk on/to [visible surface]",
-	"jump on/to [visible surface]",
-	"cross on/to [visible surface]"
+	"go on/onto/to [visible surface]",
+	"walk on/onto/to [visible surface]",
+	"jump on/onto/to [visible surface]",
+	"cross on/onto/to [visible surface]"
 	as surface_going.
 
 Carry out surface_going:
@@ -554,11 +556,9 @@ Instead of doing_some_swimming when waterbody is not visible:
 
 Doing_some_swimming_in is an action applying to one touchable thing.
 Understand
-	"go to/in/into [touchable waterbody]",
-	"swim in/into [touchable waterbody]",
-	"wade in/into [touchable waterbody]",
-	"dive in/into [touchable waterbody]",
-	"jump in/into [touchable waterbody]"
+	"swim in/into/through/under [touchable waterbody]",
+	"wade in/into/through [touchable waterbody]",
+	"dive in/into [touchable waterbody]"
 	as doing_some_swimming_in.
 
 Instead of Doing_some_swimming_in:
@@ -675,31 +675,34 @@ Carry out standing_up:
 [Procedural rule while exiting or standing_up or getting off (this is the make standing a brief experience rule):
 	ignore the describe room stood up into rule;]
 
-Chapter - Climbing
+Chapter - Get_Up_On
 
-[ climbing_something ]
+[ get_up_on_something ]
 
 Understand the command "climb" as something new.
 
-Climbing_something is an action applying to one visible thing.
+get_up_on_something is an action applying to one visible thing.
 
 Understand
 	"climb up/on/onto/in/into/over/through/under/-- [something]", 
 	"hop up/on/onto/in/into/over/through/under/-- [something]", 
 	"scale up/on/onto/in/into/over/through/under/--  [something]", 
 	"jump up/on/onto/in/into/over/through/under/-- [something]", 
-	"cross up/on/onto/in/into/over/through/under/-- [something]"
-	as climbing_something.
+	"cross up/on/onto/in/into/over/through/under/-- [something]",
+	"go up/on/onto/in/into/over/through/under/to/-- [something]"
+	as get_up_on_something.
 
-Carry out climbing_something:
+Carry out get_up_on_something:
 	if the noun is climbable:
 		say "You climb [the noun].";
 	else if the noun is an enterable container:
 		say "You climb into [the noun].";
-		now the player is in the noun;
+		try entering the noun;
 	else if the noun is a supporter:
 		say "You climb onto [the noun].";
-		now the player is on the noun;
+		try entering the noun;
+	else if the noun is a waterbody:
+		try doing_some_swimming;
 	else:
 		let up_room be the room up from the location; 
 		if the up_room is a room:
@@ -707,35 +710,35 @@ Carry out climbing_something:
 		else:
 			try climbing the noun.
 
-[ Does the player mean climbing_something an unclimbable thing:
+[ Does the player mean get_up_on_something an unclimbable thing:
 	it is unlikely.
 
-Does the player mean climbing_something thing that is not an enterable container:
+Does the player mean get_up_on_something thing that is not an enterable container:
 	it is unlikely. ]
 
-Does the player mean climbing_something thing that is touchable:
+Does the player mean get_up_on_something thing that is touchable:
 	it is likely.
 
-Does the player mean climbing_something thing that is not touchable:
+Does the player mean get_up_on_something thing that is not touchable:
 	it is very unlikely. 
 
-[ climbing_nothing ]
+[ get_up_on_anything ]
 
-Climbing_nothing is an action applying to nothing.
+get_up_on_anything is an action applying to nothing.
 Understand
 	"climb up/--", 
 	"hop up/--", 
 	"scale up/--", 
 	"jump up/--", 
 	"cross up/--"
-	as climbing_nothing.
+	as get_up_on_anything.
 
-Carry out climbing_nothing:
+Carry out get_up_on_anything:
 	try going up.
 
-[ descending_something ]
+[ get_down_from_something ]
 
-Descending_something is an action applying to one touchable thing.
+get_down_from_something is an action applying to one touchable thing.
 
 understand
 	"climb down/out of/-- [something]", 
@@ -743,14 +746,14 @@ understand
 	"scale down/out of/-- [something]", 
 	"jump down/out of/-- [something]", 
 	"cross down/out of/-- [something]"
-	as descending_something.
+	as get_down_from_something.
 
-Carry out descending_something:
+Carry out get_down_from_something:
 	try going down.
 
-[ descending_nothing ]
+[ get_down_from_anything ]
 
-Descending_nothing is an action applying to nothing.
+get_down_from_anything is an action applying to nothing.
 
 Understand
 	"climb down/out of/--", 
@@ -758,9 +761,9 @@ Understand
 	"scale down/out of/--", 
 	"jump down/out of/--", 
 	"cross down/out of/--"
-	as descending_nothing.
+	as get_down_from_anything.
 
-Carry out descending_nothing:
+Carry out get_down_from_anything:
 	try going down.
 
 
@@ -1095,14 +1098,16 @@ Instead of smelling a room:
 	else:
 		say "You smell nothing in particular.".
 
-Chapter - Supporters
+[ Chapter - Supporters
+
+[TODO: nix. This has been consolidated into get_up_on_something ]
 
 Understand
 	"go on/onto/in/into [supporter]",
 	"walk on/onto/in/into [supporter]",
 	"balance on/onto/in/into [supporter]",
 	"get on/onto/in/into"
-	as entering
+	as entering ]
 
 Chapter - Tracks
 
@@ -5613,6 +5618,9 @@ Room_Swimming_Hole is east of Room_Long_Stretch, and down from Room_Long_Stretch
 
 The available_exits of Room_Swimming_Hole is "It is possible to walk along the rocky shore downstream to another spot along the creek. Back up the trail leads through the woods back to the dirt road."
 
+Instead of entering rocky_shore_north:
+	try room_navigating Room_Crossing;
+
 Section - Objects
 
 A pool_log is a thing in Room_Swimming_Hole.
@@ -5634,9 +5642,6 @@ The rocky_shore_north is a surface in Room_Swimming_Hole.
 	The description is "You can walk along the creek downstream over a rocky shore.".
 	The destination is Room_Crossing.
 	Understand "rocks", "rocky/-- shore/bank" as rocky_shore_north.
-
-[Instead of entering rocky_shore_north:
-	try room_navigating Room_Crossing;]
 
 Section - Rules and Actions
 
@@ -5678,7 +5683,6 @@ Instead of doing_some_swimming in Room_Swimming_Hole:
 		make underwear wet;
 	else:
 		say "You hesitate. [if clothes are worn]You don't have a bathing suit, so you'd have to strip down to your undies. But the water does look inviting. Maybe try again?[otherwise]The water is likely to be pretty cold. But the day is pretty hot.[end if]";
-
 
 Chapter - Room_Crossing
 
@@ -6108,7 +6112,7 @@ Instead of climbing Doug_Fir2:
 	try going up.
 
 [TODO: nix]
-[ Instead of climbing_nothing when player is in Room_Halfway_Up:
+[ Instead of get_up_on_anything when player is in Room_Halfway_Up:
 	try going up. ]
 
 [TODO: needed?]
@@ -7200,7 +7204,7 @@ Instead of entering fallen_tree:
 Instead of climbing fallen_tree:
 	try room_navigating Room_Protected_Hollow.
 
-Instead of climbing_something fallen_tree:
+Instead of get_up_on_something fallen_tree:
 	try room_navigating Room_Protected_Hollow.
 
 Instead of listening when player is in Region_Woods_Area and Scene_Night_In_The_Woods is happening:
@@ -7286,7 +7290,7 @@ Instead of going to Room_Forest_Meadow when player is in Room_Protected_Hollow a
 	now Room_Protected_Hollow is not made_cozy;
 	continue the action.
 
-Instead of descending_nothing when player is in Room_Protected_Hollow:
+Instead of get_down_from_anything when player is in Room_Protected_Hollow:
 	try room_navigating Room_Forest_Meadow.
 
 Instead of listening when player is in Room_Protected_Hollow and Scene_Night_In_The_Woods is happening:
