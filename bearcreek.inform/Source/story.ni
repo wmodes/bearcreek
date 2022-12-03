@@ -1254,7 +1254,9 @@ Before doing something when the second noun is unavailable:
 
 ]
 
-Part - Available Exits
+Book - Navigating
+
+Chapter - Available Exits
 
 A room has some text called the available_exits.
 
@@ -1265,7 +1267,7 @@ To say available_exits:
 To say looking_for_available_exits:
 	say "You take a quick look around you: [available_exits of location][line break]";
 
-Part - Navigation Hints
+Chapter - Navigation Hints
 
 exit_listing is an action applying to nothing.
 Understand
@@ -1284,7 +1286,104 @@ Carry out exit_listing:
 To say navigation_hint:
 	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [em]  go to clearing  [/em][line break]Or try: [em]  follow trail  [/em][line break]Or even: [em]  go back  [/em] or [em]  go on  [/em][line break]If you need a reminder of where you can go, try: [em]  which way  [/em] or simply [em]  look[/em][stopping]";
 
-Part - Compass Navigation
+Chapter - Elusive_Landmarks and Landmark_Navigating
+
+[ TODO: Nix if distant as an attribute works.
+The_distance is a container.
+The printed name is "the distance".
+The_distance is in Limbo. ]
+
+lost_stuff_storage is a container.
+The printed name is "Lost Stuff Storage".
+lost_stuff_storage is in Limbo.
+
+An elusive_landmark is a kind of thing.
+An elusive_landmark is mentioned scenery.
+An elusive_landmark can be distant.
+
+[ Create richer generative Dark Woods locations with rises and downslopes, incidental details, etc. ]
+A landscape_feature is a kind of thing.
+An landscape_feature is scenery.
+
+landmark_navigating is an action applying to one thing.
+Understand
+	"go to/near/by/-- [any elusive_landmark]",
+	"walk to/near/by/-- [any elusive_landmark]",
+	"run to/near/by/-- [any elusive_landmark]",
+	"follow [any elusive_landmark]",
+	"landmark_navigate [any elusive_landmark]"
+	as landmark_navigating.
+
+Check landmark_navigating:
+	if noun is not visible:
+		say cant_find_that instead;
+	if noun is not distant:
+		say "Well, that's right here." instead;
+
+To say cant_find_that:
+	say "You're no longer sure how to get there. [looking_for_available_exits]";
+
+landmark_nav_counter is a number that varies. landmark_nav_counter is 0.
+
+Carry out landmark_navigating:
+	increment landmark_nav_counter;
+	say "You head toward the [noun].[run paragraph on] ";
+	move_within_dark_woods.
+
+The can't reach inside rooms rule does nothing if landmark_navigating.
+
+When play begins:
+	Let this_thing be a random elusive_landmark in Limbo;
+	Now this_thing is in Room_Dark_Woods_South;
+	Let next_thing be a random elusive_landmark in Limbo;
+	Now next_thing is distant;
+	Now next_thing is in Room_Dark_Woods_South;
+	[ landscape_features ]
+	Let this_feature be a random landscape_feature in Limbo;
+	Now this_feature is in Room_Dark_Woods_South;
+
+To say movement_in_woods:
+	say "[one of]You stumble around in the dark woods[or]You carefully make your way through the forest[or]You follow an uncertain path through the wood[or]You bushwhack your way through the underbrush[at random].".
+
+To move_within_dark_woods:
+	say movement_in_woods;
+	[ elusive_landmarks ]
+	Let near_landmark be a random not distant elusive_landmark in Room_Dark_Woods_South;
+	Let distant_landmark be a random distant elusive_landmark in Room_Dark_Woods_South;
+	Let next_landmark be a random elusive_landmark in Limbo;
+	Now near_landmark is off-stage;
+	Now distant_landmark is not distant;
+	Now next_landmark is in Room_Dark_Woods_South;
+	Now next_landmark is distant;
+	[ landscape_features ]
+	Let old_feature be a random landscape_feature in Room_Dark_Woods_South;
+	Let new_feature be a random landscape_feature in Limbo;
+	Now old_feature is off-stage;
+	Now new_feature is in Room_Dark_Woods_South;
+	[ deal with dropped stuff ]
+	Repeat with item running through stuff_you_brought_here:
+		if item is visible and item is not held:
+			move item to lost_stuff_storage;
+	try looking;
+
+After dropping something (called the item) when player is in Room_Dark_Woods_South:
+	add item to stuff_you_brought_here;
+	continue the action;
+
+Instead of doing anything except examining or landmark_navigating to elusive_landmarks:
+	say "This is no time for that. [if Scene_Day_Two is not happening]You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.[end if]".
+
+Does the player mean examining distant elusive_landmark:
+	It is unlikely.
+
+Does the player mean examining not distant elusive_landmark:
+	It is likely.
+
+[ TODO: nix?
+Instead of doing anything except examining or landmark_navigating  landscape_features:
+	say "This is no time for that. [if Scene_Day_Two is not happening]You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.[end if]".]
+
+Chapter - Compass Navigation and Room_Navigating
 
 [This is only necessary as a work around to something else we need to do:
 	First, we want to disuade the player during the first two acts from navigating via compass.
@@ -1307,16 +1406,13 @@ Every turn when player is not aware_of_compass_directions:
 	now player is discouraged_from_compass_navigating.
 
 Check going north when player is discouraged_from_compass_navigating:
-	say "[navigation_hint].";
-	stop the action.
+	say navigation_hint instead.
 
 Check going northeast when player is discouraged_from_compass_navigating:
-	say "[navigation_hint].";
-	stop the action.
+	say navigation_hint instead.
 
 Check going east when player is discouraged_from_compass_navigating:
-	say "[navigation_hint].";
-	stop the action.
+	say navigation_hint instead.
 
 Check going southeast when player is discouraged_from_compass_navigating:
 	say navigation_hint instead.
@@ -1328,14 +1424,12 @@ Check going southwest when player is discouraged_from_compass_navigating:
 	say navigation_hint instead.
 
 Check going west when player is discouraged_from_compass_navigating:
-	say "[navigation_hint].";
-	stop the action.
+	say navigation_hint instead.
 
 Check going northwest when player is discouraged_from_compass_navigating:
-	say "[navigation_hint].";
-	stop the action.
+	say navigation_hint instead.
 
-Part - room_navigating
+Part - Room_Navigating
 
 [Basically, if the player and the room are in Region_Dreams OR the player and the room are both not in Region_Dreams, than the room is reachable.]
 Definition: A room is reachable
@@ -1403,7 +1497,7 @@ Carry out fail_navigating:
 	say cant_find_that;
 
 
-Part - People Navigation
+Chapter - People Navigation
 
 [Basically, if the player and the person are not in Region_Dreams, than the room is reachable. Everywhere NOT within Region_Dreams is contiguous -- and discontiguous with everything inside of it.]
 Definition: A person is reachable
@@ -1454,10 +1548,7 @@ Carry out fail_person_navigating:
 The can't reach inside rooms rule does nothing if person_navigating.
 
 
-Part - Landmarks and Navpoints
-
-
-Part - Specific Actions (GO ON and GO BACK)
+Chapter - Specific Actions (GO ON and GO BACK)
 
 Going_back is an action applying to nothing.
 Understand
@@ -1552,93 +1643,6 @@ To long_range_navigate to (destination - a room):
 		say "I'm not sure how to get there from here.";
 	else:
 		try room_navigating destination.
-
-Part - Elusive Landmarks
-
-The_distance is a container.
-The printed name is "the distance".
-The_distance is in Limbo.
-
-lost_stuff_storage is a container.
-The printed name is "Lost Stuff Storage".
-lost_stuff_storage is in Limbo.
-
-An elusive_landmark is a kind of thing.
-An elusive_landmark is mentioned scenery.
-
-[ Create richer generative Dark Woods locations with rises and downslopes, incidental details, etc. ]
-A landscape_feature is a kind of thing.
-An landscape_feature is scenery.
-
-Definition: an elusive_landmark is distant if it is in the_distance.
-
-landmark_navigating is an action applying to one thing.
-Understand
-	"go to/near/by/-- [any distant elusive_landmark]",
-	"walk to/near/by/-- [any distant elusive_landmark]",
-	"run to/near/by/-- [any distant elusive_landmark]",
-	"landmark_navigate [any distant elusive_landmark]"
-	as landmark_navigating.
-
-Check landmark_navigating:
-	if the noun is visible:
-		say "Well, that's right here." instead;
-	if the noun is not in the_distance:
-		say cant_find_that instead;
-
-To say cant_find_that:
-	say "You're no longer sure how to get there. [looking_for_available_exits]";
-
-landmark_nav_counter is a number that varies. landmark_nav_counter is 0.
-
-Carry out landmark_navigating:
-	increment landmark_nav_counter;
-	say "You head toward the [noun].[run paragraph on] ";
-	move_within_dark_woods.
-
-The can't reach inside rooms rule does nothing if landmark_navigating.
-
-When play begins:
-	Let this_thing be a random elusive_landmark in Limbo;
-	Now this_thing is in Room_Dark_Woods_South;
-	Let next_thing be a random elusive_landmark in Limbo;
-	Now next_thing is in the_distance;
-	[ landscape_features ]
-	Let this_feature be a random landscape_feature in Limbo;
-	Now this_feature is in Room_Dark_Woods_South;
-
-To say movement_in_woods:
-	say "[one of]You stumble around in the dark woods[or]You carefully make your way through the forest[or]You follow an uncertain path through the wood[or]You bushwhack your way through the underbrush[at random].".
-
-To move_within_dark_woods:
-	say movement_in_woods;
-	[ elusive_landmarks ]
-	Let old_near_thing be a random elusive_landmark in Room_Dark_Woods_South;
-	Let old_far_thing be a random elusive_landmark in the_distance;
-	Let new_far_thing be a random elusive_landmark in Limbo;
-	Now old_far_thing is in Room_Dark_Woods_South;
-	Now new_far_thing is in the_distance;
-	Now old_near_thing is off-stage;
-	[ landscape_features ]
-	Let old_feature be a random landscape_feature in Room_Dark_Woods_South;
-	Let new_feature be a random landscape_feature in Limbo;
-	Now old_feature is off-stage;
-	Now new_feature is in Room_Dark_Woods_South;
-	[ deal with dropped stuff ]
-	Repeat with item running through stuff_you_brought_here:
-		if item is visible and item is not held:
-			move item to lost_stuff_storage;
-	try looking;
-
-After dropping something (called the item) when player is in Room_Dark_Woods_South:
-	add item to stuff_you_brought_here;
-	continue the action;
-
-Instead of doing anything except examining or landmark_navigating to elusive_landmarks:
-	say "This is no time for that. [if Scene_Day_Two is not happening]You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.[end if]".
-
-[Instead of doing anything except examining or landmark_navigating  landscape_features:
-	say "This is no time for that. [if Scene_Day_Two is not happening]You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.[end if]".]
 
 Book - Language Tweaks
 
@@ -4026,7 +4030,7 @@ Scene_Lost begins when player has been in Room_Dark_Woods_South.
 
 Scene_Lost ends when Scene_Night_In_The_Woods begins.
 
-Section -Actions
+Section - Actions
 
 [TODO: The goal here is to make it so we can landmark_navigate to these elusive landmarks. When we say "go to tree" we want it to match "white tree" (an elusive landmark) rather than try to room_navigate to Room_Top_of_the_Tree (a room)
 
@@ -4055,9 +4059,10 @@ When Scene_Night_In_The_Woods begins:
 	pause_the_game;
 	say Title_Card_Part_2;
 	Now the right hand status line is "Evening";
-	[ move our elusive_landmark to the new location ]
-	Let this_thing be random elusive_landmark in Room_Dark_Woods_South;
-	Now this_thing is in Room_Dark_Woods_North;
+	[ move our elusive_landmark to the new location - which by now has been marked as not distant ]
+	Let distant_landmark be random not distant elusive_landmark in Room_Dark_Woods_South;
+	Now distant_landmark is in Room_Dark_Woods_North;
+	Now distant_landmark is not distant;
 	Now player is in Room_Dark_Woods_North;
 	set_the_time_to evening.
 
@@ -7005,11 +7010,12 @@ Room_Dark_Woods_South is a room.
 The printed name is "Dark Woods".
 The casual_name is "in the dark woods".
 The description is "[if Scene_Day_Two is not happening][day1_woods_desc][else][day2_woods_desc][end if].[paragraph break][available_exits]".
+Understand "dark/-- woods south" as Room_Dark_Woods_South.
 The scent is "musty forest smell".
 
 To say day1_woods_desc:
 	let this_feature be a random landscape_feature in Room_Dark_Woods_South;
-	say "You are [one of]no longer sure where you are[or]not completely certain which way to go[or]confused[or]feeling lost[cycling]. The woods look familiar and altogether strange. It's difficult to get your bearings[first time]. You can see what might be rabbit or deer trails leading into the woods, but you are no longer sure which one takes you back to either the creek or to the blackberry trail[only]. [description of this_feature]. Here there is [a list of elusive_landmarks in Room_Dark_Woods_South]";
+	say "You are [one of]no longer sure where you are[or]confused[or]feeling lost[cycling]. The woods look familiar and altogether strange. It's difficult to get your bearings[first time]. You can see what might be rabbit or deer trails leading into the woods, but you are no longer sure which one takes you back to either the creek or to the blackberry trail[only]. [description of this_feature]. Here there is [a list of not distant elusive_landmarks in Room_Dark_Woods_South]";
 
 To say day2_woods_desc:
 	say "These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night: a madrone tree, a huge stump";
@@ -7025,7 +7031,8 @@ South of Room_Dark_Woods_South is nowhere.
 The available_exits of Room_Dark_Woods_South are "[if Scene_Day_Two is not happening][day1_woods_exits][else][day2_woods_exits][end if].".
 
 To say day1_woods_exits:
-	say "[one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there,[in random order] [a list of elusive_landmarks in the_distance][if a random chance of 1 in 2 succeeds]. [one of]This may be the way back to Honey and Grandpa. You long to give him a hug and never let go[or]Is that the way back to the blackberry trail? You hope so[in random order][end if]";
+	Let distant_landmark be a random distant elusive_landmark in Room_Dark_Woods_South;
+	say "[one of]In the distance, there is[or]Finally, a ways off, there is[or]Wait, in the distance, you can just make out[or]Not too far off is[or]Whew, in the distance you can just make out[or]Okay, that looks familiar, just over there,[in random order] [distant_landmark][if a random chance of 1 in 2 succeeds]. [one of]This may be the way back to Honey and Grandpa. You long to give him a hug and never let go[or]Is that the way back to the blackberry trail? You hope so[in random order][end if]";
 
 To say day2_woods_exits:
 	say "There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail";
@@ -7037,6 +7044,8 @@ Instead of room_navigating when player is in Room_Dark_Woods_South and Scene_Nig
 Section - Objects
 
 Section - Backdrops & Scenery
+
+[landscape_features]
 
 A rise is a landscape_feature in Limbo.
 	The description is "The trail tops a small rise".
@@ -7053,6 +7062,8 @@ A slope is a landscape_feature in Limbo.
 A clearing is a landscape_feature in Limbo.
 	The description is "The trail levels out and crosses a tiny clearing".
 	Understand "tiny/-- clearing", "level/-- trail" as clearing.
+
+[elusive_landmarks]
 
 A white tree is an elusive_landmark in Limbo.
 	The description is "Looking closer you see the tree is a dogwood growing in a place where the woods are thinner."
@@ -7110,10 +7121,10 @@ Section - Description
 Room_Dark_Woods_North is a room.
 The printed name is "Dark Woods".
 The casual_name is "in the dark woods".
-The description is "[if Scene_Day_Two is not happening]The woods still look familiar and strange, but no longer sinister. It helped to cry. You are no longer afraid. You dry your eyes and look around. You still see deer trails leading in various directions into the woods, and here there is [a list of elusive_landmarks in Room_Dark_Woods_North][else]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night: a bright clearing, a burned out tree[end if].
+The description is "[if Scene_Day_Two is not happening]The woods still look familiar and strange, but no longer sinister. It helped to cry. You are no longer afraid. You dry your eyes and look around. You still see deer trails leading in various directions into the woods, and here there is [a list of not distant elusive_landmarks in Room_Dark_Woods_North][else]These dark woods are considerably easier to navigate by daylight. You recognize some of the landmarks you spotted last night: a bright clearing, a burned out tree[end if].
 [paragraph break][available_exits]".
+Understand "dark/-- woods north" as Room_Dark_Woods_North.
 The scent is "musty forest smell".
-Understand "dark woods" as Room_Dark_Woods_North.
 
 
 Section - Navigation
@@ -7147,7 +7158,7 @@ The scent is "musty forest smell".
 Understand "forest/-- meadow", "golden/-- grass" as Room_Forest_Meadow.
 
 To say meadow_desc_day1:
-	say "You have found a dark shaded forest meadow with tall grass up to your waist[first time]. You can't help thinking about ticks. You got a tick once in your neck and Honey had to burn it out with a cigarette[only]. There is a steady symphony of crickets tuning up for the night. Seeing the darkening sky overhead makes you [nervous]";
+	say "You have found a dark shaded forest meadow with tall grass up to your waist. But at least here you can see the sky[first time]. You can't help thinking about ticks. You got a tick once in your neck and Honey had to burn it out with a cigarette[only]. There is a steady symphony of crickets tuning up for the night. Seeing the darkening sky overhead makes you [nervous]";
 
 To say meadow_desc_day2:
 	say "This is the dark forest meadow you found last night, except in the morning light, it is bright and crispy cold. The meadow still makes you think of ticks, but you try not to as you push through the tall grass. You can see paths in a few different directions";
