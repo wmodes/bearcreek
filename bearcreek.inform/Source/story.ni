@@ -3517,6 +3517,7 @@ Instead of quizzing or informing or implicit-quizzing or implicit-informing duri
 	else:
 		continue the action;
 
+[ Prevent going elsewhere during part of this imporant scene.]
 Instead of going during Scene_Sheriffs_Drive_By:
 	if Scene_Sheriffs_Drive_By has been happening for less than 2 turns:
 		say "But you're curious what the police are here for, so you change your mind and keep listening.";
@@ -3726,7 +3727,8 @@ When Scene_Visit_With_Lee begins:
 
 Section - Sequences
 
-[TODO: All seq should stop if rant is in progress]
+[TODO: All seq should stop if rant is in progress -
+though in important sequences, the ability to small talk should be limited.]
 
 seq_lee_invite is a sequence.
 	The action_handler is the seq_lee_invite_handler rule.
@@ -4008,24 +4010,37 @@ Chapter - Scene_Across_the_Creek
 
 There is a scene called Scene_Across_the_Creek.
 
-Scene_Across_the_Creek begins when player has been in Room_Wooded_Trail.
+Scene_Across_the_Creek begins when player has been in Room_Other_Shore.
 
-Scene_Across_the_Creek ends when Scene_Night_In_The_Woods begins.
+Scene_Across_the_Creek ends when Scene_Lost begins.
 
 [ Now the time of day is 4:10 AM. ]
 When Scene_Across_the_Creek begins:
 	set_the_time_to late_afternoon.
 
+Chapter - Scene_Lost
+
+There is a scene called Scene_Lost.
+
+Scene_Lost begins when player has been in Room_Dark_Woods_South.
+
+Scene_Lost ends when Scene_Night_In_The_Woods begins.
+
 Section -Actions
 
-[TODO: The goal here is to make it so we can landmark_navigate to these elusive landmarks. When we say "go to tree" we want it to match "white tree" (an elusive landmark) rather than try to room_navigate to Room_Top_of_the_Tree
+[TODO: The goal here is to make it so we can landmark_navigate to these elusive landmarks. When we say "go to tree" we want it to match "white tree" (an elusive landmark) rather than try to room_navigate to Room_Top_of_the_Tree (a room)
 
 This is harder than it looks:
 * "Does the player mean" rules don't seem to help
 * There is no easy way to remove the action and rebirth a command with landmark_navigating
-* I don't know how to disable the room_navigating action during this scene
-* Changing the def'n of "reachable room" so it excludes rooms during this scene means "I don't understand the noun in this conext"]
+* I can't just disable the room_navigating action during this scene, because...
+* Changing the def'n of "reachable room" so it excludes rooms during this scene results in "I don't understand the noun in this conext"]
 
+Does the player mean landmark_navigating during Scene_Lost:
+	It is very likely.
+
+Does the player mean room_navigating during Scene_Lost:
+	It is very unlikely.
 
 Part - Scene_Night_In_The_Woods
 
@@ -6944,7 +6959,7 @@ Instead of doing_some_swimming in Room_Other_Shore:
 Instead of room_navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Other_Shore:
 	try room_navigating Room_Wooded_Trail;
 
-test shore with "teleport to other shore /abstract bridge west to Room_Crossing";
+test other-shore with "teleport to other shore /abstract bridge west to Room_Crossing";
 
 Chapter - Room_Wooded_Trail
 
