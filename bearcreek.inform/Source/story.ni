@@ -504,23 +504,6 @@ Understand
 Carry out pouring_in:
 	try inserting the noun into the second noun.
 
-[ Chapter - Surface_going
-
-[TODO: nix. This has been consolidated into get_up_on_something ]
-
-Surface_going is an action applying to one thing.
-Understand
-	"go on/onto/to [visible surface]",
-	"walk on/onto/to [visible surface]",
-	"jump on/onto/to [visible surface]",
-	"cross on/onto/to [visible surface]"
-	as surface_going.
-
-Carry out surface_going:
-	if destination of noun is Limbo:
-		Try entering noun;
-	else:
-		Try room_navigating destination of noun. ]
 
 Chapter - Looking_ouside
 
@@ -579,9 +562,9 @@ Understand
 
 Instead of jumping_across:
 	if player is in Room_Crossing:
-		try room_navigating Room_Other_Shore;
+		try navigating Room_Other_Shore;
 	else if player is in Room_Other_Shore:
-		try room_navigating Room_Crossing;
+		try navigating Room_Crossing;
 	else:
 		try jumping;
 
@@ -596,9 +579,9 @@ Understand
 
 Instead of jumping_across_something:
 	if player is in Room_Crossing:
-		try room_navigating Room_Other_Shore;
+		try navigating Room_Other_Shore;
 	else if player is in Room_Other_Shore:
-		try room_navigating Room_Crossing;
+		try navigating Room_Crossing;
 	else:
 		try jumping;
 
@@ -675,13 +658,13 @@ Carry out standing_up:
 [Procedural rule while exiting or standing_up or getting off (this is the make standing a brief experience rule):
 	ignore the describe room stood up into rule;]
 
-Chapter - Get_Up_On
+[ Chapter - Get_Up_On
 
-[ get_up_on_something ]
+[ navigating ]
 
 Understand the command "climb" as something new.
 
-get_up_on_something is an action applying to one visible thing.
+navigating is an action applying to one visible thing.
 
 Understand
 	"climb up/on/onto/in/into/over/through/under/-- [something]", 
@@ -690,9 +673,9 @@ Understand
 	"jump up/on/onto/in/into/over/through/under/-- [something]", 
 	"cross up/on/onto/in/into/over/through/under/-- [something]",
 	"go up/on/onto/in/into/over/through/under/to/-- [something]"
-	as get_up_on_something.
+	as navigating.
 
-Carry out get_up_on_something:
+Carry out navigating:
 	if the noun is climbable:
 		say "You climb [the noun].";
 	else if the noun is an enterable container:
@@ -706,21 +689,21 @@ Carry out get_up_on_something:
 	else:
 		let up_room be the room up from the location; 
 		if the up_room is a room:
-			try room_navigating up_room;
+			try navigating up_room;
 		else:
-			try climbing the noun.
+			try climbing the noun. ]
 
-[ Does the player mean get_up_on_something an unclimbable thing:
+[ Does the player mean navigating an unclimbable thing:
 	it is unlikely.
 
-Does the player mean get_up_on_something thing that is not an enterable container:
+Does the player mean navigating thing that is not an enterable container:
 	it is unlikely. ]
 
-Does the player mean get_up_on_something thing that is touchable:
+[ Does the player mean navigating thing that is touchable:
 	it is likely.
 
-Does the player mean get_up_on_something thing that is not touchable:
-	it is very unlikely. 
+Does the player mean navigating thing that is not touchable:
+	it is very unlikely.  ]
 
 [ get_up_on_anything ]
 
@@ -1100,7 +1083,7 @@ Instead of smelling a room:
 
 [ Chapter - Supporters
 
-[TODO: nix. This has been consolidated into get_up_on_something ]
+[TODO: nix. This has been consolidated into navigating ]
 
 Understand
 	"go on/onto/in/into [supporter]",
@@ -1120,7 +1103,7 @@ Carry out follow_tracks:
 		say "[one of]The trees crowd in on either side, so there's nowhere to walk but on the tracks. You follow them for a little while but then get scared that a train will come and you will have nowhere to go.
 		[paragraph break]You[or]Mom told you about kids who get killed walking on the tracks, so you[or]You walk on down the tracks a bit, and then[stopping] head on back to where the old dirt road crosses the train tracks.";
 	else if player is in Room_Dream_Railroad_Tracks:
-		try room_navigating Room_Mars;
+		try navigating Room_Mars;
 	else:
 		say "Best go to the railroad crossing for that."
 
@@ -1286,12 +1269,9 @@ Carry out exit_listing:
 To say navigation_hint:
 	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [em]  go to clearing  [/em][line break]Or try: [em]  follow trail  [/em][line break]Or even: [em]  go back  [/em] or [em]  go on  [/em][line break]If you need a reminder of where you can go, try: [em]  which way  [/em] or simply [em]  look[/em][stopping]";
 
-Chapter - Elusive_Landmarks and Landmark_Navigating
+Chapter - Navigation to Rooms and Landmarks
 
-[ TODO: Nix if distant as an attribute works.
-The_distance is a container.
-The printed name is "the distance".
-The_distance is in Limbo. ]
+Part - Lost_stuff, Elusive_Landmarks, & Landscape_Features
 
 lost_stuff_storage is a container.
 The printed name is "Lost Stuff Storage".
@@ -1301,46 +1281,155 @@ An elusive_landmark is a kind of thing.
 An elusive_landmark is mentioned scenery.
 An elusive_landmark can be distant.
 
+landmark_nav_counter is a number that varies. landmark_nav_counter is 0.
+
 [ Create richer generative Dark Woods locations with rises and downslopes, incidental details, etc. ]
 A landscape_feature is a kind of thing.
 An landscape_feature is scenery.
 
-landmark_navigating is an action applying to one thing.
-Understand
-	"go to/near/by/-- [any elusive_landmark]",
-	"walk to/near/by/-- [any elusive_landmark]",
-	"run to/near/by/-- [any elusive_landmark]",
-	"follow [any elusive_landmark]",
-	"landmark_navigate [any elusive_landmark]"
-	as landmark_navigating.
+Does the player mean examining distant elusive_landmark:
+	It is unlikely.
 
-Check landmark_navigating:
+Does the player mean examining not distant elusive_landmark:
+	It is likely.
+
+When play begins:
+	Let this_landmark be a random elusive_landmark in Limbo;
+	Now this_landmark is in Room_Dark_Woods_South;
+	Let next_landmark be a random elusive_landmark in Limbo;
+	Now next_landmark is distant;
+	Now next_landmark is in Room_Dark_Woods_South;
+	[ landscape_features ]
+	Let this_feature be a random landscape_feature in Limbo;
+	Now this_feature is in Room_Dark_Woods_South;
+
+Part - Reachability & Interactivity
+
+[Basically, if the player and the room are in Region_Dreams OR the player and the room are both not in Region_Dreams, than the room is reachable.]
+Definition: A room is reachable
+	if it is reachable_in_dreams or
+		it is reachable_IRL.
+
+[Everywhere within Region_Dreams is contiguous -- and discontiguous with everything outside of it.]
+Definition: A room is reachable_in_dreams
+	if the map region of it is Region_Dreams and
+		the map region of the location is Region_Dreams.
+
+[Everywhere NOT within Region_Dreams is contiguous -- and discontiguous with everything inside of it.]
+Definition: A room is reachable_IRL
+	if the map region of it is not Region_Dreams and
+		the map region of the location is not Region_Dreams.
+
+Definition: A thing is interactive
+	if it is climbable or it is a supporter or it is an enterable container.
+
+Definition: An elusive_landmark is relevant
+	if Scene_Lost is happening.
+
+Part - Navigating
+
+[ navigating means moving from one room to another, moving to an elusive_landmark, or on/in to a supporter or container ]
+
+Navigating is an action applying to one thing.
+Understand
+	[ rooms and landmarks ]	
+	"go to/near/by/-- [any relevant elusive_landmark]",
+	"go to/near/by/-- [any room]",
+	"walk to/near/by/-- [any relevant elusive_landmark]",
+	"walk to/near/by/-- [any room]",
+	"run to/near/by/-- [any relevant elusive_landmark]",
+	"run to/near/by/-- [any room]",
+	"return to/near/by/-- [any relevant elusive_landmark]",
+	"return to/near/by/-- [any room]",
+	"follow [any relevant elusive_landmark]",
+	"follow [any room]",
+	[ interactive things ]
+	"climb on/onto/in/into/over/through/under/-- [interactive thing]", 
+	"climb up in/into/on/onto/-- [interactive thing]",
+	"hop on/onto/in/into/over/through/under/-- [interactive thing]", 
+	"hop up in/into/on/onto/-- [interactive thing]",
+	"scale on/onto/in/into/over/through/under/--  [interactive thing]", 
+	"scale up in/into/on/onto/-- [interactive thing]",
+	"jump on/onto/in/into/over/through/under/-- [interactive thing]", 
+	"jump up in/into/on/onto/-- [interactive thing]",
+	"cross up/on/onto/in/into/over/through/under/-- [interactive thing]",
+	"go up/on/onto/in/into/over/through/under/to/-- [interactive thing]"
+	as navigating.
+
+[ landmark navigating ]
+
+Check navigating elusive_landmark:
+	[ say "(DEBUG: check nav elusive_landmark: [noun])"; ]
 	if noun is not visible:
+		say "(DEBUG: [noun] not visible?)";
 		say cant_find_that instead;
-	if noun is not distant:
+	else if noun is not distant:
 		say "Well, that's right here." instead;
+
+Carry out navigating elusive_landmark:
+	[ say "(DEBUG: carry out nav elusive_landmark: [noun])"; ]
+	increment landmark_nav_counter;
+	move_within_dark_woods;
+
+[ room navigating ]
+
+Check navigating room:
+	[ say "(DEBUG: Check navigating room: [noun])"; ]
+	if the noun is the location:
+		say "Well, happily you're already here." instead;
+	else if the noun is not reachable:
+		say cant_find_that;
+
+Carry out navigating room:
+	[ say "(DEBUG: Carry out navigating room: [noun])"; ]
+	if noun is not reachable:
+		say cant_find_that;
+	else:
+		let initial location be the location;
+		let the destination be the noun;
+		if the initial location is the destination,
+			say "." instead;
+		let heading be the best route from the initial location to the destination;
+		[ say "(DEBUG navigating: heading toward [noun] is [heading])[line break]"; ]
+		if heading is nothing:
+			say cant_find_that instead;
+		else:
+			now player is not discouraged_from_compass_navigating;
+			try going heading;
+
+[ navigating to climbable things, supporters, containers, & waterbodies]
+
+Check navigating interactive thing:
+	[ say "(DEBUG: check navigating interactive thing: [noun])"; ]
+	if noun is not touchable:
+		say cant_find_that;
+
+Carry out navigating interactive thing:
+	[ say "(DEBUG: carry out navigating interactive thing: [noun])"; ]
+	if the noun is climbable:
+		[ say "You climb [the noun]."; ]
+		try climbing the noun;
+	else if the noun is an enterable container:
+		[ say "You climb into [the noun]."; ]
+		try entering the noun;
+	else if the noun is a supporter:
+		[ say "You climb onto [the noun]."; ]
+		try entering the noun;
+	else if the noun is a waterbody:
+		try doing_some_swimming;
+	else:
+		say fail_navigation;
+
+[ some things we say about navigation ]
 
 To say cant_find_that:
 	say "You're no longer sure how to get there. [looking_for_available_exits]";
 
-landmark_nav_counter is a number that varies. landmark_nav_counter is 0.
+To say fail_navigation:
+	say "You can't really figure out how to go about that.";
 
-Carry out landmark_navigating:
-	increment landmark_nav_counter;
-	say "You head toward the [noun].[run paragraph on] ";
-	move_within_dark_woods.
 
-The can't reach inside rooms rule does nothing if landmark_navigating.
-
-When play begins:
-	Let this_thing be a random elusive_landmark in Limbo;
-	Now this_thing is in Room_Dark_Woods_South;
-	Let next_thing be a random elusive_landmark in Limbo;
-	Now next_thing is distant;
-	Now next_thing is in Room_Dark_Woods_South;
-	[ landscape_features ]
-	Let this_feature be a random landscape_feature in Limbo;
-	Now this_feature is in Room_Dark_Woods_South;
+Part - Moving Within Room_Dark_Woods
 
 To say movement_in_woods:
 	say "[one of]You stumble around in the dark woods[or]You carefully make your way through the forest[or]You follow an uncertain path through the wood[or]You bushwhack your way through the underbrush[at random].".
@@ -1366,24 +1455,20 @@ To move_within_dark_woods:
 			move item to lost_stuff_storage;
 	try looking;
 
+The can't reach inside rooms rule does nothing if navigating a room.
+
+
+Part - Dropping Things in Room_Dark_Woods
+
 After dropping something (called the item) when player is in Room_Dark_Woods_South:
 	add item to stuff_you_brought_here;
 	continue the action;
 
-Instead of doing anything except examining or landmark_navigating to elusive_landmarks:
+Instead of doing anything except examining or navigating to elusive_landmarks:
 	say "This is no time for that. [if Scene_Day_Two is not happening]You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.[end if]".
 
-Does the player mean examining distant elusive_landmark:
-	It is unlikely.
 
-Does the player mean examining not distant elusive_landmark:
-	It is likely.
-
-[ TODO: nix?
-Instead of doing anything except examining or landmark_navigating  landscape_features:
-	say "This is no time for that. [if Scene_Day_Two is not happening]You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.[end if]".]
-
-Chapter - Compass Navigation and Room_Navigating
+Chapter - Compass Navigation and navigating
 
 [This is only necessary as a work around to something else we need to do:
 	First, we want to disuade the player during the first two acts from navigating via compass.
@@ -1393,8 +1478,7 @@ Chapter - Compass Navigation and Room_Navigating
 	let heading be the best route from the location to the destination
 
 	This returns a heading that we want to navigate toward. So we need a way to pause
-	our prohibiition on compass navigation.
-]
+	our prohibiition on compass navigation. ]
 
 Yourself can be discouraged_from_compass_navigating.
 Yourself can be aware_of_compass_directions.
@@ -1428,73 +1512,6 @@ Check going west when player is discouraged_from_compass_navigating:
 
 Check going northwest when player is discouraged_from_compass_navigating:
 	say navigation_hint instead.
-
-Part - Room_Navigating
-
-[Basically, if the player and the room are in Region_Dreams OR the player and the room are both not in Region_Dreams, than the room is reachable.]
-Definition: A room is reachable
-	if it is reachable_in_dreams or
-		it is reachable_IRL.
-
-[ Definition: A room is unreachable
-	if it is not reachable_in_dreams and
-		it is not reachable_IRL and
-		it is not unavailable_while_lost. ]
-
-[Everywhere within Region_Dreams is contiguous -- and discontiguous with everything outside of it.]
-Definition: A room is reachable_in_dreams
-	if the map region of it is Region_Dreams and
-		the map region of the location is Region_Dreams.
-
-[Everywhere NOT within Region_Dreams is contiguous -- and discontiguous with everything inside of it.]
-Definition: A room is reachable_IRL
-	if the map region of it is not Region_Dreams and
-		the map region of the location is not Region_Dreams.
-
-[During Scene_Across_the_Creek we will be using landmark_nagigating to advance through the woods, though actually we are held in Room_Dark_Woods_South]
-[ Definition: A room is unavailable_while_lost
-	if (location is Room_Dark_Woods_South or location is Room_Dark_Woods_North) and Scene_Across_the_Creek is happening. ]
-	
-Room_navigating is an action applying to one thing.
-Understand
-	"go back/- to/around/near/by/-- [any reachable room]",
-	"return to [any reachable room]",
-	"walk to/-- [any reachable room]",
-	"run to/-- [any reachable room]",
-	"follow [any reachable room]" 
-	as room_navigating.
-
-Check room_navigating:
-	[say "(DEBUG: go from [location of player] to [the noun])[line break]";]
-	if the noun is the location, say "Well, happily you're already here." instead;
-
-Carry out room_navigating:
-	let initial location be the location;
-	let the destination be the noun;
-	if the initial location is the destination,
-		say "." instead;
-	let heading be the best route from the initial location to the destination;
-	[ say "(DEBUG: heading toward [noun] is [heading])[line break]"; ]
-	if heading is nothing:
-		say cant_find_that instead;
-	else:
-		now player is not discouraged_from_compass_navigating;
-		try going heading.
-
-To say cant_find_that:
-	say "You're not sure exactly how to get there. [looking_for_available_exits]";
-
-Fail_navigating is an action applying to one thing.
-Understand
-	"go back/- to/-- [any not reachable room]",
-	"return to [any not reachable room]",
-	"walk to/-- [any not reachable room]",
-	"run to/-- [any not reachable room]",
-	"follow [any not reachable room]"
-	as fail_navigating.
-
-Carry out fail_navigating:
-	say cant_find_that;
 
 
 Chapter - People Navigation
@@ -1589,7 +1606,7 @@ Carry out going_upstream:
 	else if destination is Limbo:
 		say "I'm not sure how to go upstream from from here.";
 	else:
-		try room_navigating destination.
+		try navigating destination.
 
 Going_downstream is an action applying to nothing.
 Understand
@@ -1604,7 +1621,7 @@ Carry out going_downstream:
 	else if destination is Limbo:
 		say "I'm not sure how to go downstream from here.";
 	else:
-		try room_navigating destination.
+		try navigating destination.
 
 Going_uppath is an action applying to nothing.
 Understand
@@ -1618,7 +1635,7 @@ Carry out going_uppath:
 	else if destination is Limbo:
 		say "I'm not sure how to get there from here.";
 	else:
-		try room_navigating destination.
+		try navigating destination.
 
 Going_downpath is an action applying to nothing.
 Understand
@@ -1633,7 +1650,7 @@ Carry out going_downpath:
 	else if destination is Limbo:
 		say "I'm not sure how to get there from here.";
 	else:
-		try room_navigating destination.
+		try navigating destination.
 
 To long_range_navigate to (destination - a room):
 	[say "(DEBUG: Long range nav: [destination])[line break]";]
@@ -1642,7 +1659,7 @@ To long_range_navigate to (destination - a room):
 	else if destination is Limbo:
 		say "I'm not sure how to get there from here.";
 	else:
-		try room_navigating destination.
+		try navigating destination.
 
 Book - Language Tweaks
 
@@ -3490,7 +3507,7 @@ This is the
 
 Chapter - Actions
 
-Instead of room_navigating or going when player is in Room_Grandpas_Trailer during Scene_Walk_With_Grandpa:
+Instead of navigating or going when player is in Room_Grandpas_Trailer during Scene_Walk_With_Grandpa:
 	queue_report "'Hold your horses, [grandpas_nickname],' Grandpa says. 'Stay with us for now.'" at priority 3.
 
 
@@ -4036,15 +4053,10 @@ Section - Actions
 
 This is harder than it looks:
 * "Does the player mean" rules don't seem to help
-* There is no easy way to remove the action and rebirth a command with landmark_navigating
-* I can't just disable the room_navigating action during this scene, because...
+* There is no easy way to remove the action and rebirth a command with navigating
+* I can't just disable the navigating action during this scene, because...
 * Changing the def'n of "reachable room" so it excludes rooms during this scene results in "I don't understand the noun in this conext"]
 
-Does the player mean landmark_navigating during Scene_Lost:
-	It is very likely.
-
-Does the player mean room_navigating during Scene_Lost:
-	It is very unlikely.
 
 Part - Scene_Night_In_The_Woods
 
@@ -4193,7 +4205,7 @@ This is the seq_raccoon_visit_interrupt_test rule:
 		rule succeeds;
 	if we are yelling:
 		rule succeeds;
-	if the current action is room_navigating and the noun is Room_Protected_Hollow:
+	if the current action is navigating and the noun is Room_Protected_Hollow:
 		rule succeeds;
 	rule fails.
 
@@ -4837,13 +4849,13 @@ This is the journey_lee_walk_end rule:
 Section - Actions
 
 [This will prevent player from getting re-lost after beign found!]
-Instead of room_navigating Room_Wooded_Trail when player is in Room_Other_Shore during Scene_Found:
+Instead of navigating Room_Wooded_Trail when player is in Room_Other_Shore during Scene_Found:
 	say not_going_back_to_woods.
 
 Instead of going east when player is in Room_Other_Shore during Scene_Found:
 	say not_going_back_to_woods.
 
-Instead of room_navigating Room_Dappled_Forest_Path when player is in Room_Blackberry_Tangle during Scene_Found:
+Instead of navigating Room_Dappled_Forest_Path when player is in Room_Blackberry_Tangle during Scene_Found:
 	say not_going_back_to_woods.
 
 Instead of going east when player is in Room_Blackberry_Tangle during Scene_Found:
@@ -4864,7 +4876,7 @@ There is a scene called Scene_Reunions.
 Scene_Reunions begins when Scene_Found ends.
 Scene_Reunions ends when Scene_Long_Arm_of_the_Law begins.
 
-Instead of room_navigating or going during Scene_Reunions:
+Instead of navigating or going during Scene_Reunions:
 	say "Now that you are with your Honey and Grandpa, you don't want to go anywhere else.".
 
 Chapter - Scene_Long_Arm_of_the_Law
@@ -4943,7 +4955,7 @@ Section - Actions
 
 [Things that make us decide NOT to support Lee:
 	Going elsewhere, waiting too long]
-Instead of room_navigating or going during Scene_Long_Arm_of_the_Law:
+Instead of navigating or going during Scene_Long_Arm_of_the_Law:
 	if index of seq_long_arm_of_the_law < 4:
 		say "You don't want to go anywhere, right now.";
 	else:
@@ -5047,7 +5059,7 @@ This is the seq_parents_arrive_interrupt_test rule:
 Section - Actions
 
 [ Prevent player from going anywhere during this imporant scene ]
-Instead of room_navigating or going during Scene_Parents_Arrive:
+Instead of navigating or going during Scene_Parents_Arrive:
 	if index of seq_parents_arrive < 3:
 		say "There's no way you are leaving now that your mom's here.";
 	else:
@@ -5154,7 +5166,7 @@ When Scene_Fallout_Staying ends:
 Section - Actions and Sequences
 
 [ Prevent player from going anywhere during this imporant scene ]
-Instead of room_navigating or going during Scene_Parents_Arrive:
+Instead of navigating or going during Scene_Parents_Arrive:
 	say "There's no way you are leaving now that you are safe at home with Honey and Grandpa.";
 
 seq_staying_w_grandpa is a sequence.
@@ -5639,7 +5651,7 @@ Room_Swimming_Hole is east of Room_Long_Stretch, and down from Room_Long_Stretch
 The available_exits of Room_Swimming_Hole is "It is possible to walk along the rocky shore downstream to another spot along the creek. Back up the trail leads through the woods back to the dirt road."
 
 Instead of entering rocky_shore_north:
-	try room_navigating Room_Crossing;
+	try navigating Room_Crossing;
 
 Section - Objects
 
@@ -5724,19 +5736,19 @@ East of Room_Crossing is Room_Other_Shore.
 The available_exits of Room_Crossing are "The shoreline ends at a steep bank further downstream, though it looks like you might be able to cross the creek to the other shore on the boulders in midstream. You can also go back along the rocky shore to the swimming hole upstream."
 
 Instead of entering rocky_shore_south:
-	try room_navigating Room_Swimming_Hole;
+	try navigating Room_Swimming_Hole;
 
 Instead of entering boulders_west:
-	try room_navigating Room_Other_Shore;
+	try navigating Room_Other_Shore;
 
 Instead of entering bridge_log_west:
-	try room_navigating Room_Other_Shore;
+	try navigating Room_Other_Shore;
 
 Instead of climbing swift_current_west:
-	try room_navigating Room_Other_Shore.
+	try navigating Room_Other_Shore.
 
 Instead of jumping when player is in Room_Crossing:
-	try room_navigating Room_Other_Shore.
+	try navigating Room_Other_Shore.
 
 Section - Objects
 
@@ -5811,7 +5823,7 @@ Instead of doing_some_swimming in Room_Crossing:
 	if bridge_log_west is not visible:
 		say current_swim_refusal;
 	else:
-		try room_navigating Room_Other_Shore;
+		try navigating Room_Other_Shore;
 
 To say current_swim_refusal:
 	say "The current here is too strong and it scares you. You saw a TV show once with your grandpa about people in rafts and one man fell off and got caught under a rock and drowned. You think better of the idea.";
@@ -5890,7 +5902,7 @@ The casual_name is "at the long stretch of dirt road".
 The description of Room_Long_Stretch is "This is a really long stretch of the dirt road that climbs up the hill. You can see the heat shimmering off of the ground. Grass grows up through the middle of the road, and deep rocky ruts suggest it hasn't been used as anything but river access for hikers and fishermen in a long time. The long road is alternately shaded by pines and exposed to the scorching sun. The air smells hot with a particular piney fragrance that always reminds you of the foothills of the Sierras.
 [paragraph break][available_exits]".
 The scent is "sunshine and dust".
-Understand "long stretch" as Room_Long_Stretch.
+Understand "long stretch", "long dirt/-- road", "tall/-- doug/-- fir", "tall/-- pine/-- tree"  as Room_Long_Stretch.
 
 Section - Navigation
 
@@ -5903,9 +5915,14 @@ Section - Objects
 
 Section - Backdrops & Scenery
 
-A Doug fir is [climbable] scenery. It is in Room_Long_Stretch. The description of the Doug Fir is "There is a hugely tall pine tree here. Grandpa said it was called Doug Fir (not fur like a dog, but fir, which is a kind of pine tree). The tree is on the uphill side of the road below a low bluff. The branches are almost low enough to climb which you've done a couple of times but never all the way to the top.".
-Understand "tree/trees/branch/branches/pine/pines/tall/bluff/low/fir/fur", "doug fir/fur", "pine tree/trees", "doug fir tree/trees" as Doug Fir.
+A doug_fir is climbable scenery in Room_Long_Stretch. 
+The printed name is "Doug fir".
+The description is "There is a hugely tall pine tree here. Grandpa said it was called Doug Fir (not fur like a dog, but fir, which is a kind of pine tree). The tree is on the uphill side of the road below a low bluff. The branches are almost low enough to climb which you've done a couple of times but never all the way to the top.".
+Understand "tree/trees/branch/branches/pine/pines/tall/bluff/low/fir/fur", "doug fir/fur", "pine tree/trees", "doug fir tree/trees" as doug_fir.
 The scent is "delightful piney fragrance".
+
+Instead of climbing doug_fir:
+	try going up.
 
 Section - Rules and Actions
 
@@ -6013,7 +6030,7 @@ Instead of dropping lost_penny when player is on train_track:
 	say "You carefully place the penny on one of the rails.";
 	now lost_penny is on train_track.
 
-Instead of room_navigating Room_Railroad_Tracks when player is in Room_Railroad_Tracks:
+Instead of navigating Room_Railroad_Tracks when player is in Room_Railroad_Tracks:
 	try follow_tracks.
 
 
@@ -6062,7 +6079,7 @@ Instead of doing anything except entering or examining to field_back_gate:
 	say "You better leave that alone. You don't want to get in trouble."
 
 Instead of entering field_back_gate:
-	try room_navigating Room_Picnic_Area;
+	try navigating Room_Picnic_Area;
 
 
 Part - Region_Up_In_Tall_Fir
@@ -6385,7 +6402,7 @@ Instead of doing anything except entering or examining to picnic_back_gate:
 	say "You better leave that alone. You don't want to get in trouble."
 
 Instead of entering picnic_back_gate:
-	try room_navigating Room_Grassy_Field;
+	try navigating Room_Grassy_Field;
 
 Chapter - Room_D_Loop
 
@@ -6438,7 +6455,7 @@ Big old cars are backdrop in Room_D_Loop.
 Section - Rules and Actions
 
 Instead of entering sharons_virtual_trailer:
-	try room_navigating Room_Sharons_Trailer.
+	try navigating Room_Sharons_Trailer.
 
 Instead of inserting something into sharons_virtual_trailer:
 	say "You might want to just go in there."
@@ -6569,7 +6586,7 @@ Instead of taking Mika_figurine:
 Instead of going outside when player is in Room_Sharons_Trailer and (Mika_figurine has been palmed):
 	joink_mika;
 
-Instead of room_navigating Room_D_Loop when player is in Room_Sharons_Trailer and (Mika_figurine has been palmed):
+Instead of navigating Room_D_Loop when player is in Room_Sharons_Trailer and (Mika_figurine has been palmed):
 	joink_mika;
 
 To joink_mika:
@@ -6632,7 +6649,7 @@ Big old cars are backdrop in Room_C_Loop.
 Section - Rules and Actions
 
 Instead of entering lees_virtual_trailer:
-	try room_navigating Room_Lees_Trailer.
+	try navigating Room_Lees_Trailer.
 
 Instead of inserting something into lees_virtual_trailer:
 	say "You might want to just go in there."
@@ -6765,7 +6782,7 @@ Big old cars are backdrop in Room_B_Loop.
 Section - Rules and Actions
 
 Instead of entering grandpas_virtual_trailer:
-	try room_navigating Room_Grandpas_Trailer.
+	try navigating Room_Grandpas_Trailer.
 
 Instead of inserting something into grandpas_virtual_trailer:
 	say "You might want to just go in there."
@@ -6900,20 +6917,20 @@ East of Room_Other_Shore is Room_Wooded_Trail.
 
 The available_exits of Room_Other_Shore are "[if Scene_Day_Two has not happened]The creek here curves around in a funny way, but you're pretty sure that this trail must connect with the blackberry trail on this side of the creek. That was this way, right? This trail is darker and more wooded, but it looks like it gets lighter up ahead. Back the way you came, you can get most of the way across the creek by hopping from boulder to boulder.[else]You can get back across the creek by hopping from boulder to boulder and crossing on the log. Or you can go east back the way you came on the wooded trail.[end if]";
 
-Instead of room_navigating Room_Willow_Trail when player is in Room_Other_Shore:
-	try room_navigating Room_Dark_Woods_North.
+Instead of navigating Room_Willow_Trail when player is in Room_Other_Shore:
+	try navigating Room_Dark_Woods_North.
 
 Instead of entering boulders_east:
-	try room_navigating Room_Crossing.
+	try navigating Room_Crossing.
 
 Instead of climbing swift_current_east:
-	try room_navigating Room_Crossing.
+	try navigating Room_Crossing.
 
 Instead of entering bridge_log_east:
-	try room_navigating Room_Crossing.
+	try navigating Room_Crossing.
 
 Instead of jumping when player is in Room_Other_Shore:
-	try room_navigating Room_Crossing.
+	try navigating Room_Crossing.
 
 Section - Objects
 
@@ -6961,8 +6978,9 @@ Instead of entering swift_current_east,
 Instead of doing_some_swimming in Room_Other_Shore:
 	say current_swim_refusal.
 
-Instead of room_navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Other_Shore:
-	try room_navigating Room_Wooded_Trail;
+[ when player has crossed the creek, make any attempt to get back to the blackberry area go deeper into the woods ]
+Instead of navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Other_Shore:
+	try navigating Room_Wooded_Trail;
 
 test other-shore with "teleport to other shore /abstract bridge west to Room_Crossing";
 
@@ -6996,11 +7014,12 @@ Instead of going to Room_Wooded_Trail when player is in Room_Other_Shore:
 	say "You think this is the right way back to the blackberry trail, right?";
 	continue the action;
 
-Instead of room_navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Wooded_Trail:
-	try room_navigating Room_Dark_Woods_North.
+[ when player has crossed the creek, make any attempt to get back to the blackberry area go deeper into the woods ]
+Instead of navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Wooded_Trail:
+	try navigating Room_Dark_Woods_North.
 
-Instead of room_navigating Room_Willow_Trail when player is in Room_Wooded_Trail:
-	try room_navigating Room_Dark_Woods_North.
+Instead of navigating Room_Willow_Trail when player is in Room_Wooded_Trail:
+	try navigating Room_Dark_Woods_North.
 
 Chapter - Room_Dark_Woods_South
 
@@ -7038,8 +7057,8 @@ To say day2_woods_exits:
 	say "There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail";
 
 [TODO: What does this do? ]
-Instead of room_navigating when player is in Room_Dark_Woods_South and Scene_Night_In_The_Woods is not happening:
-	say cant_find_that;
+[ Instead of navigating when player is in Room_Dark_Woods_South and Scene_Night_In_The_Woods is not happening:
+	say cant_find_that; ]
 
 Section - Objects
 
@@ -7222,16 +7241,16 @@ Instead of going to Room_Protected_Hollow when Room_Forest_Meadow is not observe
 	say "You're not going anywhere until you have a plan.";
 
 Instead of climbing virtual_sentinel_tree:
-	try room_navigating Room_Sentinel_Tree;
+	try navigating Room_Sentinel_Tree;
 
 Instead of entering fallen_tree:
-	try room_navigating Room_Protected_Hollow.
+	try navigating Room_Protected_Hollow.
 
 Instead of climbing fallen_tree:
-	try room_navigating Room_Protected_Hollow.
+	try navigating Room_Protected_Hollow.
 
-Instead of get_up_on_something fallen_tree:
-	try room_navigating Room_Protected_Hollow.
+Instead of navigating fallen_tree:
+	try navigating Room_Protected_Hollow.
 
 Instead of listening when player is in Region_Woods_Area and Scene_Night_In_The_Woods is happening:
 	if raccoons are in Room_Forest_Meadow:
@@ -7317,7 +7336,7 @@ Instead of going to Room_Forest_Meadow when player is in Room_Protected_Hollow a
 	continue the action.
 
 Instead of get_down_from_anything when player is in Room_Protected_Hollow:
-	try room_navigating Room_Forest_Meadow.
+	try navigating Room_Forest_Meadow.
 
 Instead of listening when player is in Room_Protected_Hollow and Scene_Night_In_The_Woods is happening:
 	if raccoons are in Room_Forest_Meadow:
@@ -7545,13 +7564,13 @@ Instead of climbing or climbing in moms_camaro,
 	try entering moms_camaro.
 
 Instead of entering moms_camaro:
-	Try room_navigating Room_Car_With_Stepdad.
+	Try navigating Room_Car_With_Stepdad.
 
-Instead of room_navigating Room_Car_With_Stepdad when Room_Restroom is unvisited:
+Instead of navigating Room_Car_With_Stepdad when Room_Restroom is unvisited:
 	say "You really have to go. Better visit the restroom first."
 
 Instead of entering Virtual_Snack_Bar,
-	try room_navigating Room_Snack_Bar.
+	try navigating Room_Snack_Bar.
 
 
 Chapter - Room_Snack_Bar
@@ -7758,7 +7777,7 @@ Instead of doing anything except examining to cigarette lighter:
 	say "No way. Touching that is a good way to lose a hand."
 
 Instead of jumping when player is in Room_Car_With_Stepdad:
-	try room_navigating Room_Dream_Grassy_Field.
+	try navigating Room_Dream_Grassy_Field.
 
 Instead of going to Room_Dream_Grassy_Field when player is in Room_Car_With_Stepdad:
 	if stepdad_free_to_go is false:
@@ -7888,7 +7907,7 @@ Instead of putting something on dream_train_track:
 	else:
 		say "Grandpa told you if you put things on the tracks, you might derail the train. You think better of the idea.".
 
-Instead of room_navigating Room_Railroad_Tracks when player is in Room_Dream_Railroad_Tracks:
+Instead of navigating Room_Railroad_Tracks when player is in Room_Dream_Railroad_Tracks:
 	try follow_tracks.
 
 Instead of taking dream_mound_of_rock:
