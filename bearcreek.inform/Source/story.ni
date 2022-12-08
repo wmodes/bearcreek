@@ -547,6 +547,26 @@ Understand
 Instead of Doing_some_swimming_in:
 	try doing_some_swimming;
 
+Chapter - Swinging
+
+Understand the command "swing" as something new.
+
+Doing_some_swinging is an action applying to nothing.
+Understand "swing", "hang"
+	as doing_some_swinging.
+
+Instead of doing_some_swinging when climbable thing is not contained by location:
+	say "Good idea. Maybe climb a tree?";
+
+Doing_some_swinging_on is an action applying to one touchable thing.
+Understand
+	"swing on/from [touchable climbable thing]",
+	"hang on/from [touchable climbable thing]"
+	as doing_some_swinging_on.
+
+Instead of doing_some_swinging_on:
+	try doing_some_swinging;
+
 Chapter - Jumping_across
 
 [This is laregely for attempting to cross the river in Room_Crossing, understanding that the player will try to get across before the bridge log appears ]
@@ -658,7 +678,8 @@ Carry out standing_up:
 [Procedural rule while exiting or standing_up or getting off (this is the make standing a brief experience rule):
 	ignore the describe room stood up into rule;]
 
-[ Chapter - Get_Up_On
+[TODO: Nix. Now incorporated into navigating...
+Chapter - Get_Up_On
 
 [ navigating ]
 
@@ -1081,16 +1102,6 @@ Instead of smelling a room:
 	else:
 		say "You smell nothing in particular.".
 
-[ Chapter - Supporters
-
-[TODO: nix. This has been consolidated into navigating ]
-
-Understand
-	"go on/onto/in/into [supporter]",
-	"walk on/onto/in/into [supporter]",
-	"balance on/onto/in/into [supporter]",
-	"get on/onto/in/into"
-	as entering ]
 
 Chapter - Tracks
 
@@ -1330,6 +1341,16 @@ Part - Navigating
 
 [ navigating means moving from one room to another, moving to an elusive_landmark, or on/in to a supporter or container ]
 
+[The goal here is to make it so we can navigate to  elusive_landmarks during the relevant scene, but navigate to rooms otherwise. When we say "go to tree" we want it to match "white tree" (an elusive landmark) rather than try to room_navigate to Room_Top_of_the_Tree (a room)
+
+This was accomplished by careful organization of the navigate action:
+
+* I combined many similar navigation or movement actions into one navigation action - this helped prevent similar grammar lines from uncontrollably competing with each other
+* It was suggested not to use any in grammar lines - however, I wanted the action to catch these possibilities to give an error in the check rule that made sense for the kind of thing and action
+* It was suggested not to use qualifiers in grammar lines so you wouldn’t get the dreaded “The noun does not make sense in this context” - I took this to heart, but also used some definitions (described below) that helped
+* I used definitions to keep grammar lines from being triggered when I didn’t want them to, i.e., [any relevant elusive_landmark]
+* I was careful to put grammar lines I wanted to be preferentially triggered before others (if the number of grammar options is the same, the parser is first come, first served) ]
+
 Navigating is an action applying to one thing.
 Understand
 	[ rooms and landmarks ]	
@@ -1370,6 +1391,14 @@ Carry out navigating elusive_landmark:
 	[ say "(DEBUG: carry out nav elusive_landmark: [noun])"; ]
 	increment landmark_nav_counter;
 	move_within_dark_woods;
+
+[ These three DTPM rules are necessary to privledge the elusive_landmark that is in location and distant. In general, however, we allow navigation to these others to generate a relevant can't-reach-that message. ]
+Does the player mean navigating not visible elusive_landmark:
+	It is very unlikely.
+Does the player mean navigating visible not distant elusive_landmark:
+	It is very unlikely.
+Does the player mean navigating visible distant elusive_landmark:
+	It is very likely.
 
 [ room navigating ]
 
@@ -3337,7 +3366,6 @@ Scene_Grandparents_Conversation ends when Scene_Explorations begins.
 Scene_Grandparents_Conversation ends when Scene_Walk_With_Grandpa begins.
 
 When Scene_Grandparents_Conversation begins:
-	try saying hello to Grandpa;
 	now current interlocutor is Grandpa;
 	start_seq_grandparents_chat in one turn from now;
 	continue the action.
@@ -4039,6 +4067,7 @@ Scene_Across_the_Creek ends when Scene_Lost begins.
 When Scene_Across_the_Creek begins:
 	set_the_time_to late_afternoon.
 
+
 Chapter - Scene_Lost
 
 There is a scene called Scene_Lost.
@@ -4049,13 +4078,8 @@ Scene_Lost ends when Scene_Night_In_The_Woods begins.
 
 Section - Actions
 
-[TODO: The goal here is to make it so we can landmark_navigate to these elusive landmarks. When we say "go to tree" we want it to match "white tree" (an elusive landmark) rather than try to room_navigate to Room_Top_of_the_Tree (a room)
-
-This is harder than it looks:
-* "Does the player mean" rules don't seem to help
-* There is no easy way to remove the action and rebirth a command with navigating
-* I can't just disable the navigating action during this scene, because...
-* Changing the def'n of "reachable room" so it excludes rooms during this scene results in "I don't understand the noun in this conext"]
+Instead of navigating a room during Scene_Lost:
+	say cant_find_that;
 
 
 Part - Scene_Night_In_The_Woods
@@ -4302,7 +4326,7 @@ When Scene_Dreams ends:
 	pause_the_game;
 	say Title_Card_Part_3;
 
-test dreams with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep"
+test dreams with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / go to hollow / pile leaves / sleep / get up / drop bag / go to hollow / z/z/z/ pile leaves/ sleep"
 
 [During Scene_Dreams player cannot move to next location until the scene for that location is finished]
 
@@ -5412,6 +5436,10 @@ Some pine trees are backdrop in Room_Grassy_Clearing.
 A low bank is scenery in Room_Grassy_Clearing.
 	The description is "Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree.".
 
+Section - Rules and Actions
+
+After going to Room_Grassy_Clearing for the first time:
+	try saying hello to Grandpa;
 
 Chapter - Room_Blackberry_Tangle
 
@@ -5781,11 +5809,6 @@ The swift_current_west is a waterbody in Room_Crossing.
 	The description is "The river here narrows to a swift current, too broad to jump across and too swift to wade or swim -- or in any case, you're not willing to risk drowning here."
 	Understand "river/creek/crick/stream/water",  "bear creek/crick", "gap/chasm", "swift/-- current" as swift_current_west.
 
-[TODO: Shouldn't this be the same as swift_current_east? ]
-[TODO: Oops - in Other Shore
->cross creek
-You look around, but don't see Bear Creek. Last you remember, it was lost in the brambles.]
-
 A steep bank is scenery in Room_Crossing.
 	The description of steep bank is "It's pretty steep. And covered in poison oak."
 
@@ -5954,6 +5977,9 @@ Instead of going from Room_Long_Stretch:
 Instead of jumping in Room_Long_Stretch:
 	try going up.
 
+Instead of doing_some_swinging in Room_Long_Stretch:
+	say "You swing from some of the lower branches.";
+
 
 Chapter - Room_Railroad_Tracks
 
@@ -6112,7 +6138,6 @@ The description is "You're about Halfway Up the tree, really pretty high. The br
 [paragraph break]Looking around, it's hard to see much of anything, although you can see [dog_from_a_distance] through the thick branches. It looks like the view is much better higher up.".
 The scent is "pine sap".
 
-
 Section - Navigation
 
 Room_Halfway_Up is up from Room_Long_Stretch.
@@ -6148,16 +6173,6 @@ Instead of going to Room_Halfway_Up when player is in Room_Long_Stretch:
 Instead of climbing Doug_Fir2:
 	try going up.
 
-[TODO: nix]
-[ Instead of get_up_on_anything when player is in Room_Halfway_Up:
-	try going up. ]
-
-[TODO: needed?]
-[ Does the player mean climbing the Doug_Fir2 when player is in Room_Halfway_Up:
-	It is very likely.
-Does the player mean climbing_up the Doug_Fir2 when player is in Room_Halfway_Up:
-	It is very likely. ]
-
 [Encourage retry and transition text]
 Instead of going to Room_Long_Stretch when player is in Room_Halfway_Up:
 	if treetop_tries_count of the player is less than 2:
@@ -6180,6 +6195,8 @@ Instead of throwing when player is in Room_Halfway_Up:
 Instead of dropping when player is in Room_Halfway_Up:
 	say "You're not likely to find that again if you throw that from here. You change your mind."
 
+Instead of doing_some_swinging in Room_Halfway_Up:
+	say "You swing like a monkey from the branches of the big Doug fir.";
 
 Chapter - Room_Top_of_Pine_Tree
 
@@ -6191,7 +6208,6 @@ The casual_name is "at the top of the big pine tree".
 The description is "This is very close to the very top. You are holding on to the narrow trunk of the tree. You can feel it sway in the faint breeze. It is slightly cooler up here. [treetop_payoff].".
 Understand "top of/-- pine/doug/-- tree/fir/--" as Room_Top_of_Pine_Tree.
 The scent is "pine sap".
-
 
 Section - Navigation
 
@@ -6295,6 +6311,8 @@ Instead of dropping when player is in Room_Top_of_Pine_Tree:
 Does the player mean examining distant_tracks:
 	it is possible.]
 
+Instead of doing_some_swinging in Room_Top_of_Pine_Tree:
+	say "You swing like a monkey from the branches of the big Doug fir. Oh man, you are really high up. You get a firm grip on the tree.";
 
 Part - Region_Trailer_Park_Area
 
@@ -6516,6 +6534,7 @@ The indefinite article is "Cat Lady's".
 >get up
 You get off kitchen table.]
 
+[TODO: replace "undescribed fixed in place" with "scenery"]
 The sharons_table is an undescribed fixed in place enterable sit-at-able supporter in Room_Sharons_Trailer.
 The printed name is "kitchen table".
 The description is "This is the kitchen table, half buried in cat food cans and bags and other stuff. There is a space cleared off for teacups, teapot, tea cozies, and tea things which occupy a corner. There are a few chairs around the table, some are even clear enough to sit on.".
@@ -7056,9 +7075,6 @@ To say day1_woods_exits:
 To say day2_woods_exits:
 	say "There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail";
 
-[TODO: What does this do? ]
-[ Instead of navigating when player is in Room_Dark_Woods_South and Scene_Night_In_The_Woods is not happening:
-	say cant_find_that; ]
 
 Section - Objects
 
@@ -7405,13 +7421,16 @@ Instead of throwing when player is in Room_Sentinel_Tree:
 Instead of dropping when player is in Room_Sentinel_Tree:
 	say "You're not likely to find that again if you throw that from here. You change your mind."
 
+Instead of doing_some_swinging in Room_Sentinel_Tree:
+	say "You swing like a monkey from the branches of the sentinel tree.";
+
 
 Part - Region_Dreams
 
 Section - Description
 
 Region_Dreams is a region.
-Room_Car_With_Mom, Room_Drive_In, Room_Snack_Bar, Room_Restroom,
+Room_Car_With_Mom, Room_Drive_In, Room_Playground, Room_Snack_Bar, Room_Restroom,
 Room_Car_With_Stepdad, Room_Dream_Grassy_Field, Room_Dream_Railroad_Tracks, Room_Mars, Room_Chryse_Planitia, Room_Dream_Dirt_Road are in Region_Dreams.
 
 Section - Backdrops and Scenery
@@ -7419,6 +7438,7 @@ Section - Backdrops and Scenery
 [ Create an ambiguous sky backdrop. Is it day? Is it night? ]
 Dream_sky is backdrop in Room_Car_With_Mom.
 Dream_sky is backdrop in Room_Drive_In.
+Dream_sky is backdrop in Room_Playground.
 Dream_sky is backdrop in Room_Snack_Bar.
 Dream_sky is backdrop in Room_Restroom.
 Dream_sky is backdrop in Room_Car_With_Stepdad.
@@ -7444,7 +7464,7 @@ The downpath_dest of Region_Dreams is Limbo.
 Section - Rules and Actions
 
 
-Chapter - Room_Cfar_With_Mom
+Chapter - Room_Car_With_Mom
 
 Section - Description
 
@@ -7455,7 +7475,6 @@ The description is "[one of]It's Friday and your mom picked you up from school t
 The scent is "bean burritos and taco sauce".
 The outside_view is "the movie. [description of movie_backdrop]".
 Understand "Car With Mom" as Room_Car_With_Mom.
-
 
 Section - Navigation
 
@@ -7476,8 +7495,8 @@ Section - Backdrops and Scenery
 
 The movie_backdrop is backdrop in Room_Car_With_Mom.
 The printed name is "movie".
-The description is "The movie is playing on the big screen. In the last of the sunset light, you can still see the figures of kids running around at the playground at the front of the drive-in. It seems unsettling that some parents would let their kids run around in the dark.[paragraph break]Mom always tries to take you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Benji. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who kills people by looking at them."
-Understand "film/drive-in/omen", "drive in" as movie_backdrop.
+The description is "The movie is playing on the big screen. Mom always takes you to the drive-in when there's a good movie playing. [first time]Your favorite was Escape From Witch Mountain, though it was a little scary. No wait, your favorite was Benji. Mom loved that one too. [paragraph break][only]This one, The Omen, is scary and probably not made for kids. It's about an evil child protected by witches and dogs who kills people by looking at them."
+Understand "film/drive-in/omen/movie/film", "drive in", "drive-in/movie/film/-- screen" as movie_backdrop.
 The indefinite article is "the".
 
 The camaro_backdrop is backdrop in Room_Car_With_Mom.
@@ -7488,7 +7507,7 @@ Understand "Camaro/car/seats/dash/dashboard" as camaro_backdrop.
 Section - Rules and Actions
 
 [keep player here until they finish their convo with mom]
-Instead of going to Room_Drive_In when mom_free_to_go is not true:
+Instead of going to Room_Drive_In from Room_Car_With_Mom when mom_free_to_go is not true:
 	say "You can't bring yourself to leave yet. There is something important here."
 
 
@@ -7504,15 +7523,15 @@ The casual_name is "at the drive-in in a dream".
 The description is "The movie is playing on the big screen. The drive-in is like a big parking lot but with bumps that cars can drive up on. There are a million cars here on a Friday night and each one is parked beside a pole that has the speakers you can put in your car. There is trash and drifts of spilled popcorn on the ground.
 [paragraph break][available_exits]".
 The scent is "popcorn".
-Understand "drive-in/lot", "drive in", "parking lot" as Room_Drive_In.
-
+Understand "drive-in/drivein/lot", "drive in", "parking lot" as Room_Drive_In.
 
 Section - Navigation
 
 East of Room_Drive_In is Room_Snack_Bar.
+North of Room_Drive_In is Room_Playground.
 Inside from Room_Drive_In is Room_Car_With_Stepdad.
 
-The available_exits of Room_Drive_In are "You can get back in the car or head to the snack bar from which waves of popcorn smell are emerging."
+The available_exits of Room_Drive_In are "You can get back in the car or head to the snack bar from which waves of popcorn smell are emerging. There is also a dark and scary playground near the screen."
 
 Section - Objects
 
@@ -7550,7 +7569,7 @@ The printed name is "spilled popcorn".
 The description is "There is popcorn blowing in drifts on the ground turning the drive-in into a winter wonderland. The popcorn squeaks when you step on it."
 Understand "spilled/-- popcorn/snow", "popcorn" as spilled_popcorn.
 
-The movie, the screen, some speakers, some paper trash are scenery in Room_Drive_In.
+Some speakers, some paper trash are scenery in Room_Drive_In.
 
 Section - Rules and Actions
 
@@ -7573,6 +7592,52 @@ Instead of entering Virtual_Snack_Bar,
 	try navigating Room_Snack_Bar.
 
 
+Chapter - Room_Playground
+
+Section - Description
+
+Room_Playground is a room.
+The printed name is "The Playground".
+The casual_name is "at the playground in a dream".
+The description is "Directly under the big drive-in screen, there is a playground with a swing set. Before the movie, kids usually play here, but at this point in the movie, no sensible child would hang out here. Your mom would freak out if she knew you were here now.[paragraph break][available_exits]".
+The scent is "popcorn".
+Understand "playground/swings/swingset", "play ground", "swing set"  as Room_Playground.
+
+Section - Navigation
+
+South of Room_Playground is Room_Drive_In.
+Southwest of Room_Playground is Room_Snack_Bar.
+
+The available_exits of Room_Playground are "You can head back to mom's car or head to the snack bar from which the smell of popcorn is drifting."
+
+Section - Objects
+
+[TODO: Oops
+>get all
+There are none at all available!]
+
+Section - Backdrops and Scenery
+
+The movie_backdrop is backdrop in Room_Playground.
+
+The swingset is climbable scenery enterable supporter in Room_Playground.
+The printed name is "swing set".
+The description is "This is a really tall swing set. There is nothing but asphalt under it, and you imagine what would happen if you fell off this deadly swing, and it makes you [nervous]."
+Understand "swings/swingset", "swing set" as swingset.
+
+The playground is scenery in Room_Playground.
+The description is "This is a sad little playground, as playgrounds go. Just a single tall swing set with asphalt underneath."
+Understand "playground", "play ground" as playground.
+
+[TODO: Test this location]
+
+Section - Rules and Actions
+
+Instead of doing_some_swinging in Room_Playground:
+	try entering swingset;
+	say "This is a [em]really[/em] tall swing set[first time]. And there is nothing but asphalt beneath you. Perhaps the person who designed this didn't like kids and was trying to kill them off. It makes you [nervous] at first, but you quickly get used to it[only]. And you can swing [em]really[/em] high. You pump your legs forward and back and get a really good swing going.[paragraph break]At the height of your swing, you look around you. For a moment, you can see miles of cars, people coming and going at the snack bar, and the [em]beam[/em] of the movie suspended in the air projected over your head! You begin your downward rush and feel the cool night air rushing through your hair, everything is perfect, and you wonder is this a dream?[paragraph break][one of]Then you think about what would happen if you jumped from here. You picture your broken body on the pavement and your mom crying. You[or]Eventually, you[stopping] stop pumping and let your swinging die down and then drag your feet until you come to a stop.";
+	now player is intrepid;
+
 Chapter - Room_Snack_Bar
 
 Section - Description
@@ -7589,6 +7654,7 @@ Understand "snack bar", "snackbar", "snack-bar", "snack shack" as Room_Snack_Bar
 Section - Navigation
 
 West of Room_Snack_Bar is Room_Drive_In.
+Northwest of Room_Snack_Bar is Room_Playground.
 Outside of Room_Snack_Bar is Room_Drive_In.
 East of Room_Snack_Bar is Room_Restroom.
 
@@ -8678,8 +8744,6 @@ test honey-tell with "teleport to Grassy Clearing / tell honey about Aunt Mary /
 
 
 Part - Grandpa
-
-[TODO: Grandpa says hello when the game starts rather than when you go to grassy clearing. ]
 
 Grandpa is an undescribed _male man in Room_Grassy_Clearing.
 	The initial appearance is "[grandpas_initial_appearance].".
