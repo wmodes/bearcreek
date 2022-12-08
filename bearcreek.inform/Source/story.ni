@@ -391,7 +391,7 @@ Chapter - Smarter Messages
 
 The parser error internal rule response (E) is "Oh? Do you see that here?".
 
-The can't go that way rule response (A) is "[one of]Well. You can't go that way[or]Well, that's not an option[or]Hm, doesn't look like that's an option[cycling]."
+The can't go that way rule response (A) is "[one of]Well. You can't go that way[or]Well, that's not an option[or]Hm, doesn't look like you can go that way[at random]."
 
 The can't eat unless edible rule response (A) is "[one of]Blecch[or]Ugh[or]Bleurgh[or]Ew[at random].".
 
