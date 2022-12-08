@@ -391,11 +391,11 @@ Chapter - Smarter Messages
 
 The parser error internal rule response (E) is "Oh? Do you see that here?".
 
-The can't go that way rule response (A) is "Which direction is that? You might want to use landmarks to navigate.".
+The can't go that way rule response (A) is "[one of]Well. You can't go that way[or]Well, that's not an option[or]Hm, doesn't look like that's an option[cycling]."
 
 The can't eat unless edible rule response (A) is "[one of]Blecch[or]Ugh[or]Bleurgh[or]Ew[at random].".
 
-The examine undescribed things rule response (A) is "[if Scene_Dreams is not happening][We] [see] nothing [one of]It is what it is[or]Eh, nothing special[at random][else]You look at [the noun], but the details are[one of] foggy[or] indistinct[or] fuzzy[at random][end if]."
+The examine undescribed things rule response (A) is "[if Scene_Dreams is not happening][one of]It is what it is[or]Eh, nothing special[at random][else]You look at [the noun], but the details are[one of] foggy[or] indistinct[or] fuzzy[at random][end if]."
 
 The can't reach inside rooms rule response (A) is "You can't get there from here."
 
@@ -405,6 +405,10 @@ The can't take scenery rule response (A) is "You can't really figure out how to 
 
 [ The block vaguely going rule response (A) is "New response text." ]
 
+Rule for clarifying the parser's choice of something:
+	do nothing.
+
+The parser nothing error internal rule response (B) is "Let's not be greedy."
 
 Book - Bibliographical information
 
@@ -442,9 +446,6 @@ Chapter - Taking Things
 Rule for implicitly taking something (called target):
 	try silently taking the target;
 
-Rule for clarifying the parser's choice of something:
-	do nothing.
-
 Chapter - Moving Player
 
 To move player to (new-location - a room) with little fuss:
@@ -472,7 +473,6 @@ Include (-
 Replace PrintInferredCommand;
 [ PrintInferredCommand; ];
 -) before “Parser.i6t”.
-
 
 
 Part - New commands
@@ -610,13 +610,13 @@ Chapter - Sitting/Lying
 
 Understand the command "lie", "sit" as something new.
 
-lying_down is an action applying to one thing.
+sitting_on_something is an action applying to one thing.
 Understand
 	"lie down/-- on/in [something]",
 	"sit down/-- on/in/at [something]"
-	as lying_down.
+	as sitting_on_something.
 
-Carry out lying_down:
+Carry out sitting_on_something:
 	if noun is a lie-able supporter:
 		try silently entering noun;
 		if rule succeeded:
@@ -630,22 +630,23 @@ Carry out lying_down:
 	otherwise:
 		try entering the noun;
 
-lying_default is an action applying to nothing.
+sitting_on_anything is an action applying to nothing.
 
 Understand
-	"lie", "lie down", "sit", "sit down"
-	as lying_default.
+	"lie down/--", 
+	"sit down/--"
+	as sitting_on_anything.
 
-Carry out lying_default:
+Carry out sitting_on_anything:
 	let list_of_lieables be a list of things;
 	add the list of lie-able supporters in location to list_of_lieables;
 	add the list of sit-at-able supporters in location to list_of_lieables;
 	if the number of entries of list_of_lieables is 0:
 		say "There's nowhere comfortable to sit here.";
 	else if the number of entries of list_of_lieables is 1:
-		try lying_down entry 1 of list_of_lieables;
+		try sitting_on_something entry 1 of list_of_lieables;
 	else:
-		say "Where do you want to sit? There's a few choices: [list_of_lieables]."
+		say "Where do you want to sit? There's a few choices: [list_of_lieables with indefinite articles]."
 
 Does the player mean entering a lie-able supporter:
 	it is likely.
@@ -657,74 +658,38 @@ Understand the command "stand" as something new.
 
 standing_up is an action applying to nothing.
 Understand
-	"stand", "stand up", "get up", "get off"
+	"stand up/--", 
+	"get up/off"
 	as standing_up.
 
 Carry out standing_up:
-	if player is on a lie-able supporter (called the loungy_thing):
-		try silently exiting [loungy_thing];
+	if player is on a lie-able supporter (called the bed):
+		try silently exiting [bed];
 		if rule succeeded:
-			say "You push yourself up from [the loungy_thing].";
+			say "You push yourself up from [the bed].";
 		stop the action;
-	else if player is on a supporter (called the loungy_thing):
-		try silently exiting [loungy_thing];
+	else if player is on a sit-at-able supporter (called the chair):
+		try silently exiting [chair];
 		if rule succeeded:
-			say "You stand up from [the loungy_thing].";
+			say "You get up from [the chair].";
+		stop the action;
+	else if player is on a supporter (called the couch):
+		try silently exiting [couch];
+		if rule succeeded:
+			say "You get off [the couch].";
 		stop the action;
 	otherwise:
 		say "You are already up.";
 		rule fails;
 
-[Procedural rule while exiting or standing_up or getting off (this is the make standing a brief experience rule):
-	ignore the describe room stood up into rule;]
+[ These rules eliminate "(first getting off [the chaise])" and "(getting off [the current home])" messages when moving ]
+The new stand up before going rule substitutes for the stand up before going rule.
 
-[TODO: Nix. Now incorporated into navigating...
-Chapter - Get_Up_On
+This is the new stand up before going rule:
+	if player is on supporter or player is in container:
+		try silently standing_up.
 
-[ navigating ]
-
-Understand the command "climb" as something new.
-
-navigating is an action applying to one visible thing.
-
-Understand
-	"climb up/on/onto/in/into/over/through/under/-- [something]", 
-	"hop up/on/onto/in/into/over/through/under/-- [something]", 
-	"scale up/on/onto/in/into/over/through/under/--  [something]", 
-	"jump up/on/onto/in/into/over/through/under/-- [something]", 
-	"cross up/on/onto/in/into/over/through/under/-- [something]",
-	"go up/on/onto/in/into/over/through/under/to/-- [something]"
-	as navigating.
-
-Carry out navigating:
-	if the noun is climbable:
-		say "You climb [the noun].";
-	else if the noun is an enterable container:
-		say "You climb into [the noun].";
-		try entering the noun;
-	else if the noun is a supporter:
-		say "You climb onto [the noun].";
-		try entering the noun;
-	else if the noun is a waterbody:
-		try doing_some_swimming;
-	else:
-		let up_room be the room up from the location; 
-		if the up_room is a room:
-			try navigating up_room;
-		else:
-			try climbing the noun. ]
-
-[ Does the player mean navigating an unclimbable thing:
-	it is unlikely.
-
-Does the player mean navigating thing that is not an enterable container:
-	it is unlikely. ]
-
-[ Does the player mean navigating thing that is touchable:
-	it is likely.
-
-Does the player mean navigating thing that is not touchable:
-	it is very unlikely.  ]
+The implicitly pass through other barriers rule is not listed in any rulebook.
 
 [ get_up_on_anything ]
 
@@ -1278,7 +1243,7 @@ Carry out exit_listing:
 		say looking_for_available_exits;
 
 To say navigation_hint:
-	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [em]  go to clearing  [/em][line break]Or try: [em]  follow trail  [/em][line break]Or even: [em]  go back  [/em] or [em]  go on  [/em][line break]If you need a reminder of where you can go, try: [em]  which way  [/em] or simply [em]  look[/em][stopping]";
+	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [em]  go to clearing  [/em][line break]Or try: [em]  follow trail  [/em][line break]Or even: [em]  go back  [/em] or [em]  go on  [/em][line break]If you need a reminder of where you can go, try: [em]  which way  [/em] or simply [em]  look[/em][stopping][line break]";
 
 Chapter - Navigation to Rooms and Landmarks
 
@@ -1425,6 +1390,12 @@ Carry out navigating room:
 		else:
 			now player is not discouraged_from_compass_navigating;
 			try going heading;
+
+[ These DTPM rules prevent disambiguation of  not reachable rooms ]
+Does the player mean navigating not reachable rooms:
+	It is very unlikely.
+Does the player mean navigating reachable rooms:
+	It is likely.
 
 [ navigating to climbable things, supporters, containers, & waterbodies]
 
@@ -3241,13 +3212,6 @@ It is in Limbo.
 The description is "[first time]You are looking down at the train from above! Kinda weird. [only]You can see the train on the tracks moving toward the crossing far below your perch. This is a freight train with all kinds of cars. You see tankers and box cars and some others you don't recognize from here.".
 Understand "train", "railroad", "far away", "distant", "crossing", "tracks" as distant_train.
 
-[Does the player mean doing anything to distant_train when player is in top of pine tree: It is likely.]
-[ Does the player mean doing anything to distant_train when player is not in Room_Top_of_Pine_Tree:
-	It is very unlikely. ]
-
-[ Does the player mean doing anything to distant_train when player is in Room_Top_of_Pine_Tree:
-	It is very likely. ]
-
 The next_train_interval is a number that varies.
 
 When play begins:
@@ -3260,7 +3224,7 @@ At the time when train_comes:
 	[ schedule train events ]
 	train_enters_area;
 	train_is_nearby in 3 turns from now;
-	train_hits_crossing in 5 turns from now;
+	train_hits_crossing in 6 turns from now;
 
 To train_enters_area:
 	if Scene_Dreams is not happening and Scene_Epilogue is not happening and Scene_Fallout_Going_Home is not happening:
@@ -3319,7 +3283,11 @@ To show_train_crossing:
 		now player is train_experienced;
 	else if location of player is Room_Top_of_Pine_Tree:
 		queue_report "The train is approaching the dirt road near the trailer park, passing almost directly beneath you. It sounds it's whistle for the crossing. Still loud, even up here! For a moment, you can see the whole train, end to end. It's going fast, and before you know it, the train is past the crossing, past the trailer park, and around the next bend and out of sight." with priority 2;
-		move distant_train to Limbo.
+		[ move distant_train to Limbo; ]
+		distant_train_leaves in zero turns from now.
+
+At the time when distant_train_leaves:
+	move distant_train to Limbo;
 
 Volume - The World
 
@@ -3710,13 +3678,13 @@ This is the seq_sharon_teatime_handler rule:
 		now sharon is ready-for-tea-time;
 		queue_report "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest." at priority 2;
 	else if index is 2:
-		Report Sharon saying "'[if player is not on sharons_table]Oh, [sharons_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
+		Report Sharon saying "'[if player is not on the sharons_table]Oh, [sharons_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
 		do Sharon_Teatime_Premonition;
 	else if index is 3:
-		Report Sharon saying "'[if player is not on sharons_table]Please, [sharons_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharons_nickname]. What adventures have you had since we talked last?'";
+		Report Sharon saying "'[if player is not on the sharons_table]Please, [sharons_nickname], sit down[else]Oh goodie[end if].' The Cat Lady fills the teapot from a kettle that she didn't bother to heat.[paragraph break]'I love a tea party, don't you?' the Cat Lady asks, but leaves you no time to answer. 'Tell me about your life, [sharons_nickname]. What adventures have you had since we talked last?'";
 	else if index is 4:
 		if sharon is visible:
-			if player is not on sharons_table:
+			if player is not on the sharons_table:
 				queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3;
 				try silently entering the sharons_table;
 			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharons_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
@@ -5396,12 +5364,12 @@ The big_bucket is half-full.
 The scent is "ripe berries".
 
 The honeys_radio is improper-named scenery in Room_Grassy_Clearing.
-	It is familiar, switched on, device.
-	The printed name is "transistor radio".
-	The description is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
-	Understand "honey's/honeys/grandma's/grandmas/-- portable/-- transistor/-- radio", "radio/-- station/dial/channel", "knob/cube/woodgrain/plastic/wax", "music" as the honeys_radio.
-	The scent is "ozone".
-	The indefinite article is "Honey's".
+It is familiar, switched on, device.
+The printed name is "transistor radio".
+The description is "[one of]Honey's little portable transistor radio is sitting on the bank [if grandpas_shirt is in location]beside Grandpa's shirt [end if]under the tree. You've always been fascinated by it, as much by its perfect cube shape and woodgrain finish as anything. The tiny volume knob is missing, but there is a piece of something that looks like wax or plastic jammed in its place. The[or]Honey's transistor[stopping] radio is on and is tuned to a station playing pop music."
+Understand "honey's/honeys/grandma's/grandmas/-- portable/-- transistor/-- radio", "radio/-- station/dial/channel", "knob/cube/woodgrain/plastic/wax", "music" as the honeys_radio.
+The scent is "ozone".
+The indefinite article is "Honey's".
 
 Instead of doing anything except examining or listening or smelling or quizzing or informing or implicit-quizzing or implicit-informing to honeys_radio:
 	say "[one of]Honey will kill you if you mess with her radio.[or]You better leave the radio alone.[or]Honey gives you a [em]look[/em], and you leave the radio alone.[cycling]".
@@ -6003,7 +5971,7 @@ The available_exits of Room_Railroad_Tracks is "Across the tracks is a grassy fi
 
 Section - Objects
 
-The train_track is an undescribed fixed in place enterable supporter in Room_Railroad_Tracks.
+The train_track is a scenery enterable supporter in Room_Railroad_Tracks.
 The printed name is "train tracks".
 The description is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock.".
 Understand "train/railroad/-- track/tracks", "rail/rails/traintracks", "train/railroad", "rail road", "ties" as train_track.
@@ -6022,12 +5990,12 @@ The description is "The train rolled over your penny and turned it into a flatte
 Understand "lucky/flattened/flat/train/-- penny/coin" as flattened_penny.
 The indefinite article is "the".
 
-[ A mound_of_rock is a undescribed fixed in place supporter in Room_Railroad_Tracks.
+[ A mound_of_rock is a scenery supporter in Room_Railroad_Tracks.
 The printed name is "mound of rock".
 The description is "Grandpa called these ballast, rocks that line the railroad tracks."
 Understand "mound of rock/rocks", "rock/-- mound", "rock/rocks/stone/stones" as mound_of_rock. ]
 
-A green_tunnel is undescribed fixed in place enterable container in Room_Railroad_Tracks.
+A green_tunnel is scenery enterable container in Room_Railroad_Tracks.
 The printed name is "green tunnel".
 The description is "The trees grow close on either side of the tracks, and their branches touch above."
 Understand "green/-- tunnel", "trees/branches" as green_tunnel.
@@ -6507,7 +6475,7 @@ The Mika_figurine can be palmed.
 The indefinite article is "the".
 
 The players_teacup is an undescribed edible thing.
-The players_teacup is on sharons_table. 
+The players_teacup is on the sharons_table. 
 The printed name is "teacup".
 It is an unopenable open container. 
 The description is "[one of]This is a teacup -- not at all like the coffee mugs at home -- made of china, complete with a delicate little handle. The complicated rose-colored pattern may be dogs and fancy men on horses. Your teacup is [or]Your teacup is [stopping][if players_teacup is unfilled]empty[else]full of tea barely worthy of the name, a lukewarm watery somewhat tea-flavored liquid[end if]."
@@ -6528,18 +6496,18 @@ sharons_loveseat is a lie-able surface in Room_Sharons_Trailer.
 The printed name is "what was formerly a loveseat".
 The description is "This once was a loveseat. Now it is a pile of cat-shredded upholstery and stuffing, and smells like cat pee.".
 Understand "shredded/-- sofa/loveseat/couch/couches/divan/upholstery/stuffing", "cat pee" as sharons_loveseat.
-The indefinite article is "Cat Lady's".
 
 [TODO: Oops
 >get up
-You get off kitchen table.]
+You get off kitchen table.
+This is because "get up" is the "exiting" action,
+not OUR standing_up action]
 
-[TODO: replace "undescribed fixed in place" with "scenery"]
-The sharons_table is an undescribed fixed in place enterable sit-at-able supporter in Room_Sharons_Trailer.
+The sharons_table is an improper-named scenery enterable sit-at-able supporter in Room_Sharons_Trailer.
 The printed name is "kitchen table".
 The description is "This is the kitchen table, half buried in cat food cans and bags and other stuff. There is a space cleared off for teacups, teapot, tea cozies, and tea things which occupy a corner. There are a few chairs around the table, some are even clear enough to sit on.".
-Understand "table/kitchen/chair/chairs", "cat food", "can/cans", "bag/bags" as sharons_table.
-[ The indefinite article is "Cat Lady's". ]
+Understand "table/kitchen/chair/chairs", "cat food", "can/cans", "bag/bags" as the sharons_table.
+The indefinite article is "the".
 
 Some tea_things are scenery on sharons_table.
 The printed name is "tea things".
@@ -6695,7 +6663,7 @@ North from Room_Lees_Trailer is Room_C_Loop.
 
 Section - Objects
 
-The lees_table is a undescribed fixed in place enterable sit-at-able supporter in Room_Lees_Trailer.
+The lees_table is a scenery enterable sit-at-able supporter in Room_Lees_Trailer.
 	The printed name is "table".
 	The indefinite article is "Lee's".
 	The description is "Like the rest of Lee's trailer, the table is mostly empty[if there is something on lees_table]. On the table, there's [a list of things on lees_table][end if].".
@@ -6719,7 +6687,7 @@ Understand "lee's/lees/-- coffee/-- mug/cup" as lees_coffee_mug.
 The indefinite article is "Lee's".
 The scent is "stale bitter coffee".
 
-The lees_tv is an improper-named undescribed fixed in place device in Room_Lees_Trailer.
+The lees_tv is an improper-named scenery device in Room_Lees_Trailer.
 	The printed name is "TV".
 	The description is "This is a tiny portable black and white set with a giant channel changer and bent rabbit ears propped on a crate[if lees_tv is switched on] [what_show_is_playing][else].[end if]".
 	Understand "lees/lee's/-- tiny/-- television/tv set/--", "tv/television/-- station/dial/channel/changer", "bent/-- rabbit ears" as lees_tv.
@@ -6845,7 +6813,7 @@ Some jam_jars are scenery in Room_Grandpas_Trailer.
 	The description of the jam_jars is "Jars and lids and pots and pans and paraffin and tongs and boiling water are laid out strategically all over the kitchen. Who knew making jam was so complicated?".
 	Understand "jar", "lid/lids", "parafin/paraffin/wax", "tongs", "water", "boiling" as jam_jars.
 
-Honeys_tv is improper-named undescribed fixed in place device in Room_Grandpas_Trailer.
+Honeys_tv is improper-named scenery device in Room_Grandpas_Trailer.
 	The printed name is "TV".
 	The description is "This is Honey's big color TV in its wooden case, pretty much like the one you have at home with mom, but with lighter wood. On weekend nights you lie on the floor with Grandpa and [one of]watch [em]Bowling for Dollars[/em][or]watch [em]Wild World of Animals[/em][or]sometimes, if you and mom aren't going home early on Sunday night, watch [em]Wonderful World of Disney[/em][at random].".
 	Understand "honeys/honey's/-- big/color/-- television/tv set/--", "tv/television/-- station/dial/channel" as honeys_tv.
@@ -7513,8 +7481,6 @@ Instead of going to Room_Drive_In from Room_Car_With_Mom when mom_free_to_go is 
 
 Chapter - Room_Drive_In
 
-[TODO: Add a playground room with a swing set. ]
-
 Section - Description
 
 Room_Drive_In is a room.
@@ -7542,7 +7508,7 @@ moms_camaro is fixed in place climbable enterable container in Room_Drive_In.
 	The description is "Mom's car is green and sleek with a black vinyl top."
 	Understand "Camaro/car" as moms_camaro.
 
-Virtual_snack_bar is undescribed fixed in place enterable container in Room_Drive_In.
+Virtual_snack_bar is scenery enterable container in Room_Drive_In.
 	The printed name is "the snack bar".
 	The description is "The snack bar sign says 'Snack Shack.."
 	Understand "snack bar/shack" as Virtual_snack_bar.
@@ -7612,10 +7578,6 @@ The available_exits of Room_Playground are "You can head back to mom's car or he
 
 Section - Objects
 
-[TODO: Oops
->get all
-There are none at all available!]
-
 Section - Backdrops and Scenery
 
 The movie_backdrop is backdrop in Room_Playground.
@@ -7623,18 +7585,17 @@ The movie_backdrop is backdrop in Room_Playground.
 The swingset is climbable scenery enterable supporter in Room_Playground.
 The printed name is "swing set".
 The description is "This is a really tall swing set. There is nothing but asphalt under it, and you imagine what would happen if you fell off this deadly swing, and it makes you [nervous]."
-Understand "swings/swingset", "swing set" as swingset.
+Understand "swing/swings/swingset", "swing set" as swingset.
 
 The playground is scenery in Room_Playground.
 The description is "This is a sad little playground, as playgrounds go. Just a single tall swing set with asphalt underneath."
 Understand "playground", "play ground" as playground.
 
-[TODO: Test this location]
-
 Section - Rules and Actions
 
 Instead of doing_some_swinging in Room_Playground:
-	try entering swingset;
+	if player is not in swingset:
+		try entering swingset;
 	say "This is a [em]really[/em] tall swing set[first time]. And there is nothing but asphalt beneath you. Perhaps the person who designed this didn't like kids and was trying to kill them off. It makes you [nervous] at first, but you quickly get used to it[only]. And you can swing [em]really[/em] high. You pump your legs forward and back and get a really good swing going.[paragraph break]At the height of your swing, you look around you. For a moment, you can see miles of cars, people coming and going at the snack bar, and the [em]beam[/em] of the movie suspended in the air projected over your head! You begin your downward rush and feel the cool night air rushing through your hair, everything is perfect, and you wonder is this a dream?[paragraph break][one of]Then you think about what would happen if you jumped from here. You picture your broken body on the pavement and your mom crying. You[or]Eventually, you[stopping] stop pumping and let your swinging die down and then drag your feet until you come to a stop.";
 	now player is intrepid;
 
@@ -7949,12 +7910,12 @@ Some dream_train_track are an enterable supporter in Room_Dream_Railroad_Tracks.
 	The description is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock."
 	Understand "tracks", "track", "rails", "rail", "traintracks", "railroad", "rail road", "ties", "rusty", "shiny" as dream_train_track.
 
-A dream_mound_of_rock is an undescribed fixed in place supporter in Room_Dream_Railroad_Tracks.
+A dream_mound_of_rock is a scenery supporter in Room_Dream_Railroad_Tracks.
 The printed name is "ballast rock".
 The description is "Grandpa called these ballast, rocks that line the railroad tracks."
 Understand "rock/rocks/stone/stones" as dream_mound_of_rock.
 
-A dream_green_tunnel is an undescribed fixed in place enterable container in Room_Dream_Railroad_Tracks.
+A dream_green_tunnel is a scenery enterable container in Room_Dream_Railroad_Tracks.
 	The printed name is "green tunnel".
 	The description is "The trees grow close on either side of the tracks, and their branches touch above."
 	Understand "green/tree/-- tunnel", "trees/branches", "tunnel of green/trees" as dream_green_tunnel.
