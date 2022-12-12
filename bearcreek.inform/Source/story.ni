@@ -3180,7 +3180,7 @@ To change_TV_channel:
 		say "You change the TV to channel 7.";
 		now tv_channel is 7;
 	else if tv_channel is 7:
-		say "You change the tv_channel all the way around from 7 to 2, skipping 9 since nothing is ever on.";
+		say "You change the TV channel all the way around from 7 to 2, skipping 9 since nothing is ever on.";
 		now tv_channel is 2;
 	find_show_in_table;
 	say "[line break][current_show] is on. [current_reaction][line break]";
@@ -4275,7 +4275,7 @@ After taking tuna_sandwich when raccoons are visible:
  	queue_report "The eyes of the invaders follow the tuna sandwich." at priority 1;
 
 After dropping tuna_sandwich when raccoons are visible:
- 	queue_report "The glittering eyes watch the tuna_sandwich hit the ground." at priority 1;
+ 	queue_report "The glittering eyes watch the tuna sandwich hit the ground." at priority 1;
 
 After dropping brown paper bag when raccoons are visible:
  	queue_report "Numerous pairs of eyes watch the paper bag hit the ground." at priority 1;
@@ -6308,7 +6308,7 @@ The distant_trailers is scenery in Room_Top_of_Pine_Tree.
 
 Section - Rules and Actions
 
-Test treetop with "test bridge/go to Room_Top_of_Pine_Tree/g/g/g/u/u/u/u/u".
+Test treetop with "test bridge/go to Top of Doug Fir/g/g/g/u/u/u/u/u".
 
 [Ensure retry and transition text]
 Instead of going to Room_Top_of_Pine_Tree when Room_Halfway_Up encloses the player:
@@ -6444,7 +6444,7 @@ A picnic table is an sit-at-able enterable supporter in Room_Picnic_Area.
 	Understand "beat-up/redwood/old/-- picnic/-- table" as picnic table.
 
 A little cluster of tall trees is backdrop in Room_Picnic_Area.
-	The description is "This little cluster of tall trees is huddled at the back of the Room_Picnic_Area against the back fence. The branches don't start until half way up the tree."
+	The description is "This little cluster of tall trees is huddled at the back of the picnic area against the back fence. The branches don't start until half way up the tree."
 	Understand "tree" as little cluster of tall trees.
 
 An ant hill is a fixed in place thing in Room_Picnic_Area.
@@ -6454,8 +6454,13 @@ An ant hill is a fixed in place thing in Room_Picnic_Area.
 
 Some remains, a seed, and a drop of something on the pavement are scenery in Room_Picnic_Area.
 
-A huge Jerusalem cricket is scenery in Room_Picnic_Area.
-The description is "This huge translucent brown bug is totally gross when it is alive, so now that it is half smashed, half decayed and swarming with red ants, it is indescribably disgusting. You are totally fascinated.";
+A jerusalem_cricket is scenery in Room_Picnic_Area.
+The printed name is "huge Jerusalem cricket".
+The description is "This huge translucent brown bug is totally gross when it is alive, so now that it is half smashed, half decayed and swarming with red ants, it is indescribably disgusting. You are totally fascinated.".
+Understand "smashed/-- huge/-- brown/-- translucent/-- jerusalem/-- bug/cricket" as jerusalem_cricket.
+
+Instead of taking jerusalem_cricket:
+	say "That it too gross for words. Plus the ants are enjoying their feast, apparently."
 
 Section - Rules and Actions
 
@@ -6619,6 +6624,11 @@ Instead of taking tea_things:
 	say "Best not to mess with that.";
 
 Understand "get --/more tea", "fill teacup" as a mistake ("It would be rude for a guest to fill their own teacup. Honey's efforts to teach you manners were not wasted.").
+
+Before going from Room_Sharons_Trailer:
+	if player holds players_teacup:
+		say "You politely place your teacup on the table.";
+		try silently putting players_teacup on sharons_table;
 
 Instead of switching on the sharons_tv:
 	if sharon is not watching-tv:
@@ -6882,7 +6892,7 @@ Section - Backdrops & Scenery
 
 The pot_of_blackberry_jam is nonfamiliar scenery in Room_Grandpas_Trailer.
 	The printed name is "pot of blackberry jam".
-	The description of the pot_of_blackberry_jam is "The pot of blackberry jam is bubbling blackly on low heat like the La Brea Tar Pits -- but better smelling. Aunt Mary is staring off into space and stirring the pot continuously. There are jam_jars and lids set out ready to receive the jam when it is ready. Generally, Aunt Mary shoos you away when she is making jam.".
+	The description of the pot_of_blackberry_jam is "The pot of blackberry jam is bubbling blackly on low heat like the La Brea Tar Pits -- but better smelling. Aunt Mary is staring off into space and stirring the pot continuously. There are jam jars and lids set out ready to receive the jam when it is ready. Generally, Aunt Mary shoos you away when she is making jam.".
 	Understand "pot of blackberry/-- jam", "pot/pan", "blackberry/-- goo/jelly/jam/preserves", "stove/kitchen/burner" as pot_of_blackberry_jam.
 	The scent is "the most intense blackberry smell ever. Like when blackberries dream of being the best blackberries they can be, this is what they dream".
 
@@ -8185,7 +8195,7 @@ The casual_name is "in the car".
 The description is "You are in the car with mom and your stepdad. There is a vicious silence that you don't dare break. The road rolls by but you don't really see it. You are concentrating on making yourself invisible.".
 The scent is "fear".
 The outside_view is "the highway. [description of road_backdrop]".
-Understand "Room_In_Car_With_Parents" as Room_In_Car_With_Parents.
+Understand "Car With Parents" as Room_In_Car_With_Parents.
 
 Section - Navigation
 
@@ -9085,7 +9095,7 @@ The Sharon is an improper-named _female woman in Room_D_Loop.
 
 To say sharons_initial_appearance:
 	if Scene_Day_One is happening:
-		say "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of her TC watching a soap opera[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She stares briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs";
+		say "The Cat Lady is [if Scene_Sheriffs_Drive_By is happening]talking to the Sheriff[else if Sharon is tending-garden]out in front of her trailer watering her tiny, overflowing garden[else if Sharon is feeding-cats]in the kitchen cooking fish for her cats[else if Sharon is watching-tv]sitting in front of her TV watching a soap opera[otherwise]here[end if]. [one of]Her hair is kinda crazy[or]She is still wearing her bathrobe or a dress that looks like a bathrobe[or]She is absently humming to herself[or]She stares briefly into space[in random order][if a random chance of 1 in 2 succeeds], and that makes you a little [nervous][end if][first time]. She's always been nice to you, even if your grandma doesn't like her[only]. There is a yellow tabby cat rubbing against her legs";
 	else:
 		say "The Cat Lady is here";
 
@@ -9495,7 +9505,7 @@ Response of Lee when asked-or-told about stepdad:
 	say "'I don't know your step-dad, man,' Lee says, 'I heard him yelling at your mom once, but I'm in no position to criticize.'".
 
 Response of Lee when asked-or-told about topic_tree:
-	say "'I must have spent half my time up in the treetops when I was a kid,' Lee says. 'Fell out of some too. I even built a treehouse deep in the woods. Not much to look at, but it was a great hideout. I made friends with squirrels and birds. I liked to think I was part of the Squirrel clan.' Lee takes a drag from his cigarette.[if player is tree_experienced] 'I guess you might be part of that clan too.'[end if]".
+	say "'I must have spent half my time up in the treetops when I was a kid,' Lee says. 'Fell out of some too. I even built a treehouse deep in the woods. Not much to look at, but it was a great hideout. I made friends with squirrels and birds. I liked to think I was part of the Squirrel clan.' Lee takes a drag from his cigarette.[no line break][if player is tree_experienced] 'I guess you might be part of that clan too.'[else][line break][end if]".
 
 Response of Lee when asked-or-told about topic_jam or asked-or-told about topic_berries or asked-or-told about backdrop_berries or asked-or-told about berries_in_pail:
 	say "'You know, I grew up around here. Guess that's why I came back,' Lee says mostly to himself. 'I used to pick blackberries in August too. Me and my brother used to pick berries and eat every single one until our tongues and our fingers were purple and our bellies were sore.'".
@@ -10397,7 +10407,8 @@ Every turn when angry timer of ants is greater than 0:
 	Decrease angry timer of ants by 1;
 	if angry timer of ants is less than 1:
 		now ants are not stirred up;
-		queue_report "It looks like thfsadfsafe red ants have calmed down." at priority 3;
+		if Room_Picnic_Area encloses player:
+			queue_report "It looks like the red ants have calmed down." at priority 3;
 	else if Room_Picnic_Area encloses player:
 		queue_report "[ant stuff]." at priority 3.
 
@@ -10405,9 +10416,11 @@ Instead of attacking ants:
 	now angry timer of ants is 5;
 	now ants are stirred up;
 	say "[one of]You kick the ant hill with your foot and then jump back to watch[or]You crush a few of the nearby ants with your foot. Take that[or]You throw a dirt clod at the ant hill. Direct hit[or]You kick the ant hill, but now several ants are on your shoes and, oh no! on your leg! You dance around for a while swatting at yourself until you are satisfied that you are safe[in random order]!"
+
 Understand "kick [something]" as attacking.
 Understand "stomp [something]" as attacking.
 Understand "squish [something]" as attacking.
+Understand "step on [something]" as attacking.
 
 Instead of attacking ant hill:
 	try attacking ants.
