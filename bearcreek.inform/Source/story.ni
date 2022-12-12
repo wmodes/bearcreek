@@ -410,6 +410,8 @@ Rule for clarifying the parser's choice of something:
 
 The parser nothing error internal rule response (B) is "Let's not be greedy."
 
+The can't enter what's not enterable rule response (D) is "Best not."
+
 Book - Bibliographical information
 
 Book - Releasing
@@ -581,9 +583,9 @@ Understand
 	as jumping_across.
 
 Instead of jumping_across:
-	if player is in Room_Crossing:
+	if Room_Crossing encloses the player:
 		try navigating Room_Other_Shore;
-	else if player is in Room_Other_Shore:
+	else if Room_Other_Shore encloses the player:
 		try navigating Room_Crossing;
 	else:
 		try jumping;
@@ -598,9 +600,9 @@ Understand
 	as jumping_across_something.
 
 Instead of jumping_across_something:
-	if player is in Room_Crossing:
+	if Room_Crossing encloses the player:
 		try navigating Room_Other_Shore;
-	else if player is in Room_Other_Shore:
+	else if Room_Other_Shore encloses the player:
 		try navigating Room_Crossing;
 	else:
 		try jumping;
@@ -735,6 +737,9 @@ Understand
 Carry out get_down_from_anything:
 	try going down.
 
+Before navigating or person_navigating or going when player is in container or player is on supporter:
+	try standing_up;
+	continue the action;
 
 Chapter - Dressing
 
@@ -746,7 +751,7 @@ Carry out dressing:
 	put_clothes_back_on.
 
 To put_clothes_back_on:
-	if player is in Room_Swimming_Hole:
+	if Room_Swimming_Hole encloses the player:
 		let getting_stuff be false;
 		let getting_clothes be false;
 		[say "stuff: [list of everything that has been carried].";]
@@ -777,11 +782,16 @@ Understand
 	as laughing.
 
 Carry out laughing:
-	say "You [one of]laugh out loud[or]chuckle heartily[or]giggle loudly[at random][run paragraph on]";
-	if people who are not the player are visible and a random chance of 1 in 4 succeeds:
-		let reactor be a random touchable person who is not the player;
-		say " and [the reactor] [one of]looks at[or]glances over at[at random] you";
-	say ".[line break]";
+	if location is Room_Top_of_Pine_Tree:
+		say "[one of]You let out a maniacal laugh that sends the birds in nearby trees erupting into the sky[or]The birds have resettled in the trees and are now used to your maniacal laughter[stopping].";
+	else if location is Room_Swimming_Hole and player is swim_experienced:
+		say "You let out a victorious cackle.";
+	else:
+		say "You [one of]laugh out loud[or]chuckle heartily[or]giggle loudly[at random][run paragraph on]";
+		if people who are not the player are visible and a random chance of 1 in 2 succeeds:
+			let reactor be a random touchable person who is not the player;
+			say " and [the reactor] [one of]looks at[or]glances over at[at random] you";
+		say ".[line break]";
 
 Laughing at is an action applying to one thing.
 Understand "laugh at [something]" as laughing at.
@@ -824,31 +834,38 @@ Understand
 	"pet [something]",
 	"pat [something]",
 	"hug [something]",
-	"kiss [something]"
+	"kiss [something]",
+	"touch [something]"
 	as touching.
 
 Instead of kissing someone:
 	Try touching the noun.
 
+Check touching a waterbody:
+	if Scene_Day_One is happening:
+		say "The water is cool and refreshing on this hot day." instead;
+	else:
+		say "The water is cold, reminding you that it may have been snow on some mountaintop yesterday." instead;
 
 Chapter - Piling
 
 Piling is an action applying to one thing.
 Understand
-	"pile [something] over/on/- me/myself/--",
-	"pull [something] over/on/- me/myself/--",
+	"pile [something] over/on/-- me/myself/--",
+	"pull [something] over/on/-- me/myself/--",
 	"cover myself/me with/-- [something]"
 	as piling.
 
-Carry out piling:
+Check piling:
 	if the noun is not fallen_leaves:
-		say "Hmm. Not sure how to do that.";
-	else:
-		say "You pile the leaves under yourself for a cozy bed, and then over yourself in a heaping pile for a cozy banket. Warm in your cozy nest, you are pretty sure you could sleep.";
-		now Room_Protected_Hollow is made_cozy;
-		now player is covered_in_leaves;
-		now player is dirty;
-		Now player is resourceful;
+		say "Hmm. Not sure how to do that." instead;
+
+Carry out piling:
+	say "You pile the leaves under yourself for a cozy bed, and then over yourself in a heaping pile for a cozy banket. Warm in your cozy nest, you are pretty sure you could sleep.";
+	now Room_Protected_Hollow is made_cozy;
+	now player is covered_in_leaves;
+	now player is dirty;
+	Now player is resourceful;
 
 Part - Howdy?
 
@@ -1075,10 +1092,10 @@ Understand
 	"follow train/green/-- tracks/tunnel" as follow_tracks.
 
 Carry out follow_tracks:
-	if player is in Room_Railroad_Tracks:
+	if Room_Railroad_Tracks encloses the player:
 		say "[one of]The trees crowd in on either side, so there's nowhere to walk but on the tracks. You follow them for a little while but then get scared that a train will come and you will have nowhere to go.
 		[paragraph break]You[or]Mom told you about kids who get killed walking on the tracks, so you[or]You walk on down the tracks a bit, and then[stopping] head on back to where the old dirt road crosses the train tracks.";
-	else if player is in Room_Dream_Railroad_Tracks:
+	else if Room_Dream_Railroad_Tracks encloses the player:
 		try navigating Room_Mars;
 	else:
 		say "Best go to the railroad crossing for that."
@@ -1460,7 +1477,7 @@ The can't reach inside rooms rule does nothing if navigating a room.
 
 Part - Dropping Things in Room_Dark_Woods
 
-After dropping something (called the item) when player is in Room_Dark_Woods_South:
+After dropping something (called the item) when Room_Dark_Woods_South encloses the player:
 	add item to stuff_you_brought_here;
 	continue the action;
 
@@ -1870,16 +1887,9 @@ Book - Storytelling Elements
 
 Part - Title Cards
 
-[When play begins:
-	say story_intro;
-	pause_the_game;
-	say Title_Card_Part_1;
-	say "[line break]You've wandered away from Honey and Grandpa picking blackberries.";
-	now the right hand status line is "Late Morning".]
-
 Banner_displayed is truth state that varies. Banner_displayed is false.
 To say story_intro:
-	say "Looking back, it was that summer, or maybe just that one day that changed everything. [paragraph break]KC and the Sunshine Band was on the radio, your mom and Honey and Grandpa loved you, and you were eight years old. A fragile moment that seemed like it would last forever and would never be quite the same again. You were a curious daydreamer on the verge of learning what lay beyond the boundaries of your own little world.
+	say "Looking back, it was that summer, or maybe just that one day that changed everything. [paragraph break]KC and the Sunshine Band was on the radio, your mom and Honey and Grandpa loved you, and you were nine years old. A fragile moment that seemed like it would last forever and would never be quite the same again. You were a curious daydreamer on the verge of learning what lay beyond the boundaries of your own little world.
 	[paragraph break]There were changes coming -- and there was nothing certain about whether you'd survive the journey. Or not.[line break]";
 	[[line break][banner text]";
 	Now banner_displayed is true.]
@@ -1964,11 +1974,11 @@ To end_the_story:
 
 Section - Fake waiting - Not for release
 
-To wait for any key:
+[ To wait for any key:
 	do nothing.
 
 To clear the screen:
-	do nothing.
+	do nothing. ]
 
 Part - Premonitions
 
@@ -2366,12 +2376,32 @@ Does the player mean implicit-informing a nonfamiliar thing:
 
 Part - Talk to Someone
 
-Instead of saying hello to someone (called the target):
+[TODO: strike this? I like the hint, but it gets in the way of saying hello to someone]
+[ Instead of saying hello to someone (called the target):
 	if the current interlocutor is target:
-	 	say "You are already talking to [target]. Perhaps you can try to ask or tell them something. Maybe 'Ask [target] about something,' or 'Tell [target] about something.'[command clarification break]" instead;
+	 	say "You are already talking to [target]. Perhaps you can try to ask or tell them something. Maybe [em]Ask [target] about something[/em], or [em]Tell [target] about something[/em].[command clarification break]" instead;
 	else:
-		continue the action;
+		continue the action; ]
 
+A person has a number called the hail_number.
+
+The new check what's being hailed rule substitutes for the check what's being hailed rule. 
+
+This is the new check what's being hailed rule:
+	if the current interlocutor is a visible person:
+		try saying hello to current interlocutor instead;	
+	now the noun is a random visible person who is not the player;
+	if the noun is a person:
+		do nothing;
+	otherwise:
+		say "There's no one here but you." instead. 
+	
+The can't greet current interlocutor rule is not listed in any rulebook. 
+
+Before saying hello to person (called the target):
+	Increment the hail_number of target;
+	If hail_number of target is at least 3 and the current interlocutor is target:
+		say "You are already talking to [target]. Perhaps you can try to ask or tell them something. Maybe [em]Ask [target] about something[/em], or [em]Tell [target] about something[/em]." instead;
 
 Part - You Talking to Me?
 
@@ -2752,6 +2782,7 @@ To put_berries_in_pail:
 		now pail is full;
 		if player is warned_by_grandma:
 			say "[line break][blackberry_payoff]";
+			now player is not warned_by_grandma;
 			now player is free_to_wander;
 	else if pail is full:
 		say "Your pail is already full. You should probably dump it into Honey and Grandpa's bucket.";
@@ -2932,12 +2963,12 @@ Rule for clarifying the parser's choice of the loose_rock while taking:
 	let chosen rock be a random off-stage rock;
 	move the chosen rock to Room_Railroad_Tracks.]
 
-[Instead of throwing loose_rock when player is in Room_Railroad_Tracks:
+[Instead of throwing loose_rock when Room_Railroad_Tracks encloses the player:
 	try dropping the noun.]
 
 [still a host of problems: throwing, confusion with the mound_of_rock etc]
 
-Instead of dropping loose_rock when player is in Room_Railroad_Tracks:
+Instead of dropping loose_rock when Room_Railroad_Tracks encloses the player:
 	throw_rock_back.
 
 [ Instead of putting a loose_rock on train_track:
@@ -2967,9 +2998,9 @@ Instead of throwing the loose_rock at something:
 	try dropping the noun.
 
 To throw_rock_away:
-	if player is in Room_Halfway_Up or
-	player is in Room_Top_of_Pine_Tree or
-	player is in Room_Sentinel_Tree:
+	if Room_Halfway_Up encloses the player or
+	Room_Top_of_Pine_Tree encloses the player or
+	Room_Sentinel_Tree encloses the player:
 		say "The rock sails out into space before dropping with a crash among the bushes far below.";
 	else:
 		say "You throw the rock and it disappears into the bushes.";
@@ -3045,7 +3076,7 @@ To say what_song_is_playing:
 		say "You hear [distant_radio] playing [current_song]";
 
 To say distant_radio:
-	say "[if player is in Room_Grassy_Clearing]Honey's [otherwise if player is in Room_Lost_in_the_Brambles or player is in Room_Blackberry_Tangle]the nearby [otherwise]a [one of]far-away[or]distant[or]crackly far-off[or]faint[at random] [end if]radio".
+	say "[if Room_Grassy_Clearing encloses the player]Honey's [otherwise if Room_Lost_in_the_Brambles encloses the player or Room_Blackberry_Tangle encloses the player]the nearby [otherwise]a [one of]far-away[or]distant[or]crackly far-off[or]faint[at random] [end if]radio".
 
 To say current_song:
 	Let Current title be the title in row Song Number of the Table of Pop Songs;
@@ -3108,7 +3139,7 @@ Title	Artist	Length	Fave
 
 Chapter - The TV
 
-Every turn when player is in Room_Lees_Trailer and lees_tv is switched on:
+Every turn when Room_Lees_Trailer encloses the player and lees_tv is switched on:
 	if current action is not tuning or examining lees_tv or switching on lees_tv:
 		if time_for_a_new_show:
 			report_new_tv_show_begins;
@@ -3237,7 +3268,7 @@ At the time when train_is_nearby:
 	if Scene_Dreams is not happening and Scene_Epilogue is not happening and Scene_Fallout_Going_Home is not happening:
 		if current_time_period is not evening and current_time_period is not night:
 			queue_report "[one of]You hear a train whistle in the distance[or]You hear the train whistle blowing as it goes through town[in random order]." with priority 3;
-			if player is in Room_Top_of_Pine_Tree:
+			if Room_Top_of_Pine_Tree encloses the player:
 				queue_report "Looking toward the sound, you can actually see the train rounding the hill outside of town." with priority 2;
 			move distant_train to Room_Top_of_Pine_Tree;
 		else:
@@ -3260,7 +3291,7 @@ At the time when train_hits_crossing:
 	[ say "The train comes in [next_train_interval] turns from now."; ]
 
 To show_train_crossing:
-	if player is in Room_Railroad_Tracks or player is on train_track:
+	if Room_Railroad_Tracks encloses the player:
 		if player is not train_experienced:
 			queue_report "The train arrives!
 			[paragraph break]You see the single light of the locomotive as it comes around the bend while it is still a ways away. The track begins to hum and you hear the squeal of the wheels on the curve. There's a moment where it just kind of hangs there in space." with priority 5;
@@ -3321,14 +3352,14 @@ When Scene_Day_One begins:
 Chapter - Scene_Picking_Berries
 
 Scene_Picking_Berries is a scene.
-Scene_Picking_Berries begins when play begins.
+Scene_Picking_Berries begins when Scene_Day_One begins.
 Scene_Picking_Berries ends when Scene_Explorations begins.
 
 Chapter - Scene_Grandparents_Conversation
 
 There is a scene called Scene_Grandparents_Conversation.
 
-Scene_Grandparents_Conversation begins when play begins.
+Scene_Grandparents_Conversation begins when Scene_Day_One begins.
 
 Scene_Grandparents_Conversation ends when Scene_Explorations begins.
 Scene_Grandparents_Conversation ends when Scene_Walk_With_Grandpa begins.
@@ -3358,9 +3389,9 @@ This is the seq_grandparents_chat_handler rule:
 	if a random chance of 1 in 2 succeeds:
 		rule fails;
 	else:
-		if player is in Room_Lost_in_the_Brambles or player is in Room_Blackberry_Tangle:
+		if Room_Lost_in_the_Brambles encloses the player or Room_Blackberry_Tangle encloses the player:
 			queue_report "You hear Honey and Grandpa talking and you perk up your ears." at priority 1;
-		else if player is in Room_Grassy_Clearing:
+		else if Room_Grassy_Clearing encloses the player:
 			if index is 1:
 				Report Honey saying "Honey and Grandpa continue their conversation: 'Have you heard from Nick about this summer? Is he planning a visit or are we just left guessing?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says.";
 			else if index is 2:
@@ -3433,7 +3464,7 @@ When Scene_Walk_With_Grandpa ends:
 Chapter - Actions
 
 Every turn when Scene_Walk_With_Grandpa is happening and journey_gpa_walk is not in-progress:
-	if player is in Room_Grassy_Clearing:
+	if Room_Grassy_Clearing encloses the player:
 		now journey_gpa_walk is in-progress;
 	else if player is in Region_Blackberry_Area:
 		queue_report "[one of]You hear Grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing.[or]Grandpa's calling you.[at random]" at priority 1;
@@ -3472,7 +3503,7 @@ This is the journey_gpa_walk_start rule:
 
 This is the
 journey_gpa_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Room_Stone_Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]heads for the grassy field[else if player is in Room_Grassy_Field]goes through the back gate into the trailer park[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else if player is in Room_B_Loop]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 1;
+	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if Room_Stone_Bridge encloses the player]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]heads for the grassy field[else if Room_Grassy_Field encloses the player]goes through the back gate into the trailer park[else if Region_Dirt_Road encloses the player]heads off toward the railroad tracks[else if Room_B_Loop encloses the player]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 1;
 
 This is the
 journey_gpa_walk_after_waiting rule:
@@ -3480,7 +3511,7 @@ journey_gpa_walk_after_waiting rule:
 
 This is the
 	journey_gpa_walk_catching_up rule:
-	queue_report "Grandpa catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in the Room_Picnic_Area]as you go through the back gate into the trailer park[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grandpas_Trailer]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzales,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
+	queue_report "Grandpa catches up to you [if Stone Bridge encloses the player]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if the Room_Picnic_Area encloses the player]as you go through the back gate into the trailer park[else if Room_Long_Stretch encloses the player]as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player]as you reach the railroad crossing[else if Room_Grandpas_Trailer encloses the player]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzales,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
 
 This is the
 		journey_gpa_walk_end rule:
@@ -3503,7 +3534,7 @@ This is the
 
 Chapter - Actions
 
-Instead of navigating or going when player is in Room_Grandpas_Trailer during Scene_Walk_With_Grandpa:
+Instead of navigating or going when Room_Grandpas_Trailer encloses the player during Scene_Walk_With_Grandpa:
 	queue_report "'Hold your horses, [grandpas_nickname],' Grandpa says. 'Stay with us for now.'" at priority 3.
 
 
@@ -3561,38 +3592,38 @@ seq_sheriffs_drive_by is a sequence.
 
 This is the seq_sheriffs_drive_by_handler rule:
 	let the index be the index of seq_sheriffs_drive_by;
-	if (player is in Room_C_Loop or player is in Room_B_Loop or player is in Room_Picnic_Area) and index is greater than 1 and index is less than 6:
+	if (Room_C_Loop encloses the player or Room_B_Loop encloses the player or Room_Picnic_Area encloses the player) and index is greater than 1 and index is less than 6:
 		queue_report "The Sheriff is still talking to the Cat Lady in D Loop." with priority 3;
 	if index is 1:
-		if player is in Room_D_Loop:
+		if Room_D_Loop encloses the player:
 			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. As it drives through C Loop and passes Lee, the car slows way down but doesn't stop. It's coming straight toward where you stand in D Loop." with priority 2;
-		else if player is in Room_C_Loop:
+		else if Room_C_Loop encloses the player:
 			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park, headed toward D Loop. As the car passes [if Lee is visible]Lee who is out in front of his trailer smoking, you see the policeman slow down and give him a Look[else]Lee's trailer, you see the policeman looking carefully at his trailer[end if]. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
 			Move player to Room_D_Loop, without printing a room description;
-		else if player is in Region_Trailer_Outdoors:
+		else if Region_Trailer_Outdoors encloses the player:
 			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
 			Move player to Room_D_Loop, without printing a room description;
-		else if player is in Region_Trailer_Indoors:
+		else if Region_Trailer_Indoors encloses the player:
 			queue_report "You get a lurching feeling as you catch sight of a police car outside the window. It is driving slowly by. Curiosity draws you outside and along in its wake. It stops in D Loop and so do you.[line break][location heading]" with priority 2;
 			Move player to Room_D_Loop, without printing a room description;
 		queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 1;
 	else if index is 2:
 		if sharon is not in Room_D_Loop:
 			move_sharon_out_of_her_trailer;
-		if player is in Room_D_Loop:
+		if Room_D_Loop encloses the player:
 			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing, Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 2;
 	else if index is 3:
-		if player is in Room_D_Loop:
+		if Room_D_Loop encloses the player:
 			queue_report "'Well, pretty good, Bill. I can't complain,' the Cat Lady tells the Sheriff. Then a frown crosses her face, 'Oh except Oliver has an abscess. I have to take him to the kitty doctor next week.'" with priority 2;
 	else if index is 4:
-		if player is in Room_D_Loop:
+		if Room_D_Loop encloses the player:
 			queue_report "'Well what I came to ask,' the Sheriff says to the Cat Lady, 'Has he been bothering you any?' He looks back toward C Loop. 'When I drove up, I saw him over there. Has he been leaving you alone?'" with priority 2;
 	else if index is 5:
-		if player is in Room_D_Loop:
+		if Room_D_Loop encloses the player:
 			queue_report "'Oh, he hasn't so much as looked in my direction,' the Cat Lady says to the Sheriff.
 			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?'" with priority 2;
 	else if index is 6:
-		if player is in Room_D_Loop:
+		if Room_D_Loop encloses the player:
 			queue_report "'Dearie, you're a sweet man to check in on me,' the Cat Lady puts her hand on the Sheriff's arm and he almost smiles.
 			[paragraph break]He pats her hand, 'You take care of yourself Sharon, and make sure you call me if you have any problems.' He talks briefly on his radio and then drives off, a little too fast for inside the trailer park. The Cat Lady unwinds the hose and continues watering her garden." with priority 2;
 		else if player is in Region_Trailer_Park_Area:
@@ -3612,7 +3643,7 @@ Chapter - Scene_Visit_With_Sharon
 
 There is a recurring scene called Scene_Visit_With_Sharon.
 
-Scene_Visit_With_Sharon begins when Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening and player is in Room_D_Loop or Room_Sharons_Trailer encloses player.
+Scene_Visit_With_Sharon begins when Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening and Room_D_Loop encloses the player or Room_Sharons_Trailer encloses player.
 
 Scene_Visit_With_Sharon ends when Scene_Sheriffs_Drive_By begins.
 
@@ -3729,7 +3760,7 @@ Chapter - Scene_Visit_With_Lee
 
 There is a recurring scene called Scene_Visit_With_Lee.
 
-Scene_Visit_With_Lee begins when Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening and player is in Room_C_Loop or Room_Lees_Trailer encloses player.
+Scene_Visit_With_Lee begins when Scene_Day_One is happening and Scene_Sheriffs_Drive_By is not happening and Room_C_Loop encloses the player or Room_Lees_Trailer encloses player.
 
 Scene_Visit_With_Lee ends when Scene_Sheriffs_Drive_By begins.
 
@@ -3862,7 +3893,7 @@ Instead of going from Room_Lees_Trailer during Scene_Hangout_With_Lee:
 Chapter - Scene_Visit_With_Mary
 
 There is a scene called Scene_Visit_With_Mary.
-Scene_Visit_With_Mary begins when player is in Room_Grandpas_Trailer.
+Scene_Visit_With_Mary begins when Room_Grandpas_Trailer encloses the player.
 Scene_Visit_With_Mary ends when player is not in Room_Grandpas_Trailer.
 
 When Scene_Visit_With_Mary begins:
@@ -4141,7 +4172,7 @@ Chapter - Scene_Sleep_One
 
 There is a scene called Scene_Sleep_One.
 Scene_Sleep_One begins when
-	player is in Room_Protected_Hollow and
+	Room_Protected_Hollow encloses the player and
 	Scene_Defend_the_Fort has not happened and
 	Scene_Dreams has not happened.
 Scene_Sleep_One ends when
@@ -4210,10 +4241,10 @@ To do_raccoon_things:
 	Let limbo_sandwich_list be the list of tuna_sandwiches enclosed by Limbo;
 	[This continues until all of the sandwiches are gone.]
 	If the number of entries in limbo_sandwich_list is less than three:
-		If player is in Room_Forest_Meadow:
+		If Room_Forest_Meadow encloses the player:
 			[raccoons will be in Room_Forest_Meadow waiting at the edges]
 			queue_report "[raccoon_description]." at priority 1;
-		else if player is in Room_Protected_Hollow:
+		else if Room_Protected_Hollow encloses the player:
 			Let meadow_sandwich_list be the list of tuna_sandwiches enclosed by Room_Forest_Meadow;
 			Let hollow_sandwich_list be the list of tuna_sandwiches enclosed by Room_Protected_Hollow;
 			[if there are sandwiches in Room_Forest_Meadow]
@@ -4234,9 +4265,9 @@ To do_raccoon_things:
 		now raccoons are in Limbo;
 		now virtual_raccoons are in Limbo;
 		now seq_raccoon_visit is not in-progress;
-		if player is in Room_Protected_Hollow:
+		if Room_Protected_Hollow encloses the player:
 			queue_report  "Suddenly, you hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 2;
-		else if player is in Room_Forest_Meadow:
+		else if Room_Forest_Meadow encloses the player:
 			queue_report  "The invaders have taken their sandwiches and gone. You protected the fort."  at priority 2;
 
 After taking tuna_sandwich when raccoons are visible:
@@ -4253,7 +4284,7 @@ Chapter - Scene_Sleep_Two
 
 There is a scene called Scene_Sleep_Two.
 Scene_Sleep_Two begins when
-	player is in Room_Protected_Hollow and
+	Room_Protected_Hollow encloses the player and
 	Scene_Defend_the_Fort has ended and
 	Scene_Dreams has not happened.
 Scene_Sleep_Two ends when
@@ -4309,7 +4340,7 @@ Chapter - Scene_Dream_about_Mom
 
 There is a scene called Scene_Dream_about_Mom.
 Scene_Dream_about_Mom begins when Scene_Dreams begins.
-Scene_Dream_about_Mom ends when player is in Room_Drive_In.
+Scene_Dream_about_Mom ends when Room_Drive_In encloses the player.
 
 Mom_free_to_go is truth state that varies.
 	Mom_free_to_go is false.
@@ -4362,7 +4393,7 @@ Chapter - Scene_Dream_About_Stepdad
 
 There is a scene called Scene_Dream_About_Stepdad.
 Scene_Dream_About_Stepdad begins when player is in Room_Car_With_Stepdad.
-Scene_Dream_About_Stepdad ends when player is in Room_Dream_Grassy_Field.
+Scene_Dream_About_Stepdad ends when Room_Dream_Grassy_Field encloses the player.
 
 stepdad_free_to_go is a truth state that varies.
 	stepdad_free_to_go is false.
@@ -4420,8 +4451,8 @@ Chapter - Scene_Dream_About_the_Tango
 ]
 
 There is a scene called Scene_Dream_About_the_Tango.
-Scene_Dream_About_the_Tango begins when player is in Room_Dream_Grassy_Field.
-Scene_Dream_About_the_Tango ends when player is in Room_Dream_Railroad_Tracks.
+Scene_Dream_About_the_Tango begins when Room_Dream_Grassy_Field encloses the player.
+Scene_Dream_About_the_Tango ends when Room_Dream_Railroad_Tracks encloses the player.
 
 When Scene_Dream_About_the_Tango begins:
 	sheriff_plays_music in 2 turn from now;
@@ -4444,8 +4475,8 @@ test tango with "purloin brown paper bag / d / d / d / pick berries / pick berri
 Chapter - Scene_Dream_Tracks
 
 There is a scene called Scene_Dream_Tracks.
-Scene_Dream_Tracks begins when player is in Room_Dream_Railroad_Tracks.
-Scene_Dream_Tracks ends when player is in Room_Mars.
+Scene_Dream_Tracks begins when Room_Dream_Railroad_Tracks encloses the player.
+Scene_Dream_Tracks ends when Room_Mars encloses the player.
 
 Grandparents_track_done is truth state that varies. Grandparents_track_done is false.
 
@@ -4471,7 +4502,7 @@ seq_grandparents_tracks is a sequence.
 
 This is the seq_grandparents_tracks_handler rule:
 	let index be index of seq_grandparents_tracks;
-	if player is in Room_Dream_Railroad_Tracks:
+	if Room_Dream_Railroad_Tracks encloses the player:
 		if index is 1:
 			Report Grandpa saying "'Hey, [grandpas_nickname]. We've been waiting for you,' Grandpa says gently. Honey smiles at you.";
 		else if index is 2:
@@ -4499,7 +4530,7 @@ This is the seq_grandparents_tracks_interrupt_test rule:
 Chapter - Scene_Dream_Bouncing
 
 There is a scene called Scene_Dream_Bouncing.
-Scene_Dream_Bouncing begins when player is in Room_Mars.
+Scene_Dream_Bouncing begins when Room_Mars encloses the player.
 Scene_Dream_Bouncing ends when mars_free_to_go is true.
 
 mars_free_to_go is truth state that varies. mars_free_to_go is false.
@@ -4521,7 +4552,7 @@ seq_grandparents_bounce is a sequence.
 
 This is the seq_grandparents_bounce_handler rule:
 	let index be index of seq_grandparents_bounce;
-	if player is in Room_Mars:
+	if Room_Mars encloses the player:
 		if index is 2:
 			Report Grandpa saying "Honey and Grandpa both stumble in the light gravity. Honey looks concerned, but Grandpa looks thrilled. 'Hmm,' he says smiling broadly taking several experimental hops.";
 		else if index is 4:
@@ -4529,7 +4560,7 @@ This is the seq_grandparents_bounce_handler rule:
 		else if index is 6:
 			Report Grandpa saying "'Watch this!' Grandpa says like a little kid and leaps high into the air yelling 'Woo!' while Honey laughs.";
 		else if index is 7:
-			queue_report "Grandpa gathers up his strength, squatting down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'John!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
+			queue_report "Grandpa gathers up his strength, squatting down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'George!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
 			now seq_grandparents_bounce is not in-progress;
 			now mars_free_to_go is true;
 			now Honey is in Limbo;
@@ -4543,13 +4574,13 @@ This is the seq_grandparents_bounce_interrupt_test rule:
 Chapter - Scene_Mars_Dream
 
 There is a scene called Scene_Mars_Dream.
-Scene_Mars_Dream begins when player is in Room_Mars.
-Scene_Mars_Dream ends when player is in Room_Dream_Dirt_Road.
+Scene_Mars_Dream begins when Room_Mars encloses the player.
+Scene_Mars_Dream ends when Room_Dream_Dirt_Road encloses the player.
 
 Chapter - Scene_Dog_Dream
 
 Scene_Dog_Dream is a scene.
-Scene_Dog_Dream begins when player is in Room_Dream_Dirt_Road.
+Scene_Dog_Dream begins when Room_Dream_Dirt_Road encloses the player.
 Scene_Dog_Dream ends when dog_free_to_go is true.
 
 dog_free_to_go is truth state that varies. dog_free_to_go is false.
@@ -4614,13 +4645,13 @@ test day2 with "purloin brown paper bag / d / d / d / pick berries / pick berrie
 Chapter - Morning After
 
 There is a scene called Scene_Morning_After.
-Scene_Morning_After begins when Scene_Day_Two is happening and player is in Room_Forest_Meadow.
+Scene_Morning_After begins when Scene_Day_Two is happening and Room_Forest_Meadow encloses the player.
 
 Chapter - Scene_Orienteering
 
 There is a scene called Scene_Orienteering.
 Scene_Orienteering begins when Scene_Morning_After begins.
-Scene_Orienteering ends when player is in Room_Sentinel_Tree.
+Scene_Orienteering ends when Room_Sentinel_Tree encloses the player.
 
 When Scene_Orienteering begins:
 	Change up exit of Room_Forest_Meadow to Room_Sentinel_Tree;
@@ -4656,13 +4687,13 @@ After eating during Scene_Foraging_for_Breakfast:
 Chapter - Scene_Out_of_the_Woods
 
 There is a scene called Scene_Out_of_the_Woods.
-Scene_Out_of_the_Woods begins when Scene_Day_Two is happening and (player is in Room_Dappled_Forest_Path or player is in Room_Dark_Woods_South).
+Scene_Out_of_the_Woods begins when Scene_Day_Two is happening and (Room_Dappled_Forest_Path encloses the player or Room_Dark_Woods_South encloses the player).
 Scene_Out_of_the_Woods ends when Scene_Found begins.
 
 Every turn during Scene_Out_of_the_Woods:
-	if player is in Room_Wooded_Trail:
+	if Room_Wooded_Trail encloses the player:
 		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that the Cat Lady calling you?[or]Someone is calling you.[at random]" at priority 1;
-	else if player is in Room_Dappled_Forest_Path:
+	else if Room_Dappled_Forest_Path encloses the player:
 		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that Lee calling you?[or]Someone is calling you.[at random]" at priority 1;
 
 Chapter - Scene_Found
@@ -4670,13 +4701,13 @@ Chapter - Scene_Found
 [TODO: Arguably this should be broken into two scenes (as originally intended): Scene_Found and Scnee_Reunions. The end of the journey of both Sharon and Lee's walk is very similar (though subtley different). The main argument is that during Scene_Found, being chatty and asking questions of Lee or Sharon makes sense, but less so during the reunion. ]
 
 There is a scene called Scene_Found.
-Scene_Found begins when Scene_Day_Two is happening and (player is in Room_Blackberry_Tangle or player is in Room_Other_Shore).
-Scene_Found ends when player is in Room_Grassy_Field.
+Scene_Found begins when Scene_Day_Two is happening and (Room_Blackberry_Tangle encloses the player or Room_Other_Shore encloses the player).
+Scene_Found ends when Room_Grassy_Field encloses the player.
 
 When Scene_Found begins:
-	if player is in Room_Blackberry_Tangle:
+	if Room_Blackberry_Tangle encloses the player:
 		now journey_lee_walk is in-progress;
-	else if player is in Room_Other_Shore:
+	else if Room_Other_Shore encloses the player:
 		now journey_sharon_walk is in-progress;
 
 Section - Sequences & Journeys
@@ -4723,7 +4754,7 @@ This is the journey_sharon_walk_start rule:
 
 This is the
 journey_sharon_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if player is in Room_Other_Shore]crosses the river to the crossing[else if player is in Room_Crossing]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if player is in Room_Swimming_Hole]makes her way up the steep trail to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if Room_Other_Shore encloses the player]crosses the river to the crossing[else if Room_Crossing encloses the player]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if Room_Swimming_Hole encloses the player]makes her way up the steep trail to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
 
 To say sharon_urging:
 	queue_report  "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]" at priority 3;
@@ -4734,7 +4765,7 @@ journey_sharon_walk_after_waiting rule:
 
 This is the
 	journey_sharon_walk_catching_up rule:
-	queue_report "Sharon catches up to you[if player is in Room_Crossing], carefully crossing the river on the floating log[else if player is in Room_Swimming_Hole] at the swimming hole[else if player is in Room_Railroad_Tracks] as you reach the railroad crossing[else if player is in Room_Grassy_Field] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 3;
+	queue_report "Sharon catches up to you[if Room_Crossing encloses the player], carefully crossing the river on the floating log[else if Room_Swimming_Hole encloses the player] at the swimming hole[else if Room_Railroad_Tracks] as you reach the railroad crossing[else if Room_Grassy_Field encloses the player] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 3;
 
 This is the journey_sharon_walk_end rule:
 	if time_here of journey_sharon_walk is 1:
@@ -4805,7 +4836,7 @@ This is the journey_lee_walk_start rule:
 
 This is the
 journey_lee_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds][lee_urging] [run paragraph on][end if]Lee [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if player is in Room_Railroad_Tracks]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+	queue_report "[if a random chance of 1 in 2 succeeds][lee_urging] [run paragraph on][end if]Lee [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
 
 To say lee_urging:
 	say "'[one of]We gotta hoof it, soldier'[or]Let's hustle'[or]Movin' out,'[or]Okay, let's go,'[or]We gotta double time. Your family's gonna be worried,'[or]You okay? Just a little farther,'[or]Coming up on home,'[cycling]";
@@ -4816,7 +4847,7 @@ journey_lee_walk_after_waiting rule:
 
 This is the
 	journey_lee_walk_catching_up rule:
-	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if player is in Room_Dirt_Road]as you reach the dirt road[else if player is in Room_Long_Stretch]as you walk along the dirt road[else if player is in Room_Railroad_Tracks]as you reach the railroad crossing[else if player is in Room_Grassy_Field]and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or player is in Room_Grassy_Clearing] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya, [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
+	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if Room_Long_Stretch encloses the player]as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player]as you reach the railroad crossing[else if Room_Grassy_Field encloses the player]and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya, [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
 
 This is the journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
@@ -4841,16 +4872,16 @@ This is the journey_lee_walk_end rule:
 Section - Actions
 
 [This will prevent player from getting re-lost after beign found!]
-Instead of navigating Room_Wooded_Trail when player is in Room_Other_Shore during Scene_Found:
+Instead of navigating Room_Wooded_Trail when Room_Other_Shore encloses the player during Scene_Found:
 	say not_going_back_to_woods.
 
-Instead of going east when player is in Room_Other_Shore during Scene_Found:
+Instead of going east when Room_Other_Shore encloses the player during Scene_Found:
 	say not_going_back_to_woods.
 
-Instead of navigating Room_Dappled_Forest_Path when player is in Room_Blackberry_Tangle during Scene_Found:
+Instead of navigating Room_Dappled_Forest_Path when Room_Blackberry_Tangle encloses the player during Scene_Found:
 	say not_going_back_to_woods.
 
-Instead of going east when player is in Room_Blackberry_Tangle during Scene_Found:
+Instead of going east when Room_Blackberry_Tangle encloses the player during Scene_Found:
 	say not_going_back_to_woods.
 
 To say not_going_back_to_woods:
@@ -4876,7 +4907,7 @@ Chapter - Scene_Long_Arm_of_the_Law
 There is an scene called Scene_Long_Arm_of_the_Law.
 
 Scene_Long_Arm_of_the_Law begins when 
-Scene_Day_Two is happening and player is in Room_B_Loop.
+Scene_Day_Two is happening and Room_B_Loop encloses the player.
 
 Scene_Long_Arm_of_the_Law ends when seq_long_arm_of_the_law is run and seq_long_arm_of_the_law is not in-progress.
 
@@ -5271,8 +5302,8 @@ Section - Backdrops
 
 Some backdrop_blackberry_brambles is backdrop in Region_Blackberry_Area.
 	The printed name is "berry brambles".
-	The description is "[if player is in Room_Willow_Trail]The blackberry brambles are thinner here, forming prickly walls on either side of the trail[otherwise]The brambles are as high as you are, higher actually[end if]. They are heavy with berries, the very ripest ones always just out of reach."
-	Understand "berry/-- brambles/bramble/bushes/bush/thicket/vines/plant" as backdrop_blackberry_brambles.
+	The description is "[if Room_Willow_Trail encloses the player]The blackberry brambles are thinner here, forming prickly walls on either side of the trail[otherwise]The brambles are as high as you are, higher actually[end if]. They are heavy with berries, the very ripest ones always just out of reach."
+	Understand "berry/-- brambles/bramble/bushes/bush/thicket/vines/plant/maze" as backdrop_blackberry_brambles.
 
 Some backdrop_berries are nonfamiliar backdrop in Region_Blackberry_Area.
 The printed name is "bunch of ripe berries".
@@ -5320,21 +5351,27 @@ The description is "[one of]You were sure that this was a better spot than where
 Understand "lost/-- in/-- the/-- brambles" as Room_Lost_in_the_Brambles.
 The scent is "sunshine and that dusty fragrance of pine trees that you remember from hiking with Grandpa in the mountains".
 
-
 Section - Navigation
 
 The available_exits of Room_Lost_in_the_Brambles is "To get to the grassy clearing where Honey and Grandpa have been picking, you can [em]go down[/em] the hill. You can also [em]look around[/em] again here or [em]examine[/em] anything in your surroundings[first time]. Or you can get some [em]help[/em][only]."
 
 Section - Objects
 
-Section - Backdrops
+Section - Backdrops & Scenery
 
 Some pine trees are backdrop in Room_Lost_in_the_Brambles.
 The description is "Pine trees fringe the tangle of berry brambles.". 
 Understand "tree/pines/pine" as pine trees.
 The scent is "sharp pine pitch".
 
+A hill is climbable scenery in Room_Lost_in_the_Brambles.
+The description is "A gentle slope goes up from here but is lost in blackberry brambles.". 
+Understand "hill/slope/mountain" as hill.  
+
 Section - Rules and Actions
+
+Instead of climbing hill when Room_Lost_in_the_Brambles encloses the player:
+	say "You try to work your way further up the hill, but only end up stuck in the dense brambles. You finally extract yourself.";
 
 Chapter - Room_Grassy_Clearing
 
@@ -5343,8 +5380,7 @@ Section - Description
 The Room_Grassy_Clearing is a room.
 The printed name is "Grassy Clearing".
 The casual_name is "at the grassy clearing".
-The description is "[one of]The water churgles in the nearby creek but you can't see it through the forest of blackberry brambles all around you. Every summer since you were little, you pick blackberries with your Honey and Grandpa down along Bear Creak[or]You are near the creek, but it can't be seen through the blackberry brambles[stopping]. This is a pleasant clearing carpeted with stubbly grass under a sycamore tree. There are paths and clearings beaten down among the brambles that allow you to squeeze in to get the ripest berries. [if big_bucket is visible]There is a big bucket in the middle of the clearing. [end if][if grandpas_shirt is in location]Grandpa's shirt and Honey's portable transistor radio are[else]Honey's portable transistor radio is[end if] on the bank under the tree playing music.
-[paragraph break][first time]Looking around for [em]which way[/em] you can go: [only][available_exits]".
+The description is "[one of]The water churgles in the nearby creek but you can't see it through the forest of blackberry brambles all around you. Every summer since you were little, you pick blackberries with your Honey and Grandpa down along Bear Creak[or]You are near the creek, but it can't be seen through the blackberry brambles[stopping]. This is a pleasant clearing carpeted with stubbly grass under a sycamore tree. There are paths and clearings beaten down among the brambles that allow you to squeeze in to get the ripest berries.[paragraph break][first time]Looking around for [em]which way[/em] you can go: [only][available_exits][things_in_grassy_clearing]".
 Understand "grassy/-- clearing" as Room_Grassy_Clearing.
 
 Section - Navigation
@@ -5354,6 +5390,20 @@ Room_Grassy_Clearing is south of Room_Lost_in_the_Brambles and down from Room_Lo
 The available_exits of Room_Grassy_Clearing is "If you [em]follow the creek[/em], there's a tangle of blackberry bushes. [em]Up the hill[/em] is the blackberry brambles where you've been picking for a while[first time]. You can examine items around you, for instance, [em]examine radio[/em][only].".
 
 Section - Objects and People
+
+[TODO: This could be handled more generally and have it apply to any room, gracefully listing ordinary objects (like a rock or a shirt) and extraordinary objects (like a radio playing music) ]	
+To say things_in_grassy_clearing:
+	let list_of_things be a list of indexed text;
+	if big_bucket is visible:
+		add "a big bucket in the middle of the clearing" to list_of_things;
+	if grandpas_shirt is in location:
+		add "Grandpa's shirt" to list_of_things;
+	if grandpas_cigarettes is in location:
+		add "Grandpa's cigarettes" to list_of_things;
+	if honeys_radio is in location:
+		add "Honey's portable transistor radio playing music" to list_of_things;
+	if the number of entries of list_of_things is greater than 0:
+		say "[paragraph break]There is [list_of_things] on the bank under the tree.[no line break]";
 
 The big_bucket is scenery unopenable open container in Room_Grassy_Clearing.
 The printed name is "big bucket".
@@ -5376,28 +5426,26 @@ Instead of doing anything except examining or listening or smelling or quizzing 
 
 Grandpas_shirt is an undescribed thing in Room_Grassy_Clearing.
 	The printed name is "Grandpa's shirt".
-	The description is "This is the warm green plaid shirt that Grandpa always wears[if grandpas_cigarettes are in location]. There are a pack of cigarettes in the pocket[end if]."
+	The description is "This is the warm green plaid shirt that Grandpa always wears[if grandpas_cigarettes are in location]. There is a pack of cigarettes in the pocket[end if]."
 	It is a wearable [floatable] thing.
 	Understand "Grandpa's/Grandpas/Grampa's/Grampas/plaid/green/warm/-- shirt" as grandpas_shirt.
 	The dry_time of grandpas_shirt is 6.
 	The scent is "cigarettes and cologne".
 
-grandpas_cigarettes are scenery in Room_Grassy_Clearing.
+grandpas_cigarettes are in Grandpas_shirt.
 	The printed name is "cigarettes".
 	The indefinite article is "Grandpa's".
-	The description is "These are Grandpa's cigarettes. Lucky Strikes. He's been smoking since World War Two.
-	[paragraph break][em]You didn't know it then, but you had less than ten more years with Grandpa. It turns out, two packs a day for three or four decades can kill a man.[/em]".
+	The description is "These are Grandpa's cigarettes. Lucky Strikes. He's been smoking since World War Two.[first time][paragraph break][em]You didn't know it then, but you had less than ten more years with Grandpa. It turns out, two packs a day for three or four decades can kill a man.[/em][only]".
 	Understand "cig/cigs/cigarette/cigarettes/smokes/pack/tobacco", "lucky strikes/strike", "pack of cig/cigs/smokes/cigarettes" as grandpas_cigarettes.
 	The scent is "Mmm, tobacco. You've always liked the smell".
 
 Section - Backdrops and Scenery
 
-A sycamore tree is [climbable] scenery in Room_Grassy_Clearing.
-	The description is "You know this is a sycamore tree from YWCA Nature Camp. White flaky bark, big broad furry leaves.".
+A sycamore tree is climbable scenery in Room_Grassy_Clearing.
+The description is "You know this is a sycamore tree from Explorer Camp. White flaky bark, big broad furry leaves.".
 
-Some stubbly grass is scenery in Room_Grassy_Clearing.
-	It is a lie-able surface.
-	Understand "pleasant", "weeds", "carpet" as stubbly grass.
+Some stubbly grass is scenery lie-able surface in Room_Grassy_Clearing.
+Understand "pleasant", "weeds", "carpet" as stubbly grass.
 
 Some pine trees are backdrop in Room_Grassy_Clearing.
 
@@ -5408,6 +5456,16 @@ Section - Rules and Actions
 
 After going to Room_Grassy_Clearing for the first time:
 	try saying hello to Grandpa;
+	continue the action;
+
+Before taking grandpas_shirt:
+	say "Grandpa swoops in and takes the pack of cigs out of the pocket and says, 'You don't need these, [grandpas_nickname].'";
+	now grandpas_cigarettes are in location;
+	continue the action;
+
+Instead of taking grandpas_cigarettes:
+	say "'You don't need to mess with those,' Grandpa says.";
+
 
 Chapter - Room_Blackberry_Tangle
 
@@ -5438,11 +5496,10 @@ Some pine trees are backdrop in Room_Blackberry_Tangle.
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Blackberry_Tangle when player is in Room_Dappled_Forest_Path:
+Instead of going to Room_Blackberry_Tangle when Room_Dappled_Forest_Path encloses the player:
 	say "You fight your way through the blackberry brambles ripping your clothes in several places. You almost turn back at several points. But at last, finally, you emerge in a familiar place.";
 	now player is clothing_ripped;
 	continue the action.
-
 
 Chapter - Room_Willow_Trail
 
@@ -5466,7 +5523,7 @@ Section - Objects
 
 Section - Backdrops and Scenery
 
-Willows are scenery in Room_Willow_Trail.
+Willows are climbable scenery in Room_Willow_Trail.
 	The initial appearance is "[description of willows]".
 	The description is "Weeping willows dangle over the trail. These are smaller trees than the ones that line the banks of Bear Creek.".
 	Understand "tree/trees/willow/lush/green", "willow trees" as willows.
@@ -5583,7 +5640,7 @@ The old stone bridge is scenery in Room_Stone_Bridge.
 
 Creek_at_bridge is a waterbody in Room_Stone_Bridge.
 The printed name is "Bear Creek".
-	The description is "In places, the creek seems like just a trickle, then other places it is as wide as a river. Here, it is broad and shallow as it [if player is in Room_Stone_Bridge]goes under the bridge[otherwise]flows over and around the rocky creek bed[end if]. There are bright stars twinkling on the water with pebbles and tiny minnows below. It smells like wet rocks.
+	The description is "In places, the creek seems like just a trickle, then other places it is as wide as a river. Here, it is broad and shallow as it [if Room_Stone_Bridge encloses the player]goes under the bridge[otherwise]flows over and around the rocky creek bed[end if]. There are bright stars twinkling on the water with pebbles and tiny minnows below. It smells like wet rocks.
 	[paragraph break][stuff_about_the_creek]."
 	Understand "river/creek/crick/stream/water",  "bear creek/crick" as Creek_at_bridge.
 	The scent is "cool creek water. It tingles your nose sort of".
@@ -5598,11 +5655,11 @@ The description is "Near the grassy bank, there is a rounded boulder in the cree
 Understand "boulders/rounded/turtle/rock/rocks" or "big rock" as boulder.
 
 The grassy bank is a lie-able surface in Room_Stone_Bridge.
-	Understand "grassy/-- shore/bank" as grassy bank.
+	Understand "grassy/-- shore/bank", "grass" as grassy bank.
 
 Moss is scenery in Room_Stone_Bridge.
-	The description of moss is "Thanks to science camp, you're able to identify plants in the Riparian Zone. That means the area around the banks of a river."
-	Understand "horsetail/horsetails/fern/ferns/moss/mosses", "horse tails" as moss.
+	The description of moss is "Thanks to Explorer Camp, you're able to identify plants in the Riparian Zone. That means the area around the banks of a river."
+	Understand "horsetail/horsetails/fern/ferns/moss/mosses", "horse tails", "riparian zone" as moss.
 
 Section - Rules and Actions
 
@@ -5664,22 +5721,28 @@ The description is "The creek tumbles down some big granite rocks here and forms
 Understand "swimming/deep/-- hole/pool", "river/creek/crick/stream/water", "bear creek/crick" as deep_pool.
 
 Some smooth granite rocks are a lie-able surface in Room_Swimming_Hole.
+The description is "These granite rocks crystallized from molten lava deep within the Earth and were pushed up by the subduction of the Pacific Plate. Then a few million years of erosion left them smooth. Yes, you read the geology books on your shelf. Today they are warming in the summer sun."
+
+Does the player mean sitting_on_something smooth granite rocks:
+	It is very likely.
+Does the player mean sitting_on_something rocky_shore_north:
+	It is very unlikely.
 
 The rocky_shore_north is a surface in Room_Swimming_Hole.
 	The printed name is "rocky shore".
 	The description is "You can walk along the creek downstream over a rocky shore.".
 	The destination is Room_Crossing.
-	Understand "rocks", "rocky/-- shore/bank" as rocky_shore_north.
+	Understand "rocky/-- shore/bank" as rocky_shore_north.
 
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Swimming_Hole when player is in Room_Long_Stretch:
+Instead of going to Room_Swimming_Hole when Room_Long_Stretch encloses the player:
 	say "As you step out of the oppressive heat, the cool shade is a welcome relief. You work your way down the steep trail.";
 	continue the action.
 
 [Transition text]
-Instead of going to Room_Swimming_Hole when player is in Room_Crossing:
+Instead of going to Room_Swimming_Hole when Room_Crossing encloses the player:
 	say "You carefully navigate the rocky bank, making your way upstream.";
 	continue the action.
 
@@ -5704,7 +5767,7 @@ deep_pool has a number called swim attempts. Swim attempts is 0.
 Instead of doing_some_swimming in Room_Swimming_Hole:
 	increase swim attempts of deep_pool by 1;
 	if swim attempts of deep_pool is greater than 1:
-		say "On this hot day, you are eager to get back in the water[if clothes are worn]. You look around again to see if you are alone[one of]. The path from the dirt road is deep forest and there is no one else at the swimming hole[or] and there is no one in sight[stopping]. So you carefully strip down to your skivvies, folding your clothes on the rocks[end if]. [one of][swimming_payoff][or]You leap in! Cold! But you get used to it, and it feels good. Actually, it feels great, as you swim around for a bit[or]You try diving like they taught you at the YWCA, but you're scared of conking your head. So your uncommitted dive turns into a belly flop[or]You make a huge splash[or]The water feels refreshing on this hot day[or]You dip in the cool water and swim about[stopping]. When you get out of the water, [one of]the warm air feels good on your skin[or]you dry quickly in the warm air[or]you stand in the cool shade, and you get a sudden chill[in random order].";
+		say "On this hot day, you are eager to get in the water[if clothes are worn]. You look around again to see if you are alone[one of]. The path from the dirt road is deep forest and there is no one else at the swimming hole[or] and there is no one in sight[stopping]. So you carefully strip down to your skivvies, folding your clothes on the rocks[end if]. [one of][swimming_payoff][or]You leap in! Cold! But you get used to it, and it feels good. Actually, it feels great, as you swim around for a bit[or]You try diving like they taught you at the YWCA, but you're scared of conking your head. So your uncommitted dive turns into a belly flop[or]You make a huge splash[or]The water feels refreshing on this hot day[or]You dip in the cool water and swim about[stopping]. When you get out of the water, [one of]the warm air feels good on your skin[or]you dry quickly in the warm air[or]you stand in the cool shade, and you get a sudden chill[in random order].";
 		now player is intrepid;
 		now player is swim_experienced;
 		drop_all_your_stuff;
@@ -5743,7 +5806,7 @@ Instead of entering bridge_log_west:
 Instead of climbing swift_current_west:
 	try navigating Room_Other_Shore.
 
-Instead of jumping when player is in Room_Crossing:
+Instead of jumping when Room_Crossing encloses the player:
 	try navigating Room_Other_Shore.
 
 Section - Objects
@@ -5763,7 +5826,7 @@ The rocky_shore_south is a surface in Room_Crossing.
 	The printed name is "rocky shore".
 	The description is "You can walk along the creek downstream over a rocky shore.".
 	The destination is Room_Swimming_Hole.
-	Understand "rocks", "rocky/-- shore/bank" as rocky_shore_south.
+	Understand "rocky/-- shore/bank" as rocky_shore_south.
 
 Some boulders_west are a surface in Room_Crossing.
 	The printed name is "scattered boulders".
@@ -5783,13 +5846,13 @@ A steep bank is scenery in Room_Crossing.
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Crossing when player was in Room_Swimming_Hole:
+Instead of going to Room_Crossing when Room_Swimming_Hole encloses the player:
 	put_clothes_back_on;
 	say "You carefully navigate the rocky bank, making your way downstream.";
 	Continue the action.
 
 [Transition text]
-Instead of going east when player is in Room_Crossing:
+Instead of going east when Room_Crossing encloses the player:
  	if bridge_log_west is not visible:
 		say "You [one of]get part way across on the boulders[or]hop from boulder to boulder out into the broad river[in random order], but there is an sizeable gap in the middle and a really swift current. You consider jumping across, but the slippery rocks make you reconsider.";
 	else:
@@ -5832,7 +5895,7 @@ Some backdrop_sunlight is backdrop in Region_Dirt_Road.
 The rutted_road is backdrop in Region_Dirt_Road.
 	The printed name is "rutted dirt road".
 	The description is "The old creekside road is seldom used now and in poor condition with deep ruts and sandy areas. Nowadays it is only used by people walking down to Bear Creek from the highway, fishermen and berry pickers mostly. There is tall grass growing right down the middle of the road.".
-	Understand "road/trail/path/ruts/sand", "deep ruts", "tall grass" as rutted_road.
+	Understand "road/trail/path/sand", "deep/-- ruts", "tall/-- grass" as rutted_road.
 
 Section - Navigation
 
@@ -5871,14 +5934,14 @@ The dog is in Room_Dirt_Road
 Section - Backdrops and Scenery
 
 Someone's field is backdrop in Room_Dirt_Road.
-	The description is "Someone's field backs up to the road and is separated by a chainlink fence. The field is a mass of tall weeds and old junk cars.". Understand "yard" as Someone's field.
+	The description is "Someone's field backs up to the road and is separated by a chainlink fence. The field is a mass of tall weeds and old junk cars.". Understand "yard/field/fields/weeds" as Someone's field.
 
 A chainlink fence is backdrop in Room_Dirt_Road.
 	The description is "A chainlink fence, drooping in the middle, fences off the field[if dog is loose]. There is a sizable hole dug under the fence[end if]."
-	Understand "chain link", "cyclone fence" as chainlink fence.
+	Understand "chain link", "cyclone/chainlink/-- fence" as chainlink fence.
 
 Some old junk cars are backdrop in Room_Dirt_Road.
-	The description is "These are old-timey cars. Big boxy things with big rounded fenders." Understand "rusty", "model-t", "old", "timey" as junk cars.
+	The description is "These are old-timey cars. Big boxy things with big rounded fenders." Understand "old/old-timey/-- junk/timey/-- cars" as junk cars.
 
 Section - Rules and Actions
 
@@ -5918,7 +5981,7 @@ Instead of climbing doug_fir:
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Long_Stretch when player is in Room_Swimming_Hole:
+Instead of going to Room_Long_Stretch when Room_Swimming_Hole encloses the player:
 	put_clothes_back_on;
 	say "You clamber up the steep trail. As you step out of the shaded trail, the heat is like a physical force that pushes against you.";
 	continue the action.
@@ -6024,7 +6087,7 @@ Instead of dropping lost_penny when player is on train_track:
 	say "You carefully place the penny on one of the rails.";
 	now lost_penny is on train_track.
 
-Instead of navigating Room_Railroad_Tracks when player is in Room_Railroad_Tracks:
+Instead of navigating Room_Railroad_Tracks when Room_Railroad_Tracks encloses the player:
 	try follow_tracks.
 
 
@@ -6103,7 +6166,7 @@ Room_Halfway_Up is a room.
 The printed name is "Halfway Up".
 The casual_name is "halfway up the big pine tree".
 The description is "You're about Halfway Up the tree, really pretty high. The branches definitely get thinner higher up. But here the branches are about as big around as your leg and you are sitting on a particularly sturdy one[first time]. In fact, you're feeling pretty comfortable up here. You make a monkey yell to tell the other monkeys you are now the ruler of the forest[only].
-[paragraph break]Looking around, it's hard to see much of anything, although you can see [dog_from_a_distance] through the thick branches. It looks like the view is much better higher up.".
+[paragraph break]Looking around, it's hard to see much of anything through the thick branches. Although you can see [dog_from_a_distance]. It looks like the view is much better higher up.".
 The scent is "pine sap".
 
 Section - Navigation
@@ -6122,10 +6185,15 @@ A Doug_Fir2 is an climbable backdrop in Room_Halfway_Up.
 	Understand "tree/trees/branches/pine/pines/tall/bluff/low/fir/fur", "doug fir/fur", "pine tree/trees", "doug fir tree/trees" as Doug_Fir2.
 	The scent is "piney fragrance".
 
+The half_distant_road is scenery in Room_Halfway_Up.
+	The printed name is "dirt road".
+	The description is "Though the branches, you can make out the dirt road under you, where [if dog is not loose]the dog is still digging at the fence.[else]you can see the fence, but where is the dog?[end if]".
+	Understand "road/trail/path/stretch/dog", "dirt road", "long stretch" as half_distant_road.
+
 Section - Rules and Actions
 
 [Ensure retries and transition text]
-Instead of going to Room_Halfway_Up when player is in Room_Long_Stretch:
+Instead of going to Room_Halfway_Up when Room_Long_Stretch encloses the player:
 	Increase pinetree_tries_count of player by one;
 	if pinetree_tries_count of player is less than 3:
 		say "[one of]You jump to reach the lowest branch and hang there struggling for a few moments before dropping back to the ground frustrated[or]This time, you get a leg up and hang there like a monkey, but can't quite get up on the lowest branch. You drop down when your arms start shaking[stopping].
@@ -6142,7 +6210,7 @@ Instead of climbing Doug_Fir2:
 	try going up.
 
 [Encourage retry and transition text]
-Instead of going to Room_Long_Stretch when player is in Room_Halfway_Up:
+Instead of going to Room_Long_Stretch when Room_Halfway_Up encloses the player:
 	if treetop_tries_count of the player is less than 2:
 		say "You descend the tree, disappointed not to reach the top, and drop the last few feet to the ground.";
 	else if treetop_tries_count of the player is 2:
@@ -6157,10 +6225,10 @@ Instead of jumping in Room_Halfway_Up,
 Instead of yelling in Room_Halfway_Up,
 	say "Your [one of]scream echoes off the surrounding hills[or]yell is heard far and wide[or]shriek causes a nearby flock of birds to take flight and it is known by all the monkeys of the forest that you are the undisputed leader of the monkeys now and forever[at random].";
 
-Instead of throwing when player is in Room_Halfway_Up:
+Instead of throwing when Room_Halfway_Up encloses the player:
 	try dropping the noun.
 
-Instead of dropping when player is in Room_Halfway_Up:
+Instead of dropping when Room_Halfway_Up encloses the player:
 	say "You're not likely to find that again if you throw that from here. You change your mind."
 
 Instead of doing_some_swinging in Room_Halfway_Up:
@@ -6227,7 +6295,7 @@ Understand "distant forest", "forest/woods/trees/hills/around/mountains" as dist
 The distant_tracks is scenery in Room_Top_of_Pine_Tree.
 The printed name is "distant railroad tracks".
 The description is "The tracks wind below you from beyond town out past the trailer park and the highway."
-Understand "train/railroad/-- track/tracks/crossing" as distant_tracks.
+Understand "train/railroad/-- track/tracks/crossing", "train/railroad" as distant_tracks.
 
 The distant_trailers is scenery in Room_Top_of_Pine_Tree.
 	The printed name is "trailer park".
@@ -6239,7 +6307,7 @@ Section - Rules and Actions
 Test treetop with "test bridge/go to Room_Top_of_Pine_Tree/g/g/g/u/u/u/u/u".
 
 [Ensure retry and transition text]
-Instead of going to Room_Top_of_Pine_Tree when player is in Room_Halfway_Up:
+Instead of going to Room_Top_of_Pine_Tree when Room_Halfway_Up encloses the player:
 	Increase treetop_tries_count of player by one;
 	if treetop_tries_count of player is less than 3:
 		say "[one of]Should you go any higher? You notice that the branches definitely thin out near the top of the tree. But you think about your grandpa who fought in World War 2.[or]You work your way higher into the pine tree, the branches are thinner but still seem pretty stable and--
@@ -6258,7 +6326,7 @@ Instead of going to Room_Top_of_Pine_Tree when player is in Room_Halfway_Up:
 	continue the action.
 
 [Transition text]
-Instead of going to Room_Halfway_Up when player is in Room_Top_of_Pine_Tree:
+Instead of going to Room_Halfway_Up when Room_Top_of_Pine_Tree encloses the player:
 	say "You carefully work your way down from the top, avoiding the thinner branches.";
 	continue the action.
 
@@ -6268,16 +6336,16 @@ Instead of jumping in Room_Top_of_Pine_Tree:
 Instead of yelling in Room_Top_of_Pine_Tree,
 	say "Your [one of]scream echoes off the surrounding hills[or]yell is heard far and wide[or]shriek causes a nearby flock of birds to take flight and it is known by all the monkeys of the forest that you are the undisputed leader of the monkeys now and forever[at random].";
 
-Instead of throwing when player is in Room_Top_of_Pine_Tree:
+Instead of throwing when Room_Top_of_Pine_Tree encloses the player:
 	try dropping the noun.
 
-Instead of dropping when player is in Room_Top_of_Pine_Tree:
+Instead of dropping when Room_Top_of_Pine_Tree encloses the player:
 	say "You're not likely to find that again if you throw that from here. You change your mind."
 
-[Does the player mean examining distant_train:
+Does the player mean examining distant_train when Room_Top_of_Pine_Tree encloses the player:
 	it is very likely.
-Does the player mean examining distant_tracks:
-	it is possible.]
+Does the player mean examining distant_tracks when Room_Top_of_Pine_Tree encloses the player:
+	it is possible.
 
 Instead of doing_some_swinging in Room_Top_of_Pine_Tree:
 	say "You swing like a monkey from the branches of the big Doug fir. Oh man, you are really high up. You get a firm grip on the tree.";
@@ -6431,7 +6499,7 @@ Trailers are backdrop in Room_D_Loop.
 	Understand "loop/street/neighborhood" as trailers.
 
 Some gardens are backdrop in Room_D_Loop.
-	The description is "Some of those trailers that don't have yards full of gravel, have tiny little gardens in front[if player is in Room_D_Loop]. But while some people's gardens consist of a few succulents or bushes, the Cat Lady's garden looks like a flower truck exploded[end if].".
+	The description is "Some of those trailers that don't have yards full of gravel, have tiny little gardens in front[if Room_D_Loop encloses the player]. But while some people's gardens consist of a few succulents or bushes, the Cat Lady's garden looks like a flower truck exploded[end if].".
 	Understand "gravel", "yards" as gardens.
 
 Big old cars are backdrop in Room_D_Loop.
@@ -6556,31 +6624,31 @@ Instead of switching off the sharons_tv:
 	else:
 		say "The Cat Lady is watching her show. You don't want to be rude.";
 
-Instead of tuning when player is in Room_Sharons_Trailer:
+Instead of tuning when Room_Sharons_Trailer encloses the player:
 	if sharon is not watching-tv:
 		say "The TV set is off.";
 	else:
 		say "The Cat Lady is watching her show. You don't want to be rude.";
 
 Instead of taking Mika_figurine:
-	if player is in Room_Sharons_Trailer:
+	if Room_Sharons_Trailer encloses the player:
 		say "[one of]You quickly palm the figurine, but the Cat Lady[if Sharon is in Room_D_Loop] comes in at just that moment and [end if] immediately notices it missing. 'Oh be careful with that, Dear,' she says, plucking the Mika figurine out of your hand. 'That was made all the way in Ohio.' She places it back on the shelf in the exact same place[if Sharon is in Room_D_Loop]. She looks back at you one more time before going back out to her garden[end if][or]You're not sure you want to risk it again[stopping].";
 		now Mika_figurine is palmed;
 		now Mika_figurine is familiar;
 	otherwise:
 		continue the action;
 
-Instead of going outside when player is in Room_Sharons_Trailer and (Mika_figurine has been palmed):
+Instead of going outside when Room_Sharons_Trailer encloses the player and (Mika_figurine has been palmed):
 	joink_mika;
 
-Instead of navigating Room_D_Loop when player is in Room_Sharons_Trailer and (Mika_figurine has been palmed):
+Instead of navigating Room_D_Loop when Room_Sharons_Trailer encloses the player and (Mika_figurine has been palmed):
 	joink_mika;
+	continue the action;
 
 To joink_mika:
 	say "You look at the Cat Lady[if Sharon is in Room_D_Loop] outside watering her plants[otherwise] who's not paying attention for one moment[end if] and with your heart pounding in your throat, you pocket the little Mika figurine.";
 	Now player holds Mika_figurine;
 	Now player is resourceful;
-	Continue the action.
 
 Instead of touching Mika_figurine,
 	try examining Mika_figurine.
@@ -6834,13 +6902,13 @@ Does the player mean doing anything to pot_of_blackberry_jam: it is likely.
 Instead of searching pot_of_blackberry_jam,
 	try examining pot_of_blackberry_jam.
 
-Instead of doing anything to pot_of_blackberry_jam when player is in Room_Grandpas_Trailer:
+Instead of doing anything to pot_of_blackberry_jam when Room_Grandpas_Trailer encloses the player:
 	if examining pot_of_blackberry_jam or smelling pot_of_blackberry_jam:
 		continue the action;
 	else:
 		warn_about_jam.
 
-Instead of doing anything to jam_jars when player is in Room_Grandpas_Trailer:
+Instead of doing anything to jam_jars when Room_Grandpas_Trailer encloses the player:
 	if examining jam_jars:
 		continue the action;
 	else:
@@ -6904,7 +6972,7 @@ East of Room_Other_Shore is Room_Wooded_Trail.
 
 The available_exits of Room_Other_Shore are "[if Scene_Day_Two has not happened]The creek here curves around in a funny way, but you're pretty sure that this trail must connect with the blackberry trail on this side of the creek. That was this way, right? This trail is darker and more wooded, but it looks like it gets lighter up ahead. Back the way you came, you can get most of the way across the creek by hopping from boulder to boulder.[else]You can get back across the creek by hopping from boulder to boulder and crossing on the log. Or you can go east back the way you came on the wooded trail.[end if]";
 
-Instead of navigating Room_Willow_Trail when player is in Room_Other_Shore:
+Instead of navigating Room_Willow_Trail when Room_Other_Shore encloses the player:
 	try navigating Room_Dark_Woods_North.
 
 Instead of entering boulders_east:
@@ -6916,7 +6984,7 @@ Instead of climbing swift_current_east:
 Instead of entering bridge_log_east:
 	try navigating Room_Crossing.
 
-Instead of jumping when player is in Room_Other_Shore:
+Instead of jumping when Room_Other_Shore encloses the player:
 	try navigating Room_Crossing.
 
 Section - Objects
@@ -6945,16 +7013,16 @@ The swift_current_east is a waterbody in Room_Other_Shore.
 Section - Rules and Actions
 
 [Transition text]
-Instead of going west when player is in Room_Other_Shore:
+Instead of going west when Room_Other_Shore encloses the player:
 	if bridge_log_east is not visible:
 		say "You [one of]get part way across on the boulders[or]hop from boulder to boulder out into the broad river[in random order], but there is an sizeable gap in the middle and a really swift current. You consider jumping across, but the slippery rocks make you reconsider.";
 	else:
 		say "You hop from boulder to boulder to the middle of the broad river and take a few steps across the floating log. Halfway across, it shifts alarmingly and you jump the last few feet almost losing your balance. The log bobs back and settles into its place between the rocks.";
 		continue the action;
 
-Understand "jump across" as jumping when player is in Room_Other_Shore.
+Understand "jump across" as jumping when Room_Other_Shore encloses the player.
 
-Understand "cross [visible thing]" as climbing when player is in Room_Other_Shore.
+Understand "cross [visible thing]" as climbing when Room_Other_Shore encloses the player.
 
 Instead of searching swift_current_east:
 	try examining swift_current_east;
@@ -6966,7 +7034,7 @@ Instead of doing_some_swimming in Room_Other_Shore:
 	say current_swim_refusal.
 
 [ when player has crossed the creek, make any attempt to get back to the blackberry area go deeper into the woods ]
-Instead of navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Other_Shore:
+Instead of navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and Room_Other_Shore encloses the player:
 	try navigating Room_Wooded_Trail;
 
 test other-shore with "teleport to other shore /abstract bridge west to Room_Crossing";
@@ -6997,15 +7065,15 @@ Section - Backdrops
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Wooded_Trail when player is in Room_Other_Shore:
+Instead of going to Room_Wooded_Trail when Room_Other_Shore encloses the player:
 	say "You think this is the right way back to the blackberry trail, right?";
 	continue the action;
 
 [ when player has crossed the creek, make any attempt to get back to the blackberry area go deeper into the woods ]
-Instead of navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and player is in Room_Wooded_Trail:
+Instead of navigating a room (called the dest) when the map region of dest is Region_Blackberry_Area and Room_Wooded_Trail encloses the player:
 	try navigating Room_Dark_Woods_North.
 
-Instead of navigating Room_Willow_Trail when player is in Room_Wooded_Trail:
+Instead of navigating Room_Willow_Trail when Room_Wooded_Trail encloses the player:
 	try navigating Room_Dark_Woods_North.
 
 Chapter - Room_Dark_Woods_South
@@ -7107,7 +7175,7 @@ Section - Rules and Actions
 Instead of listening to the sound_of_the_creek:
 	try examining noun;
 
-Instead of listening when player is in Room_Dark_Woods_South and sound_of_the_creek is visible:
+Instead of listening when Room_Dark_Woods_South encloses the player and sound_of_the_creek is visible:
 	try examining sound_of_the_creek;
 
 [Rule for printing the name of a room when location is Room_Dark_Woods_South and Scene_Night_In_The_Woods has been happening for exactly 1 turn:
@@ -7282,6 +7350,7 @@ The available_exits of Room_Protected_Hollow are "You can climb back out and go 
 
 Section - Objects
 
+[TODO: Maybe fallen_leaves should be a container - that would allow player to crawl into leaves but we'd have to redefine the cover action ]
 Some fallen_leaves are fixed in place in Room_Protected_Hollow.
 	The printed name is "fallen leaves".
 	The initial appearance is "[if Scene_Defend_the_Fort is not happening][fallen_leaves_appearance][end if]".
@@ -7309,27 +7378,27 @@ Some crickets are backdrop in Room_Protected_Hollow.
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Protected_Hollow when player is in Room_Forest_Meadow:
+Instead of going to Room_Protected_Hollow when Room_Forest_Meadow encloses the player:
 	say "You crawl into the low hollow formed by the fallen tree.";
 	continue the action.
 
 [Transition text]
-Instead of going to Room_Forest_Meadow when player is in Room_Protected_Hollow and Room_Protected_Hollow is made_cozy:
+Instead of going to Room_Forest_Meadow when Room_Protected_Hollow encloses the player and Room_Protected_Hollow is made_cozy:
 	say "You shake off the pile of leaves and crawl out of your nest.";
 	now Room_Protected_Hollow is not made_cozy;
 	continue the action.
 
-Instead of get_down_from_anything when player is in Room_Protected_Hollow:
+Instead of get_down_from_anything when Room_Protected_Hollow encloses the player:
 	try navigating Room_Forest_Meadow.
 
-Instead of listening when player is in Room_Protected_Hollow and Scene_Night_In_The_Woods is happening:
+Instead of listening when Room_Protected_Hollow encloses the player and Scene_Night_In_The_Woods is happening:
 	if raccoons are in Room_Forest_Meadow:
 		say "You hear a thumping, rustling sound. Is something trying to get at you?";
 	else:
 		say "You hear nothing but the crickets playing their love songs and the stars whirring in their orbits overhead.";
 
 Every turn when Scene_Night_In_The_Woods is happening and
-	player is in Room_Protected_Hollow and
+	Room_Protected_Hollow encloses the player and
 	Room_Protected_Hollow is not made_cozy:
 	if Scene_Defend_the_Fort is not happening:
 		say "[one of]You are awfully chilly. You wish you had a blanket to keep warm[or]It's good to have shelter, but it's still too cold to sleep[or]Unless you find a way to keep warm, you are still in danger of hypothermia[cycling]."
@@ -7371,22 +7440,22 @@ Section - Navigation
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Sentinel_Tree when player is in Room_Forest_Meadow:
+Instead of going to Room_Sentinel_Tree when Room_Forest_Meadow encloses the player:
 	say "You easily climb the low branches and carefully pull yourself to the top where you are high above the forest.";
 	continue the action.
 
 [Transition text]
-Instead of going to Room_Forest_Meadow when player is in Room_Sentinel_Tree:
+Instead of going to Room_Forest_Meadow when Room_Sentinel_Tree encloses the player:
 	say "You carefully work your way down from the top.";
 	continue the action.
 
 Instead of jumping in Room_Sentinel_Tree:
 	say "Looking down, you get a sudden crazy urge to leap into space. You resist the urge.";
 
-Instead of throwing when player is in Room_Sentinel_Tree:
+Instead of throwing when Room_Sentinel_Tree encloses the player:
 	try dropping the noun.
 
-Instead of dropping when player is in Room_Sentinel_Tree:
+Instead of dropping when Room_Sentinel_Tree encloses the player:
 	say "You're not likely to find that again if you throw that from here. You change your mind."
 
 Instead of doing_some_swinging in Room_Sentinel_Tree:
@@ -7417,7 +7486,7 @@ The printed name is "sky".
 The description is "What is the sky anyway? Can we see air? Are we looking into space? Is it day or is it night? Are those clouds or are they stars? Hard to tell.".
 Understand "sky/sun/air/space/stars/clouds/day/night" as dream_sky.
 
-Instead of examining Dream_sky when player is in Room_Snack_Bar or player is in Room_Restroom:
+Instead of examining Dream_sky when Room_Snack_Bar encloses the player or Room_Restroom encloses the player:
 	say "You can't see the sky from here. But maybe if you step outside."
 
 Section - Navigation
@@ -7539,7 +7608,7 @@ Some speakers, some paper trash are scenery in Room_Drive_In.
 
 Section - Rules and Actions
 
-Instead of going to Room_Drive_In when player is in Room_Car_With_Mom:
+Instead of going to Room_Drive_In when Room_Car_With_Mom encloses the player:
 	say "'Want to pick us up some Milk Duds?' mom asks, handing you some money.
 	[paragraph break]Mom smiles at you, 'Hurry back,' and, as you shut the car door, adds 'I love you, pumpkin.'";
 	now player has money;
@@ -7670,7 +7739,7 @@ Does the player mean doing anything other than buying to popcorn_maker:
 Instead of taking or eating popcorn_maker:
 	try buying popcorn_maker.
 
-Instead of buying popcorn_maker when player is in Room_Snack_Bar:
+Instead of buying popcorn_maker when Room_Snack_Bar encloses the player:
 	if Scene_Dream_Have_To_Pee is happening:
 		say "Probably best to visit the restroom first.";
 	else if the player has money:
@@ -7697,7 +7766,7 @@ Does the player mean doing anything other than buying to candy_selection:
 Instead of taking or eating candy_selection:
 	try buying candy_selection.
 
-Instead of buying candy_selection when player is in Room_Snack_Bar:
+Instead of buying candy_selection when Room_Snack_Bar encloses the player:
 	if Scene_Dream_Have_To_Pee is happening:
 		say "Probably best to visit the restroom first.";
 	else if the player has money:
@@ -7716,13 +7785,13 @@ Instead of eating Milk Duds,
 
 [Counter Lady]
 
-Instead of doing anything to counter lady when player is in Room_Snack_Bar:
+Instead of doing anything to counter lady when Room_Snack_Bar encloses the player:
 	if examining counter lady:
 		continue the action;
 	else:
 		say "She's helping other customers and doesn't seem to hear you."
 
-Instead of going to Room_Car_With_Stepdad when player is in Room_Drive_In:
+Instead of going to Room_Car_With_Stepdad when Room_Drive_In encloses the player:
 	if Scene_Dream_About_Drive_In is happening:
 		say "[one of]Before you get in the car, you remember there's something you have to do.[or]The dollar in your pocket reminds you that you still want to visit the snack bar.[stopping]";
 		stop the action;
@@ -7793,7 +7862,7 @@ Virtual_Mom is scenery in Room_Car_With_Stepdad.
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Car_With_Stepdad when player is in Room_Drive_In:
+Instead of going to Room_Car_With_Stepdad when Room_Drive_In encloses the player:
 	say "With the logic of dreams, you're in the car speeding down the road.";
 	Continue the action.
 
@@ -7803,10 +7872,10 @@ Instead of searching road:
 Instead of doing anything except examining to cigarette lighter:
 	say "No way. Touching that is a good way to lose a hand."
 
-Instead of jumping when player is in Room_Car_With_Stepdad:
+Instead of jumping when Room_Car_With_Stepdad encloses the player:
 	try navigating Room_Dream_Grassy_Field.
 
-Instead of going to Room_Dream_Grassy_Field when player is in Room_Car_With_Stepdad:
+Instead of going to Room_Dream_Grassy_Field when Room_Car_With_Stepdad encloses the player:
 	if stepdad_free_to_go is false:
 		say "[one of]Are you sure? The car's still moving.[or]You've got to get out of here, but how and when?[or]Wait. Maybe he will stop or slow down up ahead.[stopping]";
 		stop the action;
@@ -7840,20 +7909,20 @@ A grassy field, the rutted dirt road, some golden grasses, the back fence, the b
 
 Section - Rules and Actions
 
-Instead of going to Room_Dream_Grassy_Field when player is in Room_Car_With_Stepdad:
+Instead of going to Room_Dream_Grassy_Field when Room_Car_With_Stepdad encloses the player:
 	say "You open the car door and look at the surface of the road speeding by. You gather your courage and prepare to jump. Mark's hand shoots out to stop you. You duck the hand, glancing back at Mark's startled face, and jump.
 	[paragraph break][line break][line break]...And land surprisingly softly, with no more force than if you had fallen down from a standstill. You pick yourself up to familiar surroundings.";
 	Now player is courageous;
 	continue the action.
 
-Every turn when player is in Room_Dream_Grassy_Field:
+Every turn when Room_Dream_Grassy_Field encloses the player:
 	if sheriff is visible:
 		report_on_the_dance;
 
 To report_on_the_dance:
 		queue_report "[one of]As you watch the dancers, [or]As you watch, [or]Now, [stopping][one of]Lee spins the Cat Lady while her dress swishes around her, then lowers her into an elegant dip with her hand extended[or]they step together, first forward, then to the side, then back as if they are one person[or]Lee swishes the Cat Lady first right than left, their feet moving like magic in elegant slides beneath them, churning up puffs of dust[or]Lee and the Cat Lady step slow, slow, quick, quick, drag in a beautiful rhythm to the sheriff's accordion tango[or]the Cat Lady slowly lifts her knee and wraps her leg around Lee as he turns her quickly than slowly in an embrace[in random order]." at priority 1.
 
-Instead of doing anything to sharon when player is in Room_Dream_Grassy_Field:
+Instead of doing anything to sharon when Room_Dream_Grassy_Field encloses the player:
 	if examining sharon:
 		continue the action;
 	else:
@@ -7862,7 +7931,7 @@ Instead of doing anything to sharon when player is in Room_Dream_Grassy_Field:
 		else:
 			say "She's busy dancing the tango.";
 
-Instead of doing anything to lee when player is in Room_Dream_Grassy_Field:
+Instead of doing anything to lee when Room_Dream_Grassy_Field encloses the player:
 	if examining lee:
 		continue the action;
 	else:
@@ -7871,7 +7940,7 @@ Instead of doing anything to lee when player is in Room_Dream_Grassy_Field:
 		else:
 			say "He's too busy dancing."
 
-Instead of doing anything to sheriff when player is in Room_Dream_Grassy_Field:
+Instead of doing anything to sheriff when Room_Dream_Grassy_Field encloses the player:
 	if examining sheriff:
 		continue the action;
 	else:
@@ -7934,7 +8003,7 @@ Instead of putting something on dream_train_track:
 	else:
 		say "Grandpa told you if you put things on the tracks, you might derail the train. You think better of the idea.".
 
-Instead of navigating Room_Railroad_Tracks when player is in Room_Dream_Railroad_Tracks:
+Instead of navigating Room_Railroad_Tracks when Room_Dream_Railroad_Tracks encloses the player:
 	try follow_tracks.
 
 Instead of taking dream_mound_of_rock:
@@ -7985,13 +8054,13 @@ Understand "thick/-- red/-- dust/ground/dirt" as thick red dust.
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Mars when player is in Room_Dream_Railroad_Tracks:
+Instead of going to Room_Mars when Room_Dream_Railroad_Tracks encloses the player:
 	say "You follow the railroad tracks walking silently with Honey and Grandpa, briefly balancing on the rails while you hold Honey's hand. This time, you're not worried about a train coming. You walk for a while humming a little tune. You look down and realize you've lost the train tracks and see only red dust.";
 	Now honey is in Room_Mars;
 	Now Grandpa is in Room_Mars;
 	Continue the action.
 
-Instead of jumping when player is in Room_Mars:
+Instead of jumping when Room_Mars encloses the player:
 	if Grandpa is visible:
 		say "[one of]You give a little experimental jump in the light gravity and sail up at least half your height. Grandpa and Honey watch you.[or]You try another experimental jump, this time a little harder, leaping at least your height. Grandpa smiles and Honey says, 'Be careful, Hon.'[or]This time, you really give it a good effort, jumping as high as you can, sailing to a startling height. For a moment, you are afraid you won't come down and will sail off into the sky, and Grandpa dives forward to catch you. But you reach the top of your flight and touch down lightly.[or]This time, you jump more cautiously.[stopping]";
 	else:
@@ -8038,11 +8107,11 @@ The Viking 1 Lander is scenery in Room_Chryse_Planitia.
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Chryse_Planitia when player is in Room_Mars:
+Instead of going to Room_Chryse_Planitia when Room_Mars encloses the player:
 	say "You scan the sky looking for Honey and Grandpa. As you walk-hop in the light gravity along the surface of Mars, your tennis shoes padding in the red dust, you see something in the distance. It gets closer as you walk for what seems like hours.";
 	continue the action;
 
-Instead of jumping when player is in Room_Chryse_Planitia:
+Instead of jumping when Room_Chryse_Planitia encloses the player:
 	say "You don't have much enthusiasm for jumping now.";
 
 Instead of doing anything except examining to Viking 1 lander:
@@ -8084,12 +8153,12 @@ Someone's field, ragged trail, the old dirt road, a chainlink fence, some junk c
 Section - Rules and Actions
 
 [Transition text]
-Instead of going to Room_Dream_Dirt_Road when player is in Room_Chryse_Planitia:
+Instead of going to Room_Dream_Dirt_Road when Room_Chryse_Planitia encloses the player:
 	say "As you walk, you look at your feet and notice that the dust has changed to a more familiar color.";
 	continue the action.
 
 [keep player here until they finish their convo with dog]
-Instead of going_on when player is in Room_Dream_Dirt_Road:
+Instead of going_on when Room_Dream_Dirt_Road encloses the player:
 	if dog_free_to_go is not true:
 		say "You're pretty sure, the dog will not let you.";
 	else:
@@ -8268,14 +8337,14 @@ Chapter - Possessions
 Some tennis_shoes are an improper-named undescribed unmentionable floating thing.
 	The printed name is "tennis shoes".
 	Tennis_shoes are worn by the player.
-	The description of tennis_shoes is "Your white and black tennies[if tennis_shoes are wet], now soaking wet[end if]".
+	The description of tennis_shoes is "Your white and black tennies[if tennis_shoes are wet], now soaking wet[end if].".
 	Understand "sneakers/shoes/shoe/tennies/feet" as tennis_shoes.
 	The dry_time of tennis_shoes is 10.
 	The indefinite article of tennis_shoes is "your".
 
 Some clothes are an improper-named undescribed unmentionable floating thing.
 	Clothes are worn by the player.
-	The description of clothes is "Your pants and blue Mickey Mouse T-shirt".
+	The description of clothes is "Your pants and blue Mickey Mouse T-shirt.".
 	Understand "clothing", "dress", "pants", "tshirt", "t-shirt", "tee", "skirt", "blouse" as clothes.
 	The dry_time of clothes is 10.
 	The indefinite article of clothes is "your".
@@ -8475,14 +8544,14 @@ To say honey_initial_description:
 Player has a number called attempts_to_leave.
 	Attempts_to_leave is zero.
 
-Instead of going down when player is in Room_Grassy_Clearing:
+Instead of going down when Room_Grassy_Clearing encloses the player:
 	if Scene_Picking_Berries is happening:
 		say "[one of]Honey looks up, as you go by[or]Honey notices as you go past[or]Honey catches your eye and give you a Meaningful Look as you pass[or]Honey looks up as you go by and you catch a flicker of annoyance[as decreasingly likely outcomes].";
 	else if Scene_Explorations is happening:
 		say "Honey looks up and says, '[one of]Have fun, but don't wander too far[or]Stay where you can hear me call[or]Don't go too far[cycling].'";
 	continue the action;
 
-Instead of going down when player is in Room_Blackberry_Tangle during Scene_Picking_Berries:
+Instead of going down when Room_Blackberry_Tangle encloses the player during Scene_Picking_Berries:
 	Increase attempts_to_leave of Player by 1;
 	say "[one of]Ever vigilant[or]Again[or]Once again[or]Of course[stopping], Honey looks down the trail and sees you [one of]wandering[or]leaving[or]exploring[at random]. [one of]'Hey, why don't you stay here with us? Don't you want to help your Honey and Grandpa? One more pail, okay?'[run paragraph on][or]'Hey Ants-In-The-Pants, are you getting bored? Why don't you come pick some more berries?'[run paragraph on][or]'I want you to pick one more pail before you go exploring.'[run paragraph on][or]'Uh. What did I tell you?'[run paragraph on][or]She gives you A Look.[run paragraph on][stopping] You reluctantly head back to the clearing.";
 	Move player to Room_Grassy_Clearing with little fuss;
@@ -8566,7 +8635,7 @@ Response of Honey when asked-or-told about Grandpa:
 	say "'Ah, your grandpa. He's probably a smarter man than I give him credit for,' Honey says, leaving you wondering what that means exactly.".
 
 Response of Honey when asked-or-told about Aunt Mary:
-	say "'Ah, my sister Mary, your great-great -- no, only one great -- your great Aunt. She was the baby in the family until I came along as an accident when your great grandma was pretty old. She's kind of loosing her marbles lately, I think.'[run paragraph on][one of][if Grandpa is visible] She looks over at Grandpa, 'John, don't you think?'[line break][paragraph break]Grandpa looks up from picking berries. 'What?'[paragraph break]'Mary. You think she's cracking up?'[paragraph break]'Oh, leave her alone,' Grandpa says. 'Why do you have to pick on your sister?'[end if][or][paragraph break][stopping]".
+	say "'Ah, my sister Mary, your great-great -- no, only one great -- your great Aunt. She was the baby in the family until I came along as an accident when your great grandma was pretty old. She's kind of loosing her marbles lately, I think.'[run paragraph on][one of][if Grandpa is visible] She looks over at Grandpa, 'George, don't you think?'[line break][paragraph break]Grandpa looks up from picking berries. 'What?'[paragraph break]'Mary. You think she's cracking up?'[paragraph break]'Oh, leave her alone,' Grandpa says. 'Why do you have to pick on your sister?'[end if][or][paragraph break][stopping]".
 
 Response of Honey when asked-or-told about Lee:
 	say "'Stay away from him,' Honey looks up seriously. Is she mad at you? 'I mean it. He's not right. Something about him's not quite right.'".
@@ -8659,7 +8728,7 @@ gma_sharon_rant is a rant.
 
 Table of gma_sharon_rant
 Quote
-"'That crazy old coot. I told your mom the other day I caught her standing out in her garden in the middle of the night talking to the flowers,' Honey says, 'but that's not all.[run paragraph on][if Grandpa is visible]' She turns toward Grandpa, 'John, did I tell you this?[end if]'"
+"'That crazy old coot. I told your mom the other day I caught her standing out in her garden in the middle of the night talking to the flowers,' Honey says, 'but that's not all.[run paragraph on][if Grandpa is visible]' She turns toward Grandpa, 'George, did I tell you this?[end if]'"
 "'I couldn't sleep because your grandpa's snoring was keeping me up and I was taking a walk,' Honey says, 'and that's when I caught Sharon talking to her flowers.'"
 "Honey says: 'I asked the cat lady, [']What are you doing?['] and she said, [']I'm keeping my babies safe from slugs.['] And then she gives me the nuttiest smile. Okay, I told her, most of us just put snail bait out in the daytime.'"
 "Honey shakes her head, 'That cat lady is a crazy old nut.'"
@@ -8691,7 +8760,7 @@ Quote
 "Honey clenches her teeth and growls but says no more."
 
 To say grandparent_random:
-	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[or]'It burns my britches that Mark wants that kid to call him [']dad,['] Grandpa says quietly to Honey.[or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both.' Honey laughs.[or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[or]'Hey, [honeys_nickname],' Honey calls to you. 'When you go with Grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[in random order]".
+	say "[one of]'Oh, Mary went to the doctor last week and found out about that thing on her neck,' Honey says to Grandpa. 'Turns out it's nothing, but they took it off anyway.' Grandpa just nods silently.[no line break][or]'Is that fellow Mark coming here when Rachel comes to pick up Jody?' Grandpa asks Honey, 'I'm not sure I can keep from giving him a piece of my mind.'[no line break][or]'It burns my britches that Mark wants that kid to call him [']dad,[']' Grandpa says quietly to Honey.[no line break][or]'Remind me when we get into town, I need to pick up my new pair of eyes,' Honey says to Grandpa.[no line break][or]'That sheriff came by again asking about Lee,' Grandpa says.[paragraph break]'I'm not sure why you trust him,' Honey says. 'I'd be happy if I never saw that guy again.'[paragraph break]'The sheriff or Lee?' Grandpa asks.[paragraph break]'Both.' Honey laughs.[no line break][or]'You're tuneless whistling again,' Honey says to Grandpa. You hadn't even noticed any whistling.[no line break][or]'How close is the bucket to being full?' Grandpa asks Honey who ignores him. 'Never mind,' he says, looking in it himself, 'We have more berries to pick.'[no line break][or]'How you doing over there, [grandpas_nickname]?' Grandpa asks you.[no line break][or]Honey says to Grandpa, 'Did I tell you that I caught Sharon being crazy in the middle of the night?' Grandpa seems to ignore her and she doesn't repeat it.[no line break][or]'Hey, [honeys_nickname],' Honey calls to you. 'When you go with Grandpa to take the bucket to the trailer, can you ask Mary about lunch?'[no line break][or]Honey asks Grandpa, 'Are you going swimming later with the kiddo?'[paragraph break]'If we have time,' Grandpa says.[no line break][or]'I heard Lee had another one of his freak outs, screaming about the war, last week,' Honey says to Grandpa.[paragraph break]'Give him a break. He doesn't have it easy,' Grandpa says.[no line break][in random order]".
 
 [TODO: when grandparents_random is queued, it adds an extra line feed. Tried almost every combo of [no line feed] and [run paragraph on] here and it it's call]
 
@@ -8710,7 +8779,7 @@ Grandpa is an undescribed _male man in Room_Grassy_Clearing.
 	The initial appearance is "[grandpas_initial_appearance].".
 	The description of Grandpa is "Grandpa is, well, Grandpa. He's not tall. He's not fat. He has a bald spot right on top of his head like a little hat. He's like a bull, kind of, but skinnier and wears a warm plaid shirt. Today he's in a t-shirt, but usually. He smells good, like cigarettes and that stuff he puts on his face when he shaves.[if a random chance of 1 in 3 succeeds]
 	[paragraph break]While you are looking, he sees you and smiles.[end if]".
-	Understand "grampa/granpa/grandfather/gramp/pa/gramps/John" as Grandpa.
+	Understand "grampa/granpa/grandfather/gramp/pa/gramps/George" as Grandpa.
 	The scent is "something familiar, like cigarettes and the stuff he uses when he shaves".
 
 Chapter - Properties
@@ -8726,7 +8795,7 @@ Instead of touching Grandpa:
 
 [ Grandpa picking berries ]
 
-Every turn when player is in Room_Grassy_Clearing and Grandpa is in Room_Grassy_Clearing and a random chance of 1 in 10 succeeds:
+Every turn when Room_Grassy_Clearing encloses the player and Grandpa is in Room_Grassy_Clearing and a random chance of 1 in 10 succeeds:
 	queue_report "Grandpa pauses for a minute from his berry picking and [one of]wipes his forehead with his handkerchief and rests against a tree[or]lights a cigarette and smokes for a bit[at random]." with priority 2.
 
 Chapter - Responses
@@ -8827,7 +8896,7 @@ Response of Grandpa when asked-or-told about Honey:
 	say "[if honey is visible]Grandpa looks over toward Honey[end if], 'She's your Grandma Honey[one of]. Don't worry about her[or]. Her bark's worse than her bite[or]. She loves the heck out of you[in random order], [grandpas_nickname].'".
 
 Response of Grandpa when asked-or-told about Aunt Mary:
-	say "'She's your Honey's older sister. Did you know your Honey had twelve brothers and sisters. Let's see, you know Uncle Charley and Aunt Ethel and Aunt Mary,' Grandpa says counting on his fingers. 'Mary has grandkids that are your mom's age.'".
+	say "'She's your Honey's older sister. Did you know your Honey had twelve brothers and sisters? Let's see, you know Uncle Charley and Aunt Ethel and Aunt Mary,' Grandpa says counting on his fingers. 'Mary has grandkids that are your mom's age.'".
 
 Response of Grandpa when asked-or-told about Lee:
 	say "'I don't know much about him, [grandpas_nickname],' Grandpa says. 'He's pretty quiet and keeps mostly to himself. I heard from your Aunt Mary that he served in Vietnam.'".
@@ -8836,7 +8905,7 @@ Response of Grandpa when asked-or-told about Lee:
 	say "".]
 
 Response of Grandpa when asked-or-told about stepdad:
-	say "[one of]'Mark? He seemed like a nice enough guy when I met him, but...' Grandpa looks like he's going to get mad at you, 'he better start being a whole heck of a lot nicer to you and your[if player is in Room_Grassy_Clearing]--'[paragraph break]Honey cuts him off, 'John, that's enough. Remember, little pitchers have big ears.'[paragraph break]Grandpa leans down and says a little quieter, 'Well, you just know that your mom, your Honey, and your grandpa love you,' and he [grandpa_stuff].[else] mom or he's going to have to answer to me. That's all I have to say.'[end if][or]Grandpa face goes tight. 'I don't think I can rightly say anything more about that without saying anything I don't want to.'[stopping]".
+	say "[one of]'Mark? He seemed like a nice enough guy when I met him, but...' Grandpa looks like he's going to get mad at you, 'he better start being a whole heck of a lot nicer to you and your[if Room_Grassy_Clearing encloses the player]--'[paragraph break]Honey cuts him off, 'George, that's enough. Remember, little pitchers have big ears.'[paragraph break]Grandpa leans down and says a little quieter, 'Well, you just know that your mom, your Honey, and your grandpa love you,' and he [grandpa_stuff].[else] mom or he's going to have to answer to me. That's all I have to say.'[end if][or]Grandpa face goes tight. 'I don't think I can rightly say anything more about that without saying anything I don't want to.'[stopping]".
 
 Response of Grandpa when asked-or-told about topic_dreams:
 	say "'We all have dreams, [grandpas_nickname]. Sometimes as you get older, or if you get to be an old man like me, you have different dreams than you did when you were a young man,' Grandpa says, 'These days, I dream about a quiet river with a fishing pole.'".
@@ -9039,14 +9108,14 @@ At the time when sharon_tends_garden:
 		sharon_tends_garden in 10 turns from now;
 		stop;
 	if Sharon is ready-for-tea-time:
-		Report Sharon saying "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'I was going to water the garden, but we're having so much fun, I'll do it later.'";
+		Report Sharon saying "The Cat Lady, glances [if Room_Sharons_Trailer encloses the player]out the window[otherwise]at her trailer[end if] and says, 'I was going to water the garden, but we're having so much fun, I'll do it later.'";
 		sharon_tends_garden in 15 turns from now;
 	Otherwise:
 		if Sharon is touchable:
-			queue_report "The Cat Lady, glances [if player is in Room_Sharons_Trailer]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], I have to go water the garden.'" at priority 4;
+			queue_report "The Cat Lady, glances [if Room_Sharons_Trailer encloses the player]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], I have to go water the garden.'" at priority 4;
 		Move_sharon_out_of_her_trailer;
 		Now Sharon is tending-garden;
-		if player is in Room_D_Loop:
+		if Room_D_Loop encloses the player:
 			queue_report "She uncoils the hose and starts watering her little garden in front of her trailer." at priority 2;
 
 At the time when sharon_resumes_gardening:
@@ -9059,15 +9128,15 @@ At the time when sharon_watches_tv:
 		sharon_watches_tv in 10 turns from now;
 		stop;
 	if Sharon is ready-for-tea-time:
-		Report Sharon saying "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'One of my shows is on, but it is so much fun talking to you, I'll skip it.'";
+		Report Sharon saying "The Cat Lady glances [if Room_Sharons_Trailer encloses the player]at the TV[otherwise]at her trailer[end if] and says, 'One of my shows is on, but it is so much fun talking to you, I'll skip it.'";
 		sharon_watches_tv in 15 turns from now;
 	Otherwise:
 		if Sharon is touchable:
-			queue_report "The Cat Lady glances [if player is in Room_Sharons_Trailer]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], my favorite show is on. You can join me if you want.'" at priority 4;
+			queue_report "The Cat Lady glances [if Room_Sharons_Trailer encloses the player]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], my favorite show is on. You can join me if you want.'" at priority 4;
 		move_sharon_into_her_trailer;
 		Now Sharon is watching-tv;
 		Now sharons_tv is switched on;
-		if player is in Room_Sharons_Trailer:
+		if Room_Sharons_Trailer encloses the player:
 			queue_report "She sits down in front of her TV and turns on a soap opera." at priority 2;
 
 At the time when sharon_feeds_cats:
@@ -9082,11 +9151,11 @@ At the time when sharon_feeds_cats:
 			queue_report "The Cat Lady [sharon_stuff] and says, 'Well, [sharons_nickname], I have to go feed the kitties.' [run paragraph on]" at priority 4;
 		move_sharon_into_her_trailer;
 		Now Sharon is feeding-cats;
-		if player is in Room_Sharons_Trailer:
+		if Room_Sharons_Trailer encloses the player:
 			queue_report "The Cat Lady moves into the kitchen and starts cooking up smelly fish for her cats." at priority 2;
 
 To move_sharon_out_of_her_trailer:
-	if player is in Room_D_Loop:
+	if Room_D_Loop encloses the player:
 		queue_report "The Cat Lady steps out of her trailer, going slowly down the steps. The tabby shoots out the door ahead of her, almost tripping her." at priority 3;
 	otherwise if player is contained by Room_Sharons_Trailer:
 		queue_report "The Cat Lady steps outside. The tabby shoots out the door soon as it is open." at priority 3;
@@ -9094,9 +9163,9 @@ To move_sharon_out_of_her_trailer:
 	Now Tabby is in Room_D_Loop;
 
 To move_sharon_into_her_trailer:
-	if player is in Room_D_Loop:
+	if Room_D_Loop encloses the player:
 		queue_report "The Cat Lady goes into her trailer, going slowly up the steps. The tabby cat licks its paw and, after a bit, follows through the cat door." at priority 3;
-	otherwise if player is in Room_Sharons_Trailer:
+	otherwise if Room_Sharons_Trailer encloses the player:
 		queue_report "The Cat Lady comes into the trailer and sees you, 'Hi, [sharons_nickname].' The tabby cat follows through the cat door." at priority 3;
 	Now Sharon is in Room_Sharons_Trailer;
 	Now yellow tabby is in Room_Sharons_Trailer;
@@ -9318,7 +9387,7 @@ At the time when lee_resumes_smoking:
 
 To move_lee_into_his_trailer:
 	now Lee is in Room_Lees_Trailer;
-	if player is in Room_Lees_Trailer:
+	if Room_Lees_Trailer encloses the player:
 		queue_report "Lee comes in stubbing out his cigarette in an ashtray and says, 'Hey, Jody.'" at priority 3;
 	else:
 		queue_report "Lee gives you a wave and heads inside his trailer." at priority 3;
@@ -9644,20 +9713,20 @@ test mary-tell with "teleport to D Loop / z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/teleport
 Part - the Sheriff
 
 The Sheriff is an undescribed _male man.
-	The printed name is "The Sheriff".
-	The description is "[if Scene_Dreams is not happening]The sheriff is an older guy about grampa's age maybe, but is still a big guy. He looks like he used to be a football player. He has big glasses that are kind of lopsided and a hat like smokey the bear[else]The sheriff sits on the hood of his car with his big smokey the bear hat looking serious, and playing the accordion with gusto[end if].".
-	Understand "sherriff/sherrif/deputy/police/officer/pig/bill/hat/glasses" as The Sheriff.
-	The scent is "fear".
-	The sheriff is in the sheriffs_car.
+The sheriff is in sheriffs_car.
+The printed name is "The Sheriff".
+The description is "[if Scene_Dreams is not happening]The sheriff is an older guy about grampa's age maybe, but is still a big guy. He looks like he used to be a football player. He has big glasses that are kind of lopsided and a hat like smokey the bear[else]The sheriff sits on the hood of his car with his big smokey the bear hat looking serious, and playing the accordion with gusto[end if].".
+Understand "sherriff/sherrif/deputy/police/officer/pig/bill/hat/glasses" as The Sheriff.
+The scent is "fear".
 
 
 Chapter - Properties
 
 Chapter - Rules and Actions
 
-The sheriffs_car is an undescribed unopenable open vehicle in Limbo. 
+The sheriffs_car is an improper-named scenery transparent unopenable closed vehicle in Limbo. 
 The printed name is "Sheriff's patrol car".
-The description is "It is dark green, mostly, with white doors, and a big black and gold badge on the door that says 'Sierra County Sheriff.' It has red lights along the top. This is a big boxy car that looks kinda muscular and mean like the yellow dog."
+The description is "It is dark green, mostly, with white doors, and a big black and gold badge on the door that says 'Sierra County Sheriff.' It has red lights along the top. This is a big boxy car that looks kinda muscular and mean like the yellow dog[if sheriff is in sheriffs_car]. The Sheriff is sitting in the car with his arm resting on the open window[end if]."
 Understand "police/sheriff/sheriffs/sheriff's/sherriff/sherriffs/sherriff's/deputys/deputy's/-- patrol/squad/-- car", "policecar/patrolccar/squadcar", "cruiser", "car" as sheriffs_car.
 The scent is "burnt oil".
 
@@ -9695,7 +9764,7 @@ Instead of touching Sheriff:
 Part - Mom
 
 Mom is a familiar _female woman in Room_Car_With_Mom.
-The initial appearance is "[if player is in Room_Car_With_Mom]Your mom is watching the movie[first time]. Sensing you looking, she smiles at you[only][else]Your mom is here looking very worried[end if].".
+The initial appearance is "[if Room_Car_With_Mom encloses the player]Your mom is watching the movie[first time]. Sensing you looking, she smiles at you[only][else]Your mom is here looking very worried[end if].".
 The description is "[moms_description].".
 Understand "mommy/ma/mother/rachel/rach" as Mom.
 The scent is "home".
@@ -9749,12 +9818,12 @@ To say mom_stuff:
 	say "[one of]smiles[or]squeezes your shoulder[or]gives you a quick squeeze[at random]";
 
 [ The following prefaces mom's utterances in the drive-in ]
-Last after conversing when the current interlocutor is mom and player is in Room_Car_With_Mom and a random chance of 1 in 2 succeeds:
+Last after conversing when the current interlocutor is mom and Room_Car_With_Mom encloses the player and a random chance of 1 in 2 succeeds:
 	say "[looks_away_from_movie][run paragraph on]";
 	continue the action.
 
 To say looks_away_from_movie:
-	if player is in Room_Car_With_Mom and a random chance of 1 in 2 succeeds:
+	if Room_Car_With_Mom encloses the player and a random chance of 1 in 2 succeeds:
 		say "[one of]Mom turns away from the movie[or]Mom, absorbed in the movie, takes a second to respond[or]Mom turns toward you[at random]. ";
 
 [
@@ -10365,10 +10434,10 @@ Instead of taking yellow tabby,
 To say random-cat:
 	say "[one of]cat with one eye[or]black cat[or]skinny white and black cat[or]blue-eyed siamese[or]chunky gray cat[or]fluffy tortoise-shell[or]stripey gray tomcat[or]one-eyed chunky black cat[or]hard-eyed notch-eared patchy tom[or]huge gray and white cat that looks more like a raccoon[or]hugely pregnant calico[or]bony graying moth-eaten cat[or]dirty white cat[or]yellow kitten[in random order]"
 
-Every turn when player is in Room_Sharons_Trailer and (a random chance of 1 in 3 succeeds):
+Every turn when Room_Sharons_Trailer encloses the player and (a random chance of 1 in 3 succeeds):
 	queue_report "[one of]A [random-cat] brushes up against your leg, but then darts off when you bend to pet it[or]A [random-cat] jumps up on the table[if Sharon is visible] before the Cat Lady sweeps it off[end if][or]A [random-cat] scratches at the corner of the sofa[or]One of a pile of kittens lazing in the sun falls off the ottoman[or]A [random-cat] takes a growling swipe at a [random-cat][or]A [random-cat] stares fixedly at the gap under the couch[or]A [random-cat] chews on your shoelace[or]A [random-cat] bats at a housefly[or]A [random-cat] chases a [random-cat] between your legs[or]A [random-cat] goes out through the cat door[or]A [random-cat] darts in through the cat door[in random order]." with priority 6;
 
-Every turn when player is in Room_D_Loop and (a random chance of 1 in 6 succeeds):
+Every turn when Room_D_Loop encloses the player and (a random chance of 1 in 6 succeeds):
 	queue_report "[one of]A [random-cat] darts out of the Cat Lady's cat door and around the trailer[or]A [random-cat] streaks from around the corner and disappears into the bushes[or]A [random-cat] is walking on the roof of the Cat Lady's trailer and then ducks out of sight[in random order]." with priority 6;
 
 Every turn when yellow tabby is contained by location of player and (a random chance of 1 in 4 succeeds):
@@ -10390,7 +10459,7 @@ Chapter - Properties
 
 Chapter - Rules and Actions
 
-Instead of examining raccoons when player is in Room_Protected_Hollow:
+Instead of examining raccoons when Room_Protected_Hollow encloses the player:
 	say "You can hear them rustling around, even if you can't see them from inside the fort.";
 
 To say raccoon_description:

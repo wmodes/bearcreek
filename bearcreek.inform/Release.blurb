@@ -46,10 +46,10 @@ template path "/Users/wmodes/Library/Inform/Templates"
 template path "/Applications/Inform.app/Contents/Resources/retrospective/6M62/Templates"
 css
 website "Standard"
-status instruction ||&nbsp;<a href="source:story.ni#line417"><img border=0 src=inform:/doc_images/Reveal.tif></a>||
-status instruction ||&nbsp;<a href="source:story.ni#line418"><img border=0 src=inform:/doc_images/Reveal.tif></a>||
 status instruction ||&nbsp;<a href="source:story.ni#line419"><img border=0 src=inform:/doc_images/Reveal.tif></a>||
 status instruction ||&nbsp;<a href="source:story.ni#line420"><img border=0 src=inform:/doc_images/Reveal.tif></a>||
+status instruction ||&nbsp;<a href="source:story.ni#line421"><img border=0 src=inform:/doc_images/Reveal.tif></a>||
+status instruction ||&nbsp;<a href="source:story.ni#line422"><img border=0 src=inform:/doc_images/Reveal.tif></a>||
 status alternative ||Using 'Release along with a file of "Such-and-Such" called "whatever.pdf"', perhaps to add a manual, or a welcoming note&nbsp;<a href=inform:/doc401.html><img border=0 src=inform:/doc_images/help.png></a>||
 status alternative ||Using 'Release along with the source text'&nbsp;<a href=inform:/doc412.html><img border=0 src=inform:/doc_images/help.png></a>||
 status alternative ||Using 'Release along with a solution'&nbsp;<a href=inform:/doc411.html><img border=0 src=inform:/doc_images/help.png></a>||
