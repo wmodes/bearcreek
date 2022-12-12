@@ -76,7 +76,7 @@ Book - Extensions
 Part - Screen Effects
 
 Include Basic Screen Effects by Emily Short.
-[ Include Vorple Screen Effects by Juhana Leinonen.  ]
+[ Include Vorple Screen Effects by Juhana Leinonen. ]
 
 Include Glulx Text Effects by Emily Short.
 
@@ -148,11 +148,11 @@ To discard the/-- again buffer: (- DiscardAgain(); -).
 
 Include (-
 [ DiscardAgain ;
-    #ifdef TARGET_ZCODE;
-    buffer3->1 = 0;
-    #ifnot;
-    buffer3-->0 = 0;
-    #endif;
+	#ifdef TARGET_ZCODE;
+	buffer3->1 = 0;
+	#ifnot;
+	buffer3-->0 = 0;
+	#endif;
 ];
 -).
 
@@ -191,7 +191,7 @@ This is the new_where_can_I_go rule:
 
 Table of Smarter Parser Messages (continued)
 rule name	message
-where can I go rule	"While compass directions won't always work (especially if you don't know which directions are which without a compass), you can usually go to landmarks you can see ([em]go to clearing  [/em] or [em]  follow creek [/em] or [em]  enter trailer[/em]). Exits and landmarks are usually listed in the descriptions.[as normal][command clarification break]"
+where can I go rule	"While compass directions won't always work (especially if you don't know which directions are which without a compass), you can usually go to landmarks you can see ([em]go to clearing [/em] or [em] follow creek [/em] or [em] enter trailer[/em]). Exits and landmarks are usually listed in the descriptions.[as normal][command clarification break]"
 
 Chapter - the signs of confusion rule
 
@@ -954,9 +954,9 @@ Instead of singing:
 
 To say sing_action:
 	if a random chance of 1 in 3 succeeds:
-		say "You make up a song about [one of]killer red ants that eat everyone[or]picking blackberries until your fingers are bloody[or]riding the train out of town and living like a hobo[at random][one of][or] to the tune of  'When You Need a Friend'[or] to the tune of  'Baby I'm a Want You'[or] to the tune of  'American Pie'[at random]";
+		say "You make up a song about [one of]killer red ants that eat everyone[or]picking blackberries until your fingers are bloody[or]riding the train out of town and living like a hobo[at random][one of][or] to the tune of 'When You Need a Friend'[or] to the tune of 'Baby I'm a Want You'[or] to the tune of 'American Pie'[at random]";
 	else if player is in Region_Blackberry_Area:
-		say "You sing along to [current_song],  but you [one of]only know the chorus[or]only know some of the words[or]have to make up most of it[or]don't know most of the words, and you don't really care[at random]";
+		say "You sing along to [current_song], but you [one of]only know the chorus[or]only know some of the words[or]have to make up most of it[or]don't know most of the words, and you don't really care[at random]";
 	else:
 		say "You sing a little bit of one of your favorite songs, [one of]'Knock Three Times on the Ceiling If You Want Me'[or]'Before the Next Teardrop Falls'[or]'Thank God I'm a Country Boy'[or]'He Don't Love You Like I Love You'[or]'How Sweet It Is To Be Loved By You'[or]'Kung Fu Fighting'[at random], but you [one of]only know the chorus[or]don't really know the words[or]have to make up most of it[or]but you don't know most of the words, but you don't really care[at random]";
 	if people who are not the player are touchable and a random chance of 1 in 3 succeeds:
@@ -1087,6 +1087,7 @@ Instead of smelling a room:
 
 Chapter - Tracks
 
+[TODO: This seems pretty specific - there is probably a more elegant way to do this]
 Follow_tracks is an action applying to nothing.
 Understand
 	"follow train/green/-- tracks/tunnel" as follow_tracks.
@@ -1200,10 +1201,10 @@ The Remembering saying room name rule response (A) is "[if casual_name of the pl
 
 [An alternative to scope testing via direct object tree inspection]
 To decide whether (X - thing) has line of sight to (Y - thing):
-    if the common ancestor of X with Y is nothing, decide no;
-    if Y is enclosed by a closed opaque container that does not enclose X, decide no;
-    if X is enclosed by a closed opaque container that does not enclose Y, decide no;
-    decide yes.
+	if the common ancestor of X with Y is nothing, decide no;
+	if Y is enclosed by a closed opaque container that does not enclose X, decide no;
+	if X is enclosed by a closed opaque container that does not enclose Y, decide no;
+	decide yes.
 
 To decide whether (X - thing) does not have line of sight to (Y - thing):
 	if X has line of sight to Y:
@@ -1260,7 +1261,7 @@ Carry out exit_listing:
 		say looking_for_available_exits;
 
 To say navigation_hint:
-	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [em]  go to clearing  [/em][line break]Or try: [em]  follow trail  [/em][line break]Or even: [em]  go back  [/em] or [em]  go on  [/em][line break]If you need a reminder of where you can go, try: [em]  which way  [/em] or simply [em]  look[/em][stopping][line break]";
+	say "[one of]You could never remember which way was which, and without your Explorer Scout compass it's more useful to use landmarks to navigate anyway[or]Try using landmarks. For example: [em] go to clearing [/em][line break]Or try: [em] follow trail [/em][line break]Or even: [em] go back [/em] or [em] go on [/em][line break]If you need a reminder of where you can go, try: [em] which way [/em] or simply [em] look[/em][stopping][line break]";
 
 Chapter - Navigation to Rooms and Landmarks
 
@@ -1323,7 +1324,7 @@ Part - Navigating
 
 [ navigating means moving from one room to another, moving to an elusive_landmark, or on/in to a supporter or container ]
 
-[The goal here is to make it so we can navigate to  elusive_landmarks during the relevant scene, but navigate to rooms otherwise. When we say "go to tree" we want it to match "white tree" (an elusive landmark) rather than try to room_navigate to Room_Top_of_the_Tree (a room)
+[The goal here is to make it so we can navigate to elusive_landmarks during the relevant scene, but navigate to rooms otherwise. When we say "go to tree" we want it to match "white tree" (an elusive landmark) rather than try to room_navigate to Room_Top_of_the_Tree (a room)
 
 This was accomplished by careful organization of the navigate action:
 
@@ -1351,7 +1352,7 @@ Understand
 	"climb up in/into/on/onto/-- [interactive thing]",
 	"hop on/onto/in/into/over/through/under/-- [interactive thing]", 
 	"hop up in/into/on/onto/-- [interactive thing]",
-	"scale on/onto/in/into/over/through/under/--  [interactive thing]", 
+	"scale on/onto/in/into/over/through/under/-- [interactive thing]", 
 	"scale up in/into/on/onto/-- [interactive thing]",
 	"jump on/onto/in/into/over/through/under/-- [interactive thing]", 
 	"jump up in/into/on/onto/-- [interactive thing]",
@@ -1408,7 +1409,7 @@ Carry out navigating room:
 			now player is not discouraged_from_compass_navigating;
 			try going heading;
 
-[ These DTPM rules prevent disambiguation of  not reachable rooms ]
+[ These DTPM rules prevent disambiguation of not reachable rooms ]
 Does the player mean navigating not reachable rooms:
 	It is very unlikely.
 Does the player mean navigating reachable rooms:
@@ -1947,7 +1948,7 @@ To say Sleep_Card:
 To say Title_Card_Epilogue:
 	clear the screen;
 	say paragraph break;
-	center "[b]Epilogue";
+	center "[b]Epilogue  ";
 	center "[em]The Special Box";
 	say paragraph break;
 	say line break;
@@ -2057,13 +2058,13 @@ To say crossing_payoff:
 To say treetop_payoff:
 	say "Looking around, you can see the [em]whole world[/em].
 	[paragraph break]Directly under you, you can see the dirt road and Bear Creek and the stone bridge, and you notice there is a place you might cross the creek below the swimming hole.
-	[paragraph break]In the distance, you can see the mountains, brown and green, edged with trees all the way around, and not just Bear Creek below you, but the river a ways over there. And out that way is town, barely visible through trees.  And the forest stretching out endlessly in every direction.
+	[paragraph break]In the distance, you can see the mountains, brown and green, edged with trees all the way around, and not just Bear Creek below you, but the river a ways over there. And out that way is town, barely visible through trees. And the forest stretching out endlessly in every direction.
 	[paragraph break]The railroad tracks which wind gently from one direction pass almost beneath you and disappear in gentle S-curves in the other direction. You can see the trailer park and that might be Honey and Grandpa's trailer. Everything looks so small, like looking at an ant hill. A giddy feeling pushes up out of you, and you can't stop laughing";
 
 To say lost_in_the_woods_payoff:
 	say "The afternoon shadows are lengthening and it is slowly getting on toward evening. You should be home by now. Honey and Grandpa will be worried. You fight back a brief wave of misery and trudge on. But it's no use. Part of the time you are pretty sure you are going in circles. The rest of the time you are scared you are getting lost deeper in the forest.
 	[paragraph break]For a while there, you felt you were close to finding your way back, but now everything looks completely unfamiliar -- and to be honest, a bit sinister. Like the forest is trying to [em]keep[/em] you here, to lead you astray, lead you deeper into the woods. The trees lean in toward you. The underbrush grabs as your clothing.
-	[paragraph break]But no, that's stupid. You fight back panic. It's nobody's fault but your own. You should have been more careful, more observant. A good Explorer Scout would never get lost like this. Stupid stupid stupid, you berate yourself. Again, you think about your Honey and Grandpa at home. The smell of blackberry jam cooking. Watching TV on the floor with your grandpa. And your mom.  It's all too much.
+	[paragraph break]But no, that's stupid. You fight back panic. It's nobody's fault but your own. You should have been more careful, more observant. A good Explorer Scout would never get lost like this. Stupid stupid stupid, you berate yourself. Again, you think about your Honey and Grandpa at home. The smell of blackberry jam cooking. Watching TV on the floor with your grandpa. And your mom. It's all too much.
 	[paragraph break]You have to admit it: You are hopelessly lost.
 	[paragraph break]You sit down right where you are and sob miserably.";
 
@@ -2109,9 +2110,9 @@ Chapter - The Mechanics
 
 Every turn:
 	repeat with this_seq running through every in-progress sequence:
-		step a sequence for this_seq;
+		step_a_sequence for this_seq;
 
-To step a sequence for (this_seq - a sequence):
+To step_a_sequence for (this_seq - a sequence):
 	now this_seq is run;
 	increase turns_so_far of this_seq by one;
 	follow the interrupt_test of this_seq;
@@ -2208,9 +2209,9 @@ Chapter - The Mechanics
 
 Every turn:
 	repeat with this_journey running through every in-progress npc_journey:
-		take one step on this journey for this_journey;
+		step_a_journey for this_journey;
 
-To take one step on this journey for (this_journey - an npc_journey):
+To step_a_journey for (this_journey - an npc_journey):
 	[
 		set some local vars to make things easier
 	]
@@ -2278,7 +2279,7 @@ To take one step on this journey for (this_journey - an npc_journey):
 						say "[npc] is waiting for you[one of][or] [casual_name of location of NPC][cycling]. You should probably get going.";
 						[say "DEBUG: [npc] will wait for you [max_wait of this_journey] turns.";]
 						[if npc has not been waiting max time:]
-						if time_here of this_journey <  max_wait of this_journey:
+						if time_here of this_journey < max_wait of this_journey:
 							[say "DEBUG: [npc] is still waiting for you.";]
 							[stop the action]
 							stop the action;
@@ -2501,7 +2502,7 @@ topic_trailer is a subject.
 
 topic_creek is a subject.
 	The printed name is "Bear Creek".
-	Understand "river/creek/crick/stream",  "bear creek/crick" as topic_creek.
+	Understand "river/creek/crick/stream", "bear creek/crick" as topic_creek.
 
 The topic_bridge is a subject.
 	The printed name is "old stone bridge".
@@ -2598,7 +2599,7 @@ A thing can be unmentionable.
 [ A property that determines what happens when you toss it in a waterbody ]
 A thing can be floating or sinking. Things are usually sinking.
 
-[ I don't rememember what this is. lol]
+[ A property that determines whether an item ends up in the special box in the epilogue]
 A thing can be special.
 
 A supporter can be lie-able. Supporters are usually not lie-able.
@@ -2718,8 +2719,8 @@ To say looking_closely_at_berries:
 	say "Looking at them, you notice that the color goes from deep red to deepest black. [one of]The sweetest ones are the ones that aren't shiny. You know that from experience[or]Your hands are stained red all the way to your wrist[or] You notice a tiny weeny white spider crawling on one of the berries[or] One of these berries is still green[or] A couple of these berries are kind of too ripe and look like little raisins[at random]".
 
 Rule for printing the name of the pail:
-  say "[printed name of pail]";
-	    omit contents in listing.
+	say "[printed name of pail]";
+	omit contents in listing.
 
 Instead of eating berries_in_pail:
 	eat_berries_from_pail;
@@ -3215,7 +3216,7 @@ To decide if time_for_a_new_show:
 Table of TV Shows
 Show	Channel	Index	Reaction
 "General Hospital"	2	1	"This is one of mom's shows. There's a hospital and lots of people falling in love and stuff. Ick."
-"Ryan's Hope"	2	2	"Who are these people?  This isn't one of the soaps your mom watches. There's a hospital. There's a bar. There's a priest. Who cares?"
+"Ryan's Hope"	2	2	"Who are these people? This isn't one of the soaps your mom watches. There's a hospital. There's a bar. There's a priest. Who cares?"
 "The $10,000 Pyramid"	2	3	"The category is [']green thumb['], things grown in the garden. Yawn."
 "All my Children"	2	4	"This is one of your mom's shows. Some lady is leading a protest against the War in Vietnam and another lady is angry about it."
 "One Life to Live"	2	5	"There's a lady talking to a guy who doesn't know who he is or where he is."
@@ -3231,7 +3232,7 @@ Show	Channel	Index	Reaction
 "The Big Valley"	5	5	"This show is kind of like mom's soap operas, but in the wild west. There's a gunfight in the street and a girl in a saloon and some other stuff."
 "The Price is Right"	7	1	"This is sometimes fun. You don't know the prices of things really, but the game is interesting and easy to guess. And players always win a new car."
 "The Young and the Restless"	7	2	"Mom doesn't watch this one, and you can see why. There's a lady crying -- no a bunch of ladies crying, and one lady lying down is dying or something. Geez."
-"As The World Turns"	7	3	"More people in a hospital. Do all soap operas have to happen in hospitals? Why? This time with a ghost.  A ghost in a hospital. Jeez."
+"As The World Turns"	7	3	"More people in a hospital. Do all soap operas have to happen in hospitals? Why? This time with a ghost. A ghost in a hospital. Jeez."
 "Search for Tomorrow"	7	4	"Kissy kiss kiss. A boy and a girl kissing with dramatic music. And someone lurking angrily in the background."
 "Guiding Light"	7	5	"At least this soap opera isn't in a hospital. It's a court room instead. But the people are still doing the same things, yelling at each other and crying and stuff."
 
@@ -3298,7 +3299,7 @@ To show_train_crossing:
 			if player is on train_track:
 				queue_report "The engineer sees you standing on the rail and blows the whistle LOUD and long! It very nearly scares the pee out of you. You leap off to safety, tripping on the rail!"
 				with priority 4;
-			queue_report "The train is suddenly very close and moving very fast. You can feel hot air the train pushes ahead of it. The locomotive roars past you with a terrifying racket. Then car after car is swooshing past you, clanking and clattering.
+			queue_report "Then the train is suddenly very close and moving very fast. You can feel hot air the train pushes ahead of it. The locomotive roars past you with a terrifying racket. Then car after car is swooshing past you, clanking and clattering.
 			[paragraph break]It isn't until half the train goes by that you remember to count cars and then it's too late. With the sound of the train still ringing in your ears, you are suddenly aware of the smell of dust and grease in the air." with priority 3;
 			if player is on train_track:
 				queue_report "You pick yourself up and dust yourself off" with priority 2;
@@ -3967,7 +3968,7 @@ Section - Sequences
 Some sandwich_ingredients are a fixed in place thing.
 	The printed name is "sandwich makings".
 	The initial appearance is "Aunt Mary has gotten out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread for making tuna sandwiches.". The description is "Several cans of Chicken of the Sea, Miracle Whip, and Wonder Bread are out for making tuna sandwiches."
-	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonaise/mayonnaise/can/cans/bags", "miracle whip",  "sandwich bags" as sandwich_ingredients.
+	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonaise/mayonnaise/can/cans/bags", "miracle whip", "sandwich bags" as sandwich_ingredients.
 
 The brown paper bag is a unopenable open container.
 	The printed name is "[if brown paper bag is torn]torn up [end if]brown paper bag".
@@ -4223,7 +4224,7 @@ This is the seq_raccoon_visit_handler rule:
 			decrease index of seq_raccoon_visit by one;
 
 This is the seq_raccoon_visit_interrupt_test rule:
-  [ We don't worry about interrupting seq if NPCs are not visible because the seq accounts for that. ]
+	[ We don't worry about interrupting seq if NPCs are not visible because the seq accounts for that. ]
 	if we are speaking to raccoons:
 		rule succeeds;
 	if we are yelling:
@@ -4266,9 +4267,9 @@ To do_raccoon_things:
 		now virtual_raccoons are in Limbo;
 		now seq_raccoon_visit is not in-progress;
 		if Room_Protected_Hollow encloses the player:
-			queue_report  "Suddenly, you hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 2;
+			queue_report "Suddenly, you hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 2;
 		else if Room_Forest_Meadow encloses the player:
-			queue_report  "The invaders have taken their sandwiches and gone. You protected the fort."  at priority 2;
+			queue_report "The invaders have taken their sandwiches and gone. You protected the fort." at priority 2;
 
 After taking tuna_sandwich when raccoons are visible:
  	queue_report "The eyes of the invaders follow the tuna sandwich." at priority 1;
@@ -4508,7 +4509,7 @@ This is the seq_grandparents_tracks_handler rule:
 		else if index is 2:
 			Report Grandpa saying "Grandpa puts his hand on your shoulder, 'You've had quite a time, haven't you? Don't you worry about it, about him.' Who is Grandpa talking about? Your stepdad?";
 		else if index is 3:
-			Report Grandpa saying "'Sometimes we worry about you,  [grandpas_nickname],' Grandpa says, 'But it'll be okay, I promise.'";
+			Report Grandpa saying "'Sometimes we worry about you, [grandpas_nickname],' Grandpa says, 'But it'll be okay, I promise.'";
 		else if index is 4:
 			Report Honey saying "Honey leans over and whispers, 'Try as we might, we may not always be able to keep you safe, [honeys_nickname].' She takes a deep breath, 'But I know you can take care of yourself when you need to.'";
 		else if index is 5:
@@ -4757,7 +4758,7 @@ journey_sharon_walk_before_moving rule:
 	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if Room_Other_Shore encloses the player]crosses the river to the crossing[else if Room_Crossing encloses the player]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if Room_Swimming_Hole encloses the player]makes her way up the steep trail to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
 
 To say sharon_urging:
-	queue_report  "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]" at priority 3;
+	queue_report "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]" at priority 3;
 
 This is the
 journey_sharon_walk_after_waiting rule:
@@ -4954,7 +4955,7 @@ This is the seq_long_arm_of_the_law_handler rule:
 		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Sheriff says a little out of breath to Honey and Grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
 		now lee_support of player is _uncertain;
 	else if index is 5:
-	  [we hang at this step until either player talks to sheriff or leaves]
+		[we hang at this step until either player talks to sheriff or leaves]
 		queue_report "The sheriff is still filling out his forms. He asks Lee an occasional question, but Lee remains silent." with priority 2;
 		if lee_support of player is _uncertain:
 			decrement index of seq_long_arm_of_the_law;
@@ -5009,7 +5010,7 @@ Instead of informing or telling or yelling or saying no during Scene_Long_Arm_of
 	decide_to_support_lee.
 
 Instead of attacking Sheriff when lee_support of player is _uncertain:
-  say "You're not sure violence is the answer, though it might make you feel better. But you would probably end up worse than Lee.";
+	say "You're not sure violence is the answer, though it might make you feel better. But you would probably end up worse than Lee.";
 	decide_to_support_lee.
 
 To decide_to_support_lee:
@@ -5169,7 +5170,7 @@ There is a scene called Scene_Fallout_Staying.
 
 Scene_Fallout_Staying begins when going_home_decision of player is _decided_no and Scene_Parents_Arrive has ended;
 
-Scene_Fallout_Staying ends when  
+Scene_Fallout_Staying ends when 
 seq_staying_w_grandpa is run and seq_staying_w_grandpa is not in-progress.
 
 When Scene_Fallout_Staying begins:
@@ -5330,7 +5331,7 @@ To say sunshine_description:
 Backdrop_creek is a nonfamiliar backdrop in Region_Blackberry_Area.
 	The printed name is "Bear Creek".
 	The description is "You can't see the creek through the tall brambles, but you can hear it.".
-	Understand "river/creek/crick/stream/water",  "bear creek/crick" as backdrop_creek.
+	Understand "river/creek/crick/stream/water", "bear creek/crick" as backdrop_creek.
 
 Section - Rules and Actions
 
@@ -5366,7 +5367,7 @@ The scent is "sharp pine pitch".
 
 A hill is climbable scenery in Room_Lost_in_the_Brambles.
 The description is "A gentle slope goes up from here but is lost in blackberry brambles.". 
-Understand "hill/slope/mountain" as hill.  
+Understand "hill/slope/mountain" as hill. 
 
 Section - Rules and Actions
 
@@ -5409,7 +5410,7 @@ The big_bucket is scenery unopenable open container in Room_Grassy_Clearing.
 The printed name is "big bucket".
 The description is "There's a big bucket that Honey and Grandpa have been putting their berries into, about half full now.".
 Understand "big/-- bucket" as big_bucket.
-The big_bucket can be  empty, quarter-full, half-full, three-quarter-full, or full.
+The big_bucket can be empty, quarter-full, half-full, three-quarter-full, or full.
 The big_bucket is half-full.
 The scent is "ripe berries".
 
@@ -5642,7 +5643,7 @@ Creek_at_bridge is a waterbody in Room_Stone_Bridge.
 The printed name is "Bear Creek".
 	The description is "In places, the creek seems like just a trickle, then other places it is as wide as a river. Here, it is broad and shallow as it [if Room_Stone_Bridge encloses the player]goes under the bridge[otherwise]flows over and around the rocky creek bed[end if]. There are bright stars twinkling on the water with pebbles and tiny minnows below. It smells like wet rocks.
 	[paragraph break][stuff_about_the_creek]."
-	Understand "river/creek/crick/stream/water",  "bear creek/crick" as Creek_at_bridge.
+	Understand "river/creek/crick/stream/water", "bear creek/crick" as Creek_at_bridge.
 	The scent is "cool creek water. It tingles your nose sort of".
 
 Some floating_stuff is scenery in Creek_at_bridge.
@@ -5838,7 +5839,7 @@ The swift_current_west is a waterbody in Room_Crossing.
 	The printed name is "swift current".
 	It is a enterable unopenable open container.
 	The description is "The river here narrows to a swift current, too broad to jump across and too swift to wade or swim -- or in any case, you're not willing to risk drowning here."
-	Understand "river/creek/crick/stream/water",  "bear creek/crick", "gap/chasm", "swift/-- current" as swift_current_west.
+	Understand "river/creek/crick/stream/water", "bear creek/crick", "gap/chasm", "swift/-- current" as swift_current_west.
 
 A steep bank is scenery in Room_Crossing.
 	The description of steep bank is "It's pretty steep. And covered in poison oak."
@@ -5956,13 +5957,13 @@ The casual_name is "at the long stretch of dirt road".
 The description of Room_Long_Stretch is "This is a really long stretch of the dirt road that climbs up the hill. You can see the heat shimmering off of the ground. Grass grows up through the middle of the road, and deep rocky ruts suggest it hasn't been used as anything but river access for hikers and fishermen in a long time. The long road is alternately shaded by pines and exposed to the scorching sun. The air smells hot with a particular piney fragrance that always reminds you of the foothills of the Sierras.
 [paragraph break][available_exits]".
 The scent is "sunshine and dust".
-Understand "long stretch", "long dirt/-- road", "tall/-- doug/-- fir", "tall/-- pine/-- tree"  as Room_Long_Stretch.
+Understand "long stretch", "long dirt/-- road", "tall/-- doug/-- fir", "tall/-- pine/-- tree" as Room_Long_Stretch.
 
 Section - Navigation
 
 Room_Long_Stretch is south of Room_Dirt_Road and up from Room_Dirt_Road.
 
-The available_exits of Room_Long_Stretch is "At one place along this long stretch, there is a steep trail zigzagging down the bank toward the swimming hole. Otherwise the dirt road goes on for a ways along the creek downstream until it crosses the railroad tracks. Back the other way is the end of the dirt road and the stone bridge.
+The available_exits of Room_Long_Stretch is "At one place along this long stretch, there is a steep trail zigzagging down the bank toward the swimming hole. Otherwise the dirt road goes uphill parallel to the creek far below until it crosses the railroad tracks. Back the other way is the end of the dirt road and the stone bridge.
 [paragraph break]Along the road, in a clear stretch on the uphill side of the road, is an impressively tall pine tree that you've climbed before."
 
 Section - Objects
@@ -6060,7 +6061,7 @@ Understand "mound of rock/rocks", "rock/-- mound", "rock/rocks/stone/stones" as 
 
 A green_tunnel is scenery enterable container in Room_Railroad_Tracks.
 The printed name is "green tunnel".
-The description is "The trees grow close on either side of the tracks, and their branches touch above."
+The description is "The trees grow close on either side of the tracks, and their branches touch high above."
 Understand "green/-- tunnel", "trees/branches" as green_tunnel.
 
 Section - Backdrops & Scenery
@@ -6118,9 +6119,12 @@ The field_back_gate is an undescribed enterable container in Room_Grassy_Field.
 	The description is "This is the wooden gate that leads into the tailer park. It is usually open in the daytime."
 	Understand "back/-- gate" as field_back_gate.
 
-A grassy field is backdrop in Room_Grassy_Field.
-	The description is "The dried grass reaches up to your waist."
-	Understand "grass/field", "grassy field" as grassy field.
+A grassy_field is lie-able surface in Room_Grassy_Field.
+The printed name is "grassy field".
+The description is "The dried grass reaches up to your waist."
+Understand "grass/field", "grassy field" as grassy field.
+
+[TODO: Sorting out surfaces, supporters, contianers, etc here will help unify what actions act on them. Then they can be given text that makes the experience unique for each, like watching clouds here.]
 
 The back fence is backdrop in Room_Grassy_Field.
 
@@ -6260,7 +6264,7 @@ A Doug_Fir2 is backdrop in Room_Top_of_Pine_Tree.
 The distant_creek is scenery in Room_Top_of_Pine_Tree.
 		The printed name is "Bear Creek".
 		The description is "Except for near the stone bridge and the swimming hole, you can only see tiny snatches of Bear Creek. Mostly, it is a dense line of trees that crosses under you.".
-		Understand "creek/crick/stream",  "bear creek/crick" as distant_creek.
+		Understand "creek/crick/stream", "bear creek/crick" as distant_creek.
 
 The distant_river is scenery in Room_Top_of_Pine_Tree.
 	The printed name is "faraway river".
@@ -6393,6 +6397,12 @@ The downstream_dest of Region_Trailer_Indoors is Limbo.
 The uppath_dest of Region_Trailer_Indoors is Limbo.
 The downpath_dest of Region_Trailer_Indoors is Limbo.
 
+Does the player mean navigating Room_Picnic_Area when player is not in Region_Trailer_Park_Area:
+	It is very likely.
+
+Does the player mean navigating location when player is in Region_Trailer_Park_Area:
+	It is very likely.
+
 
 Chapter - Room_Picnic_Area
 
@@ -6401,10 +6411,10 @@ Section - Description
 Room_Picnic_Area is a room.
 The printed name is "Picnic Area".
 The casual_name is "in the picnic area of the trailer park".
-The description of Room_Picnic_Area is "At the back of the trailer park, there is a scraggly little  picnic area with a patchy lawn that smells like mowed grass. A little cluster of tall trees is against the back fence.
+The description of Room_Picnic_Area is "At the back of the trailer park, there is a scraggly little picnic area with a patchy lawn that smells like mowed grass. A little cluster of tall trees is against the back fence.
 [paragraph break][available_exits]".
 The scent is "dust and mowed grass".
-Understand "picnic area" as Room_Picnic_Area.
+Understand "picnic area/table", "trailer park" as Room_Picnic_Area.
 
 
 Section - Navigation
@@ -6468,7 +6478,7 @@ The casual_name is "in D loop of the trailer park".
 The description is "The D Loop of the trailer park is pretty much like the B and C Loops. Rows of trailers on either side, many fringed with teeny tiny gardens of flowers and shrubs. The most noteworthy thing on this loop is the Cat Lady's trailer, painted bright pink and white with an outrageously overflowing flower garden out in front.
 [paragraph break][available_exits]".
 The scent is "that smell when water falls on hot asphalt".
-Understand "d loop", "loop d" as Room_D_Loop.
+Understand "d loop", "loop d", "trailer park" as Room_D_Loop.
 
 
 Section - Navigation
@@ -6671,7 +6681,7 @@ The printed name is "C Loop".
 The casual_name is "in C loop of the trailer park".
 The description is "C Loop is pretty much like B and D Loops. [if Scene_Long_Arm_of_the_Law is not happening]Rows of trailers on either side, all different colors, though the one's across from Lee's trailer go red, brown, green, red, brown, green, which is weird. Did they do that on purpose? The most noteworthy thing on this loop for you is Lee's trailer, though it looks pretty much like every other one.[paragraph break][available_exits][else]Lee is sitting in the backseat of the Sheriff's car with a bloody nose and lip.[end if]".
 The scent is "Lee's cigarette smoke lingering in the air".
-Understand "C Loop", "loop c" as Room_C_Loop.
+Understand "C Loop", "loop c", "trailer park" as Room_C_Loop.
 
 Section - Navigation
 
@@ -6807,7 +6817,7 @@ The description is "B Loop is just like C and D Loops, except Honey and Grandpa'
 [paragraph break][available_exits]".
 Understand "loop b" as Room_B_Loop.
 The scent is "the scent of blackberries drifting out of Honey and Grandpa's trailer".
-Understand "B Loop", "loop b" as Room_B_Loop.
+Understand "B Loop", "loop b", "trailer park" as Room_B_Loop.
 
 
 Section - Navigation
@@ -6872,7 +6882,7 @@ Section - Backdrops & Scenery
 
 The pot_of_blackberry_jam is nonfamiliar scenery in Room_Grandpas_Trailer.
 	The printed name is "pot of blackberry jam".
-	The description of the pot_of_blackberry_jam is "The pot of blackberry jam is bubbling blackly on low heat like the La Brea Tar Pits -- but better smelling. Aunt Mary is staring off into space and stirring the pot continuously. There are jam_jars and lids set out ready to receive the jam when it is ready. Generally, Aunt Mary shoos you  away when she is making jam.".
+	The description of the pot_of_blackberry_jam is "The pot of blackberry jam is bubbling blackly on low heat like the La Brea Tar Pits -- but better smelling. Aunt Mary is staring off into space and stirring the pot continuously. There are jam_jars and lids set out ready to receive the jam when it is ready. Generally, Aunt Mary shoos you away when she is making jam.".
 	Understand "pot of blackberry/-- jam", "pot/pan", "blackberry/-- goo/jelly/jam/preserves", "stove/kitchen/burner" as pot_of_blackberry_jam.
 	The scent is "the most intense blackberry smell ever. Like when blackberries dream of being the best blackberries they can be, this is what they dream".
 
@@ -6960,7 +6970,7 @@ Section - Description
 Room_Other_Shore is a room.
 The printed name is "Other Shore".
 The casual_name is "on the other shore of the creek".
-The description is "[if Scene_Day_Two has not happened]You are on the far side of the creek where trees come right down to the water. [else]You are back at Bear Creek on the other shore from the swimming hole and the road.  Trees come right down to the water. [end if]A wooded trail goes into the forest.
+The description is "[if Scene_Day_Two has not happened]You are on the far side of the creek where trees come right down to the water. [else]You are back at Bear Creek on the other shore from the swimming hole and the road. Trees come right down to the water. [end if]A wooded trail goes into the forest.
 [paragraph break][available_exits]".
 The scent is "cool creek water and mossy rocks".
 Understand "other/-- shore" as Room_Other_Shore.
@@ -7008,7 +7018,7 @@ The swift_current_east is a waterbody in Room_Other_Shore.
 	The printed name is "swift current".
 	It is a enterable unopenable open container.
 	The description is "The river here narrows to a swift current, too broad to jump across and too swift to wade or swim -- or in any case, you're not willing to risk drowning here."
-	Understand "river/creek/crick/stream/water",  "bear creek/crick", "gap/chasm", "swift/-- current" as swift_current_east.
+	Understand "river/creek/crick/stream/water", "bear creek/crick", "gap/chasm", "swift/-- current" as swift_current_east.
 
 Section - Rules and Actions
 
@@ -7138,7 +7148,7 @@ A clearing is a landscape_feature in Limbo.
 
 A white tree is an elusive_landmark in Limbo.
 	The description is "Looking closer you see the tree is a dogwood growing in a place where the woods are thinner."
-	Understand "white/light/-- tree/trees", "dogwood tree/--", "nav-landmark"  as white tree.
+	Understand "white/light/-- tree/trees", "dogwood tree/--", "nav-landmark" as white tree.
 
 A huge madrone tree is an elusive_landmark in Limbo.
 	The description is "This is a particularly huge madrone tree whose branches twist far above your head."
@@ -7146,29 +7156,29 @@ A huge madrone tree is an elusive_landmark in Limbo.
 
 A burned out tree is an elusive_landmark in Limbo.
 	The description is "This tree went through a fire at some point, but still lived. The inside is all burnt, but the outside looks like a normal tree."
-	Understand "burned/burnt/-- out/-- tree", "nav-landmark"  as burned out tree.
+	Understand "burned/burnt/-- out/-- tree", "nav-landmark" as burned out tree.
 
 A bright patch in the woods is an elusive_landmark in Limbo.
 	The description is "This is a bright patch in the woods with darker woods all around."
-	Understand "bright/light/-- patch/clearing", "nav-landmark"  as bright patch in the woods.
+	Understand "bright/light/-- patch/clearing", "nav-landmark" as bright patch in the woods.
 
 The sound_of_the_creek is an elusive_landmark in Limbo.
 	The printed name is "sound of the creek".
 	The description is "Well, you can't see it, but you thought you heard the sound of the distant creek. Now you are not so sure."
-	Understand "sound/creek", "sound of the/-- creek", "nav-landmark"  as sound_of_the_creek.
+	Understand "sound/creek", "sound of the/-- creek", "nav-landmark" as sound_of_the_creek.
 	The indefinite article of sound_of_the_creek is "the".
 
 An enormous tree stump is an elusive_landmark in Limbo.
 	The description is "This is an enormous tree stump that is as tall as you are, at least twice as wide as your spread arms. It must have been cut down many years ago."
-	Understand "enormous/big/huge/-- tree/-- stump", "nav-landmark"  as enormous tree stump.
+	Understand "enormous/big/huge/-- tree/-- stump", "nav-landmark" as enormous tree stump.
 
 A broad trail is an elusive_landmark in Limbo.
 	The description is "This trail is a little bit broader than the others, though now that you are here it seems to peter out in the nearby woods."
-	Understand "broad/-- trail/path", "nav-landmark"  as broad trail.
+	Understand "broad/-- trail/path", "nav-landmark" as broad trail.
 
 A giant fern is an elusive_landmark in Limbo.
 	The description is "This is a fern growing taller than you, its fronds spraying outward like a green fountain."
-	Understand "giant/huge/big/-- fern", "nav-landmark"  as giant fern.
+	Understand "giant/huge/big/-- fern", "nav-landmark" as giant fern.
 
 Section - Rules and Actions
 
@@ -7636,7 +7646,7 @@ The printed name is "The Playground".
 The casual_name is "at the playground in a dream".
 The description is "Directly under the big drive-in screen, there is a playground with a swing set. Before the movie, kids usually play here, but at this point in the movie, no sensible child would hang out here. Your mom would freak out if she knew you were here now.[paragraph break][available_exits]".
 The scent is "popcorn".
-Understand "playground/swings/swingset", "play ground", "swing set"  as Room_Playground.
+Understand "playground/swings/swingset", "play ground", "swing set" as Room_Playground.
 
 Section - Navigation
 
@@ -9642,7 +9652,7 @@ Response of Mary when asked-or-told about player:
 	say "'Well, Honey, you're...' she starts and then kind of trails off."
 
 Response of Mary when asked-or-told about Mary:
-	say "'I was quite a firebrand in my youth, if you can believe that. I went to every dance and could Charleston with the best of them!' She looks faraway and laughs, 'And did I love to kiss the boys...' she  seems to remember you're there and stops to straighten her apron."
+	say "'I was quite a firebrand in my youth, if you can believe that. I went to every dance and could Charleston with the best of them!' She looks faraway and laughs, 'And did I love to kiss the boys...' she seems to remember you're there and stops to straighten her apron."
 
 Response of Mary when asked-or-told about Grandpa:
 	say "'Such a dear man,' she says.".
