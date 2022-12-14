@@ -3030,7 +3030,6 @@ Understand
 	"turn radio/tv/-- station/stations/channel/channels/dial/dials/--" 
 	as tuning.
 
-
 Check tuning:
 	if sharons_tv is visible:
 		if sharons_tv is not switched on:
@@ -3051,6 +3050,8 @@ Carry out tuning:
 		try taking honeys_radio;
 	else if lees_tv is visible:
 		change_TV_channel;
+
+The examine devices rule is not listed in any rulebook.
 
 
 Chapter - The Radio
@@ -3604,10 +3605,11 @@ This is the seq_sheriffs_drive_by_handler rule:
 		else if Region_Trailer_Outdoors encloses the player:
 			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
 			Move player to Room_D_Loop, without printing a room description;
-		else if Region_Trailer_Indoors encloses the player:
+		else if player is in Region_Trailer_Indoors:
 			queue_report "You get a lurching feeling as you catch sight of a police car outside the window. It is driving slowly by. Curiosity draws you outside and along in its wake. It stops in D Loop and so do you.[line break][location heading]" with priority 2;
 			Move player to Room_D_Loop, without printing a room description;
-		queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 1;
+		else:
+			queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 1;
 	else if index is 2:
 		if sharon is not in Room_D_Loop:
 			move_sharon_out_of_her_trailer;
@@ -6552,10 +6554,24 @@ Section - Objects
 
 The Mika_figurine is an undescribed sinking special thing in Room_Sharons_Trailer. 
 The printed name is "Mika figurine".
-The description is "It looks just like your cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear.".
+The description is "[mika_description].".
 Understand "Mika/-- figurine/statue/sculpture/toy", "Mika" as Mika_figurine.
 The Mika_figurine can be palmed.
 The indefinite article is "the".
+
+To say mika_description:
+	if Scene_Epilogue is happening:
+		if player is mika_experienced:
+			say "This is the cat figurine that Sharon, the cat lady from Honey and Grandpa's trailer park, gave you. What a kind, kinda kooky old lady. [no line break]";
+		else:
+			say "This is the cat figurine that you stole from Sharon, the cat lady from Honey and Grandpa's trailer park. What a kind, kinda kooky old lady. You feel bad about taking it and wonder if she knew you had it. [no line break]";
+		say "This little porcelain figurine looks just like your old cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear";
+	else if player holds Mika_figurine and Sharon is visible and player is not mika_experienced:
+		say "Maybe you shouldn't take that out right now in front of the Cat Lady";
+	else: 
+		say "It looks just like your cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear[no line break]";
+		if player had held Mika_figurine and player is not mika_experienced:
+			say ". You feel kind of bad for taking it. Maybe you should give it back to the Cat Lady";
 
 The players_teacup is an undescribed edible thing.
 The players_teacup is on the sharons_table. 
@@ -6658,10 +6674,11 @@ Instead of taking Mika_figurine:
 	otherwise:
 		continue the action;
 
-Instead of going outside when Room_Sharons_Trailer encloses the player and (Mika_figurine has been palmed):
+Instead of going outside when Room_Sharons_Trailer encloses the player and player is not mika_experienced and Mika_figurine has been palmed:
 	joink_mika;
+	continue the action;
 
-Instead of navigating Room_D_Loop when Room_Sharons_Trailer encloses the player and (Mika_figurine has been palmed):
+Instead of navigating Room_D_Loop when Room_Sharons_Trailer encloses the player and player is not mika_experienced and Mika_figurine has been palmed:
 	joink_mika;
 	continue the action;
 
@@ -6777,8 +6794,8 @@ The scent is "stale bitter coffee".
 
 The lees_tv is an improper-named scenery device in Room_Lees_Trailer.
 	The printed name is "TV".
-	The description is "This is a tiny portable black and white set with a giant channel changer and bent rabbit ears propped on a crate[if lees_tv is switched on] [what_show_is_playing][else].[end if]".
-	Understand "lees/lee's/-- tiny/-- television/tv set/--", "tv/television/-- station/dial/channel/changer", "bent/-- rabbit ears" as lees_tv.
+	The description is "This is a tiny portable black and white set with a giant channel changer and bent rabbit ears propped on a crate[if lees_tv is switched on]. [what_show_is_playing][else].[end if]".
+	Understand "lees/lee's/-- tiny/-- television/tv set/--", "tv/television/-- station/dial/channel/changer", "bent/-- rabbit ears", "milk/-- crate" as lees_tv.
 	The indefinite article is "the".
 
 The purple_heart is an improper-named special thing in Limbo.
@@ -6842,7 +6859,7 @@ Section - Objects
 The grandpas_virtual_trailer is a fixed in place undescribed enterable container in Room_B_Loop.
 	The printed name is "Honey and Grandpa's trailer".
 	The description is "Honey and Grandpa's trailer is white with dark brown trim, and has hanging ferns from the porch.".
-	Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas/-- trailer/house/place/home" as grandpas_virtual_trailer.
+	Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas/-- trailer/house/place/home/fern/ferns/porch" as grandpas_virtual_trailer.
 
 Your bicycle is a fixed in place thing in Room_B_Loop.
 	The description is "This is your trusty red Schwinn with a white banana seat. Unfortunately, the tires are so flat it barely rolls. Poo."
@@ -6908,7 +6925,7 @@ Honeys_tv is improper-named scenery device in Room_Grandpas_Trailer.
 	The indefinite article is "the".
 
 The floral print couch is a lie-able surface in Room_Grandpas_Trailer.
-		The description is "Sometimes you curl up on Honey's floral print couches with a crocheted afghan and a book and spend the afternoon.".
+		The description is "Sometimes you curl up on Honey's floral print couches with a crocheted afghan and a book and spend the afternoon. At least until Honey tells you to go outside and play.".
 	Understand "sofa", "couches", "divan", "floral-print" as floral print couch.
 
 The carpet is a lie-able surface in Room_Grandpas_Trailer.
