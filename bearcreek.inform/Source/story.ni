@@ -849,6 +849,9 @@ Check touching a waterbody:
 
 Chapter - Piling
 
+[TODO: Should the leaves be a container?]
+[TODO: "Cover me" with out an object should work]
+[TODO: "get in leaves" should work]
 Piling is an action applying to one thing.
 Understand
 	"pile [something] over/on/-- me/myself/--",
@@ -1365,7 +1368,7 @@ Understand
 Check navigating elusive_landmark:
 	[ say "(DEBUG: check nav elusive_landmark: [noun])"; ]
 	if noun is not visible:
-		say "(DEBUG: [noun] not visible?)";
+		[ say "(DEBUG: noun not visible?)"; ]
 		say cant_find_that instead;
 	else if noun is not distant:
 		say "Well, that's right here." instead;
@@ -1551,13 +1554,13 @@ Understand
 
 Check person_navigating:
 	[say "(DEBUG: go from [location of player] to [the noun])[line break]";]
-	if the noun is the location, say "Well, happily they're already here." instead;
+	if the noun is in the location, say "Well, happily [regarding the noun][they're] already here." instead;
 
 Carry out person_navigating:
 	let initial location be the location;
 	let the destination be the location of the noun;
 	if the initial location is the destination,
-		say "They're already here." instead;
+		say "[regarding the noun][They're] already here." instead;
 	let heading be the best route from the initial location to the destination;
 	[say "(DEBUG: heading toward [noun] is [heading])[line break]";]
 	if heading is nothing:
@@ -1715,6 +1718,8 @@ To say obj_pronoun of (subject - a thing):
 	follow the obj_pronoun of rulebook for subject.
 
 The obj_pronoun of rulebook is an object based rulebook. The obj_pronoun of rulebook has default success.
+
+[TODO: The whole gender system here needs to be redone using the built-in I7 substitutions: https://ganelson.github.io/inform-website/book/WI_3_17.html]
 
 obj_pronoun of someone who is _neutrois: say "them".
 obj_pronoun of someone who is _male: say "him".
@@ -2212,9 +2217,10 @@ Every turn:
 		step_a_journey for this_journey;
 
 To step_a_journey for (this_journey - an npc_journey):
-	[
-		set some local vars to make things easier
-	]
+	[ test for interrupt ]
+	if npc_is_interrupted on this_journey:
+		stop the action;
+	[ set some local vars to make things easier ]
 	let npc be the npc of this_journey;
 	let origin be the origin of this_journey;
 	let destination be the destination of this_journey;
@@ -2326,7 +2332,7 @@ To step_a_journey for (this_journey - an npc_journey):
 				[this_journey is not in-progress]
 				now this_journey is not in-progress;
 
-To decide if npc is interrupted on (this_journey - a npc_journey):
+To decide if npc_is_interrupted on (this_journey - a npc_journey):
 	[if interrupt rule succeeds, no]
 	follow the interrupt_test of this_journey;
 	if rule succeeded:
@@ -2482,7 +2488,16 @@ Dad is a familiar _male man.
 Understand "dad/father/Nick/Nicolas/papa" as dad.
 
 Joseph is a familiar _male man. 
-Understand "joe/joseph", "cat lady's husband", "Sharon's husband" as joseph.
+Understand "joe/joseph", "cat lady's husband", "Sharon's husband" as Joseph.
+
+Charlie is a familiar _male man. 
+Understand "great/-- uncle/-- charlie/charles/chuck" as Charlie.
+
+John is a familiar _male man.
+Understand "great/-- uncle/-- john" as John.
+
+Ethel is a familiar _female woman.
+Understand "great/-- aunt/-- ethel" as Ethel.
 
 Grandpa, Honey, Aunt Mary, Sharon, Lee, Sheriff, stepdad, Mom, Joseph are familiar.
 
@@ -2923,12 +2938,11 @@ To throw_berries_in_water:
 Chapter - Rocks
 
 A loose_rock is a kind of thing.
-Loose_rock are undescribed.
+Loose_rocks are undescribed and not marked for listing.
 The printed name is "rock".
 The printed plural name is "rocks".
 The description is "Grandpa called these ballast, rocks that line the railroad tracks.".
 20 loose_rocks are in Room_Railroad_Tracks.
-The loose_rocks are not marked for listing.
 Understand "mound of rock/rocks", "mound", "rock/rocks/stone/stones/ballast" as loose_rock.
 
 Instead of taking the loose_rock:
@@ -2954,20 +2968,8 @@ Rule for implicitly taking the loose_rock:
 		say "[rock_refusal]";
 	otherwise:
 		move the chosen rock to the player;
-		say "(picking up one of the rocks)";
+		[ say "(picking up one of the rocks)"; ]
 		now the noun is the chosen rock.
-
-Rule for clarifying the parser's choice of the loose_rock while taking:
-	say "(from the rocks that line the track)[line break]".
-
-[Every turn when the number of loose_rocks is greater than 0:
-	let chosen rock be a random off-stage rock;
-	move the chosen rock to Room_Railroad_Tracks.]
-
-[Instead of throwing loose_rock when Room_Railroad_Tracks encloses the player:
-	try dropping the noun.]
-
-[still a host of problems: throwing, confusion with the mound_of_rock etc]
 
 Instead of dropping loose_rock when Room_Railroad_Tracks encloses the player:
 	throw_rock_back.
@@ -2980,7 +2982,9 @@ Instead of dropping loose_rock when Room_Railroad_Tracks encloses the player:
 
 To throw_rock_back:
 	say "You throw the rock back into the mound of ballast.";
-	move the noun to Room_Railroad_Tracks.
+	now the noun is in Room_Railroad_Tracks;
+	now the noun is undescribed;
+	now the noun is not marked for listing;
 
 Instead of dropping the loose_rock:
 	if player is in Region_Trailer_Indoors:
@@ -2992,6 +2996,14 @@ Instead of throwing the loose_rock at someone (called the target):
 	if target is dog:
 		say "The dog barely dodges the rock, then erupts into a furious storm of barking.";
 		now the dog is rock-aware;
+		now the noun is in Room_Railroad_Tracks;
+		now the noun is undescribed;
+		now the noun is not marked for listing;
+	if target is raccoons:
+		say "Several pairs of eyes blink off and reappear nearby.";
+		now the noun is in Room_Railroad_Tracks;
+		now the noun is undescribed;
+		now the noun is not marked for listing;
 	else:
 		say "That seems like a really terrible idea. You think better of it.";
 
@@ -3005,7 +3017,9 @@ To throw_rock_away:
 		say "The rock sails out into space before dropping with a crash among the bushes far below.";
 	else:
 		say "You throw the rock and it disappears into the bushes.";
-	move the noun to Room_Railroad_Tracks.
+	now the noun is in Room_Railroad_Tracks;
+	now the noun is undescribed;
+	now the noun is not marked for listing;
 
 Part - Devices and Things With A Mind of Their Own
 
@@ -3972,17 +3986,18 @@ Some sandwich_ingredients are a fixed in place thing.
 	The initial appearance is "Aunt Mary has gotten out cans of Chicken of the Sea, Miracle Whip, and Wonder Bread for making tuna sandwiches.". The description is "Several cans of Chicken of the Sea, Miracle Whip, and Wonder Bread are out for making tuna sandwiches."
 	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonaise/mayonnaise/can/cans/bags", "miracle whip", "sandwich bags" as sandwich_ingredients.
 
-The brown paper bag is a unopenable open container.
-	The printed name is "[if brown paper bag is torn]torn up [end if]brown paper bag".
-	The description is "A plain brown paper bag[if brown paper bag is torn] now pretty torn up[end if]".
-The brown paper bag can be torn.
+The paper_bag is a unopenable open container.
+The printed name is "[if paper_bag is torn]torn up [end if]brown paper bag".
+The description is "This is the brown paper bag in which Mary put Honey and Grandpa's lunch[if paper_bag is torn] now pretty torn up[end if]".
+Understand "brown/-- paper/-- lunch/-- bag/sack" as paper_bag.
+The paper_bag can be torn.
 
 [Originally I thought to simplify this model, but it came in handy during Scene_Defend_the_Fort]
 A tuna_sandwich is a kind of thing.
 	The printed name is "tuna sandwich".
 	A tuna_sandwiches is edible.
 	[It is singular-named "tuna sandwich".]
-	Three tuna_sandwiches are in brown paper bag.
+	Three tuna_sandwiches are in paper_bag.
 	Rule for printing the plural name of a tuna_sandwich: say "tuna sandwiches".
 	The description is "These are your favorite. Tuna sandwiches that get delightfully soggy and tasty in the middle. Chicken of the Sea with Miracle Whip on Wonder Bread, all wrapped up in sandwich bags."
 	Understand "chicken of the sea", "miracle whip", "wonder bread", "bread/loaf/tuna/spread/mayonnaise/whip/can/cans/bag/bags", "sandwich bags", "sandwich/sandwiches" as tuna_sandwiches.
@@ -3994,7 +4009,7 @@ Instead of dropping tuna_sandwich during Scene_Day_One:
 	else:
 		say "No way. That's lunch for Honey and Grandpa.";
 
-Instead of dropping brown paper bag during Scene_Day_One:
+Instead of dropping paper_bag during Scene_Day_One:
 	if raccoons are in Region_Woods_Area:
 		say "Maybe they want the tuna sandwiches.";
 		continue the action;
@@ -4012,7 +4027,8 @@ seq_mary_sandwich is a sequence.
 Instead of going when seq_mary_sandwich is in-progress:
 	say "'I want you to stay and help make sandwiches,' Aunt Mary says. 'It will just take a minute. Then you can go join your grandpa and bring them lunch.'";
 
-Understand "make sandwiches/sandwich/lunch", "help with/make sandwiches/sandwich/lunch" as a mistake ("Aunt Mary already has you working on the assembly line making tuna sandwiches.").
+[TODO: should this be its own action - as is, the message is right, but it doesn't take any time in the game and so you could type this forever]
+Understand "make sandwiches/sandwich/lunch", "help with/make sandwiches/sandwich/lunch", "help mary" as a mistake ("Aunt Mary has you working on the assembly line making tuna sandwiches.").
 
 This is the seq_mary_sandwich_handler rule:
 	let index be index of seq_mary_sandwich;
@@ -4024,8 +4040,8 @@ This is the seq_mary_sandwich_handler rule:
 		Report Mary saying "Your Aunt Mary has you on the assembly line constructing tuna fish sandwiches and putting them in sandwich bags.";
 	else if index is 3:
 		Report Mary saying "You pack all the sandwiches up in a brown paper bag, and Aunt Mary puts away the sandwich makings. 'Okay, you take those sandwiches down to your grandparents. She hands you the paper bag. All those blackberries they're picking. It's hungry work.' Aunt Mary smiles.";
-		now all tuna_sandwiches are in brown paper bag;
-		now brown paper bag is held by player;
+		now all tuna_sandwiches are in paper_bag;
+		now paper_bag is held by player;
 		now sandwich_ingredients are in Limbo;
 
 This is the seq_mary_sandwich_interrupt_test rule:
@@ -4149,8 +4165,9 @@ This is the seq_jody_stop_handler rule:
 	else if index is 4:
 		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
 	else if index is 5:
-		queue_report "And suddenly a memory: [paragraph break][em]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[/em][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P. You drop to the ground right where you are in the tall grass.[paragraph break][em]Think.[/em] You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break][em]Observe.[/em] You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break][em]Plan.[/em] The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
+		queue_report "And suddenly a memory: [paragraph break][em]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[/em][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P[if player is not on meadow grass]. You drop to the ground right where you are in the tall grass[end if].[paragraph break][em]Think.[/em] You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break][em]Observe.[/em] You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break][em]Plan.[/em] The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
 		Move player to the meadow grass, without printing a room description;
+		Now fallen_tree is in Room_Forest_Meadow;
 		Now Room_Forest_Meadow is observed;
 	else if index is 6:
 		queue_report "[one of]You have a plan. Find shelter[or]Hypothermia is a real risk in the chilly forest at night. Time to find a place to shelter[or]You look closer at the edge of the forest[stopping]." at priority 1;
@@ -4257,8 +4274,8 @@ To do_raccoon_things:
 				[It takes one turn for the raccoons to eat one sandwich.]
 				let one_sandwich be a random tuna_sandwich enclosed by Room_Forest_Meadow;
 				now one_sandwich is in Limbo;
-				if brown paper bag is in Room_Forest_Meadow:
-					now brown paper bag is torn;
+				if paper_bag is in Room_Forest_Meadow:
+					now paper_bag is torn;
 			[if there are sandwiches in Room_Protected_Hollow]
 			else if the number of entries in hollow_sandwich_list is greater than zero:
 				[raccoons will be making noise sniffing around the fort]
@@ -4279,7 +4296,7 @@ After taking tuna_sandwich when raccoons are visible:
 After dropping tuna_sandwich when raccoons are visible:
  	queue_report "The glittering eyes watch the tuna sandwich hit the ground." at priority 1;
 
-After dropping brown paper bag when raccoons are visible:
+After dropping paper_bag when raccoons are visible:
  	queue_report "Numerous pairs of eyes watch the paper bag hit the ground." at priority 1;
 
 
@@ -4637,6 +4654,9 @@ When Scene_Day_Two begins:
 	now player is in Room_Protected_Hollow;
 	now pet_rock is in Room_Protected_Hollow;
 	now player is awake;
+	Change up exit of Room_Forest_Meadow to Room_Sentinel_Tree;
+	Now virtual_sentinel_tree is in Room_Forest_Meadow;
+	Now crickets are in Limbo;
 	now current_time_period is early_morning;
 	now the right hand status line is "Morning";
 	Now Sharon is in Room_Other_Shore;
@@ -4657,7 +4677,6 @@ Scene_Orienteering begins when Scene_Morning_After begins.
 Scene_Orienteering ends when Room_Sentinel_Tree encloses the player.
 
 When Scene_Orienteering begins:
-	Change up exit of Room_Forest_Meadow to Room_Sentinel_Tree;
 	queue_report "It's time to figure out where you are. Perhaps if you could get a view of the surrounding area." with priority 2;
 
 When Scene_Orienteering ends:
@@ -4803,8 +4822,6 @@ This is the journey_sharon_walk_end rule:
 		* turn n+m: if you take more than m turns to get to him and you are a location away, lee comes to get you and ask if you are coming
 		* end: Lee returns you to your family and tells where they found you, Sharon arrives
 ]
-
-[test gw with "teleport to lees trailer / teleport to grassy clearing / teleport to willow trail".]
 
 [TODO: Create a rule that prevents us from going anywhere but toward goal during this walk]
 
@@ -5605,6 +5622,8 @@ To say thick_trees_description:
 		say "The thick trees overhead make deep shade below[if current_time_period is early_morning or current_time_period is late_morning]. The morning light filters through the leaves[else if current_time_period is early_afternoon or current_time_period is late_afternoon], a welcome relief from the summer heat. The afternoon sunlight slants as rays through the leaves[else] under a twilit sky[end if]";
 	else:
 		say "The thick trees block out even the stars making the night nearly pitch black";
+	if Room_Forest_Meadow encloses player and Room_Forest_Meadow is observed:
+		say ". On closer observation, you see, at the darkened edge of the meadow, a place where a fallen tree has taken out the underbrush";
 
 Some backdrop_sunlight is backdrop in Region_River_Area.
 
@@ -6061,6 +6080,16 @@ The printed name is "mound of rock".
 The description is "Grandpa called these ballast, rocks that line the railroad tracks."
 Understand "mound of rock/rocks", "rock/-- mound", "rock/rocks/stone/stones" as mound_of_rock. ]
 
+[TODO: Oops:
+>go to dog
+You are already up.
+ 
+You are already up.
+ 
+You are already up.
+ 
+You would have to get out of the green tunnel first.]
+
 A green_tunnel is scenery enterable container in Room_Railroad_Tracks.
 The printed name is "green tunnel".
 The description is "The trees grow close on either side of the tracks, and their branches touch high above."
@@ -6093,6 +6122,9 @@ Instead of dropping lost_penny when player is on train_track:
 Instead of navigating Room_Railroad_Tracks when Room_Railroad_Tracks encloses the player:
 	try follow_tracks.
 
+Instead of entering green_tunnel:
+	 say "[one of]The trees crowd in on either side, so there's no where to walk but on the tracks. You follow them for a little while but then get scared that a train will come and you will have nowhere to go.[paragraph break]You[or]Mom told you about kids who get killed walking on the tracks, so you[or]You walk on down the tracks a bit, and then[stopping] head on back to where the old dirt road crosses the train tracks.";
+	 
 
 Chapter - Room_Grassy_Field
 
@@ -6819,13 +6851,14 @@ Instead of switching on lees_tv:
 		say "Lee is the only one who lets you watch TV whenever you want and even change the channels. You switch on Lee's little black and white set.";
 	continue the action;
 
-Instead of showing purple_heart to someone:
+[TODO: Should I have the same rules for Mika?]
+Instead of showing purple_heart to someone that is not an animal:
 	if second noun is not Lee:
 		say "You want to show the Purple Heart, but also want to keep the feeling to yourself. Plus, what if they make you give it back? You think better of it.";
 	else:
 		say lee_purple_heart_story;
 
-Instead of giving purple_heart to someone:
+Instead of giving purple_heart to someone that is not an animal:
 	if second noun is not Lee:
 		say "What if they make you give it back? You think better of it.";
 	else:
@@ -6916,7 +6949,7 @@ The pot_of_blackberry_jam is nonfamiliar scenery in Room_Grandpas_Trailer.
 Some jam_jars are scenery in Room_Grandpas_Trailer.
 	The printed name is "jam jars".
 	The description of the jam_jars is "Jars and lids and pots and pans and paraffin and tongs and boiling water are laid out strategically all over the kitchen. Who knew making jam was so complicated?".
-	Understand "jar", "lid/lids", "parafin/paraffin/wax", "tongs", "water", "boiling" as jam_jars.
+	Understand "jar/jars/lid/lids/parafin/paraffin/wax/tongs/pot/pots/pan/pans/stove", "boiling/-- water" as jam_jars.
 
 Honeys_tv is improper-named scenery device in Room_Grandpas_Trailer.
 	The printed name is "TV".
@@ -6980,9 +7013,12 @@ Section - Backdrops and Scenery
 Some backdrop_deep_woods are backdrop in Region_Woods_Area.
 	The printed name is "deep woods".
 	The description is "[thick_trees_description]."
-	Understand "deep/-- wood/woods/forest" as backdrop_deep_woods.
+	Understand "deep/dark/-- tree/trees/wood/woods/forest" as backdrop_deep_woods.
 
 Some backdrop_sunlight is backdrop in Region_Woods_Area.
+
+Does the player mean doing anything to backdrop_deep_woods:
+	It is very unlikely.
 
 Section - Rules and Actions
 
@@ -7148,7 +7184,6 @@ To say day1_woods_exits:
 To say day2_woods_exits:
 	say "There isn't exactly a path, but you are moving in a consistent direction. You're pretty sure you are walking parallel to the creek. You can go back toward the forest meadow to the north, or you can continue south where you think you see a wooded trail";
 
-
 Section - Objects
 
 Section - Backdrops & Scenery
@@ -7306,10 +7341,11 @@ Some meadow grass is lie-able surface in Room_Forest_Meadow.
 	The description is "Here there is tall dry grass up to your waist. You try not to think about ticks."
 	Understand "tall/high/dry/meadow/-- grass/weeds", "meadow" as meadow grass.
 
-A fallen_tree is a fixed in place undescribed enterable container in Room_Forest_Meadow.
+[This is moved to Room_Forest_Meadow in seq_jody_stop]
+A fallen_tree is a fixed in place undescribed enterable container.
 The printed name is "protected hollow".
 The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
-Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under/-- fallen/-- tree" as fallen_tree.
+Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under/-- fallen/-- tree", "forest/-- edge", "edge of the/-- forest" as fallen_tree.
 
 Some crickets are backdrop in Room_Forest_Meadow.
 	The description is "You can hear the clear sound of crickets even if you can't see them. Fun fact: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
@@ -7318,7 +7354,8 @@ Some crickets are backdrop in Room_Forest_Meadow.
 Some ticks are backdrop in Room_Forest_Meadow.
 	The description is "God, you hope you don't find any of them. Or better yet, you hope they don't find you."
 
-A virtual_sentinel_tree is climbable scenery in Room_Forest_Meadow.
+[This is moved to Room_Forest_Meadow in Scene_Day_two]
+A virtual_sentinel_tree is climbable scenery.
 	The printed name is "tall pine tree".
 	The description is "This is a tall pine tree at the edge of the meadow. The low branches hang almost to the ground. From this tree, you might be able to get your bearings."
 	Understand "tall/-- pine/sentinel/-- tree" as virtual_sentinel_tree.
@@ -7438,7 +7475,7 @@ Every turn when Scene_Night_In_The_Woods is happening and
 	Room_Protected_Hollow encloses the player and
 	Room_Protected_Hollow is not made_cozy:
 	if Scene_Defend_the_Fort is not happening:
-		say "[one of]You are awfully chilly. You wish you had a blanket to keep warm[or]It's good to have shelter, but it's still too cold to sleep[or]Unless you find a way to keep warm, you are still in danger of hypothermia[cycling]."
+		say "[one of]You are awfully chilly. You wish you had a blanket to keep warm[or]It's good to have shelter, but it's still too cold to sleep[or]Unless you find a way to keep warm, you are still in danger of hypothermia[or]You remember from Explorer Camp that anything that traps air can be used as an insulator, like feathers, crumpled newspaper, or leaves[cycling]."
 
 Instead of taking fallen_leaves:
 	try piling fallen_leaves.
@@ -7602,12 +7639,13 @@ Section - Navigation
 East of Room_Drive_In is Room_Snack_Bar.
 North of Room_Drive_In is Room_Playground.
 Inside from Room_Drive_In is Room_Car_With_Stepdad.
+West of Room_Drive_In is Room_Car_With_Stepdad.
 
 The available_exits of Room_Drive_In are "You can get back in the car or head to the snack bar from which waves of popcorn smell are emerging. There is also a dark and scary playground near the screen."
 
 Section - Objects
 
-moms_camaro is fixed in place climbable enterable container in Room_Drive_In.
+moms_camaro is fixed in place climbable enterable vehicle in Room_Drive_In.
 	The printed name is "Mom's Camaro".
 	The initial appearance is "Mom's Camaro is here[if Scene_Dreams is happening] parked among the other cars[end if].".
 	The printed name is "Mom's Camaro".
@@ -7645,13 +7683,14 @@ Some speakers, some paper trash are scenery in Room_Drive_In.
 
 Section - Rules and Actions
 
+[ transition ]
 Instead of going to Room_Drive_In when Room_Car_With_Mom encloses the player:
 	say "'Want to pick us up some Milk Duds?' mom asks, handing you some money.
 	[paragraph break]Mom smiles at you, 'Hurry back,' and, as you shut the car door, adds 'I love you, pumpkin.'";
 	now player has money;
 	continue the action.
 
-Instead of climbing or climbing in moms_camaro,
+Instead of climbing or climbing in moms_camaro or navigating moms_camaro:
 	try entering moms_camaro.
 
 Instead of entering moms_camaro:
@@ -7736,7 +7775,7 @@ Understand "cat lady", "uniform/sharon" as counter lady.
 Popcorn is edible thing in Limbo.
 Popcorn can be empty, half-full, or full. Popcorn is full.
 Popcorn_countdown is a number that varies. Popcorn_countdown is 8.
-The printed name of popcorn is "[if popcorn is full]a heaping tub of popcorn[else if popcorn is half-full]a tub of popcorn [else]the popcorn tub from the drive-in[end if]".
+The printed name of popcorn is "[if popcorn is full]heaping tub of popcorn[else if popcorn is half-full]tub of popcorn [else]the popcorn tub from the drive-in[end if]".
 The description is "This is [if popcorn is full]a small heaping tub of fresh buttered popcorn[else if popcorn is half-full]a tub of popcorn[else]the tub that your popcorn came in, sadly, empty now except for a slick of butter[end if] from the drive-in snack bar."
 Understand "tub" as popcorn.
 The scent is "fresh popped popcorn and melted butter".
@@ -8704,6 +8743,7 @@ Response of Honey when asked-or-told about topic_jam:
 Response of Honey when asked-or-told about grandpas_cigarettes:
 	say "'You keep away from those,' Honey says.".
 
+[TODO: Make sure everyone's responses are appropriate for Day_One and Day_Two]
 Response of Honey when asked-or-told about topic_trailer:
 	say "'You wanting to go back? If you head back to the house, you try and help your Aunt Mary out,' Honey says.".
 
@@ -8754,6 +8794,15 @@ Response of Honey when asked about topic_work:
 
 Response of Honey when asked about topic_family:
 	say "'That's a big subject, [honeys_nickname]. Maybe we can sit down later and look at some of the pictures of our family,' Honey says. 'I'll bet you don't even remember [one of]your Aunt Ethel who we visited in Portland[or]your Great Uncle Charley who has the rock shop[or]your grandpa's brother Marvin out in the desert[in random order].'".
+
+Response of Honey when asked about John:
+	say "'My brother John died before I was even born. He was the light of my Mama and Papa's lives, their first born child. I don't think they ever got over it.'".
+
+Response of Honey when asked about Ethel:
+	say "'Do you remember your Aunt Ethel? We visited her in Portland the year before last. She thought you were the cat's pajamas.'".
+
+Response of Honey when asked about Charlie:
+	say "'You met your great uncle Charlie when you were just a baby, but I doubt you remember him. Aunt Mary ran his rock shop for a year or so after he died.'".
 
 Chapter - Rants
 
@@ -8930,7 +8979,7 @@ Response of Grandpa when asked-or-told about Grandpa:
 	say "'Well, what can I tell ya, [grandpas_nickname]? I yam wat I yam.' Grandpa gives you his best Popeye squint and makes a muscle with his real-life Popeye arms covered with his real-life sailor tattoos.".
 
 Response of Grandpa when asked-or-told about Honey:
-	say "[if honey is visible]Grandpa looks over toward Honey[end if], 'She's your Grandma Honey[one of]. Don't worry about her[or]. Her bark's worse than her bite[or]. She loves the heck out of you[in random order], [grandpas_nickname].'".
+	say "[if honey is visible]Grandpa looks over toward Honey, [end if]'She's your Grandma Honey[one of]. Don't worry about her[or]. Her bark's worse than her bite[or]. She loves the heck out of you[in random order], [grandpas_nickname].'".
 
 Response of Grandpa when asked-or-told about Aunt Mary:
 	say "'She's your Honey's older sister. Did you know your Honey had twelve brothers and sisters? Let's see, you know Uncle Charley and Aunt Ethel and Aunt Mary,' Grandpa says counting on his fingers. 'Mary has grandkids that are your mom's age.'".
@@ -9098,7 +9147,7 @@ test grandpa-ask with "teleport to Grassy Clearing / ask grandpa about Aunt Mary
 
 test grandpa-tell with "teleport to Grassy Clearing / tell grandpa about Aunt Mary / tell grandpa about Dad / z / z / z / tell grandpa about Grandpa / tell grandpa about Honey / tell grandpa about Joseph / tell grandpa about Lee / tell grandpa about Me / tell grandpa about Mika / tell grandpa about Mom / z / z / z / tell grandpa about Sharon / z / z / z / tell grandpa about Sheriff / tell grandpa about Stepdad / tell grandpa about ants / tell grandpa about berries / tell grandpa about bridge / tell grandpa about bucket / tell grandpa about cat / tell grandpa about cigarettes / tell grandpa about creek / tell grandpa about death / tell grandpa about dog / tell grandpa about dream dog / tell grandpa about dreams / tell grandpa about family / tell grandpa about forest / tell grandpa about grandpas shirt / tell grandpa about indians / tell grandpa about jam / tell grandpa about life / tell grandpa about love / tell grandpa about lucky penny / tell grandpa about lunch / tell grandpa about movie / tell grandpa about nest / tell grandpa about pail / tell grandpa about penny / tell grandpa about purple heart / tell grandpa about radio / tell grandpa about swimming / tell grandpa about tea / tell grandpa about trailer / tell grandpa about train / tell grandpa about big tree / tell grandpa about war / tell grandpa about work / ".
 
-test gw with "teleport to grandpas trailer / teleport to grassy clearing / teleport to willow trail".
+test grandpa-walk with "teleport to grandpas trailer / teleport to dirt road / teleport to grassy clearing".
 
 
 Part - Sharon
@@ -9661,8 +9710,14 @@ To say mary_stuff:
 Default give-show response for Mary:
 	say "'Oh, thanks, dear, but I couldn't,' says Aunt Mary[if a random chance of 1 in 3 succeeds], [mary_stuff][end if].";
 
-Default response for Mary:
+Default tell response for Mary:
 	say "[one of]'Uh huh,' Aunt Mary says distractedly[or]'Hm, what was that?' Mary says[or]'Oh, you don't say,' Mary says vaguely[at random][if a random chance of 1 in 3 succeeds], [mary_stuff][end if].";
+
+Default ask response for Mary:
+	say "[one of]'Well, I don't know much about that, Hon,' says your Aunt Mary[or]'Have you asked your grandfather about that?' says Aunt Mary[or]'That's beyond me, Hon,' says your Mary[at random][if a random chance of 1 in 3 succeeds], [mary_stuff][end if]."
+
+Default response for Mary:
+	say "'Alright, Hon,' she says.";
 
 Default thanks response for Mary:
 	say "'Okay, dear,' Aunt Mary says.";
@@ -9705,14 +9760,17 @@ Response of Mary when asked-or-told about Dad:
 Response of Mary when asked-or-told about stepdad:
 	say "Her eyes look sharp for a moment, 'I know he and your grandmother have their differences, but I can tell you that he looks like he really loves your mom. When she leaves the room, that man looks like someone just let the air out of him.'"
 
-Response of Mary when asked-or-told about backdrop_berries or asked-or-told about topic_berries:
-	say "'Every year,' she smiles. 'Every year, we pick the berries and the jam lasts until the next summer.'"
+Response of Mary when asked-or-told about topic_berries:
+	say "'Every year,' she smiles. 'we pick berries, and the jam lasts until the next summer.'"
 
 Response of Mary when asked-or-told about big_bucket:
 	say "Your grandpa [if Scene_Bringing_Lunch is not happening]will be bringing[else]brought[end if] that bucket up for me to make more jam."
 
 Response of Mary when asked-or-told about topic_jam:
 	say "'That's your grandma's recipe,' she says proudly. 'No,' she looks worried, 'No. Mama is your great-grandmother. It's your great-grandma's recipe.'".
+
+Response of Mary when asked-or-told about topic_trailer:
+	say "'I'm so glad we can make jam at your grandma's house,' says your Aunt Mary."
 
 Response of Mary when asked-or-told about topic_train:
 	say "'I can hear that old train,' she says. 'Reminds me before any of us had cars - if you wanted to get somewhere, you rode a train.'".
@@ -9739,7 +9797,17 @@ Response of Mary when asked about topic_work:
 	say "'I helped your great uncle Charlie with his rock shop in Grass Valley years ago, but now he's gone,' she says sadly.".
 
 Response of Mary when asked about topic_family:
-	say "'I come from a big family,' she says. 'Not as many of them left anymore. Your great uncle Charlie died a couple years ago. Ethel is still in Portland. Your great uncle John died before you were even born, when I was still a girl. That just about broke Mama and Papa's hearts.'".
+	say "'I come from a big family,' she says. 'Not as many of them left anymore. Your great uncle Charlie died a couple years ago. Ethel is still in Portland. Your great uncle John died before you were even born, when I was still a girl. That just about broke my Mama and Papa's hearts.'".
+
+Response of Mary when asked about John:
+	say "'Your great uncle John died before you were even born, when I was still a girl. That just about broke my Mama and Papa's hearts.'".
+
+Response of Mary when asked about Ethel:
+	say "'Your Aunt Ethel is still in that big house in Portland with her family. I think you and your grandparents visited her last sumer.'".
+
+Response of Mary when asked about Charlie:
+	say "'Your great uncle Charlie died a couple years ago. He had a rock shop in Grass Valley.'".
+
 
 Chapter - Tests
 
@@ -10127,7 +10195,7 @@ Book - Animals
 
 Part - Dog
 
-The dog is a familiar improper-named _critter animal in Room_Dirt_Road.
+The dog is a familiar improper-named neuter _critter animal in Room_Dirt_Road.
 	The initial appearance is "[if not loose]There's a dog behind the fence, alternately digging and barking[otherwise]The dog is wandering in the road[end if].".
 	The description of the dog is "Kind of a yellowish medium dog with pointy ears. You don't know what kind. [sub_pronoun_cap of dog]'s not a german shepherd or a doberman but [sub_pronoun of dog] looks mean like that. Some kind of guard dog maybe. [one of][sub_pronoun_cap of dog] reminds you of Uncle Buddy's dog that mom was taking care of and how when you tried to feed it and get the spoon, it bit you.
 	[paragraph break][sub_pronoun_cap of dog] makes you [nervous]. But there's something about this dog.[or]
@@ -10135,9 +10203,15 @@ The dog is a familiar improper-named _critter animal in Room_Dirt_Road.
 	Understand "yellow/guard/-- dog/bitch/mutt/canine/pup/puppy/doge/cujo/kujo", "german shepherd", "doberman", "pitbull" as the dog.
 	The indefinite article of dog is "the".
 
+[ Closer Examination ]
+
 After examining the dog two times:
 	now dog is _female;
+	now dog is female;
 	now dream_dog is _female;
+	now dream_dog is female;
+	now dog is not neuter;
+	now dream_dog is not neuter;
 	now dog is examined;
 	now player is perceptive;
 	now player is dog_experienced;
@@ -10159,18 +10233,6 @@ Chapter - Rules and Actions
 
 Instead of touching dog:
 	say "As you reach out to the dog, [sub_pronoun of dog] lunges as you and you withdraw your hand quickly.";
-
-[ Closer Examination ]
-
-When play begins:
-	now dog is neuter.
-
-After examining the dog two times:
-	now dog is female;
-	now dog is examined;
-	now player is perceptive;
-	now player is dog_experienced;
-	continue the action.
 
 [ Dog Barking ]
 
@@ -10232,8 +10294,8 @@ Default response for dog:
 	say "[dog alert].";
 
 Default give response for dog:
-	if noun is tuna_sandwich:
-		say "The dog sniffs suspiciously and erupts in a flurry of barking.";
+	if noun is edible:
+		say "The dog sniffs suspiciously at [the noun], looks at you, and erupts in a flurry of barking.";
 	else:
 		say "[dog alert].";
 
@@ -10295,7 +10357,12 @@ To say dog_does_stuff:
 ]
 
 Default give response for dream_dog:
-	say "'Nah, I don't need that, thanks,' says the dog[if a random chance of 1 in 3 succeeds], [dog_doing_stuff][end if].";
+	if noun is popcorn:
+		say "The dog sniffs it, looks at you, and says, 'Aw, thanks, kid.' You share some of your popcorn with the dog.";
+		now dream_dog is friendly;
+		now player is compassionate;
+	else:
+		say "'Nah, I don't need that, thanks,' says the dog[if a random chance of 1 in 3 succeeds], [dog_doing_stuff][end if].";
 
 Default show response for dream_dog:
 	say "'Okay, good for you,' the dog says[if a random chance of 1 in 3 succeeds], [dog_doing_stuff][end if].";
