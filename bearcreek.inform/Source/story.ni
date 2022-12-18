@@ -412,6 +412,8 @@ The parser nothing error internal rule response (B) is "Let's not be greedy."
 
 The can't enter what's not enterable rule response (D) is "Best not."
 
+The can't enter closed containers rule response (A) is "[We] [can't get] into the [noun]. Duh."
+
 Book - Bibliographical information
 
 Book - Releasing
@@ -2559,7 +2561,7 @@ topic_work is a subject.
 
 topic_family is a subject.
 	The printed name is "family".
-	Understand "aunts/uncle/uncles/brother/brothers/sister/sisters/nephew/nephews/niece/nieces/grandchildren/grandkid/grandkids/grandson/granddaugher/daughter/daughters/son/sons/kids/family/pack/owner/territory" as topic_family.
+	Understand "great/-- aunt/aunts/uncle/uncles", "grand/-- kid/kids/child/children/son/sons/daughter/daughters", "brother/brothers/sister/sisters/nephew/nephews/niece/nieces/grandchildren/grandkid/grandkids/grandson/granddaugher/family/pack/owner/territory/litter" as topic_family.
 
 topic_war is a subject.
 	The printed name is "war".
@@ -5625,7 +5627,6 @@ The description is "This is a wide path, more of a long meadow really, that cuts
 The scent is "tangy pine".
 Understand "dappled/-- forest/-- path" as Room_Dappled_Forest_Path.
 
-
 Section - Navigation
 
 East of Room_Dappled_Forest_Path is Room_Forest_Meadow.
@@ -5638,6 +5639,7 @@ Section - Objects
 
 Section - Backdrops & Scenery
 
+Some pine trees are backdrop in Room_Dappled_Forest_Path.
 
 Part - Region_River_Area
 
@@ -5772,10 +5774,6 @@ Room_Swimming_Hole is east of Room_Long_Stretch, and down from Room_Long_Stretch
 
 The available_exits of Room_Swimming_Hole is "It is possible to walk along the rocky shore downstream to another spot along the creek. Back up the trail leads through the woods back to the dirt road."
 
-[TODO: nix?]
-[ Instead of entering rocky_shore_north:
-	try navigating Room_Crossing; ]
-
 Section - Objects
 
 A pool_log is a thing in Room_Swimming_Hole.
@@ -5864,16 +5862,6 @@ North of Room_Crossing is Room_Swimming_Hole.
 East of Room_Crossing is Room_Other_Shore.
 
 The available_exits of Room_Crossing are "The shoreline ends at a steep bank further downstream, though it looks like you might be able to cross the creek to the other shore on the boulders in midstream. You can also go back along the rocky shore to the swimming hole upstream."
-
-[TODO: nix these 3?]
-[ Instead of entering rocky_shore_south:
-	try navigating Room_Swimming_Hole; ]
-
-[ Instead of entering boulders_west:
-	try navigating Room_Other_Shore; ]
-
-[ Instead of entering bridge_log_west:
-	try navigating Room_Other_Shore; ]
 
 [TODO: sus]
 Instead of climbing swift_current_west:
@@ -6107,11 +6095,12 @@ The available_exits of Room_Railroad_Tracks is "Across the tracks is a grassy fi
 
 Section - Objects
 
-The train_track is a scenery enterable supporter in Room_Railroad_Tracks.
+The train_track is a surface in Room_Railroad_Tracks.
 The printed name is "train tracks".
 The description is "The steel rails are shiny on top and rusty on the sides. the wooden ties are supported by a mound of dark gray rock.".
 Understand "train/railroad/-- track/tracks", "rail/rails/traintracks", "train/railroad", "rail road", "ties" as train_track.
 The indefinite article is "the".
+The experience is "Was that a train? Mom tells you not to play anywhere near the railroad tracks. You nervously step between the tracks, experimentally trying to balance on one rail. Be careful."
 
 A lost_penny is a special thing in Room_Railroad_Tracks.
 The printed name is "penny".
@@ -6152,9 +6141,6 @@ A sign is backdrop in Room_Railroad_Tracks.
 The description is "The sign is posted on the trailer park side of the tracks on a tall pole. It reads 'PROPERTY OF SOUTHERN PACIFIC RAILROAD. TRESPASSING, LOITERING FORBIDDEN BY LAW.'"
 
 Section - Rules and Actions
-
-After entering train_track:
-	say "Was that a train? Mom tells you not to play anywhere near the railroad tracks. You nervously step between the tracks, experimentally trying to balance on one rail. Be careful."
 
 To say penny_status:
 	if lost_penny is on train_track:
@@ -6223,10 +6209,6 @@ Instead of climbing back fence, say "Perhaps it is easier to just go around thro
 
 Instead of doing anything except entering or examining to field_back_gate:
 	say "You better leave that alone. You don't want to get in trouble."
-
-[TODO: nix?]
-[ Instead of entering field_back_gate:
-	try navigating Room_Picnic_Area; ]
 
 
 Part - Region_Up_In_Tall_Fir
@@ -6369,7 +6351,7 @@ The distant_road is scenery in Room_Top_of_Pine_Tree.
 
 The distant_bridge is scenery in Room_Top_of_Pine_Tree.
 	The printed name is "stone bridge".
-	The description is "You can just make out the stone bridge, the grassy bank, part of the creek through the trees. Even from here, it looks shady and nice.".
+	The description is "You can just make out the stone bridge, the grassy bank, and part of the creek through the trees. Even from here, it looks shady and nice.".
 	Understand "bridge/stone/grassy/bank/shady", "grassy bank", "stone bridge" as distant_bridge.
 
 The distant_pool is scenery in Room_Top_of_Pine_Tree.
@@ -6557,9 +6539,6 @@ Instead of taking the ants:
 Instead of doing anything except entering or examining to picnic_back_gate:
 	say "You better leave that alone. You don't want to get in trouble."
 
-[TODO: nix?]
-[ Instead of entering picnic_back_gate:
-	try navigating Room_Grassy_Field; ]
 
 Chapter - Room_D_Loop
 
@@ -6611,14 +6590,6 @@ Big old cars are backdrop in Room_D_Loop.
 	Understand "driveway/carport", "car port" as big old cars.
 
 Section - Rules and Actions
-
-[TODO: nix?]
-[ Instead of entering sharons_virtual_trailer:
-	try navigating Room_Sharons_Trailer. ]
-
-[TODO: nix?]
-[ Instead of inserting something into sharons_virtual_trailer:
-	say "You might want to just go in there." ]
 
 
 Chapter - Room_Sharons_Trailer
@@ -6831,14 +6802,6 @@ Big old cars are backdrop in Room_C_Loop.
 
 Section - Rules and Actions
 
-[TODO: nix?]
-[ Instead of entering lees_virtual_trailer:
-	try navigating Room_Lees_Trailer. ]
-
-[TODO: nix?]
-[ Instead of inserting something into lees_virtual_trailer:
-	say "You might want to just go in there." ]
-
 
 Chapter - Room_Lees_Trailer
 
@@ -6968,14 +6931,6 @@ Big old cars are backdrop in Room_B_Loop.
 
 Section - Rules and Actions
 
-[TODO: nix?]
-[ Instead of entering grandpas_virtual_trailer:
-	try navigating Room_Grandpas_Trailer. ]
-
-[TODO: nix?]
-[ Instead of inserting something into grandpas_virtual_trailer:
-	say "You might want to just go in there." ]
-
 Instead of taking bicycle, say "Unfortunately, the tires of your bicycle are so flat it barely rolls.".
 
 Understand "ride bike/bicycle" as a mistake ("Unfortunately, the tires of your bicycle are so flat it barely rolls.").
@@ -7061,7 +7016,7 @@ Part - Region_Woods_Area
 Section - Description
 
 Region_Woods_Area is a region.
-Room_Other_Shore, Room_Wooded_Trail, Room_Dark_Woods_South, Room_Dark_Woods_North, Room_Forest_Meadow, Room_Protected_Hollow, and Room_Sentinel_Tree are in Region_Woods_Area.
+Room_Other_Shore, Room_Wooded_Trail, Room_Dark_Woods_South, Room_Dark_Woods_North, Room_Forest_Meadow, Room_Protected_Hollow are in Region_Woods_Area.
 
 Section - Navigation
 
@@ -7112,16 +7067,8 @@ The available_exits of Room_Other_Shore are "[if Scene_Day_Two has not happened]
 Instead of navigating Room_Willow_Trail when Room_Other_Shore encloses the player:
 	try navigating Room_Dark_Woods_North.
 
-[TODO: nix?]
-[ Instead of entering boulders_east:
-	try navigating Room_Crossing. ]
-
 Instead of climbing swift_current_east:
 	try navigating Room_Crossing.
-
-[TODO: nix?]
-[ Instead of entering bridge_log_east:
-	try navigating Room_Crossing. ]
 
 Instead of jumping when Room_Other_Shore encloses the player:
 	try navigating Room_Crossing.
@@ -7436,10 +7383,6 @@ Instead of going to Room_Protected_Hollow when Room_Forest_Meadow is not observe
 Instead of climbing virtual_sentinel_tree:
 	try navigating Room_Sentinel_Tree;
 
-[TODO: nix?]
-[ Instead of entering fallen_tree:
-	try navigating Room_Protected_Hollow. ]
-
 Instead of climbing fallen_tree:
 	try navigating Room_Protected_Hollow.
 
@@ -7577,6 +7520,31 @@ The available_exits of Room_Sentinel_Tree are "Looking at the morning sun above 
 Section - Objects
 
 Section - Backdrops & Scenery
+
+The distant_meadow is scenery in Room_Sentinel_Tree.
+THe printed name is "forest meadow".
+The description is "The forest meadow below you looks sunny and golden."
+Understand "forest/-- meadow" as distant_meadow.
+
+The distant_woods are scenery in Room_Sentinel_Tree.
+THe printed name is "woods".
+The description is "The woods completely surround you, but rather than looking sinister like they did last night, now they look sunny and inviting.".
+Understand "woods/forest/trees" as distant_woods.
+
+The distant_creek2 is scenery in Room_Sentinel_Tree.
+THe printed name is "Bear Creek".
+The description is "Bear Creek is off to the west and looks both different and familiar from this angle.".
+Understand "creek/crick/stream", "bear creek/crick" as distant_creek2.
+
+The distant_bridge2 is scenery in Room_Sentinel_Tree.
+The printed name is "stone bridge".
+The description is "You can just make out the stone bridge, the grassy bank, and part of the creek through the trees. You work out that it is off to the west.".
+Understand "bridge/stone/grassy/bank/shady", "grassy bank", "stone bridge" as distant_bridge2.
+
+The distant_road2 is scenery in Room_Sentinel_Tree.
+The printed name is "dirt road".
+The description is "West of here you can see part of the dirt road near the stone bridge.".
+Understand "road/trail/path/stretch/dog", "dirt road", "long stretch" as distant_road2.
 
 Section - Navigation
 
@@ -7724,7 +7692,7 @@ The moms_camaro is improper-named fixed in place climbable enterable vehicle in 
 
 Virtual_snack_bar is portal in Room_Drive_In.
 The printed name is "the snack bar".
-The description is "The snack bar sign says 'Snack Shack.."
+The description is "The snack bar sign says 'Snack Shack.'"
 Understand "snack bar/shack" as Virtual_snack_bar.
 The destination is Room_Snack_Bar.
 
@@ -7769,10 +7737,6 @@ Instead of entering moms_camaro:
 
 Instead of navigating Room_Car_With_Stepdad when Room_Restroom is unvisited:
 	say "You really have to go. Better visit the restroom first."
-
-[TODO: Nix?]
-[ Instead of entering Virtual_Snack_Bar,
-	try navigating Room_Snack_Bar. ]
 
 
 Chapter - Room_Playground
@@ -8140,10 +8104,11 @@ The printed name is "ballast rock".
 The description is "Grandpa called these ballast, rocks that line the railroad tracks."
 Understand "rock/rocks/stone/stones" as dream_mound_of_rock.
 
-A dream_green_tunnel is a scenery enterable container in Room_Dream_Railroad_Tracks.
-	The printed name is "green tunnel".
-	The description is "The trees grow close on either side of the tracks, and their branches touch above."
-	Understand "green/tree/-- tunnel", "trees/branches", "tunnel of green/trees" as dream_green_tunnel.
+A dream_green_tunnel is a portal in Room_Dream_Railroad_Tracks.
+The printed name is "green tunnel".
+The description is "The trees grow close on either side of the tracks, and their branches touch above."
+Understand "green/tree/-- tunnel", "trees/branches", "tunnel of green/trees" as dream_green_tunnel.
+The destination is Room_Mars.
 
 Section - Backdrops & Scenery
 
@@ -8175,7 +8140,7 @@ Section - Description
 Room_Mars is a room.
 The printed name is "Life On Mars".
 The casual_name is "in a dream about Mars".
-The description is "This is the surface of Mars, the red planet, at least 100 million miles from Earth. [if Grandpa is in Room_Mars	]You recognize it instantly from the Viking photos. Thick red dust scattered with various-sized dark rocks all under an orange-pink sky. You also know that it should be -80 degrees Fahrenheit, but you aren't feeling the cold. And though there is a very light unbreathable atmosphere, you aren't wearing a suit. You stumble, trying to get the hang of walking in the light gravity, only about a third of Earth's gravity. How high could you jump here?[else]Now you just feel lonely and alone. You are no longer excited at the prospect of this alien world.
+The description is "This is the surface of Mars, the red planet, at least 100 million miles from Earth. [if Grandpa is in Room_Mars	]You recognize it instantly from the Viking photos. Thick red dust scattered with various-sized dark rocks all under an orange-pink sky. You also know that it should be negative 80 degrees Fahrenheit, but you aren't feeling the cold. And though there is a very light unbreathable atmosphere, you aren't wearing a suit. You stumble, trying to get the hang of walking in the light gravity, only about a third of Earth's gravity. How high could you jump here?[else]Now you just feel lonely and alone. You are no longer excited at the prospect of this alien world.
 [paragraph break][available_exits][end if]".
 The scent is "billion year old dust".
 Understand "Mars" as Room_Mars.
@@ -8257,8 +8222,8 @@ Martian_sky is backdrop in Room_Chryse_Planitia.
 Thick red dust is backdrop in Room_Chryse_Planitia.
 
 The Viking 1 Lander is scenery in Room_Chryse_Planitia.
-	The description is "The is the first Viking lander. It is shaped like a flying saucer, short and squat, with three tripod legs. It's about your height, not counting the communication dish on top. It has all kinds of complicated devices, wires, and tubes. It has a light dusting of Martian dust. It will be here for centuries, sending back pictures until it malfunctions."
-	Understand "viking 1 lander", "viking/lander/saucer/tripod/legs/dish/communications/devices/wires/tubes" as Viking 1 lander.
+	The description is "The is the first Viking lander. It is shaped like a flying saucer, short and squat, with three tripod legs. It's about your height, not counting the high-gain communication dish on top talking to the orbiter. You see the cylindrical cameras on the top and the round seismometer. It has all kinds of complicated devices for testing x-rays, weather, temperature, and biological life. It has a light dusting of Martian dust. It will be here for centuries, sending back pictures until it malfunctions."
+	Understand "viking 1/-- lander", "viking/lander/saucer/tripod/legs/dish/communications/devices/wires/tubes" as Viking 1 lander.
 
 Section - Rules and Actions
 
@@ -8304,7 +8269,7 @@ Section - Objects and People
 
 Section - Backdrops and Scenery
 
-Someone's field, ragged trail, the old dirt road, a chainlink fence, some junk cars, tall weeds, tall grass are scenery in Room_Dream_Dirt_Road.
+Someone's field, the ragged trail, the old dirt road, a chainlink fence, some junk cars, the tall weeds, the tall grass are scenery in Room_Dream_Dirt_Road.
 
 Section - Rules and Actions
 
@@ -8689,7 +8654,7 @@ To say honey_initial_description:
 	if Grandpa is not visible:
 		say "Honey is here[if player is in Region_Blackberry_Area] picking berries[end if]. [run paragraph on]";
 	else:
-		say "Honey and Grandpa are here[if player is in Region_Blackberry_Area] picking berries[else if Scene_Dreams is happening]waiting for you[end if].[run paragraph on]";
+		say "Honey and Grandpa are here[if player is in Region_Blackberry_Area] picking berries[else if Scene_Dreams is happening] waiting for you[end if].[run paragraph on]";
 		now honey is not marked for listing;
 		now Grandpa is not marked for listing;
 
@@ -10418,7 +10383,7 @@ Implicit farewell response for dream_dog:
 	do nothing;
 
 To say dream_dog_greeting:
-	say "[one of]'What's up, bud?''[or]'How's it hangin[']?''[or]'How ya doin['], kid?''[or]'Howdy, bud?''[at random]";
+	say "[one of]'What's up, bud?'[or]'How's it hangin[']?'[or]'How ya doin['], kid?'[or]'Howdy, bud?'[at random]";
 
 To say dream_dog_alert:
 	say "The dog [one of]listens and tilts [pos_pronoun of dog] head for a moment[or]looks at you, suddenly alert to your movement[or]hunches down and squares [pos_pronoun of dog] shoulders[at random]";
