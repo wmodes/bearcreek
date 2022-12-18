@@ -1340,14 +1340,14 @@ This was accomplished by careful organization of the navigate action:
 Navigating is an action applying to one thing.
 Understand
 	[ rooms and landmarks ]	
-	"go to/near/by/-- [any relevant elusive_landmark]",
-	"go to/near/by/-- [any room]",
-	"walk to/near/by/-- [any relevant elusive_landmark]",
-	"walk to/near/by/-- [any room]",
-	"run to/near/by/-- [any relevant elusive_landmark]",
-	"run to/near/by/-- [any room]",
-	"return to/near/by/-- [any relevant elusive_landmark]",
-	"return to/near/by/-- [any room]",
+	"go back/-- to/near/by/-- [any relevant elusive_landmark]",
+	"go back/-- to/near/by/-- [any room]",
+	"walk back/-- to/near/by/-- [any relevant elusive_landmark]",
+	"walk back/-- to/near/by/-- [any room]",
+	"run back/-- to/near/by/-- [any relevant elusive_landmark]",
+	"run back/-- to/near/by/-- [any room]",
+	"return back/-- to/near/by/-- [any relevant elusive_landmark]",
+	"return back/-- to/near/by/-- [any room]",
 	"follow [any relevant elusive_landmark]",
 	"follow [any room]",
 	[ interactive things ]
@@ -1418,7 +1418,7 @@ Does the player mean navigating not reachable rooms:
 Does the player mean navigating reachable rooms:
 	It is likely.
 
-[ navigating to climbable things, supporters, containers, & waterbodies]
+[ navigating interactive things, i.e, climbable things, supporters, containers, & waterbodies]
 
 Check navigating interactive thing:
 	[ say "(DEBUG: check navigating interactive thing: [noun])"; ]
@@ -2630,10 +2630,52 @@ Definition: a supporter is empty if the number of things on it is zero.
 [Definition: a thing is empty if the number of things encased by it is zero.]
 Definition: a thing is non-empty if it is not empty.
 
+[ A thing can have a text called supporter_payoff. ]
+
 Chapter - Surfaces
 
-A surface is a kind of fixed in place undescribed enterable supporter.
-A surface has a room called destination. Destination is Limbo.
+[TODO: Sorting out surfaces, potals, supporters, contianers, etc here will help unify what actions act on them. Then they can be given text that makes the experience unique for each, like watching clouds here.]
+
+A surface is a kind of scenery enterable supporter.
+[TODO: While this defined for a few surfaces, I don't think it is used. ]
+A surface has a room called destination. 
+Destination is usually Limbo.
+
+A surface has text called experience. 
+Experience is usually "".
+
+Instead of entering a surface (called the target):
+	if destination of target is not Limbo:
+		try navigating destination of target;
+	else:
+		if experience of target is not "":
+			say "[experience of target][line break]";
+		else:
+			say "You make yourself comfortable on [the target].[line break]";
+		move player to target, without printing a room description;
+
+Instead of inserting something into a surface (called the target):
+	if destination of target is not Limbo:
+		say "You might just want to go there.";
+	else:
+		continue the action;
+
+Chapter - Portals
+
+A portal is a kind of scenery enterable container.
+A portal has a room called destination. Destination is Limbo.
+
+Instead of entering a portal (called the target):
+	if destination of target is not Limbo:
+		try navigating destination of target;
+	else:
+		continue the action;
+
+Instead of inserting something into a portal (called the target):
+	if destination of target is not Limbo:
+		say "You might just want to go in there.";
+	else:
+		continue the action;
 
 Chapter - Waterbodies
 
@@ -3733,8 +3775,8 @@ This is the seq_sharon_teatime_handler rule:
 	else if index is 4:
 		if sharon is visible:
 			if player is not on the sharons_table:
-				queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3;
-				try silently entering the sharons_table;
+				[ queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3; ]
+				try entering the sharons_table;
 			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharons_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
 			now players_teacup is filled;
 			Now player is sharon_experienced;
@@ -4016,6 +4058,7 @@ Instead of dropping paper_bag during Scene_Day_One:
 	else:
 		say "No way. That's lunch for Honey and Grandpa.";
 
+[TODO: Do we allow the player to eat sandwiches?]
 Instead of eating tuna_sandwich during Scene_Day_One:
 	say "Not yet. You want to eat lunch with Honey and Grandpa.";
 
@@ -4257,6 +4300,7 @@ Section - Actions
 Instead of sleeping during Scene_Defend_the_Fort:
 	say "There is no way you are sleeping while wolves or bears are trying to eat you.";
 
+[TODO: There are some issues with the bag and the sandwich - what if the player eats the sammies? What if the player drops the sandwich but not the bag? Or vice versa? What is the rule here? ]
 To do_raccoon_things:
 	Let limbo_sandwich_list be the list of tuna_sandwiches enclosed by Limbo;
 	[This continues until all of the sandwiches are gone.]
@@ -5466,6 +5510,7 @@ The description is "You know this is a sycamore tree from Explorer Camp. White f
 
 Some stubbly grass is scenery lie-able surface in Room_Grassy_Clearing.
 Understand "pleasant", "weeds", "carpet" as stubbly grass.
+The experience is "You settle down comfortably in the grass under the sycamore."
 
 Some pine trees are backdrop in Room_Grassy_Clearing.
 
@@ -5674,10 +5719,12 @@ Some floating_stuff is scenery in Creek_at_bridge.
 A boulder is a lie-able surface in Room_Stone_Bridge.
 The printed name is "boulder in the creek".
 The description is "Near the grassy bank, there is a rounded boulder in the creek. It looks like a turtle emerging from the water." 
-Understand "boulders/rounded/turtle/rock/rocks" or "big rock" as boulder.
+Understand "turtle/rounded/big/-- boulders/rock/rocks" as boulder.
+The experience is "You hop on to the big turtle boulder and the water rushes around your little island."
 
 The grassy bank is a lie-able surface in Room_Stone_Bridge.
-	Understand "grassy/-- shore/bank", "grass" as grassy bank.
+Understand "grassy/-- shore/bank", "grass" as grassy bank.
+The experience is "This is delightful. The soft grass, the burbling creek, the dappled shade, the old stone bridge."
 
 Moss is scenery in Room_Stone_Bridge.
 	The description of moss is "Thanks to Explorer Camp, you're able to identify plants in the Riparian Zone. That means the area around the banks of a river."
@@ -5725,8 +5772,9 @@ Room_Swimming_Hole is east of Room_Long_Stretch, and down from Room_Long_Stretch
 
 The available_exits of Room_Swimming_Hole is "It is possible to walk along the rocky shore downstream to another spot along the creek. Back up the trail leads through the woods back to the dirt road."
 
-Instead of entering rocky_shore_north:
-	try navigating Room_Crossing;
+[TODO: nix?]
+[ Instead of entering rocky_shore_north:
+	try navigating Room_Crossing; ]
 
 Section - Objects
 
@@ -5744,6 +5792,7 @@ Understand "swimming/deep/-- hole/pool", "river/creek/crick/stream/water", "bear
 
 Some smooth granite rocks are a lie-able surface in Room_Swimming_Hole.
 The description is "These granite rocks crystallized from molten lava deep within the Earth and were pushed up by the subduction of the Pacific Plate. Then a few million years of erosion left them smooth. Yes, you read the geology books on your shelf. Today they are warming in the summer sun."
+The experience is "You lie on the smooth granite rocks that are deliciously warm from the sun."
 
 Does the player mean sitting_on_something smooth granite rocks:
 	It is very likely.
@@ -5816,15 +5865,17 @@ East of Room_Crossing is Room_Other_Shore.
 
 The available_exits of Room_Crossing are "The shoreline ends at a steep bank further downstream, though it looks like you might be able to cross the creek to the other shore on the boulders in midstream. You can also go back along the rocky shore to the swimming hole upstream."
 
-Instead of entering rocky_shore_south:
-	try navigating Room_Swimming_Hole;
+[TODO: nix these 3?]
+[ Instead of entering rocky_shore_south:
+	try navigating Room_Swimming_Hole; ]
 
-Instead of entering boulders_west:
-	try navigating Room_Other_Shore;
+[ Instead of entering boulders_west:
+	try navigating Room_Other_Shore; ]
 
-Instead of entering bridge_log_west:
-	try navigating Room_Other_Shore;
+[ Instead of entering bridge_log_west:
+	try navigating Room_Other_Shore; ]
 
+[TODO: sus]
 Instead of climbing swift_current_west:
 	try navigating Room_Other_Shore.
 
@@ -5917,7 +5968,7 @@ Some backdrop_sunlight is backdrop in Region_Dirt_Road.
 The rutted_road is backdrop in Region_Dirt_Road.
 	The printed name is "rutted dirt road".
 	The description is "The old creekside road is seldom used now and in poor condition with deep ruts and sandy areas. Nowadays it is only used by people walking down to Bear Creek from the highway, fishermen and berry pickers mostly. There is tall grass growing right down the middle of the road.".
-	Understand "road/trail/path/sand", "deep/-- ruts", "tall/-- grass" as rutted_road.
+	Understand "road/trail/path/sand", "deep/-- ruts" as rutted_road.
 
 Section - Navigation
 
@@ -6133,7 +6184,7 @@ Section - Description
 Room_Grassy_Field is a room.
 The printed name is "Grassy Field".
 The casual_name is "in the grassy field near the trailer park".
-The description of Room_Grassy_Field is "This is the grassy field behind the trailer park. On either side of the rutted dirt road, golden grasses rise to your waist. The grassy field is dried golden and catches the summer sun. You like to come out here and catch grasshoppers and crickets.
+The description of Room_Grassy_Field is "This is the grassy field behind the trailer park. On either side of the rutted dirt road, golden grasses rise to your waist and catch the summer sun. You like to come out here and catch grasshoppers and crickets or lie in the field and watch clouds.
 [paragraph break][available_exits]".
 The scent is "the sweet smell of dried hay".
 Understand "grassy/-- field" as Room_Grassy_Field.
@@ -6148,17 +6199,17 @@ Section - Objects
 
 Section - Backdrops & Scenery
 
-The field_back_gate is an undescribed enterable container in Room_Grassy_Field.
-	The printed name is "back gate".
-	The description is "This is the wooden gate that leads into the tailer park. It is usually open in the daytime."
-	Understand "back/-- gate" as field_back_gate.
+The field_back_gate is a portal in Room_Grassy_Field.
+The printed name is "back gate".
+The description is "This is the wooden gate that leads into the tailer park. It is usually open in the daytime."
+Understand "back/-- gate" as field_back_gate.
+The destination is Room_Picnic_Area.
 
 A grassy_field is lie-able surface in Room_Grassy_Field.
 The printed name is "grassy field".
 The description is "The dried grass reaches up to your waist."
-Understand "grass/field", "grassy field" as grassy field.
-
-[TODO: Sorting out surfaces, supporters, contianers, etc here will help unify what actions act on them. Then they can be given text that makes the experience unique for each, like watching clouds here.]
+Understand "dried/golden/-- grass/field", "grassy field" as grassy_field.
+The experience is "You wade in and lie down in the waist-high grass. A few lonely clouds are making their way slowly across the bright blue sky. If you squint your eyes, that one looks like a [one of]ghost[or]face[or]dragon, maybe[or]dolphin[or]heart[or]flying saucer[or]rabbit[or]dog[at random]."
 
 The back fence is backdrop in Room_Grassy_Field.
 
@@ -6173,8 +6224,9 @@ Instead of climbing back fence, say "Perhaps it is easier to just go around thro
 Instead of doing anything except entering or examining to field_back_gate:
 	say "You better leave that alone. You don't want to get in trouble."
 
-Instead of entering field_back_gate:
-	try navigating Room_Picnic_Area;
+[TODO: nix?]
+[ Instead of entering field_back_gate:
+	try navigating Room_Picnic_Area; ]
 
 
 Part - Region_Up_In_Tall_Fir
@@ -6461,10 +6513,11 @@ Section - Objects
 
 Section - Backdrops & Scenery
 
-The picnic_back_gate is an undescribed enterable container in Room_Picnic_Area.
+The picnic_back_gate is a portal in Room_Picnic_Area.
 	The printed name is "back gate".
 	The description is "This wooden gate is at the back of the tailer park is used to go to the grassy field, across the tracks, and down to the creek. It is usually open in the daytime."
 	Understand "back/wooden/-- gate" as picnic_back_gate.
+	The destination is Room_Grassy_Field.
 
 The back fence is backdrop in Room_Picnic_Area.
 	The description is "This is the back fence of the trailer park."
@@ -6504,8 +6557,9 @@ Instead of taking the ants:
 Instead of doing anything except entering or examining to picnic_back_gate:
 	say "You better leave that alone. You don't want to get in trouble."
 
-Instead of entering picnic_back_gate:
-	try navigating Room_Grassy_Field;
+[TODO: nix?]
+[ Instead of entering picnic_back_gate:
+	try navigating Room_Grassy_Field; ]
 
 Chapter - Room_D_Loop
 
@@ -6530,10 +6584,11 @@ The available_exits are "You can go to the C Loop on the way to Honey and Grandp
 
 Section - Objects
 
-The sharons_virtual_trailer is a fixed in place undescribed enterable container in Room_D_Loop. 	
+The sharons_virtual_trailer is a portal in Room_D_Loop. 	
 The printed name is "Cat Lady's trailer".
 	The description is "The most noteworthy thing on this loop is the Cat Lady's trailer, painted bright pink and white with an outrageously overflowing flower garden out in front."
 	Understand "catlady's/catladys/sharon's/sharons/shannon's/shannons/pink/-- trailer/house/place/home", "cat lady's/ladys trailer/house/place/home" as sharons_virtual_trailer.
+	The destination is Room_Sharons_Trailer.
 
 Section - Backdrops & Scenery
 
@@ -6557,11 +6612,13 @@ Big old cars are backdrop in Room_D_Loop.
 
 Section - Rules and Actions
 
-Instead of entering sharons_virtual_trailer:
-	try navigating Room_Sharons_Trailer.
+[TODO: nix?]
+[ Instead of entering sharons_virtual_trailer:
+	try navigating Room_Sharons_Trailer. ]
 
-Instead of inserting something into sharons_virtual_trailer:
-	say "You might want to just go in there."
+[TODO: nix?]
+[ Instead of inserting something into sharons_virtual_trailer:
+	say "You might want to just go in there." ]
 
 
 Chapter - Room_Sharons_Trailer
@@ -6627,6 +6684,7 @@ sharons_loveseat is a lie-able surface in Room_Sharons_Trailer.
 The printed name is "what was formerly a loveseat".
 The description is "This once was a loveseat. Now it is a pile of cat-shredded upholstery and stuffing, and smells like cat pee.".
 Understand "shredded/-- sofa/loveseat/couch/couches/divan/upholstery/stuffing", "cat pee" as sharons_loveseat.
+The experience is "You carefully dislodge a few of the cats lounging on the loveseat to make room for yourself."
 
 [TODO: Oops
 >get up
@@ -6752,10 +6810,11 @@ The available_exits are "You can go to B Loop where Honey and Grandpa's trailer 
 
 Section - Objects
 
-lees_virtual_trailer is a fixed in place undescribed enterable container in Room_C_Loop.
+lees_virtual_trailer is a portal in Room_C_Loop.
 	The printed name is "Lee's trailer".
 	The description is "Lee's trailer looks pretty much like every other one, brown or beige or light green. If you close your eyes, you can't remember which."
 	Understand "lee's/lees/-- trailer/house/place/home" as lees_virtual_trailer.
+	The destination is Room_Lees_Trailer.
 
 Section - Backdrops & Scenery
 
@@ -6772,11 +6831,13 @@ Big old cars are backdrop in Room_C_Loop.
 
 Section - Rules and Actions
 
-Instead of entering lees_virtual_trailer:
-	try navigating Room_Lees_Trailer.
+[TODO: nix?]
+[ Instead of entering lees_virtual_trailer:
+	try navigating Room_Lees_Trailer. ]
 
-Instead of inserting something into lees_virtual_trailer:
-	say "You might want to just go in there."
+[TODO: nix?]
+[ Instead of inserting something into lees_virtual_trailer:
+	say "You might want to just go in there." ]
 
 
 Chapter - Room_Lees_Trailer
@@ -6889,10 +6950,11 @@ The available_exits are "You can go in to Honey and Grandpa's trailer of course.
 
 Section - Objects
 
-The grandpas_virtual_trailer is a fixed in place undescribed enterable container in Room_B_Loop.
+The grandpas_virtual_trailer is a portal in Room_B_Loop.
 	The printed name is "Honey and Grandpa's trailer".
 	The description is "Honey and Grandpa's trailer is white with dark brown trim, and has hanging ferns from the porch.".
 	Understand "Grandpa's/grandpas/honey's/honeys/grandma's/grandmas/-- trailer/house/place/home/fern/ferns/porch" as grandpas_virtual_trailer.
+	The destination is Room_Grandpas_Trailer.
 
 Your bicycle is a fixed in place thing in Room_B_Loop.
 	The description is "This is your trusty red Schwinn with a white banana seat. Unfortunately, the tires are so flat it barely rolls. Poo."
@@ -6906,11 +6968,13 @@ Big old cars are backdrop in Room_B_Loop.
 
 Section - Rules and Actions
 
-Instead of entering grandpas_virtual_trailer:
-	try navigating Room_Grandpas_Trailer.
+[TODO: nix?]
+[ Instead of entering grandpas_virtual_trailer:
+	try navigating Room_Grandpas_Trailer. ]
 
-Instead of inserting something into grandpas_virtual_trailer:
-	say "You might want to just go in there."
+[TODO: nix?]
+[ Instead of inserting something into grandpas_virtual_trailer:
+	say "You might want to just go in there." ]
 
 Instead of taking bicycle, say "Unfortunately, the tires of your bicycle are so flat it barely rolls.".
 
@@ -7048,14 +7112,16 @@ The available_exits of Room_Other_Shore are "[if Scene_Day_Two has not happened]
 Instead of navigating Room_Willow_Trail when Room_Other_Shore encloses the player:
 	try navigating Room_Dark_Woods_North.
 
-Instead of entering boulders_east:
-	try navigating Room_Crossing.
+[TODO: nix?]
+[ Instead of entering boulders_east:
+	try navigating Room_Crossing. ]
 
 Instead of climbing swift_current_east:
 	try navigating Room_Crossing.
 
-Instead of entering bridge_log_east:
-	try navigating Room_Crossing.
+[TODO: nix?]
+[ Instead of entering bridge_log_east:
+	try navigating Room_Crossing. ]
 
 Instead of jumping when Room_Other_Shore encloses the player:
 	try navigating Room_Crossing.
@@ -7342,10 +7408,11 @@ Some meadow grass is lie-able surface in Room_Forest_Meadow.
 	Understand "tall/high/dry/meadow/-- grass/weeds", "meadow" as meadow grass.
 
 [This is moved to Room_Forest_Meadow in seq_jody_stop]
-A fallen_tree is a fixed in place undescribed enterable container.
+A fallen_tree is a portal.
 The printed name is "protected hollow".
 The description is "This is a big tree that has fallen over several smaller ones and forms a sort of protected hollow."
 Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under/-- fallen/-- tree", "forest/-- edge", "edge of the/-- forest" as fallen_tree.
+The destination is Room_Protected_Hollow.
 
 Some crickets are backdrop in Room_Forest_Meadow.
 	The description is "You can hear the clear sound of crickets even if you can't see them. Fun fact: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
@@ -7369,12 +7436,14 @@ Instead of going to Room_Protected_Hollow when Room_Forest_Meadow is not observe
 Instead of climbing virtual_sentinel_tree:
 	try navigating Room_Sentinel_Tree;
 
-Instead of entering fallen_tree:
-	try navigating Room_Protected_Hollow.
+[TODO: nix?]
+[ Instead of entering fallen_tree:
+	try navigating Room_Protected_Hollow. ]
 
 Instead of climbing fallen_tree:
 	try navigating Room_Protected_Hollow.
 
+[TODO: Sus]
 Instead of navigating fallen_tree:
 	try navigating Room_Protected_Hollow.
 
@@ -7645,17 +7714,19 @@ The available_exits of Room_Drive_In are "You can get back in the car or head to
 
 Section - Objects
 
-moms_camaro is fixed in place climbable enterable vehicle in Room_Drive_In.
-	The printed name is "Mom's Camaro".
+[ Note this acts like a portal but isn't one because it will move around later (though I guess we could change the destination). ]
+The moms_camaro is improper-named fixed in place climbable enterable vehicle in Room_Drive_In.
+	The printed name is "Camaro".
 	The initial appearance is "Mom's Camaro is here[if Scene_Dreams is happening] parked among the other cars[end if].".
-	The printed name is "Mom's Camaro".
 	The description is "Mom's car is green and sleek with a black vinyl top."
 	Understand "Camaro/car" as moms_camaro.
+	The indefinite article is "Mom's".
 
-Virtual_snack_bar is scenery enterable container in Room_Drive_In.
-	The printed name is "the snack bar".
-	The description is "The snack bar sign says 'Snack Shack.."
-	Understand "snack bar/shack" as Virtual_snack_bar.
+Virtual_snack_bar is portal in Room_Drive_In.
+The printed name is "the snack bar".
+The description is "The snack bar sign says 'Snack Shack.."
+Understand "snack bar/shack" as Virtual_snack_bar.
+The destination is Room_Snack_Bar.
 
 Section - Backdrops and Scenery
 
@@ -7699,8 +7770,9 @@ Instead of entering moms_camaro:
 Instead of navigating Room_Car_With_Stepdad when Room_Restroom is unvisited:
 	say "You really have to go. Better visit the restroom first."
 
-Instead of entering Virtual_Snack_Bar,
-	try navigating Room_Snack_Bar.
+[TODO: Nix?]
+[ Instead of entering Virtual_Snack_Bar,
+	try navigating Room_Snack_Bar. ]
 
 
 Chapter - Room_Playground
@@ -7898,7 +7970,7 @@ Section - Objects
 
 Section - Backdrops and Scenery
 
-The toilet, sink, tile, facilities are scenery in Room_Restroom.
+The toilet, the sink,the tile, the facilities are scenery in Room_Restroom.
 
 Section - Rules and Actions
 
@@ -7923,12 +7995,20 @@ Section - Backdrops and Scenery
 
 The camaro_backdrop is backdrop in Room_Car_With_Stepdad.
 
-The cigarette lighter is scenery in Room_Car_With_Stepdad.
+The cigarette_lighter is scenery in Room_Car_With_Stepdad.
+Understand "cigarette lighter" as cigarette_lighter.
+
+A cigarette is scenery in Room_Car_With_Stepdad.
+The indefinite article is "Mark's".
 
 The road_backdrop is backdrop in Room_Car_With_Stepdad.
 The printed name is "road".
 The description is "The road and the trees zoom by as the car barrels down the highway.".
 Understand "trees/road/window/highway/outside" as road_backdrop.
+
+The beer is scenery in Room_Car_With_Stepdad.
+The description is "Mark is drinking Coors with the little waterfall on the can."
+Understand "coors/pop-top/poptop", "pop top" as beer.
 
 Virtual_Mom is scenery in Room_Car_With_Stepdad.
 	The printed name is "Mom".
@@ -7945,7 +8025,7 @@ Instead of going to Room_Car_With_Stepdad when Room_Drive_In encloses the player
 Instead of searching road:
 	try examining road.
 
-Instead of doing anything except examining to cigarette lighter:
+Instead of doing anything except examining to cigarette_lighter:
 	say "No way. Touching that is a good way to lose a hand."
 
 Instead of jumping when Room_Car_With_Stepdad encloses the player:
@@ -9876,7 +9956,7 @@ The scent is "home".
 
 To say moms_description:
 	if Scene_Fallout_Going_Home is not happening:
-		say "Mom is, well mom. She's silly and smart and plays with you and you know she works hard at her job. [first time]Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you saying 'I'm sorry' until your tears stopped. [only]She's strict and good and understanding. All you know is she loves you more than you know how to say[if a random chance of 1 in 3 succeeds][paragraph break]. While you are looking at her, she catches your eye and smiles sweetly[end if]";
+		say "Mom is, well mom. She's silly and smart and plays with you and you know she works hard at her job. [first time]Sometimes you think what would happen if something happened to her and you feel like your world would end. Once you came into the house and couldn't find her and searched every room and just as you were edging into panic, she jumped out and scared you. You dropped to the ground crying, and she held you saying 'I'm sorry' until your tears stopped. [only]She's strict and good and understanding. All you know is she loves you more than you know how to say[if a random chance of 1 in 3 succeeds].[paragraph break]While you are looking at her, she catches your eye and smiles sweetly[end if]";
 	else:
 		say "Mom is, well mom. She's silly and smart and plays with you and you know she works hard at her job. She's strict and good and understanding. All you know is she loves you more than you know how to say. And right now she's grim and quiet";
 
