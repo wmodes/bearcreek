@@ -2206,11 +2206,11 @@ An npc_journey has a rule called the action_at_start.
 
 An npc_journey has a rule called the action_at_end.
 
-An npc_journey has a rule called the action_before_moving.
+An npc_journey has a action called the say_before_moving.
 
-An npc_journey has a rule called the action_after_waiting.
+An npc_journey has an action called the say_after_waiting.
 
-An npc_journey has a rule called the action_catching_up.
+An npc_journey has a action called the say_catching_up.
 
 Chapter - The Mechanics
 
@@ -2270,7 +2270,7 @@ To step_a_journey for (this_journey - an npc_journey):
 			[reset counter]
 			now time_here of this_journey is one;
 			[do catchup action]
-			follow the action_catching_up of this_journey;
+			say "[say_catching_up of this_journey]";
 		[
 			If player is behind NPC, NPC waits or moves on.
 		]
@@ -2310,11 +2310,12 @@ To step_a_journey for (this_journey - an npc_journey):
 			if time_here of this_journey > wait_time of this_journey and location of npc is not origin:
 				[do grumpy wait action]
 				[say "DEBUG: [npc] is grumpy because they had to wait for you.";]
-				follow the action_after_waiting of this_journey;
+				Report npc saying "[say_after_waiting of this_journey]";
 			[If NPC is ready to move, NPC says something and moves on.]
 			if npc is ready to move on this_journey:
 				[do moving action]
-				follow the action_before_moving of this_journey;
+				[ queue_report "[say_before_moving of this_journey]" at priority 1; ]
+				Report npc saying "[say_before_moving of this_journey]";
 				[move npc one step ahead]
 				let heading be the best route from location of npc to destination;
 				let next_room be the room heading from location of npc;
@@ -3547,9 +3548,9 @@ journey_gpa_walk is an npc_journey.
 	The interrupt_test is the journey_gpa_walk_interrupt_test rule.
 	The action_at_start is the journey_gpa_walk_start rule.
 	The action_at_end is the journey_gpa_walk_end rule.
-	The action_before_moving is the journey_gpa_walk_before_moving rule.
-	The action_after_waiting is the journey_gpa_walk_after_waiting rule.
-	The action_catching_up is the journey_gpa_walk_catching_up rule.
+	The say_before_moving is journey_gpa_walk_before_moving.
+	The say_after_waiting is the journey_gpa_walk_after_waiting rule.
+	The say_catching_up is journey_gpa_walk_catching_up.
 
 This is the journey_gpa_walk_interrupt_test rule:
 	if we are speaking to Grandpa, rule succeeds;
@@ -3564,17 +3565,14 @@ This is the journey_gpa_walk_start rule:
 		now Grandpa holds big_bucket;
 	rule succeeds;
 
-This is the
-journey_gpa_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if Room_Stone_Bridge encloses the player]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]heads for the grassy field[else if Room_Grassy_Field encloses the player]goes through the back gate into the trailer park[else if Region_Dirt_Road encloses the player]heads off toward the railroad tracks[else if Room_B_Loop encloses the player]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 1;
+To say journey_gpa_walk_before_moving:
+	say "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if Room_Stone_Bridge encloses the player]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]heads for the grassy field[else if Room_Grassy_Field encloses the player]goes through the back gate into the trailer park[else if Region_Dirt_Road encloses the player]heads off toward the railroad tracks[else if Room_B_Loop encloses the player]goes into his and Honey's trailer[else]is headed for B Loop[end if].";
 
-This is the
-journey_gpa_walk_after_waiting rule:
-	Report Grandpa saying "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old Grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]";
+To say journey_gpa_walk_after_waiting:
+	say "[one of]Grandpa looks amused, 'Wanna keep me waiting, huh?'[or]Grandpa looks impatient, 'You want to come with me, or not?'[or]Grandpa looks irritated, '[grandpas_nickname], I'm glad you came with me, but don't make me wait for you.'[or]Grandpa looks mad, 'Now, [grandpas_nickname], I've been waiting here for you while you're doing I don't know what. I think you can show a little more respect for your old Grandpa and hurry along.'[or]Grandpa looks mad at you for making him wait.[stopping]";
 
-This is the
-	journey_gpa_walk_catching_up rule:
-	queue_report "Grandpa catches up to you [if Stone Bridge encloses the player]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if the Room_Picnic_Area encloses the player]as you go through the back gate into the trailer park[else if Room_Long_Stretch encloses the player]as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player]as you reach the railroad crossing[else if Room_Grandpas_Trailer encloses the player]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzales,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
+To say journey_gpa_walk_catching_up:
+	say "Grandpa catches up to you [if Stone Bridge encloses the player]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if the Room_Picnic_Area encloses the player]as you go through the back gate into the trailer park[else if Room_Long_Stretch encloses the player]as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player]as you reach the railroad crossing[else if Room_Grandpas_Trailer encloses the player]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzales,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]";
 
 This is the
 		journey_gpa_walk_end rule:
@@ -4698,18 +4696,27 @@ There is a scene called Scene_Day_Two.
 Scene_Day_Two begins when Scene_Dreams has ended.
 
 When Scene_Day_Two begins:
+	[ player's stuff ]
 	unstore_all_your_stuff;
 	scatter_lost_stuff;
+	[ player ]
 	now player is in Room_Protected_Hollow;
-	now pet_rock is in Room_Protected_Hollow;
 	now player is awake;
+	[ prep the area around player ]
 	Change up exit of Room_Forest_Meadow to Room_Sentinel_Tree;
 	Now virtual_sentinel_tree is in Room_Forest_Meadow;
-	[ Now crickets are in Limbo; ]
+	[ meta prep ]
 	now current_time_period is early_morning;
 	now the right hand status line is "Morning";
+	[ prep the other areas ]
 	Now Sharon is in Room_Other_Shore;
 	Now Lee is in Room_Blackberry_Tangle;
+	Now honeys_radio is in Limbo;
+	If grandpas_shirt is in Room_Grassy_Clearing:
+		Now grandpas_shirt is in Limbo;
+	Now grandpas_cigarettes are in Limbo;
+	[ George ]
+	now pet_rock is in Room_Protected_Hollow;
 	queue_report "[pet_rock_initial_appearance]." with priority 2;
 
 test day2 with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump/z/z/z/z/ go to tracks/go on/ z/z/z/z/z/z/ go on/ go on/ z/z/z/z/z/z/z/wake up".
@@ -4807,9 +4814,9 @@ journey_sharon_walk is an npc_journey.
 	The interrupt_test is the journey_sharon_walk_interrupt_test rule.
 	The action_at_start is the journey_sharon_walk_start rule.
 	The action_at_end is the journey_sharon_walk_end rule.
-	The action_before_moving is the journey_sharon_walk_before_moving rule.
-	The action_after_waiting is the journey_sharon_walk_after_waiting rule.
-	The action_catching_up is the journey_sharon_walk_catching_up rule.
+	The say_before_moving is  journey_sharon_walk_before_moving.
+	The say_after_waiting is journey_sharon_walk_after_waiting.
+	The say_catching_up is journey_sharon_walk_catching_up.
 
 This is the journey_sharon_walk_interrupt_test rule:
 	if we are speaking to Sharon, rule succeeds;
@@ -4823,26 +4830,23 @@ This is the journey_sharon_walk_start rule:
 		Report Sharon saying "'Dearie, your grandparents are beside themselves with worry,' Sharon says, 'I have to get you back home. We've been looking everywhere.'";
 	rule succeeds;
 
-This is the
-journey_sharon_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if Room_Other_Shore encloses the player]crosses the river to the crossing[else if Room_Crossing encloses the player]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if Room_Swimming_Hole encloses the player]makes her way up the steep trail to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+To say journey_sharon_walk_before_moving:
+	say "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if Room_Other_Shore encloses the player]crosses the river to the crossing[else if Room_Crossing encloses the player]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if Room_Swimming_Hole encloses the player]makes her way up the steep trail to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if].";
 
 To say sharon_urging:
 	queue_report "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]" at priority 3;
 
-This is the
-journey_sharon_walk_after_waiting rule:
-	queue_report "[one of]'Hurry along, dear,' Sharon says, 'We have to get you home.'[or]'You know, your grandparents are worried sick about you,' Sharon says, 'Let's not dawdle, shall we?'[or]Sharon looks irritated about having to wait, but says nothing.[or]'Now I don't mind if we spend all day out here,' Sharon says, 'But I would think you'd have a little more respect and concern for your grandpa and grandma who are worries about you.'[or]Sharon looks mad at you for making her wait.[stopping]" at priority 3;
+To say journey_sharon_walk_after_waiting:
+	say "[one of]'Hurry along, dear,' Sharon says, 'We have to get you home.'[or]'You know, your grandparents are worried sick about you,' Sharon says, 'Let's not dawdle, shall we?'[or]Sharon looks irritated about having to wait, but says nothing.[or]'Now I don't mind if we spend all day out here,' Sharon says, 'But I would think you'd have a little more respect and concern for your grandpa and grandma who are worries about you.'[or]Sharon looks mad at you for making her wait.[stopping]";
 
-This is the
-	journey_sharon_walk_catching_up rule:
-	queue_report "Sharon catches up to you[if Room_Crossing encloses the player], carefully crossing the river on the floating log[else if Room_Swimming_Hole encloses the player] at the swimming hole[else if Room_Railroad_Tracks] as you reach the railroad crossing[else if Room_Grassy_Field encloses the player] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 3;
+To say journey_sharon_walk_catching_up:
+	say "Sharon catches up to you[if Room_Crossing encloses the player], carefully crossing the river on the floating log[else if Room_Swimming_Hole encloses the player] at the swimming hole[else if Room_Railroad_Tracks] as you reach the railroad crossing[else if Room_Grassy_Field encloses the player] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]";
 
 This is the journey_sharon_walk_end rule:
 	if time_here of journey_sharon_walk is 1:
 		Now Honey is in Room_Grassy_Field;
 		Now Grandpa is in Room_Grassy_Field;
-		Report Grandpa saying "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops and lets out a deep breath. He looks relieved. He looks at the Cat Lady for a long moment, 'You did it, Sharon. You have my gratitude.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your surprise, you start to cry.";
+		Report Grandpa saying "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops. He looks at the Cat Lady for a long moment, nods, and lets out a deep breath. 'Right on, Sharon. I'm grateful.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: 'Jody, I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your surprise, you start to cry.";
 		rule fails;
 	else if time_here of journey_sharon_walk is 2:
 		Now Lee is in Room_Grassy_Field;
@@ -4884,9 +4888,9 @@ journey_lee_walk is an npc_journey.
 	The interrupt_test is the journey_lee_walk_interrupt_test rule.
 	The action_at_start is the journey_lee_walk_start rule.
 	The action_at_end is the journey_lee_walk_end rule.
-	The action_before_moving is the journey_lee_walk_before_moving rule.
-	The action_after_waiting is the journey_lee_walk_after_waiting rule.
-	The action_catching_up is the journey_lee_walk_catching_up rule.
+	The say_before_moving is journey_lee_walk_before_moving.
+	The say_after_waiting is journey_lee_walk_after_waiting.
+	The say_catching_up is journey_lee_walk_catching_up.
 
 This is the journey_lee_walk_interrupt_test rule:
 	if we are speaking to Lee, rule succeeds;
@@ -4905,20 +4909,17 @@ This is the journey_lee_walk_start rule:
 	else if time_here of journey_lee_walk is 4:
 		rule succeeds;
 
-This is the
-journey_lee_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds][lee_urging] [run paragraph on][end if]Lee [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+To say journey_lee_walk_before_moving rule:
+	say "[if a random chance of 1 in 2 succeeds][lee_urging] [run paragraph on][end if]Lee [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if].";
 
 To say lee_urging:
 	say "'[one of]We gotta hoof it, soldier'[or]Let's hustle'[or]Movin' out,'[or]Okay, let's go,'[or]We gotta double time. Your family's gonna be worried,'[or]You okay? Just a little farther,'[or]Coming up on home,'[cycling]";
 
-This is the
-journey_lee_walk_after_waiting rule:
-	Report Lee saying "[one of]'Your family is going to be worried, [lees_nickname],' Lee says, 'We gotta keep moving.'[or]'I know you've been through a lot,' Lee says, 'but we can't stop here.'[or]'We gotta get going, [lees_nickname],' Lee says, 'Your family is waiting.'[or]'We gotta hustle,' Lee says.[or]Lee looks impatient, but doesn't say anything.[stopping]";
+To say journey_lee_walk_after_waiting:
+	say "[one of]'Your family is going to be worried, [lees_nickname],' Lee says, 'We gotta keep moving.'[or]'I know you've been through a lot,' Lee says, 'but we can't stop here.'[or]'We gotta get going, [lees_nickname],' Lee says, 'Your family is waiting.'[or]'We gotta hustle,' Lee says.[or]Lee looks impatient, but doesn't say anything.[stopping]";
 
-This is the
-	journey_lee_walk_catching_up rule:
-	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if Room_Long_Stretch encloses the player]as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player]as you reach the railroad crossing[else if Room_Grassy_Field encloses the player]and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya, [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
+To say journey_lee_walk_catching_up:
+	say "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if Room_Long_Stretch encloses the player]as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player]as you reach the railroad crossing[else if Room_Grassy_Field encloses the player]and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya, [lees_nickname],'[in random order] Lee says seriously.[end if]";
 
 This is the journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
