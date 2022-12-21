@@ -2231,6 +2231,7 @@ To step_a_journey for (this_journey - an npc_journey):
 	[
 		increment the counter for this location
 	]
+	[TODO: sus]
 	if location of npc is origin or location of npc is destination:
 		if location of npc encloses player:
 			increment time_here of this_journey;
@@ -2247,6 +2248,8 @@ To step_a_journey for (this_journey - an npc_journey):
 		if location of npc encloses player:
 			[do/continue start of journey actions]
 			follow the action_at_start of this_journey;
+			if rule failed:
+				stop the action;
 	[
 		IF NPC is on their joourney...
 	]
@@ -4702,7 +4705,7 @@ When Scene_Day_Two begins:
 	now player is awake;
 	Change up exit of Room_Forest_Meadow to Room_Sentinel_Tree;
 	Now virtual_sentinel_tree is in Room_Forest_Meadow;
-	Now crickets are in Limbo;
+	[ Now crickets are in Limbo; ]
 	now current_time_period is early_morning;
 	now the right hand status line is "Morning";
 	Now Sharon is in Room_Other_Shore;
@@ -4897,7 +4900,9 @@ This is the journey_lee_walk_start rule:
 		Report Lee saying "Lee looks at your torn clothes and the leaves in your hair, 'Wow, I have to admit, I didn't think this would end well, but look,' he says gesturing at you. 'A little worse for wear, but still kickin'. Lee smiles and pats your back. 'I have a million questions. First, where did you bivvy last night?'";
 		rule fails;
 	else if time_here of journey_lee_walk is 3:
-		Report Lee saying "'I should have known. You're a little survivor.' Lee looks at you admiringly and it makes you proud of yourself, the leaf fort, the raccoons, the long night. 'I got to get you back to your family. They'll be so worried.'[line break]'Let's head back to the trailer park,' Lee says.";
+		Report Lee saying "'I should have known. You're a little survivor.' Lee looks at you admiringly and it makes you proud of yourself, the leaf fort, the raccoons, the long night. 'I got to get you back to your family. They'll be so worried.'[paragraph break]'Let's head back to the trailer park,' Lee says.";
+		rule fails;
+	else if time_here of journey_lee_walk is 4:
 		rule succeeds;
 
 This is the
@@ -7362,8 +7367,8 @@ Understand "protected/-- hollow/cave/nest/underbrush/fort", "in/under/-- fallen/
 The destination is Room_Protected_Hollow.
 
 Some crickets are backdrop in Room_Forest_Meadow.
-	The description is "You can hear the clear sound of crickets even if you can't see them. Fun fact: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
-	Understand "sound/-- of/-- crickets/grasshoppers" as crickets.
+The description is "[if Scene_Night_In_The_Woods is happening]You can hear the clear sound of crickets even if you can't see them[else]You can't hear the crickets now, but you [em]know[/em] they are there somewhere[end if]. Fun fact: Only boy crickets make music and they use their wings to do it. Also, their ears are on their knees."
+Understand "sound/-- of/-- crickets/grasshoppers" as crickets.
 
 Some ticks are backdrop in Room_Forest_Meadow.
 	The description is "God, you hope you don't find any of them. Or better yet, you hope they don't find you."
@@ -7394,7 +7399,7 @@ Instead of listening when player is in Region_Woods_Area and Scene_Night_In_The_
 	if raccoons are in Room_Forest_Meadow:
 		say "The critters are waiting. It sounds like the world is holding its breath.";
 	else:
- 		say "You can hear the sound of crickets in the dry grass around you.";
+ 		try examining crickets.
 
 Instead of listening to crickets:
 	try examining crickets.
@@ -9657,6 +9662,10 @@ To say lee_purple_heart_story:
 Response of Lee when asked-or-told about fallen_tree:
 	say "'You created a survival shelter?' Lee asks admiringly. 'You are really something.'".
 
+Response of Lee when asked-or-told about raccoons:
+	say "'Yeah, racoons can be fierce, especially if they are defending their territory.' Lee says. 'It sounds like you faced them bravely.'".
+
+
 Chapter - Rants
 
 Response of Lee when asked-or-told about topic_cat:
@@ -10598,7 +10607,7 @@ Every turn when yellow tabby is contained by location of player and (a random ch
 
 Part - raccoons
 
-Some raccoons are undescribed animals in Limbo.
+Some raccoons are familiar undescribed animals in Limbo.
 	The description is "You can see eyes shining at the edge of the meadow. More than two. You count at least four pair[first time]. You've been thinking of them as the invaders, but thinking about it, you guess, you're really the invader on their turf[only].".
 	Understand "raccoon/racoons/racoon/coons/coon/eyes/bandit/bandits/burgler/burglers/invaders/critters/bear/bears/wolf/wolves/animal/animals" as raccoons.
 
