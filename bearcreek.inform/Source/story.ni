@@ -1782,34 +1782,37 @@ To set_the_time_to (now - a time_period):
 		Now the right hand status line is "Early Morning";
 	else if now is late_morning:
 		Now the right hand status line is "Late Morning";
-		queue_report "Morning is getting on, and the air has lost most of its chill." with priority 3;
+		queue_report "Morning is getting on, and the air has lost most of its chill." with priority 7;
 	else if now is midday:
 		Now the right hand status line is "Midday";
-		queue_report "Its high noon (or thereabouts), and your shadow is hiding under your feet." with priority 3;
+		queue_report "Its high noon (or thereabouts), and your shadow is hiding under your feet." with priority 7;
 	else if now is early_afternoon:
 		Now the right hand status line is "Early Afternoon";
-		queue_report "The sun is slanting down golden. Gnats are drifting in and out of the sunshine in sparkling clouds." with priority 3;
+		queue_report "The sun is slanting down golden. Gnats are drifting in and out of the sunshine in sparkling clouds." with priority 7;
 	else if now is late_afternoon:
 		Now the right hand status line is "Late Afternoon";
 	else if now is evening:
 		Now the right hand status line is "Early Evening";
 		queue_report "Crickets are warming up for the evening symphony, but it only reminds you that you should be home. You can feel yourself starting to cry. You wish you had your mom, or your grandpa was here. Then you really do cry.
-		[paragraph break]Eventually, your tears turn to sniffles and you wipe your eyes with your dirty hands." with priority 2;
+		[paragraph break]Eventually, your tears turn to sniffles and you wipe your eyes with your dirty hands." with priority 8;
 	else if now is night:
 		Now the right hand status line is "Night";
-		queue_report "The last of the sunset's indigo glow has disappeared from the sky." with priority 3.
+		queue_report "The last of the sunset's indigo glow has disappeared from the sky." with priority 7.
 
 Part - Event Reporting
 
 [	We create an way to reporting system for all of the sounds, smells, cats, and other events that happen throughout.
 
-	Priority 1 = important events, i.e. things NPCs say or do, premonitions (said last)
-	Priority 3 = isolated events or sounds, i.e. the train
-	Priority 5 = foreground repeated actions, i.e. cats, dog
-	Priority 7 = ambient repeated sounds, i.e. dog barking
-	Priority 9 = anything else (said first)
+	Priority -10 = listed first before room listing, e.g., room transitions
+	Priotity -1 = listen just before room listing
 
-	We might also prune some of the simultaneous events below priority 3, if the reporting seems too crowded.
+	Priority 1 = anything else (said first)
+	Priority 3 = ambient repeated sounds, i.e. dog barking
+	Priority 5 = foreground repeated actions, i.e. cats, dog
+	Priority 7 = isolated events or sounds, i.e. the train
+	Priority 10 = important events, i.e. things NPCs say or do, premonitions (said last)
+
+	We might also prune some of the simultaneous events below priority 7, if the reporting seems too crowded.
 ]
 
 A turnevent is a kind of thing.
@@ -1818,12 +1821,18 @@ A turnevent has text called description.
 10 turnevents are in Limbo.
 A turnevent can be momentous or trivial.
 
-Definition: A turnevent is trivial if it has a priority that is greater than 6.
-Definition: A turnevent is momentous if it has a priority that is less than 3.
+[ positive and negative ]
+Definition: A turnevent is positive if it has a priority that is greater than 0.
+Definition: A turnevent is negative if it has a priority that is less than 0.
+
+[ trivial and momentous ]
+Definition: A turnevent is trivial if it has a priority that is greater than 0 and it has a priority less than 5.
+Definition: A turnevent is momentous if it has a priority that is greater than 7.
 [note that there are events between the two that are neither trivial nor momentous]
 
 coming_events is a container.
-coming_events has a truth state called some things said.
+we_said_something is a truth state that varies.
+	we_said_something is false.
 
 To queue_report (event text - text) with/at priority (event priority - a number):
 	Let new event be a random turnevent in Limbo;
@@ -1831,41 +1840,58 @@ To queue_report (event text - text) with/at priority (event priority - a number)
 	Now the priority of new event is event priority;
 	Now new event is in coming_events;
 
-The show reports rule is listed last in the every turn rulebook.
+[ The show reports rule is listed last in the every turn rulebook. ]
+The show reports rule is listed last in the every turn rulebook. 
+
 This is the show reports rule:
-	if number of turnevents in coming_events is not 0:
-		Let turnevent_list be the list of turnevents in coming_events;
-		Sort turnevent_list in reverse priority order;
-		[say "Turnevent list: [line break]";
-		repeat with item running through turnevent_list:
-			say " [priority of item] - [description of item].";]
+	if number of positive turnevents in coming_events is not 0:
+		Let turnevent_list be the list of positive turnevents in coming_events;
+		Sort turnevent_list in priority order;
+		Let momentous_count be the number of momentous turnevents in coming_events;
+		[
+			Loop through turnevents in our list ]
 		Repeat with this_event running through turnevent_list:
-			let trivial_count be the number of trivial turnevents in coming_events;
-			let momentous_count be the number of momentous turnevents in coming_events;
-			let total_count be the number of turnevents in coming_events;
-			[say "Total events: [total_count] / Trivial events: [trivial_count] / Momentous events: [momentous_count].";]
-			[we don't say trivial events if we have momentous things to report]
+			[ 
+				we don't say trivial events if we have momentous things to report ]
+			let trivial_events_remaining be the number of trivial turnevents in coming_events;
 			if this_event is trivial and momentous_count is zero:
-				[We say each of the trivial events together adding 'And' to the last one.]
-				if (trivial_count is 1) and (some things said of coming_events is true):
+				[
+					We say each of the trivial events together, adding 'And' to the last one.]
+				if (trivial_events_remaining is 1) and (we_said_something is true):
+					[TODO: This no longer reliably changes lowercases the first letter: https://intfiction.org/t/making-the-first-character-lower-case/4292/6 ]
 					let new text be indexed text;
 					let new text be the description of this_event;
 					replace character number 1 in new text with character number 1 in new text in lower case;
 					say "And [new text] [run paragraph on]";
 				otherwise:
 					say "[description of this_event] [run paragraph on]";
-				now some things said of coming_events is true;
+				now we_said_something is true;
 			else if this_event is not trivial:
-				if some things said of coming_events is true:
+				if we_said_something is true:
 					say "[line break][line break]";
 				say "[description of this_event][run paragraph on]";
-				now some things said of coming_events is true;
+				now we_said_something is true;
 			move this_event to Limbo;
-		if some things said of coming_events is true:
+		if we_said_something is true:
 			say "[line break]";
 		[clear events]
-		now all turnevents in coming_events are in Limbo;
-		now some things said of coming_events is false;
+		now all positive turnevents in coming_events are in Limbo;
+		now we_said_something is false;
+
+[ The show negative reports rule is listed before the generate action rule in the turn sequence rulebook. ]
+The show negative reports rule is listed last in the turn sequence rulebook. 
+
+This is the show negative reports rule:
+	if number of negative turnevents in coming_events is not 0:
+		Let turnevent_list be the list of negative turnevents in coming_events;
+		Sort turnevent_list in priority order;
+		Repeat with this_event running through turnevent_list:
+			say "[description of this_event][paragraph break]";
+			now we_said_something is true;
+			move this_event to Limbo;
+		[clear events]
+		now all negative turnevents in coming_events are in Limbo;
+		now we_said_something is false;
 
 
 Part - Reporting People Speaking
@@ -1882,7 +1908,7 @@ Part - Reporting People Speaking
 
 		Report Honey saying "'Have you heard from Nick about this summer?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says.";
 
-	By default it reports at priority 2, with priority 1 (printed last) reserved for premonitions and other important things.
+	By default it reports at priority 2, with priority 9 (printed last) reserved for premonitions and other important things.
 ]
 
 To report (speaker - person) saying (speech_text - text):
@@ -1994,12 +2020,12 @@ Part - Premonitions
 	These are not really a separate kind of thing, but they help set the mood, tension, and to some degree the pacing of the story, so we've gathered them all here. (I suspect there are more premonition-like things scattered around however.)
 ]
 
-When Scene_Grandparents_Conversation begins:
-	queue_report "[em]You get a funny, sad feeling out of nowhere, that this is the last time you will pick berries with Honey and Grandpa.[/em]" with priority 1;
+After going to Room_Grassy_Clearing for the first time:
+	queue_report "[em]You get a funny, sad feeling out of nowhere, that this is the last time you will pick berries with Honey and Grandpa.[/em]" with priority 9;
 	continue the action.
 
 After going to Room_Dirt_Road for the first time:
-	queue_report "[em]This dog makes you suddenly queasy, though you couldn't have known then what part it would play in what happened.[/em]" with priority 1;
+	queue_report "[em]This dog makes you suddenly queasy, though you couldn't have known then what part it would play in what happened.[/em]" with priority 9;
 	continue the action.
 
 To do Sharon_Teatime_Premonition:
@@ -2013,7 +2039,7 @@ When Scene_Bringing_Lunch begins:
 	continue the action.
 
 At the time when Premonition_About_Something_Wrong:
-	queue_report "[em]You get a feeling something is wrong. What if something happened to your grandpa?[/em]" with priority 1;
+	queue_report "[em]You get a feeling something is wrong. What if something happened to your grandpa?[/em]" with priority 9;
 
 After going to Room_Long_Stretch during Scene_Bringing_Lunch:
 	if player is not dog_warned:
@@ -2214,8 +2240,11 @@ An npc_journey has a rule called the action_catching_up.
 
 Chapter - The Mechanics
 
-Every turn:
+The npc journey rule is listed first in the every turn rulebook. 
+
+This is the npc journey rule:
 	repeat with this_journey running through every in-progress npc_journey:
+		[ say "Journey in progress: [this_journey]."; ]
 		step_a_journey for this_journey;
 
 To step_a_journey for (this_journey - an npc_journey):
@@ -2235,7 +2264,6 @@ To step_a_journey for (this_journey - an npc_journey):
 	if location of npc is origin or location of npc is destination:
 		if location of npc encloses player:
 			increment time_here of this_journey;
-			[TODO: this shouldn't advance until the action_at_start succeeds]
 	else:
 		increment time_here of this_journey;
 	[say "DEBUG: [npc] has been at [location of npc] for [time_here of this_journey] turns.";]
@@ -2461,7 +2489,7 @@ To step_a_rant for (this_rant - a rant):
 	[if player is in orig_room and speaker of this_rant is in orig_room:]
 	report speaker of this_rant saying quote in row index of the quote_table of this_rant;
 	[if speaker of this_rant is visible:
-		queue_report quote in row index of the quote_table of this_rant with priority 1;]
+		queue_report quote in row index of the quote_table of this_rant with priority 9;]
 	if index is max_quotes:
 		now this_rant is not in-progress;
 		[ we repeat the last quote from here on out ]
@@ -3130,7 +3158,7 @@ Song Timer is a number that varies. The Song Timer is 1.
 Global song length is a number that varies. The Global song length is 3.
 
 To report_new_song_begins:
-	queue_report "[one of]On [distant_radio], a new song begins: [current_song][or]You hear [distant_radio] playing a new song: [current_song][or]The song [current_song], begins playing on [distant_radio][or]After a DJ break, [distant_radio]'s playing [current_song][in random order]." with priority 4;
+	queue_report "[one of]On [distant_radio], a new song begins: [current_song][or]You hear [distant_radio] playing a new song: [current_song][or]The song [current_song], begins playing on [distant_radio][or]After a DJ break, [distant_radio]'s playing [current_song][in random order]." with priority 6;
 
 To say what_song_is_playing:
 	if honeys_radio is visible:
@@ -3248,7 +3276,7 @@ To change_TV_channel:
 	say "[line break][current_show] is on. [current_reaction][line break]";
 
 To report_new_tv_show_begins:
-	queue_report "[one of]On the little TV, after a few commercials, [current_show] begins[or][current_show] starts on Lee's little TV[or]After a bunch of commercials, [current_show] is on[at random]. [current_reaction]" with priority 4;
+	queue_report "[one of]On the little TV, after a few commercials, [current_show] begins[or][current_show] starts on Lee's little TV[or]After a bunch of commercials, [current_show] is on[at random]. [current_reaction]" with priority 6;
 
 To say what_show_is_playing:
 	say "The little black and white TV is playing [current_show]. [current_reaction]";
@@ -3323,26 +3351,26 @@ At the time when train_comes:
 To train_enters_area:
 	if Scene_Dreams is not happening and Scene_Epilogue is not happening and Scene_Fallout_Going_Home is not happening:
 		if current_time_period is not evening and current_time_period is not night:
-			queue_report "[one of]You think you hear the train blowing its whistle way off in the hills[or]You hear the train, pretty far off still[in random order]." with priority 3;
+			queue_report "[one of]You think you hear the train blowing its whistle way off in the hills[or]You hear the train, pretty far off still[in random order]." with priority 7;
 		else:
-			queue_report "Was that a train whistle or just the wind whooshing through the tree tops?" with priority 3.
+			queue_report "Was that a train whistle or just the wind whooshing through the tree tops?" with priority 7.
 
 At the time when train_is_nearby:
 	if Scene_Dreams is not happening and Scene_Epilogue is not happening and Scene_Fallout_Going_Home is not happening:
 		if current_time_period is not evening and current_time_period is not night:
-			queue_report "[one of]You hear a train whistle in the distance[or]You hear the train whistle blowing as it goes through town[in random order]." with priority 3;
+			queue_report "[one of]You hear a train whistle in the distance[or]You hear the train whistle blowing as it goes through town[in random order]." with priority 7;
 			if Room_Top_of_Pine_Tree encloses the player:
-				queue_report "Looking toward the sound, you can actually see the train rounding the hill outside of town." with priority 2;
+				queue_report "Looking toward the sound, you can actually see the train rounding the hill outside of town." with priority 8;
 			move distant_train to Room_Top_of_Pine_Tree;
 		else:
-			queue_report "You hear a train whistle in the distance, a lonely far off sorta sound." with priority 3;
+			queue_report "You hear a train whistle in the distance, a lonely far off sorta sound." with priority 7;
 
 At the time when train_hits_crossing:
 	if Scene_Dreams is not happening and Scene_Epilogue is not happening and Scene_Fallout_Going_Home is not happening:
 		if current_time_period is not evening and current_time_period is not night:
-			queue_report "[one of]You hear the train whistle, loud and close, as it hits the crossing[or]The train whistle screams as it hits the crossing[in random order]." with priority 6;
+			queue_report "[one of]You hear the train whistle, loud and close, as it hits the crossing[or]The train whistle screams as it hits the crossing[in random order]." with priority 4;
 		else:
-			queue_report "You hear the train at the crossing as it goes by your house. You think for a moment of Honey and Grandpa and how worried they will be and how much you miss them." with priority 6;
+			queue_report "You hear the train at the crossing as it goes by your house. You think for a moment of Honey and Grandpa and how worried they will be and how much you miss them." with priority 4;
 		if lost_penny is on train_track:
 			now lost_penny is in Limbo;
 			now flattened_penny is in train_track;
@@ -3360,23 +3388,23 @@ To show_train_crossing:
 			[paragraph break]You see the single light of the locomotive as it comes around the bend while it is still a ways away. The track begins to hum and you hear the squeal of the wheels on the curve. There's a moment where it just kind of hangs there in space." with priority 5;
 			if player is on train_track:
 				queue_report "The engineer sees you standing on the rail and blows the whistle LOUD and long! It very nearly scares the pee out of you. You leap off to safety, tripping on the rail!"
-				with priority 4;
+				with priority 6;
 			queue_report "Then the train is suddenly very close and moving very fast. You can feel hot air the train pushes ahead of it. The locomotive roars past you with a terrifying racket. Then car after car is swooshing past you, clanking and clattering.
-			[paragraph break]It isn't until half the train goes by that you remember to count cars and then it's too late. With the sound of the train still ringing in your ears, you are suddenly aware of the smell of dust and grease in the air." with priority 3;
+			[paragraph break]It isn't until half the train goes by that you remember to count cars and then it's too late. With the sound of the train still ringing in your ears, you are suddenly aware of the smell of dust and grease in the air." with priority 7;
 			if player is on train_track:
-				queue_report "You pick yourself up and dust yourself off" with priority 2;
+				queue_report "You pick yourself up and dust yourself off" with priority 8;
 		otherwise:
 			queue_report "The train arrives!
 			[paragraph break]When the train comes around the bend and you see the headlight, you immediately feel like you have to pee and without even thinking step off the rails. You watch it wavering in the heat waves coming off the rails. This time you are not going to let it sneak up on you, so you concentrate on the moment when it changes from far away to close. It's in the distance. It's in the distance. It's in the distance.
 			[paragraph break]And then wham! It's right here and LOUD! WAHHHHHHH! Whoosh! Clang! Bang! Clackity clack! Clackity clack!
-			[paragraph break]This time you remember to count the cars, but you forget the number as soon as the last car goes by with a final clatter." with priority 3;
+			[paragraph break]This time you remember to count the cars, but you forget the number as soon as the last car goes by with a final clatter." with priority 7;
 		if player is on train_track:
 			now player is intrepid;
-			queue_report "Though your close call with the train scared you, you also feel tremendously brave." with priority 1;
+			queue_report "Though your close call with the train scared you, you also feel tremendously brave." with priority 9;
 			try silently getting off train_track;
 		now player is train_experienced;
 	else if location of player is Room_Top_of_Pine_Tree:
-		queue_report "The train is approaching the dirt road near the trailer park, passing almost directly beneath you. It sounds it's whistle for the crossing. Still loud, even up here! For a moment, you can see the whole train, end to end. It's going fast, and before you know it, the train is past the crossing, past the trailer park, and around the next bend and out of sight." with priority 2;
+		queue_report "The train is approaching the dirt road near the trailer park, passing almost directly beneath you. It sounds it's whistle for the crossing. Still loud, even up here! For a moment, you can see the whole train, end to end. It's going fast, and before you know it, the train is past the crossing, past the trailer park, and around the next bend and out of sight." with priority 8;
 		[ move distant_train to Limbo; ]
 		distant_train_leaves in zero turns from now.
 
@@ -3574,7 +3602,7 @@ journey_gpa_walk_after_waiting rule:
 
 This is the
 	journey_gpa_walk_catching_up rule:
-	queue_report "Grandpa catches up to you [if Stone Bridge encloses the player]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if the Room_Picnic_Area encloses the player]as you go through the back gate into the trailer park[else if Room_Long_Stretch encloses the player]as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player]as you reach the railroad crossing[else if Room_Grandpas_Trailer encloses the player]and comes into the trailer hauling the big bucket[else]as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzales,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
+	queue_report "Grandpa catches up to you[if Stone Bridge encloses the player] at the stone bridge[else if player is in Region_Blackberry_Area] along the trail[else if Room_Dirt_Road encloses the player] as you reach the dirt road[else if the Room_Picnic_Area encloses the player] as you go through the back gate into the trailer park[else if Room_Long_Stretch encloses the player] as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player] as you reach the railroad crossing[else if Room_Grandpas_Trailer encloses the player] and comes into the trailer hauling the big bucket[else] as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzales,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
 
 This is the
 		journey_gpa_walk_end rule:
@@ -3656,42 +3684,42 @@ seq_sheriffs_drive_by is a sequence.
 This is the seq_sheriffs_drive_by_handler rule:
 	let the index be the index of seq_sheriffs_drive_by;
 	if (Room_C_Loop encloses the player or Room_B_Loop encloses the player or Room_Picnic_Area encloses the player) and index is greater than 1 and index is less than 6:
-		queue_report "The Sheriff is still talking to the Cat Lady in D Loop." with priority 3;
+		queue_report "The Sheriff is still talking to the Cat Lady in D Loop." with priority 7;
 	if index is 1:
 		if Room_D_Loop encloses the player:
-			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. As it drives through C Loop and passes Lee, the car slows way down but doesn't stop. It's coming straight toward where you stand in D Loop." with priority 2;
+			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. As it drives through C Loop and passes Lee, the car slows way down but doesn't stop. It's coming straight toward where you stand in D Loop." with priority 8;
 		else if Room_C_Loop encloses the player:
-			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park, headed toward D Loop. As the car passes [if Lee is visible]Lee who is out in front of his trailer smoking, you see the policeman slow down and give him a Look[else]Lee's trailer, you see the policeman looking carefully at his trailer[end if]. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
+			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park, headed toward D Loop. As the car passes [if Lee is visible]Lee who is out in front of his trailer smoking, you see the policeman slow down and give him a Look[else]Lee's trailer, you see the policeman looking carefully at his trailer[end if]. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 8;
 			Move player to Room_D_Loop, without printing a room description;
 		else if Region_Trailer_Outdoors encloses the player:
-			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 2;
+			queue_report "You get a lurching feeling as a police car pulls slowly through the trailer park. You are pulled along in its wake by curiosity. The police car stops in D Loop and so do you.[line break][location heading]" with priority 8;
 			Move player to Room_D_Loop, without printing a room description;
 		else if player is in Region_Trailer_Indoors:
-			queue_report "You get a lurching feeling as you catch sight of a police car outside the window. It is driving slowly by. Curiosity draws you outside and along in its wake. It stops in D Loop and so do you.[line break][location heading]" with priority 2;
+			queue_report "You get a lurching feeling as you catch sight of a police car outside the window. It is driving slowly by. Curiosity draws you outside and along in its wake. It stops in D Loop and so do you.[line break][location heading]" with priority 8;
 			Move player to Room_D_Loop, without printing a room description;
 		else:
-			queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 1;
+			queue_report "The Sheriff's car -- you realize it's the Sheriff since it says so right on the door -- stops in front of the Cat Lady's trailer. You take a step back. " with priority 9;
 	else if index is 2:
 		if sharon is not in Room_D_Loop:
 			move_sharon_out_of_her_trailer;
 		if Room_D_Loop encloses the player:
-			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing, Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 2;
+			queue_report "The Sheriff leans out the window toward the Cat Lady: 'How you doing, Sharon? Things okay around here?' The Sheriff flicks his eyes over at you, and you will yourself to be invisible." with priority 8;
 	else if index is 3:
 		if Room_D_Loop encloses the player:
-			queue_report "'Well, pretty good, Bill. I can't complain,' the Cat Lady tells the Sheriff. Then a frown crosses her face, 'Oh except Oliver has an abscess. I have to take him to the kitty doctor next week.'" with priority 2;
+			queue_report "'Well, pretty good, Bill. I can't complain,' the Cat Lady tells the Sheriff. Then a frown crosses her face, 'Oh except Oliver has an abscess. I have to take him to the kitty doctor next week.'" with priority 8;
 	else if index is 4:
 		if Room_D_Loop encloses the player:
-			queue_report "'Well what I came to ask,' the Sheriff says to the Cat Lady, 'Has he been bothering you any?' He looks back toward C Loop. 'When I drove up, I saw him over there. Has he been leaving you alone?'" with priority 2;
+			queue_report "'Well what I came to ask,' the Sheriff says to the Cat Lady, 'Has he been bothering you any?' He looks back toward C Loop. 'When I drove up, I saw him over there. Has he been leaving you alone?'" with priority 8;
 	else if index is 5:
 		if Room_D_Loop encloses the player:
 			queue_report "'Oh, he hasn't so much as looked in my direction,' the Cat Lady says to the Sheriff.
-			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?'" with priority 2;
+			[paragraph break]'That's good,' the Sheriff says. 'I just wanted to check in with you. Will you tell me if you have more problems?'" with priority 8;
 	else if index is 6:
 		if Room_D_Loop encloses the player:
 			queue_report "'Dearie, you're a sweet man to check in on me,' the Cat Lady puts her hand on the Sheriff's arm and he almost smiles.
-			[paragraph break]He pats her hand, 'You take care of yourself Sharon, and make sure you call me if you have any problems.' He talks briefly on his radio and then drives off, a little too fast for inside the trailer park. The Cat Lady unwinds the hose and continues watering her garden." with priority 2;
+			[paragraph break]He pats her hand, 'You take care of yourself Sharon, and make sure you call me if you have any problems.' He talks briefly on his radio and then drives off, a little too fast for inside the trailer park. The Cat Lady unwinds the hose and continues watering her garden." with priority 8;
 		else if player is in Region_Trailer_Park_Area:
-			queue_report "You hear the Sheriff's car drive off, a little too fast for inside the trailer park." with priority 1;
+			queue_report "You hear the Sheriff's car drive off, a little too fast for inside the trailer park." with priority 9;
 		now sheriffs_car is in Limbo;
 
 This is the seq_sheriffs_drive_by_interrupt_test rule:
@@ -4456,7 +4484,7 @@ Section - Actions
 
 [Reminder that you have to pee every few turns]
 Every turn during Scene_Dream_Have_To_Pee:
-	queue_report "[one of]You suddenly realize that you've been holding it, and you really have to pee[or][one of]You really have to go[or]You do a little dance, your body reminding you that you really have to go[or]Your really really really don't want to wet yourself[cycling][stopping]." with priority 1.
+	queue_report "[one of]You suddenly realize that you've been holding it, and you really have to pee[or][one of]You really have to go[or]You do a little dance, your body reminding you that you really have to go[or]Your really really really don't want to wet yourself[cycling][stopping]." with priority 9.
 
 Chapter - Scene_Dream_About_Stepdad
 
@@ -4533,7 +4561,7 @@ When Scene_Dream_About_the_Tango begins:
 Section - Actions
 
 At the time when sheriff_plays_music:
-	queue_report "Suddenly, the sheriff rolls up in his car. Neither the Cat Lady nor Lee look at him. The sheriff pops out of his car with a big box, no an accordion! and begins playing music. It's a funny tune and somehow you know it's an Argentine Tango. The Cat Lady and Lee begin to dance." with priority 2;
+	queue_report "Suddenly, the sheriff rolls up in his car. Neither the Cat Lady nor Lee look at him. The sheriff pops out of his car with a big box, no an accordion! and begins playing music. It's a funny tune and somehow you know it's an Argentine Tango. The Cat Lady and Lee begin to dance." with priority 8;
 
 At the time when sheriff_goes_to_field:
 	now sheriff is in Room_Dream_Grassy_Field;
@@ -4710,7 +4738,7 @@ When Scene_Day_Two begins:
 	now the right hand status line is "Morning";
 	Now Sharon is in Room_Other_Shore;
 	Now Lee is in Room_Blackberry_Tangle;
-	queue_report "[pet_rock_initial_appearance]." with priority 2;
+	queue_report "[pet_rock_initial_appearance]." with priority 8;
 
 test day2 with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / drop paper bag / go to hollow / pile leaves / sleep / z/z/z / sleep / z/z/z/z / get out / go to bathroom / again/ exit/ get popcorn/ go to car/ again/ z/z/z/z/z/z/z/z/z/z/z/z/z/z/z/jump/z/z/z/z/ go to tracks/go on/ z/z/z/z/z/z/ go on/ go on/ z/z/z/z/z/z/z/wake up".
 
@@ -4726,7 +4754,7 @@ Scene_Orienteering begins when Scene_Morning_After begins.
 Scene_Orienteering ends when Room_Sentinel_Tree encloses the player.
 
 When Scene_Orienteering begins:
-	queue_report "It's time to figure out where you are. Perhaps if you could get a view of the surrounding area." with priority 2;
+	queue_report "It's time to figure out where you are. Perhaps if you could get a view of the surrounding area." with priority 8;
 
 When Scene_Orienteering ends:
 	Change south exit of Room_Forest_Meadow to Room_Dark_Woods_North;
@@ -4749,7 +4777,7 @@ When Scene_Foraging_for_Breakfast begins:
 
 Every turn during Scene_Foraging_for_Breakfast:
 	if the remainder after dividing the turn count by 2 is 0:
-		queue_report "[one of]You are quite hungry[or]You didn't have dinner (or lunch!) yesterday, so you are really quite famished[or]You find you are really hungry. Perhaps you can forage something like a good Explorer Scout[cycling]." with priority 1.
+		queue_report "[one of]You are quite hungry[or]You didn't have dinner (or lunch!) yesterday, so you are really quite famished[or]You find you are really hungry. Perhaps you can forage something like a good Explorer Scout[cycling]." with priority 9.
 
 [ If player eats berries on brambles or in pail, they should no longer be hungry. ]
 After eating during Scene_Foraging_for_Breakfast:
@@ -4842,7 +4870,7 @@ This is the journey_sharon_walk_end rule:
 	if time_here of journey_sharon_walk is 1:
 		Now Honey is in Room_Grassy_Field;
 		Now Grandpa is in Room_Grassy_Field;
-		Report Grandpa saying "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops and lets out a deep breath. He looks relieved. He looks at the Cat Lady for a long moment, 'You did it, Sharon. You have my gratitude.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your surprise, you start to cry.";
+		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Sharon: 'I found him down by the creek.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your surprise, you start to cry.";
 		rule fails;
 	else if time_here of journey_sharon_walk is 2:
 		Now Lee is in Room_Grassy_Field;
@@ -4918,13 +4946,13 @@ journey_lee_walk_after_waiting rule:
 
 This is the
 	journey_lee_walk_catching_up rule:
-	queue_report "Lee catches up to you [if player is in Stone Bridge]at the stone bridge[else if player is in Region_Blackberry_Area]along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if Room_Long_Stretch encloses the player]as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player]as you reach the railroad crossing[else if Room_Grassy_Field encloses the player]and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya, [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
+	queue_report "Lee catches up to you[if player is in Stone Bridge] at the stone bridge[else if player is in Region_Blackberry_Area] along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if Room_Long_Stretch encloses the player] as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player] as you reach the railroad crossing[else if Room_Grassy_Field encloses the player] and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya, [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
 
 This is the journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
 		Now Honey is in Room_Grassy_Field;
 		Now Grandpa is in Room_Grassy_Field;
-		Report Grandpa saying "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutches her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more quietly looking at Lee, 'Thank you.'[paragraph break]Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Lee: 'I found him out in the blackberry brambles.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your embarrassment, you start to cry.";
+		Report Grandpa saying "Honey and grandma come running across the field from the back gate of the trailer park. Suddenly, everyone is talking at once.[paragraph break]Lee: 'I found him out in the blackberry brambles.'[paragraph break]Grandpa: '[grandpas_nickname], I...' and falters. He tries several times to say something, but gives up and just puts his hand on your shoulder to steady himself.[paragraph break]Honey, who is not normally the sentimental one, looks stern but has tears in her eyes and sweeps you up in a big hug and says nothing.[paragraph break]To your embarrassment, you start to cry.";
 		rule fails;
 	else if time_here of journey_lee_walk is 2:
 		Now Sharon is in Room_Grassy_Field;
@@ -4939,10 +4967,9 @@ This is the journey_lee_walk_end rule:
 		Now Lee is in Room_Lees_Trailer;
 		rule succeeds;
 
-
 Section - Actions
 
-[This will prevent player from getting re-lost after beign found!]
+[This will prevent player from getting re-lost after being found!]
 Instead of navigating Room_Wooded_Trail when Room_Other_Shore encloses the player during Scene_Found:
 	say not_going_back_to_woods.
 
@@ -4958,10 +4985,13 @@ Instead of going east when Room_Blackberry_Tangle encloses the player during Sce
 To say not_going_back_to_woods:
 	say "Maybe later, with your grandpa, you can go back to the woods and show him your little nest, but not now.".
 
+Before going to Room_Grassy_Field during Scene_Found:
+	if journey_sharon_walk is in-progress:
+		say "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops and lets out a deep breath. He looks relieved. He looks at the Cat Lady for a long moment, 'You did it, Sharon. You have my gratitude.'";
+	else if journey_lee_walk is in-progress:
+		say "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutches her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more quietly looking at Lee, 'Thank you.'";
+
 Test found with "test day2 / get up / climb pine tree / d".
-
-Section - Journeys
-
 
 
 Chapter - Scene_Reunions
@@ -5012,21 +5042,21 @@ This is the seq_long_arm_of_the_law_handler rule:
 		now Lee is in Room_C_Loop;
 		now Sheriff is in Room_C_Loop;
 		now sheriffs_car is in Room_C_Loop;
-		queue_report "'Yes, thank god,' Grandpa says. 'Apparently, [grandpas_nickname] here,' he puts his hand on your head, 'spent a pretty cold night out in the woods. We were all out looking for this one.'[paragraph break]The sheriff's car radio crackles to life and the sheriff responds. He says something into his radio. You gather he is calling off the search for you. The sheriff ends his radio call and leans back out the window.[paragraph break]'Mr. Skarbek?' the Sheriff asks, glancing toward C Loop.[paragraph break]'Everyone was out looking,' Grandpa looks confused, 'But--'[paragraph break]'And Mr. Skarbek was out there while the child was missing?' the Sheriff interrupts.[paragraph break]'We were all searching everywhere we could think of,' Grandpa says, but the Sheriff appears to have stopped listening.[paragraph break]'That's all I need to know,' the Sheriff says grimly. He suddenly turns to you. 'You're lucky you were found,' he says and speeds off." with priority 2;
+		queue_report "'Yes, thank god,' Grandpa says. 'Apparently, [grandpas_nickname] here,' he puts his hand on your head, 'spent a pretty cold night out in the woods. We were all out looking for this one.'[paragraph break]The sheriff's car radio crackles to life and the sheriff responds. He says something into his radio. You gather he is calling off the search for you. The sheriff ends his radio call and leans back out the window.[paragraph break]'Mr. Skarbek?' the Sheriff asks, glancing toward C Loop.[paragraph break]'Everyone was out looking,' Grandpa looks confused, 'But--'[paragraph break]'And Mr. Skarbek was out there while the child was missing?' the Sheriff interrupts.[paragraph break]'We were all searching everywhere we could think of,' Grandpa says, but the Sheriff appears to have stopped listening.[paragraph break]'That's all I need to know,' the Sheriff says grimly. He suddenly turns to you. 'You're lucky you were found,' he says and speeds off." with priority 8;
 	else if index is 3:
 		Move player to Room_C_Loop, without printing a room description;
 		now Lee is in sheriffs_car;
 		now honey is in Room_C_Loop;
 		now Grandpa is in Room_C_Loop;
 		now current interlocutor is Sheriff;
-		queue_report "Honey and Grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask Grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][b][location][/em][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 2;
+		queue_report "Honey and Grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask Grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][b][location][/em][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 8;
 	else if index is 4:
 		[Sheriff tries to bully narator into implicating Lee]
-		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Sheriff says a little out of breath to Honey and Grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 2;
+		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Sheriff says a little out of breath to Honey and Grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 8;
 		now lee_support of player is _uncertain;
 	else if index is 5:
 		[we hang at this step until either player talks to sheriff or leaves]
-		queue_report "The sheriff is still filling out his forms. He asks Lee an occasional question, but Lee remains silent." with priority 2;
+		queue_report "The sheriff is still filling out his forms. He asks Lee an occasional question, but Lee remains silent." with priority 8;
 		if lee_support of player is _uncertain:
 			decrement index of seq_long_arm_of_the_law;
 	else if index is 6:
@@ -5036,10 +5066,10 @@ This is the seq_long_arm_of_the_law_handler rule:
 		now Sheriff is in sheriffs_car;
 		now sheriffs_car is in Limbo;
 		if lee_support of player is _decided_no:
-			queue_report "The Sheriff closes the back door of the cruiser and goes around to the driver's side. As the car begins to roll away, you glance one more time at Lee who looks back without emotion.[paragraph break]Grandpa and Honey lead you back to...[paragraph break][b][location][/em][paragraph break]Grandpa gives you a sad hug. 'He'll be okay,' Grandpa says. Something about everything that has happened catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 2;
+			queue_report "The Sheriff closes the back door of the cruiser and goes around to the driver's side. As the car begins to roll away, you glance one more time at Lee who looks back without emotion.[paragraph break]Grandpa and Honey lead you back to...[paragraph break][b][location][/em][paragraph break]Grandpa gives you a sad hug. 'He'll be okay,' Grandpa says. Something about everything that has happened catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 8;
 		else:
 			now Lee is in Room_Lees_Trailer;
-			queue_report "The Sheriff takes a long moment and looks you up and down. Both Honey and Grandpa tense. Honey starts to say something, stops herself, shifts, and moves behind you looking challengingly at the Sheriff. Grandpa moves to stand beside her.[paragraph break]The Sheriff looks from you to your grandparents. He hesitates, apparently making a decision.[paragraph break]'Okay, maybe you could have told me that earlier.' He opens the back door of the cruiser and guides Lee out. He spins him around and removes the cuffs. 'You're free to go, Mr. Skarbek. Stay out of trouble.' Lee rubs his wrists and wipes the blood off his nose and mouth.[paragraph break]The Sheriff gets into his car without another word and drives quickly away.[paragraph break]Lee says quietly, 'Thank you, Jody,' bows slightly, and disappears into his trailer. You let Grandpa and Honey lead you back to...[paragraph break][b][location][/em][paragraph break]Grandpa gives you a tearful hug. 'I'm proud of you, [grandpas_nickname],' he says. Something about seeing the magnitude of what you did through his eyes, telling your own story for maybe the first time in your life catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 2;
+			queue_report "The Sheriff takes a long moment and looks you up and down. Both Honey and Grandpa tense. Honey starts to say something, stops herself, shifts, and moves behind you looking challengingly at the Sheriff. Grandpa moves to stand beside her.[paragraph break]The Sheriff looks from you to your grandparents. He hesitates, apparently making a decision.[paragraph break]'Okay, maybe you could have told me that earlier.' He opens the back door of the cruiser and guides Lee out. He spins him around and removes the cuffs. 'You're free to go, Mr. Skarbek. Stay out of trouble.' Lee rubs his wrists and wipes the blood off his nose and mouth.[paragraph break]The Sheriff gets into his car without another word and drives quickly away.[paragraph break]Lee says quietly, 'Thank you, Jody,' bows slightly, and disappears into his trailer. You let Grandpa and Honey lead you back to...[paragraph break][b][location][/em][paragraph break]Grandpa gives you a tearful hug. 'I'm proud of you, [grandpas_nickname],' he says. Something about seeing the magnitude of what you did through his eyes, telling your own story for maybe the first time in your life catches you by surprise and, in the safety of his arms, you sob uncontrollably. Both Grandpa and Honey try to comfort you." with priority 8;
 
 This is the seq_long_arm_of_the_law_interrupt_test rule:
 	[ Nothing stops this rule. ]
@@ -5058,7 +5088,7 @@ Instead of navigating or going during Scene_Long_Arm_of_the_Law:
 		say "You feel bad leaving Lee, but you're hope he'll be okay. You let Grandpa lead you back toward home.".
 
 Every turn while lee_support of player is _uncertain:
-	queue_report "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]" with priority 1.
+	queue_report "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]" with priority 9.
 
 Instead of waiting during Scene_Long_Arm_of_the_Law:
 	if index of seq_long_arm_of_the_law < 4:
@@ -5126,25 +5156,25 @@ This is the seq_parents_arrive_handler rule:
 		now moms_camaro is in Room_B_Loop;
 		now mom is in Room_B_Loop;
 		now stepdad is in Room_B_Loop;
-		queue_report "You are still holding Grandpa when mom's Camaro pulls into B Loop. Normally, you would run to your mom for comfort, but something's changed. You dry your eyes, pull away from Grandpa, and strand up straight. Mom and your stepdad get out of the car. Your mom runs and gives you a huge hug and when she lets go, she looks at Grandpa and says, 'Oh dad.' There are tears in her eyes when Grandpa hugs her. You realize in this moment that that your mom is usually strong for you, and this is your chance to be strong for her. You start to tell her about your adventures.[paragraph break]Mark is standing around looking uncomfortable. 'Do you know how much you worried your mom?' he demands. [paragraph break]'Oh, Mark, give it a rest,' mom says. Mark shoots her a look. 'We drove all night to get here,' mom tells your grandparents. 'We're shot. Do you have any coffee?' [paragraph break]Aunt Mary, who's been hovering anxiously in the background, wipes away her tears and says 'I'll go make some,' and goes inside." with priority 2;
+		queue_report "You are still holding Grandpa when mom's Camaro pulls into B Loop. Normally, you would run to your mom for comfort, but something's changed. You dry your eyes, pull away from Grandpa, and strand up straight. Mom and your stepdad get out of the car. Your mom runs and gives you a huge hug and when she lets go, she looks at Grandpa and says, 'Oh dad.' There are tears in her eyes when Grandpa hugs her. You realize in this moment that that your mom is usually strong for you, and this is your chance to be strong for her. You start to tell her about your adventures.[paragraph break]Mark is standing around looking uncomfortable. 'Do you know how much you worried your mom?' he demands. [paragraph break]'Oh, Mark, give it a rest,' mom says. Mark shoots her a look. 'We drove all night to get here,' mom tells your grandparents. 'We're shot. Do you have any coffee?' [paragraph break]Aunt Mary, who's been hovering anxiously in the background, wipes away her tears and says 'I'll go make some,' and goes inside." with priority 8;
 	else if index is 2:
-		queue_report "Your stepdad remains quietly simmering. Your mom hugs you again, 'Honey, we were so worried.' She straightens up looking you up and down. Your mom looks from Honey to Grandpa.[paragraph break]'It seems Jo wandered away, got lost, and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was found by Sharon and Lee.'" with priority 2;
+		queue_report "Your stepdad remains quietly simmering. Your mom hugs you again, 'Honey, we were so worried.' She straightens up looking you up and down. Your mom looks from Honey to Grandpa.[paragraph break]'It seems Jo wandered away, got lost, and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was found by Sharon and Lee.'" with priority 8;
 	else if index is 3:
 		queue_report "Mark can't stay quiet any longer. 'Jody, if I had my way, I'd paddle your behind,' he says advancing on you.[paragraph break]'Mark, I told you. This is not--'[paragraph break]
-		'You spoil this kid and are surprised when Jody acts out,' he says as he grabs your arm.[paragraph break]Both Grandpa and Honey take a step forward. Your mom stands up tall, looking like she is suddenly twice her height, 'Let go. Now. Mark.' she says fiercely. 'Are you going to hit 'em again?'[paragraph break]Mark instinctively lets go of your arm and stands with his feet apart, arms out, fists clenched ready to fight. You back away from him toward your grandpa who puts his arms protectively around you. Mark makes an angry hissing sound and yanks the car keys out of his pocket. 'We'll talk about this at home. We're leaving,' he says, going around to the driver's door of the Camaro. 'Both of you, get in the car. Now.'[paragraph break]Your mom looks helplessly at her parents. 'Sorry, mom,' she says. 'We better go. I'll call you later and let you know we're okay.'[paragraph break]Honey looks grim and Grandpa starts to say, 'Rachel.'[paragraph break]'Dad, I know,' she says and sighs. She turns to you and smiles thinly, 'Okay Jody, it's best we get going.' She opens the car door and puts the seat back so you can get in." with priority 2;
+		'You spoil this kid and are surprised when Jody acts out,' he says as he grabs your arm.[paragraph break]Both Grandpa and Honey take a step forward. Your mom stands up tall, looking like she is suddenly twice her height, 'Let go. Now. Mark.' she says fiercely. 'Are you going to hit 'em again?'[paragraph break]Mark instinctively lets go of your arm and stands with his feet apart, arms out, fists clenched ready to fight. You back away from him toward your grandpa who puts his arms protectively around you. Mark makes an angry hissing sound and yanks the car keys out of his pocket. 'We'll talk about this at home. We're leaving,' he says, going around to the driver's door of the Camaro. 'Both of you, get in the car. Now.'[paragraph break]Your mom looks helplessly at her parents. 'Sorry, mom,' she says. 'We better go. I'll call you later and let you know we're okay.'[paragraph break]Honey looks grim and Grandpa starts to say, 'Rachel.'[paragraph break]'Dad, I know,' she says and sighs. She turns to you and smiles thinly, 'Okay Jody, it's best we get going.' She opens the car door and puts the seat back so you can get in." with priority 8;
 		now stepdad is in moms_camaro;
 		now current interlocutor is mom;
 		now going_home_decision of player is _uncertain;
 	else if index is 4:
 		[we hang at this step until either player talks to sheriff or leaves]
-		queue_report "[one of]'I'm sorry, hon, we have to go,' your mom says[or]'We better go, love,' mom says sadly[or]Mom sighs and gestures for you to get in the car[in random order]." with priority 2;
+		queue_report "[one of]'I'm sorry, hon, we have to go,' your mom says[or]'We better go, love,' mom says sadly[or]Mom sighs and gestures for you to get in the car[in random order]." with priority 8;
 		if going_home_decision of player is _uncertain:
 			decrement index of seq_parents_arrive;
 	else if index is 5:
 		if going_home_decision of player is _decided_yes:
-			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and Grandpa and raise a hand goodbye." with priority 2;
+			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and Grandpa and raise a hand goodbye." with priority 8;
 		else:
-			queue_report "Mark starts to walk around the car toward you. Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you.[paragraph break]Mom glances warningly at Mark. 'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay, let's go.' She gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls angrily out of B Loop, you can see your mom look at Honey, Grandpa and you in turn and mouth, 'I love you.'" with priority 2;
+			queue_report "Mark starts to walk around the car toward you. Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you.[paragraph break]Mom glances warningly at Mark. 'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay, let's go.' She gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls angrily out of B Loop, you can see your mom look at Honey, Grandpa and you in turn and mouth, 'I love you.'" with priority 8;
 
 This is the seq_parents_arrive_interrupt_test rule:
 	[ Nothing stops this rule. ]
@@ -5164,7 +5194,7 @@ Instead of quizzing or informing or implicit-quizzing or implicit-informing duri
 	say "Everyone's attention is focused elsewhere.";
 
 Every turn while going_home_decision of player is _uncertain:
-	queue_report "[one of]Mom says it's time to go.[or]You feel terrible. You think maybe this is all your fault and now it's time to face the consequences[or]Mom's ready to go home, but what do you want?[or]Maybe you can just be quiet in the car and things will simmer down.[or]What if Mark hurts your mom and you're not there to stop him?[or]Can you just stay here with Honey and Grandpa?[cycling]" with priority 1.
+	queue_report "[one of]Mom says it's time to go.[or]You feel terrible. You think maybe this is all your fault and now it's time to face the consequences[or]Mom's ready to go home, but what do you want?[or]Maybe you can just be quiet in the car and things will simmer down.[or]What if Mark hurts your mom and you're not there to stop him?[or]Can you just stay here with Honey and Grandpa?[cycling]" with priority 9.
 
 Instead of waiting during Scene_Parents_Arrive:
 	say "[one of]The moment seems to balance on a knife's edge.[or]Seconds tick by.[or]The world holds its breath.[in random order]".
@@ -8932,7 +8962,7 @@ Instead of touching Grandpa:
 [ Grandpa picking berries ]
 
 Every turn when Room_Grassy_Clearing encloses the player and Grandpa is in Room_Grassy_Clearing and a random chance of 1 in 10 succeeds:
-	queue_report "Grandpa pauses for a minute from his berry picking and [one of]wipes his forehead with his handkerchief and rests against a tree[or]lights a cigarette and smokes for a bit[at random]." with priority 2.
+	queue_report "Grandpa pauses for a minute from his berry picking and [one of]wipes his forehead with his handkerchief and rests against a tree[or]lights a cigarette and smokes for a bit[at random]." with priority 8.
 
 Chapter - Responses
 
@@ -10292,31 +10322,31 @@ Instead of touching dog:
 
 Every turn when location is in Region_Blackberry_Area
 	and (a random chance of 1 in 8 succeeds),
-	queue_report "You hear a dog barking in the distance across the river." with priority 7;
+	queue_report "You hear a dog barking in the distance across the river." with priority 3;
 
 Every turn when location is in Region_Trailer_Outdoors
 	and a random chance of 1 in 10 succeeds:
-	queue_report "You hear a dog barking in the distance on the other side of the tracks." with priority 7;
+	queue_report "You hear a dog barking in the distance on the other side of the tracks." with priority 3;
 
 Every turn when location is in Room_Swimming_Hole
 	and a random chance of 1 in 8 succeeds:
-	queue_report "You hear a dog barking in the distance on this side of the river." with priority 7;
+	queue_report "You hear a dog barking in the distance on this side of the river." with priority 3;
 
 Every turn when location is Room_Crossing
 	and a random chance of 1 in 8 succeeds:
-	queue_report "You hear a dog barking in the distance from this side of the river." with priority 7;
+	queue_report "You hear a dog barking in the distance from this side of the river." with priority 3;
 
 Every turn when location is Room_Stone_Bridge
 	and a random chance of 1 in 4 succeeds,
-	queue_report "A dog barking can be plainly heard from across the river." with priority 7;
+	queue_report "A dog barking can be plainly heard from across the river." with priority 3;
 
 Every turn when location is Room_Long_Stretch
 	and a random chance of 1 in 4 succeeds,
-	queue_report "A dog barking can be heard somewhere down the road." with priority 7;
+	queue_report "A dog barking can be heard somewhere down the road." with priority 3;
 
 Every turn when location is Room_Railroad_Tracks
 	and a random chance of 1 in 6 succeeds,
-	queue_report "A dog barking can be heard a ways down the road." with priority 7;
+	queue_report "A dog barking can be heard a ways down the road." with priority 3;
 
 Instead of listening when location of player is in Region_Dirt_Road,
 	say "You can still hear the dog barking, of course."
@@ -10375,7 +10405,7 @@ Instead of touching dream_dog:
 
 Every turn when location is in Room_Chryse_Planitia
 	and (a random chance of 1 in 8 succeeds),
-	queue_report "Inexplicably, you think you hear a dog barking in the distance.[first time] Is there a dog out here on the red planet?[only]" with priority 7;
+	queue_report "Inexplicably, you think you hear a dog barking in the distance.[first time] Is there a dog out here on the red planet?[only]" with priority 3;
 
 Chapter - Responses
 
@@ -10596,10 +10626,10 @@ To say random-cat:
 	say "[one of]cat with one eye[or]black cat[or]skinny white and black cat[or]blue-eyed siamese[or]chunky gray cat[or]fluffy tortoise-shell[or]stripey gray tomcat[or]one-eyed chunky black cat[or]hard-eyed notch-eared patchy tom[or]huge gray and white cat that looks more like a raccoon[or]hugely pregnant calico[or]bony graying moth-eaten cat[or]dirty white cat[or]yellow kitten[in random order]"
 
 Every turn when Room_Sharons_Trailer encloses the player and (a random chance of 1 in 3 succeeds):
-	queue_report "[one of]A [random-cat] brushes up against your leg, but then darts off when you bend to pet it[or]A [random-cat] jumps up on the table[if Sharon is visible] before the Cat Lady sweeps it off[end if][or]A [random-cat] scratches at the corner of the sofa[or]One of a pile of kittens lazing in the sun falls off the ottoman[or]A [random-cat] takes a growling swipe at a [random-cat][or]A [random-cat] stares fixedly at the gap under the couch[or]A [random-cat] chews on your shoelace[or]A [random-cat] bats at a housefly[or]A [random-cat] chases a [random-cat] between your legs[or]A [random-cat] goes out through the cat door[or]A [random-cat] darts in through the cat door[in random order]." with priority 6;
+	queue_report "[one of]A [random-cat] brushes up against your leg, but then darts off when you bend to pet it[or]A [random-cat] jumps up on the table[if Sharon is visible] before the Cat Lady sweeps it off[end if][or]A [random-cat] scratches at the corner of the sofa[or]One of a pile of kittens lazing in the sun falls off the ottoman[or]A [random-cat] takes a growling swipe at a [random-cat][or]A [random-cat] stares fixedly at the gap under the couch[or]A [random-cat] chews on your shoelace[or]A [random-cat] bats at a housefly[or]A [random-cat] chases a [random-cat] between your legs[or]A [random-cat] goes out through the cat door[or]A [random-cat] darts in through the cat door[in random order]." with priority 4;
 
 Every turn when Room_D_Loop encloses the player and (a random chance of 1 in 6 succeeds):
-	queue_report "[one of]A [random-cat] darts out of the Cat Lady's cat door and around the trailer[or]A [random-cat] streaks from around the corner and disappears into the bushes[or]A [random-cat] is walking on the roof of the Cat Lady's trailer and then ducks out of sight[in random order]." with priority 6;
+	queue_report "[one of]A [random-cat] darts out of the Cat Lady's cat door and around the trailer[or]A [random-cat] streaks from around the corner and disappears into the bushes[or]A [random-cat] is walking on the roof of the Cat Lady's trailer and then ducks out of sight[in random order]." with priority 4;
 
 Every turn when yellow tabby is contained by location of player and (a random chance of 1 in 4 succeeds):
 	queue_report "[one of]The yellow tabby scratches its ear[or]The yellow tabby carefully licks its paws[or]The tabby grooms itself carefully[or]The tabby rubs up against your legs[or]The yellow tabby looks up at you as if it wants something[as decreasingly likely outcomes]." with priority 5;
