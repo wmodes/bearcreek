@@ -113,6 +113,7 @@ To say get_noun_example:
 	let fake_example be false;
 	let noun_example be indexed text;
 	[Check to see if the player tried to reference something nearby, maybe in a command like WALK TO CABINET.]
+	[TODO: Sus - may be able to steal updated routine from I7 v10 version of Smarter Parser]
 	let candidate be indexed text;
 	let last word be indexed text;
 	now last word is word number ( the number of words in the rejected command ) in the rejected command;
@@ -136,13 +137,17 @@ Chapter - TRY AGAIN
 
 [This is an attempted work around for a bug with Smarter Parser that hangs the parser in Lectrote: "Try AGAIN"]
 
-[Trying_again is an action applying to nothing.
+After reading a command:
+	if the player's command matches "try again", replace the player's command with "again".
+
+[ Trying_again is an action applying to nothing.
 Understand "try again" as trying_again.
 
 Carry out trying_again:
-	[wtf do I use to automatically try the previous command??]]
+	discard again buffer;
+	say "(Try using the command [em]again[/em] or it's shortcut [em]g[/em].)"; ]
 
-Understand "try again" as a mistake ("(Try using the command [em]again[/em] or it's shortcut [em]g[/em].)")
+[ Understand "try again" as a mistake ("(Try using the command [em]again[/em] or it's shortcut [em]g[/em].)") ]
 
 To discard the/-- again buffer: (- DiscardAgain(); -).
 
@@ -1803,9 +1808,6 @@ Part - Event Reporting
 
 [	We create an way to reporting system for all of the sounds, smells, cats, and other events that happen throughout.
 
-	Priority -10 = listed first before room listing, e.g., room transitions
-	Priotity -1 = listen just before room listing
-
 	Priority 1 = anything else (said first)
 	Priority 3 = ambient repeated sounds, i.e. dog barking
 	Priority 5 = foreground repeated actions, i.e. cats, dog
@@ -1820,10 +1822,6 @@ A turnevent has a number called priority.
 A turnevent has text called description.
 10 turnevents are in Limbo.
 A turnevent can be momentous or trivial.
-
-[ positive and negative ]
-Definition: A turnevent is positive if it has a priority that is greater than 0.
-Definition: A turnevent is negative if it has a priority that is less than 0.
 
 [ trivial and momentous ]
 Definition: A turnevent is trivial if it has a priority that is greater than 0 and it has a priority less than 5.
@@ -1844,8 +1842,8 @@ To queue_report (event text - text) with/at priority (event priority - a number)
 The show reports rule is listed last in the every turn rulebook. 
 
 This is the show reports rule:
-	if number of positive turnevents in coming_events is not 0:
-		Let turnevent_list be the list of positive turnevents in coming_events;
+	if number of turnevents in coming_events is not 0:
+		Let turnevent_list be the list of turnevents in coming_events;
 		Sort turnevent_list in priority order;
 		Let momentous_count be the number of momentous turnevents in coming_events;
 		[
@@ -1859,8 +1857,7 @@ This is the show reports rule:
 					We say each of the trivial events together, adding 'And' to the last one.]
 				if (trivial_events_remaining is 1) and (we_said_something is true):
 					[TODO: This no longer reliably changes lowercases the first letter: https://intfiction.org/t/making-the-first-character-lower-case/4292/6 ]
-					let new text be indexed text;
-					let new text be the description of this_event;
+					let new text be the substituted form of description of this_event;
 					replace character number 1 in new text with character number 1 in new text in lower case;
 					say "And [new text] [run paragraph on]";
 				otherwise:
@@ -1875,22 +1872,7 @@ This is the show reports rule:
 		if we_said_something is true:
 			say "[line break]";
 		[clear events]
-		now all positive turnevents in coming_events are in Limbo;
-		now we_said_something is false;
-
-[ The show negative reports rule is listed before the generate action rule in the turn sequence rulebook. ]
-The show negative reports rule is listed last in the turn sequence rulebook. 
-
-This is the show negative reports rule:
-	if number of negative turnevents in coming_events is not 0:
-		Let turnevent_list be the list of negative turnevents in coming_events;
-		Sort turnevent_list in priority order;
-		Repeat with this_event running through turnevent_list:
-			say "[description of this_event][paragraph break]";
-			now we_said_something is true;
-			move this_event to Limbo;
-		[clear events]
-		now all negative turnevents in coming_events are in Limbo;
+		now all turnevents in coming_events are in Limbo;
 		now we_said_something is false;
 
 
@@ -3245,7 +3227,7 @@ tv_channel is a number that varies.
 show_timer is a number that varies.
 	The show_timer is 1.
 global_show_length is a number that varies.
-	The global_show_length is 15.
+	The global_show_length is 10.
 current_show is a text that varies.
 current_reaction is a text that varies.
 
@@ -3276,7 +3258,10 @@ To change_TV_channel:
 	say "[line break][current_show] is on. [current_reaction][line break]";
 
 To report_new_tv_show_begins:
-	queue_report "[one of]On the little TV, after a few commercials, [current_show] begins[or][current_show] starts on Lee's little TV[or]After a bunch of commercials, [current_show] is on[at random]. [current_reaction]" with priority 6;
+	queue_report "[one of]On the little TV, after a few [commercials], [current_show] begins[or][current_show] starts on Lee's little TV after [commercials][or]After a bunch of [commercials], [current_show] is on[at random]. [current_reaction]" with priority 6;
+
+To say commercials:
+	say "commercials[if a random chance of 1 in 2 succeeds] including one [one of]for Cal Worthington and his dog Spot[or]for Irish Spring[or]with the little Pop-n-Fresh guy[or]with the Indian crying about people throwing litter[or]with the margarine container that says 'Butter!'[no line break][or]with Sorry Charlie tuna[or]with Mikey Likes It cereal[or]for McDonald's Big Macs ('Two all beef patties, lettuce cheese, pickles, onions, on a sesame seed bun')[at random][end if]"
 
 To say what_show_is_playing:
 	say "The little black and white TV is playing [current_show]. [current_reaction]";
@@ -3312,7 +3297,7 @@ Show	Channel	Index	Reaction
 "One Life to Live"	2	5	"There's a lady talking to a guy who doesn't know who he is or where he is."
 "Another World"	4	1	"This is another soap opera that you don't know, not one of your mom's."
 "Days of our Lives"	4	2	"You know this one, 'Like sands through the hourglass... so are the Days of Our Lives.' But you don't recognize any of the characters or what's happening."
-"The Hollywood Squares"	4	3	"Yuk yuk. Celebrities you don't know making jokes you don't get. Is there a game in this game show? You're not quite sure."
+"The Hollywood Squares"	4	3	"Celebrities you don't know making jokes you don't get. Yuk yuk. Is there a game in this game show? You're not quite sure."
 "Wheel of Fortune"	4	4	"Guess the letter, like hangman. Kind of boring. You're never able to figure out the words before the people on the show guess it. Honey gets it every time."
 "The Brady Bunch"	4	5		"You know this one. Bobby writes a book report about his hero Jesse James. Then in a dream, Bobby and the rest of the family are on a train, all dressed up old timey when Jesse James robs the train and shoots the family. Weird."
 "I Love Lucy"	5	1	"You've definitely seen this one. Lucy is stuck out on the balcony dressed as Superman during Little Ricky's birthday party."
@@ -3417,7 +3402,7 @@ Book - Scenes
 
 Part - Scene Definitions
 
-Chapter - Dramaticc Scenes
+Chapter - Dramatic Scenes
 
 [A dramatic scene is mean to not be interrupted by another scheduled scene - if we start to launch a scene and a dramatic scene is happening, we reschedule the new scene for the future ]
 
@@ -4987,9 +4972,9 @@ To say not_going_back_to_woods:
 
 Before going to Room_Grassy_Field during Scene_Found:
 	if journey_sharon_walk is in-progress:
-		say "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops and lets out a deep breath. He looks relieved. He looks at the Cat Lady for a long moment, 'You did it, Sharon. You have my gratitude.'";
+		say "As you cross the tracks, Lee catches up to the Cat Lady. He says, 'I looked out by the willows...' He catches sight of you and stops and lets out a deep breath. He looks relieved. He looks at the Cat Lady for a long moment, 'You did it, Sharon. You have my gratitude. Now, let's take this little trooper to grandpa and grandma.' He walks on with you and Sharon.";
 	else if journey_lee_walk is in-progress:
-		say "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutches her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more quietly looking at Lee, 'Thank you.'";
+		say "As you cross the tracks, the Cat Lady catches up to Lee. She's dressed differently, like for an expedition. She says, 'I went through the woods, but...' She suddenly sees you and clutches her chest. 'Oh my.' She looks woozy. 'You found our little one,' then more quietly looking at Lee, 'Thank you, Lee. Now, let's get this one home.' She walks on with you and Lee.";
 
 Test found with "test day2 / get up / climb pine tree / d".
 
@@ -5049,7 +5034,7 @@ This is the seq_long_arm_of_the_law_handler rule:
 		now honey is in Room_C_Loop;
 		now Grandpa is in Room_C_Loop;
 		now current interlocutor is Sheriff;
-		queue_report "Honey and Grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask Grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][b][location][/em][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.'[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 8;
+		queue_report "Honey and Grandpa are talking to you, but you're thinking about the Sheriff. Who is Mr. Skarbek? It takes you a moment before you realize he's talking about Lee. 'The Sheriff is asking about Lee?' you ask Grandpa.[paragraph break]'Now, that's none of your beeswax, [honeys_nickname],' Honey says. But you are already off and running with Honey and Grandpa in pursuit. You run as fast as you can to...[paragraph break][b][location][/em][paragraph break]When you arrive, the Sheriff and Lee are standing face to face in front of Lee's trailer.[paragraph break]'I'm going to tell you one more time, Mr. Skarbek, to put your hands on your head,' the Sheriff says.[paragraph break]'I'm going to ask you again,' Lee says calmly, 'What the fuck is this about?'[paragraph break]The Sheriff lunges forward and grabs Lee's wrist, and though Lee tries to twist away, the Sheriff twists his arm with both hands and Lee drops to his knees with a yelp of pain. The Sheriff slams Lee face down into the pavement and has a knee on his back. In a few seconds, he has Lee's hands in handcuffs behind his back. He hauls him up roughly and slams him against the hood of the Sheriff's car. 'You were saying?' the Sheriff says.[paragraph break]'Fuck off, fascist pig,' Lee says through a mouthful of blood.[paragraph break]Honey and Grandpa catch up to you panting.[paragraph break]'I've had about enough of you, Mr. Skarbek,' the Sheriff says, opening the back door of the patrol car. The Sheriff notices for the first time he has an audience." with priority 8;
 	else if index is 4:
 		[Sheriff tries to bully narator into implicating Lee]
 		queue_report "'I'm booking Mr. Skarbek on suspicion,' the Sheriff says a little out of breath to Honey and Grandpa, 'I don't know yet what role he played in this, but we have some history, and I'm sure I can convince him to cooperate. You saw that he resisted arrest.' He gets a metal notebook out of his car and starts filling out a form.[paragraph break]He glances at you, 'So according to the grandparents, the child was with Mr. Skarbek positively identified here.'[paragraph break]You look at Lee in the back of the patrol car who has his head back, his nose bloody. Your grandpa has his hands on your shoulder and starts to steer you back toward their trailer." with priority 8;
@@ -5086,6 +5071,10 @@ Instead of navigating or going during Scene_Long_Arm_of_the_Law:
 		increment index of seq_long_arm_of_the_law;
 		now lee_support of player is _decided_no;
 		say "You feel bad leaving Lee, but you're hope he'll be okay. You let Grandpa lead you back toward home.".
+
+[ Prevent small talk during this important scene ]
+Instead of quizzing or informing or implicit-quizzing or implicit-informing during Scene_Long_Arm_of_the_Law:
+	say "Everyone's attention is focused elsewhere.";
 
 Every turn while lee_support of player is _uncertain:
 	queue_report "[one of]Should you say something or let the grown-ups deal with this?[or]You feel like you should say something, but you're not sure.[or]Maybe you should just let the adults handle this, but is that the right thing to do?[or]What if Lee goes to jail for a long time? That's not fair. He didn't do anything.[cycling]" with priority 9.
@@ -5160,8 +5149,7 @@ This is the seq_parents_arrive_handler rule:
 	else if index is 2:
 		queue_report "Your stepdad remains quietly simmering. Your mom hugs you again, 'Honey, we were so worried.' She straightens up looking you up and down. Your mom looks from Honey to Grandpa.[paragraph break]'It seems Jo wandered away, got lost, and spent a mighty cold night in the woods,' Grandpa says, 'In the morning, [grandpas_nickname] kept their head and found their way back, and was found by Sharon and Lee.'" with priority 8;
 	else if index is 3:
-		queue_report "Mark can't stay quiet any longer. 'Jody, if I had my way, I'd paddle your behind,' he says advancing on you.[paragraph break]'Mark, I told you. This is not--'[paragraph break]
-		'You spoil this kid and are surprised when Jody acts out,' he says as he grabs your arm.[paragraph break]Both Grandpa and Honey take a step forward. Your mom stands up tall, looking like she is suddenly twice her height, 'Let go. Now. Mark.' she says fiercely. 'Are you going to hit 'em again?'[paragraph break]Mark instinctively lets go of your arm and stands with his feet apart, arms out, fists clenched ready to fight. You back away from him toward your grandpa who puts his arms protectively around you. Mark makes an angry hissing sound and yanks the car keys out of his pocket. 'We'll talk about this at home. We're leaving,' he says, going around to the driver's door of the Camaro. 'Both of you, get in the car. Now.'[paragraph break]Your mom looks helplessly at her parents. 'Sorry, mom,' she says. 'We better go. I'll call you later and let you know we're okay.'[paragraph break]Honey looks grim and Grandpa starts to say, 'Rachel.'[paragraph break]'Dad, I know,' she says and sighs. She turns to you and smiles thinly, 'Okay Jody, it's best we get going.' She opens the car door and puts the seat back so you can get in." with priority 8;
+		queue_report "Mark can't stay quiet any longer. 'Jody, if I had my way, I'd paddle your behind,' he says advancing on you.[paragraph break]'Mark, I told you. This is not--'[paragraph break]'You spoil this kid and are surprised when Jody acts out,' he says as he grabs your arm.[paragraph break]Both Grandpa and Honey take a step forward. Your mom stands up tall, looking like she is suddenly twice her height, 'Are you going to hit a little kid again, big man?' she says fiercely. 'Let go. Now. Mark.'[paragraph break]Mark instinctively lets go of your arm and stands with his feet apart, arms out, fists clenched. You back away from him toward your grandpa who puts his arms protectively around you. Mark makes an angry hissing sound and yanks the car keys out of his pocket. 'We'll talk about this at home. We're leaving,' he says, going around to the driver's door of the Camaro. 'Both of you, get in the car. Now.'[paragraph break]Your mom looks helplessly at her parents. 'Sorry, mom,' she says. 'We better go. I'll call you later and let you know we're okay.'[paragraph break]Honey looks grim and Grandpa starts to say, 'Rachel.'[paragraph break]'Dad, I know,' she says and sighs. She turns to you and smiles thinly, 'Okay Jody, it's best we get going.' She opens the car door and puts the seat back so you can get in." with priority 8;
 		now stepdad is in moms_camaro;
 		now current interlocutor is mom;
 		now going_home_decision of player is _uncertain;
@@ -5208,7 +5196,7 @@ Instead of entering moms_camaro during Scene_Parents_Arrive:
 
 To decide_to_go_home:
 	if index of seq_parents_arrive < 3:
-		say "It seems that everyone is focused elsewhere";
+		say "You stand perfectly still, sensing the precariousness of the moment.";
 	else:
 		increment index of seq_parents_arrive;
 		now going_home_decision of player is _decided_yes;
@@ -6139,16 +6127,28 @@ The experience is "Was that a train? Mom tells you not to play anywhere near the
 
 A lost_penny is a special thing in Room_Railroad_Tracks.
 The printed name is "penny".
+The description is "[lost_penny_description].".
 The initial appearance is "Hey, there's the penny you lost when you came here with Grandpa to make train pennies!".
-The description is "Ah, this is a wheat penny. Its tiny numbers say 1956. The tiny S means it was minted in Sacramento.".
 Understand "penny/coin" as lost_penny.
+
+To say lost_penny_description:
+	if Scene_Epilogue is happening:
+		say "Here's the penny that Grandpa and you never got to put on the train tracks. But you saved it anyway because it reminded you of him. You look carefully at it. It still says 1956 with a tiny S";
+	else:
+		say "Ah, this is a wheat penny. Its tiny numbers say 1956. The tiny S means it was minted in Sacramento";
 
 A flattened_penny is a described special thing in Limbo.
 The printed name is "flattened train penny".
+The description is "[flattened_penny_description].".
 The initial appearance is "[if player is not in Room_Dream_Railroad_Tracks]Hey, the train flattened the wheat penny! You made a lucky coin![else]Your lucky penny is here.[end if]".
-The description is "The train rolled over your penny and turned it into a flattened oval. You can't read it anymore, but you can see a very faint image of Lincoln with a stretched head.".
 Understand "lucky/flattened/flat/train/-- penny/coin" as flattened_penny.
 The indefinite article is "the".
+
+To say flattened_penny_description:
+	if Scene_Epilogue is happening:
+		say "Your lucky train penny! Grandpa and you put it on the tracks and it was flattened by the train. You can still see Lincoln's stretched head";
+	else:
+		say "The train rolled over your penny and turned it into a flattened oval. You can't read it anymore, but you can see a very faint image of Lincoln with a stretched head";
 
 [ A mound_of_rock is a scenery supporter in Room_Railroad_Tracks.
 The printed name is "mound of rock".
@@ -6657,14 +6657,14 @@ The indefinite article is "the".
 To say mika_description:
 	if Scene_Epilogue is happening:
 		if player is mika_experienced:
-			say "This is the cat figurine that Sharon, the cat lady from Honey and Grandpa's trailer park, gave you. What a kind, kinda kooky old lady. [no line break]";
+			say "This is the cat figurine that Sharon, the cat lady from Honey and Grandpa's trailer park, gave you. What a kind, kooky old lady. [no line break]";
 		else:
 			say "This is the cat figurine that you stole from Sharon, the cat lady from Honey and Grandpa's trailer park. What a kind, kinda kooky old lady. You feel bad about taking it and wonder if she knew you had it. [no line break]";
 		say "This little porcelain figurine looks just like your old cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear";
 	else if player holds Mika_figurine and Sharon is visible and player is not mika_experienced:
 		say "Maybe you shouldn't take that out right now in front of the Cat Lady";
 	else: 
-		say "It looks just like your cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear[no line break]";
+		say "It looks just like your cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear";
 		if player had held Mika_figurine and player is not mika_experienced:
 			say ". You feel kind of bad for taking it. Maybe you should give it back to the Cat Lady";
 
@@ -6891,9 +6891,15 @@ The lees_tv is an improper-named scenery device in Room_Lees_Trailer.
 
 The purple_heart is an improper-named special thing in Limbo.
 	The printed name is "Purple Heart".
-	The description is "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like George Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift.[run paragraph on][end if] Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[line break][paragraph break][em]What will happen if your mom discovers this? You determine to hide the medal and not let her find out.[/em][only].".
+	The description is "[purple_heart_description]."
 	Understand "war/service/purple/-- medal/heart/ribbon" as purple_heart.
 	The indefinite article is "the".
+
+To say purple_heart_description:
+	if Scene_Epilogue is happening:
+		say "This is Lee's Purple Heart for his service in Vietnam. You remember he told you that he wasn't wounded in battle, but was hurt in a jeep accident. You still can't believe he gave it to you. Lee saw something in you, even [em]before[/em] the night in the woods. He said, 'You're full of spirit.' You heard much later from Honey that he committed suicide. Lee always treated you decently like a grown up. You choke back a tear";
+	else:
+		say "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like George Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift. [no line break][end if]Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[paragraph break][em]What will happen if your mom discovers this? You determine to hide the medal and not let her find out[/em][only]"
 
 Section - Backdrops & Scenery
 
@@ -7486,8 +7492,14 @@ To say fallen_leaves_appearance:
 
 A pet_rock is a special _critter animal in Limbo.
 	The printed name is "round rock".
-	The description is "[if pet_rock is _critter]This round rock[else]George[end if] is almost perfectly round and a satisfying granite gray. [sub_pronoun_cap of pet_rock] looks smooth like [sub_pronoun of pet_rock] spent some time rolling around in a river.".
+	The description is "[pet_rock_description].".
 	Understand "pet/round/river/gray/-- rock", "george" as pet_rock.
+
+To say pet_rock_description:
+	if Scene_Epilogue is happening:
+		say "Here's your trusty pet rock George. At first you just kept him because he was a sweet rock you adopted, even making him a series of little pet rock houses. It wasn't until years later you thought that maybe you kept him because he was a keepsake from that one fateful day, your companion during a really difficult time. Well, whatever the reason, you are glad to have been able to share the years with this little guy.";
+	else:
+		say "[if pet_rock is _critter]This round rock[else]George[end if] is fist-size, almost perfectly round, and a satisfying granite gray. [sub_pronoun_cap of pet_rock] looks smooth like [sub_pronoun of pet_rock] spent some time rolling around in a river.";
 
 To say pet_rock_initial_appearance:
 	say "You shift around uncomfortably because the ground is far from soft. In fact, something is poking you in the side. Rummaging around in the leaves, you find a nearly perfectly round rock.[paragraph break]Aw, it slept here all night cuddled up against you. The poor thing was probably cold"
@@ -8328,7 +8340,7 @@ Section - Description
 Room_In_Car_With_Parents is a room.
 The printed name is "Car on the Ride Home".
 The casual_name is "in the car".
-The description is "You are in the car with mom and your stepdad. There is a vicious silence that you don't dare break. The road rolls by but you don't really see it. You are concentrating on making yourself invisible.".
+The description is "You are in the car with mom and your stepdad. There is a vicious silence that you don't dare break. The road rolls by, but you don't really see it. You are concentrating on making yourself invisible.".
 The scent is "fear".
 The outside_view is "the highway. [description of road_backdrop]".
 Understand "Car With Parents" as Room_In_Car_With_Parents.
