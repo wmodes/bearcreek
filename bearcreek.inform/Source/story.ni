@@ -1890,12 +1890,12 @@ Part - Reporting People Speaking
 
 		Report Honey saying "'Have you heard from Nick about this summer?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says.";
 
-	By default it reports at priority 2, with priority 9 (printed last) reserved for premonitions and other important things.
+	By default it reports at priority 8, with priority 9 (printed last) reserved for premonitions and other important things.
 ]
 
 To report (speaker - person) saying (speech_text - text):
 	if player is enclosed by location of speaker:
-		queue_report speech_text at priority 2;
+		queue_report speech_text at priority 8;
 		now current interlocutor is speaker;
 
 
@@ -2011,7 +2011,7 @@ After going to Room_Dirt_Road for the first time:
 	continue the action.
 
 To do Sharon_Teatime_Premonition:
-	queue_report "[em]A sudden thought: What if you are here talking to the Cat Lady and something happens to your Grandpa or Honey? Or worse, your mom? You struggle to think about something else.[/em]" at priority 1.
+	queue_report "[em]A sudden thought: What if you are here talking to the Cat Lady and something happens to your Grandpa or Honey? Or worse, your mom? You struggle to think about something else.[/em]" at priority 9.
 
 To say Lee_Invite_Premonition:
 	say "[em]You remember your grandma's warning and suddenly feel [nervous], but something tells you it will be okay. You've visited him before and it was fine. You couldn't say why, but you trust Lee[/em]".
@@ -2025,12 +2025,12 @@ At the time when Premonition_About_Something_Wrong:
 
 After going to Room_Long_Stretch during Scene_Bringing_Lunch:
 	if player is not dog_warned:
-		queue_report "[em]Something is different. The hairs on your arm and the back of your neck stand up.[/em]" at priority 1;
+		queue_report "[em]Something is different. The hairs on your arm and the back of your neck stand up.[/em]" at priority 9;
 		now player is dog_warned;
 	continue the action.
 
 After going to Room_Crossing for the first time:
-	queue_report "[em]Something about the crossing makes you [nervous] like watching a glass fall off of a countertop in slow motion.[/em]" at priority 1;
+	queue_report "[em]Something about the crossing makes you [nervous] like watching a glass fall off of a countertop in slow motion.[/em]" at priority 9;
 	continue the action.
 
 After going to Room_Dirt_Road during Scene_Bringing_Lunch:
@@ -2038,7 +2038,7 @@ After going to Room_Dirt_Road during Scene_Bringing_Lunch:
 	continue the action.
 
 At the time when Premonition_About_Another_Way:
-	queue_report "[em]You've got to get back to the clearing. There must be another way.[/em]" at priority 1;
+	queue_report "[em]You've got to get back to the clearing. There must be another way.[/em]" at priority 9;
 
 To say Sharon_Stepdad_Premonition:
 	say "[em]For a moment, you share her vision -- a rocky shore stretching for miles and miles -- a child picking among the rocks completely and hopelessly alone. [/em]".
@@ -2468,14 +2468,16 @@ To step_a_rant for (this_rant - a rant):
 	let index be index of this_rant;
 	let orig_room be orig_room of this_rant;
 	let max_quotes be the number of rows in quote_table of this_rant;
-	[if player is in orig_room and speaker of this_rant is in orig_room:]
-	report speaker of this_rant saying quote in row index of the quote_table of this_rant;
-	[if speaker of this_rant is visible:
-		queue_report quote in row index of the quote_table of this_rant with priority 9;]
-	if index is max_quotes:
+	let speaker be speaker of this_rant;
+	let this_saying be "";
+	if index is not max_quotes:
+		let this_saying be "[quote in row index of the quote_table of this_rant][paragraph break][one of]It looks like [the speaker] has more to say[or][The speaker] pauses for a second[or][The speaker] takes a deep breath before continuing[or][The speaker] looks thoughtful for a second before continuing[at random].";
+	else:
+		let this_saying be "[quote in row index of the quote_table of this_rant]";
 		now this_rant is not in-progress;
 		[ we repeat the last quote from here on out ]
 		now index of this_rant is max_quotes minus one;
+	report speaker saying this_saying;
 	[say "rant [this_rant] - in progress (index: [index of this_rant]; rows: [number of rows in quote_table of this_rant], number: [number of in-progress rants]).";]
 
 Instead of doing something to someone (called the target):
@@ -3466,12 +3468,12 @@ This is the seq_grandparents_chat_handler rule:
 		rule fails;
 	else:
 		if Room_Lost_in_the_Brambles encloses the player or Room_Blackberry_Tangle encloses the player:
-			queue_report "You hear Honey and Grandpa talking and you perk up your ears." at priority 1;
+			queue_report "You hear Honey and Grandpa talking and you perk up your ears." at priority 9;
 		else if Room_Grassy_Clearing encloses the player:
 			if index is 1:
 				Report Honey saying "Honey and Grandpa continue their conversation: 'Have you heard from Nick about this summer? Is he planning a visit or are we just left guessing?' Grandpa asks Honey.[paragraph break]'Nothing. Not a word,' Honey says.";
 			else if index is 2:
-				queue_report "[grandparent_random]" at priority 2;
+				queue_report "[grandparent_random]" at priority 8;
 			else if index is 3:
 				Report Honey saying "'Did you call Rachel?' Honey asks Grandpa. 'Sounded like she wanted to talk to her dad.'";
 			else if index is 4:
@@ -3483,7 +3485,7 @@ This is the seq_grandparents_chat_handler rule:
 			else if index is 7:
 				Report Grandpa saying "You wander a little distance away, but close enough that you can still hear. 'I do not like the way he treats, ah, the little one. At all.' Grandpa says.";
 			else if index is 8:
-				queue_report "[grandparent_random]" at priority 1;
+				queue_report "[grandparent_random]" at priority 9;
 			else if index is 9:
 				Report Honey saying "'I don't know,' Honey says quietly. 'I trust Rachel too, but still. I'm not happy how it's turning out with this guy. Maybe it happened too quickly.";
 			else if index is 10:
@@ -3494,7 +3496,7 @@ This is the seq_grandparents_chat_handler rule:
 			else if index is 12:
 				Report Honey saying "'I wouldn't put anything past him when he's been drinking,' Honey says to Grandpa. 'Yeah, he's a charmer. What was Rachel thinking?'";
 			else if index is 13:
-				queue_report "[grandparent_random]" at priority 1;
+				queue_report "[grandparent_random]" at priority 9;
 				[We do the following, because we want this step to repeat]
 				decrease index of seq_grandparents_chat by one;
 				[we make sure this ends when Scene_Walk_With_Grandpa begins]
@@ -3543,10 +3545,10 @@ Every turn when Scene_Walk_With_Grandpa is happening and journey_gpa_walk is not
 	if Room_Grassy_Clearing encloses the player:
 		now journey_gpa_walk is in-progress;
 	else if player is in Region_Blackberry_Area:
-		queue_report "[one of]You hear Grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing.[or]Grandpa's calling you.[at random]" at priority 1;
+		queue_report "[one of]You hear Grandpa calling you from the blackberry clearing.[or]Grandpa's calling you from the clearing.[or]Grandpa's calling you.[at random]" at priority 9;
 	else if player is in Region_River_Area or player is in Region_Dirt_Road:
 		if a random chance of 1 in 2 succeeds:
-			queue_report "[one of]You think you hear your Grandpa calling you.[or]Is that Grandpa calling you?[or]That sounds like Grandpa calling you.[at random]" at priority 1;
+			queue_report "[one of]You think you hear your Grandpa calling you.[or]Is that Grandpa calling you?[or]That sounds like Grandpa calling you.[at random]" at priority 9;
 
 Chapter - Sequenes & Journeys
 
@@ -3579,7 +3581,7 @@ This is the journey_gpa_walk_start rule:
 
 This is the
 journey_gpa_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if Room_Stone_Bridge encloses the player]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]heads for the grassy field[else if Room_Grassy_Field encloses the player]goes through the back gate into the trailer park[else if Region_Dirt_Road encloses the player]heads off toward the railroad tracks[else if Room_B_Loop encloses the player]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 1;
+	queue_report "[if a random chance of 1 in 2 succeeds]'[one of]Okay, I'm heading out. You coming?'[run paragraph on][or]You coming?'[run paragraph on][or]Let's get a move on,'[run paragraph on][or]Okay, let's go,'[run paragraph on][or]You coming with your grandpa?'[run paragraph on][or]Almost there,'[run paragraph on][or]Come on, lazybones,'[run paragraph on][cycling] [end if]Grandpa [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if Room_Stone_Bridge encloses the player]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]heads for the grassy field[else if Room_Grassy_Field encloses the player]goes through the back gate into the trailer park[else if Region_Dirt_Road encloses the player]heads off toward the railroad tracks[else if Room_B_Loop encloses the player]goes into his and Honey's trailer[else]is headed for B Loop[end if]." at priority 9;
 
 This is the
 journey_gpa_walk_after_waiting rule:
@@ -3587,7 +3589,7 @@ journey_gpa_walk_after_waiting rule:
 
 This is the
 	journey_gpa_walk_catching_up rule:
-	queue_report "Grandpa catches up to you[if Stone Bridge encloses the player] at the stone bridge[else if player is in Region_Blackberry_Area] along the trail[else if Room_Dirt_Road encloses the player] as you reach the dirt road[else if the Room_Picnic_Area encloses the player] as you go through the back gate into the trailer park[else if Room_Long_Stretch encloses the player] as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player] as you reach the railroad crossing[else if Room_Grandpas_Trailer encloses the player] and comes into the trailer hauling the big bucket[else] as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzales,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 3;
+	queue_report "Grandpa catches up to you[if Stone Bridge encloses the player] at the stone bridge[else if player is in Region_Blackberry_Area] along the trail[else if Room_Dirt_Road encloses the player] as you reach the dirt road[else if the Room_Picnic_Area encloses the player] as you go through the back gate into the trailer park[else if Room_Long_Stretch encloses the player] as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player] as you reach the railroad crossing[else if Room_Grandpas_Trailer encloses the player] and comes into the trailer hauling the big bucket[else] as you head toward B Loop[end if].[run paragraph on] [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You gonna wait for your old Grandpa, [grandpas_nickname]?'[or]Ah, to be young again,'[or]Alright, Speedy Gonzales,'[or]Your old Grandpa can barely keep up with you,'[or]I got ya, [grandpas_nickname],'[at random] Grandpa says, smiling.[end if]" at priority 7;
 
 This is the
 		journey_gpa_walk_end rule:
@@ -3611,7 +3613,7 @@ This is the
 Chapter - Actions
 
 Instead of navigating or going when Room_Grandpas_Trailer encloses the player during Scene_Walk_With_Grandpa:
-	queue_report "'Hold your horses, [grandpas_nickname],' Grandpa says. 'Stay with us for now.'" at priority 3.
+	queue_report "'Hold your horses, [grandpas_nickname],' Grandpa says. 'Stay with us for now.'" at priority 7.
 
 
 Chapter - Scene_Helping_the_Cat_Lady
@@ -3784,7 +3786,7 @@ This is the seq_sharon_teatime_handler rule:
 		if sharon is not in Room_Sharons_Trailer:
 			move_sharon_into_her_trailer;
 		now sharon is ready-for-tea-time;
-		queue_report "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest." at priority 2;
+		queue_report "'Oh, how I love visitors. And you are such a dear heart,' the Cat Lady says, looking at you in a way that makes you nervous. 'I know! I know! Tea time! Let's have a little tea party.' She clasps her hands to her chest." at priority 8;
 	else if index is 2:
 		Report Sharon saying "'[if player is not on the sharons_table]Oh, [sharons_nickname], won't you sit down?' the Cat Lady says, pointing at the half-buried kitchen table[else]Oh good, you are already at the table,' the Cat Lady bubbles[end if]. 'I'll get the tea ready.' She bustles around at the sink, in her cupboards, and with the tea things.";
 		do Sharon_Teatime_Premonition;
@@ -3793,7 +3795,7 @@ This is the seq_sharon_teatime_handler rule:
 	else if index is 4:
 		if sharon is visible:
 			if player is not on the sharons_table:
-				[ queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 3; ]
+				[ queue_report "You make yourself comfortable at the Cat Lady's kitchen table." at priority 7; ]
 				try entering the sharons_table;
 			Report Sharon saying "The Cat Lady fills your cup and her own from the teapot. 'I'm terribly sorry, [sharons_nickname], I don't have tea biscuits. I'm out right now,' she looks accusingly at a particularly fat cat lying on a chair. 'Sam got into the cupboard and ate every last one.' You wonder that the cat can jump up on anything, let alone get into the cupboard.";
 			now players_teacup is filled;
@@ -3804,14 +3806,14 @@ This is the seq_sharon_teatime_handler rule:
 			if sharon is visible:
 				if players_teacup is unfilled and a random chance of 2 in 3 succeeds:
 					refill_teacups;
-				queue_report "[cat lady prattle]" at priority 2;
+				queue_report "[cat lady prattle]" at priority 8;
 		else:
 			now index of seq_sharon_teatime is 6;
 			now index is 6;
 	if index is 6:
 		Report Sharon saying "'Oh [sharons_nickname], it's been so nice talking to you. I can see you're ready to go,' the Cat Lady hugs you and pinches your cheek gently which makes you squirm. 'You are growing so big. And so... such a lovely child,' she says looking you up and down, embarrassing you. 'I better go water my garden.'";
 		if player holds players_teacup:
-			queue_report "You return your teacup to the table." at priority 1;
+			queue_report "You return your teacup to the table." at priority 9;
 			now players_teacup is on the sharons_table;
 		sharon_resumes_gardening in two turns from now;
 		Now player is compassionate;
@@ -3868,7 +3870,7 @@ This is the seq_lee_invite_handler rule:
 		Report Lee saying "Lee looks you over. 'What happened to your arm?' he asks with what seems like genuine concern.[if player is injured] 'I see you're looking a little rough around the edges. You okay?' You notice you've been holding your side where you bashed it on the big pine tree.[end if]";
 		now player is aware_of_arm_injury;
 	else if index is 4:
-		queue_report "Lee looks like he is thinking about something. Finally, he nods to himself." at priority 2;
+		queue_report "Lee looks like he is thinking about something. Finally, he nods to himself." at priority 8;
 	else if index is 5:
 		Report Lee saying "'I think I have something for you. You're welcome to come in, if you want,' Lee shrugs.[first time]
 		[paragraph break][Lee_Invite_Premonition].[only]";
@@ -3916,7 +3918,7 @@ This is the seq_lee_hangout_handler rule:
 		if Lee is not in Room_Lees_Trailer:
 			move_lee_into_his_trailer;
 		queue_report "'So what's up in your world?' Lee asks. 'Anything good?' He pauses for a moment. 'Hey, I have something here for you.'
-			[paragraph break]Lee is fumbling around in a drawer." at priority 2;
+			[paragraph break]Lee is fumbling around in a drawer." at priority 8;
 	if index is 2:
 		Report Lee saying "'Hey, make yourself comfortable,' Lee says. 'Mi casa, es su casa. That means [']My home is your home.['] Do you want anything? A drink or anything?' It makes you [nervous] to think of drinking or eating in Lee's trailer. You can smell a little alcohol on his breath like your step-dad.
 		[paragraph break]Lee is fumbling around in a drawer.";
@@ -4222,16 +4224,16 @@ seq_jody_stop is a sequence.
 This is the seq_jody_stop_handler rule:
 	let index be index of seq_jody_stop;
 	if index is 3:
-		queue_report "You think of how worried Honey and Grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say out loud to yourself." at priority 1;
+		queue_report "You think of how worried Honey and Grandpa must be, and you start breathing hard. You can feel tears wanting to squeeze out. 'Stop,' you say out loud to yourself." at priority 9;
 	else if index is 4:
-		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 1;
+		queue_report "You draw in quick breaths to keep from crying. 'Stop. Stop. Stop.'" at priority 9;
 	else if index is 5:
-		queue_report "And suddenly a memory: [paragraph break][em]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[/em][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P[if player is not on meadow grass]. You drop to the ground right where you are in the tall grass[end if].[paragraph break][em]Think.[/em] You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break][em]Observe.[/em] You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break][em]Plan.[/em] The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 1;
+		queue_report "And suddenly a memory: [paragraph break][em]You and other campers yelling 'Stop!' at Explorer Camp. 'What do you do if you're ever lost in the woods?' Debbie asks the group again. 'STOP!' the campers shout.[/em][paragraph break]The tears are gone. You can breathe again. You remember what to do: Stop. Sit down. Think. Observe. Plan. S-T-O-P[if player is not on meadow grass]. You drop to the ground right where you are in the tall grass[end if].[paragraph break][em]Think.[/em] You could get hurt stumbling around in the dark. Better to wait until morning or until you're found.[paragraph break][em]Observe.[/em] You take a good look around you for the first time. You can hear crickets. You can see trees against the twilight. Stars are coming out. Even now, you can see that they are beautiful. As your eyes adjust, you can see new details in the trees around the meadow.[paragraph break][em]Plan.[/em] The facts you learned in Explorer Camp come tumbling out at you: You can live for 3 weeks without food, 3 days without water, but only 3 hours without shelter.[paragraph break]You need to find shelter." at priority 9;
 		Move player to the meadow grass, without printing a room description;
 		Now fallen_tree is in Room_Forest_Meadow;
 		Now Room_Forest_Meadow is observed;
 	else if index is 6:
-		queue_report "[one of]You have a plan. Find shelter[or]Hypothermia is a real risk in the chilly forest at night. Time to find a place to shelter[or]You look closer at the edge of the forest[stopping]." at priority 1;
+		queue_report "[one of]You have a plan. Find shelter[or]Hypothermia is a real risk in the chilly forest at night. Time to find a place to shelter[or]You look closer at the edge of the forest[stopping]." at priority 9;
 		[We do the following, because we want this step to repeat]
 		decrease index of seq_jody_stop by one;
 		[we make sure this ends when Scene_STOP ends]
@@ -4325,14 +4327,14 @@ To do_raccoon_things:
 	If the number of entries in limbo_sandwich_list is less than three:
 		If Room_Forest_Meadow encloses the player:
 			[raccoons will be in Room_Forest_Meadow waiting at the edges]
-			queue_report "[raccoon_description]." at priority 1;
+			queue_report "[raccoon_description]." at priority 9;
 		else if Room_Protected_Hollow encloses the player:
 			Let meadow_sandwich_list be the list of tuna_sandwiches enclosed by Room_Forest_Meadow;
 			Let hollow_sandwich_list be the list of tuna_sandwiches enclosed by Room_Protected_Hollow;
 			[if there are sandwiches in Room_Forest_Meadow]
 			If the number of entries in meadow_sandwich_list is greater than zero:
 				[raccoons will be making noise in the meadow eating them.]
-				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and Grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]" at priority 1;
+				queue_report "You can hear frantic rustling in the meadow[one of]. You hear a snarl like two animals fighting over something. Sandwiches? Dibs on eating you?[or]. Are they eating your sandwiches?[or]. You left Honey and Grandpa's lunch out there and something appears to be eating it.[or]. Will the sandwiches satisfy them, or will it draw more animals?[at random]" at priority 9;
 				[It takes one turn for the raccoons to eat one sandwich.]
 				let one_sandwich be a random tuna_sandwich enclosed by Room_Forest_Meadow;
 				now one_sandwich is in Limbo;
@@ -4341,25 +4343,25 @@ To do_raccoon_things:
 			[if there are sandwiches in Room_Protected_Hollow]
 			else if the number of entries in hollow_sandwich_list is greater than zero:
 				[raccoons will be making noise sniffing around the fort]
-				queue_report "[one of]Something is trying to get into the fort. There is a rustling thump like a ghost in the attic.[or]You hear a nearby growl that nearly stops your heart.[or]Something is trying to get in. You see a branch shift. Is something on top of the fallen trees?[or]You hear something walking around -- wolves? bears? And are they trying to get you?[or]You hear something outside the fort. What do they want?[or]Looks like you're going to have to go see what's outside.[or]You steel your courage to go confront the wolves. Maybe they're friendly, you think unconvincingly.[cycling]" at priority 1;
+				queue_report "[one of]Something is trying to get into the fort. There is a rustling thump like a ghost in the attic.[or]You hear a nearby growl that nearly stops your heart.[or]Something is trying to get in. You see a branch shift. Is something on top of the fallen trees?[or]You hear something walking around -- wolves? bears? And are they trying to get you?[or]You hear something outside the fort. What do they want?[or]Looks like you're going to have to go see what's outside.[or]You steel your courage to go confront the wolves. Maybe they're friendly, you think unconvincingly.[cycling]" at priority 9;
 	[If player yells or moves, it takes one turn for the raccoons to make noise again.]
 	else:
 		now raccoons are in Limbo;
 		now virtual_raccoons are in Limbo;
 		now seq_raccoon_visit is not in-progress;
 		if Room_Protected_Hollow encloses the player:
-			queue_report "Suddenly, you hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 2;
+			queue_report "Suddenly, you hear nothing but a few crickets. They must have enjoyed the sandwiches and left. You have successfully defended the fort." at priority 8;
 		else if Room_Forest_Meadow encloses the player:
-			queue_report "The invaders have taken their sandwiches and gone. You protected the fort." at priority 2;
+			queue_report "The invaders have taken their sandwiches and gone. You protected the fort." at priority 8;
 
 After taking tuna_sandwich when raccoons are visible:
- 	queue_report "The eyes of the invaders follow the tuna sandwich." at priority 1;
+ 	queue_report "The eyes of the invaders follow the tuna sandwich." at priority 9;
 
 After dropping tuna_sandwich when raccoons are visible:
- 	queue_report "The glittering eyes watch the tuna sandwich hit the ground." at priority 1;
+ 	queue_report "The glittering eyes watch the tuna sandwich hit the ground." at priority 9;
 
 After dropping paper_bag when raccoons are visible:
- 	queue_report "Numerous pairs of eyes watch the paper bag hit the ground." at priority 1;
+ 	queue_report "Numerous pairs of eyes watch the paper bag hit the ground." at priority 9;
 
 
 Chapter - Scene_Sleep_Two
@@ -4445,7 +4447,7 @@ This is the seq_mom_watching_movie_handler rule:
 	if index is 2:
 		Report Mom saying "You and mom watch the movie for a while. The boy that the movie is about doesn't say much, but everyone seems scared of him including his mom and dad. There is something bad that happens at his birthday party but mom makes you cover your eyes. 'I'll tell you when you can look,' mom says.";
 	else if index is 3:
-		queue_report "In the movie, the bad kid knocks his mom over a railing, but she doesn't die." at priority 2;
+		queue_report "In the movie, the bad kid knocks his mom over a railing, but she doesn't die." at priority 8;
 	else if index is 4:
 		Report Mom saying "The dad and another guy go to a cemetary and find a dog skeleton and are attacked by other dogs. Are they protecting the dead dog? This movie is really scary. [paragraph break]'Are you okay, hon?' mom asks. Something else happens to the boy's mom and your mom makes you cover your eyes. Did she die? You think about what would happen if your mom died and you almost start to cry. You quickly think about something else and sneak a glance at mom. Thankfully she didn't notice.";
 	else if index is 5:
@@ -4498,11 +4500,11 @@ This is the seq_stepdad_in_car_handler rule:
 	if index is 2:
 		Report stepdad saying "Your step-dad reaches behind the seat and grabs a can of beer. He pulls the pop-top and tosses it out the window. He takes a long drink and puts the can between his legs. He shoots you a glance and you carefully look out the window.";
 	else if index is 5:
-		queue_report "Mark takes another long swig of his beer and taps on the steering wheel." at priority 2;
+		queue_report "Mark takes another long swig of his beer and taps on the steering wheel." at priority 8;
 	else if index is 8:
-		queue_report "You can tell Mark is working up to say something. Instead he drains his beer, drops the empty behind the seat, and grabs another can. He pops the top and puts the can between his legs." at priority 2;
+		queue_report "You can tell Mark is working up to say something. Instead he drains his beer, drops the empty behind the seat, and grabs another can. He pops the top and puts the can between his legs." at priority 8;
 	else if index is 9:
-		queue_report "Mark taps out a cigarette but doesn't light it." at priority 2;
+		queue_report "Mark taps out a cigarette but doesn't light it." at priority 8;
 	else if index is 11:
 		Report stepdad saying "Mark clears his throat as if he's not used to using his voice. 'When you asked to use my tools, I told you that I expected you to put them away when you were done,' Mark says and [stepdad_stuff].";
 	else if index is 12:
@@ -4638,11 +4640,11 @@ This is the seq_grandparents_bounce_handler rule:
 		if index is 2:
 			Report Grandpa saying "Honey and Grandpa both stumble in the light gravity. Honey looks concerned, but Grandpa looks thrilled. 'Hmm,' he says smiling broadly taking several experimental hops.";
 		else if index is 4:
-			queue_report "Honey smiles as she gives a little jump and sails high. Grandpa gives a bigger jump and flies almost as high as he is tall. They are both laughing." at priority 1;
+			queue_report "Honey smiles as she gives a little jump and sails high. Grandpa gives a bigger jump and flies almost as high as he is tall. They are both laughing." at priority 9;
 		else if index is 6:
 			Report Grandpa saying "'Watch this!' Grandpa says like a little kid and leaps high into the air yelling 'Woo!' while Honey laughs.";
 		else if index is 7:
-			queue_report "Grandpa gathers up his strength, squatting down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'George!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 1;
+			queue_report "Grandpa gathers up his strength, squatting down and taking a tremendous leap. He sails into the air and his smile turns to sudden concern. He's floating away. 'George!' Honey yells leaping after him too high to stop. Honey and Grandpa lift high in the air.[paragraph break]'Ellie!' Grandpa yells from far above. 'Help!' they both yell while you watch helplessly. You jump as high as you can, but can't reach them.[paragraph break]You call to them and watch as they both float away into the Martian sky, becoming smaller and smaller dots until you can no longer see them.[paragraph break]There is nothing to do but flop down on the ground sobbing miserably. [paragraph break]After a long while you dry your tears and haul yourself up out of the red dust." at priority 9;
 			now seq_grandparents_bounce is not in-progress;
 			now mars_free_to_go is true;
 			now Honey is in Limbo;
@@ -4776,9 +4778,9 @@ Scene_Out_of_the_Woods ends when Scene_Found begins.
 
 Every turn during Scene_Out_of_the_Woods:
 	if Room_Wooded_Trail encloses the player:
-		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that the Cat Lady calling you?[or]Someone is calling you.[at random]" at priority 1;
+		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that the Cat Lady calling you?[or]Someone is calling you.[at random]" at priority 9;
 	else if Room_Dappled_Forest_Path encloses the player:
-		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that Lee calling you?[or]Someone is calling you.[at random]" at priority 1;
+		queue_report "[one of]You think you hear someone calling you from up ahead.[or]Is that Lee calling you?[or]Someone is calling you.[at random]" at priority 9;
 
 Chapter - Scene_Found
 
@@ -4838,18 +4840,18 @@ This is the journey_sharon_walk_start rule:
 
 This is the
 journey_sharon_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if Room_Other_Shore encloses the player]crosses the river to the crossing[else if Room_Crossing encloses the player]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if Room_Swimming_Hole encloses the player]makes her way up the steep trail to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+	queue_report "[if a random chance of 1 in 2 succeeds][sharon_urging] [run paragraph on][end if]Sharon [if Room_Other_Shore encloses the player]crosses the river to the crossing[else if Room_Crossing encloses the player]crosses the rocky shore toward the swimming hole so lightly and deftly it makes you reconsider her age. Previously, you thought of her as 'old,' now you're not so sure[else if Room_Swimming_Hole encloses the player]makes her way up the steep trail to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 9;
 
 To say sharon_urging:
-	queue_report "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]" at priority 3;
+	queue_report "'[one of]I'm so glad we found you, [sharons_nickname],'[or]Your grandpa was so worried,'[or]Oh dear, are you okay? We need to get you home,'[or]Everyone was looking for you, they are going to be so relieved,'[or]Let's get you home,'[or]We're almost there, dear,'[or]Okay, dearie, let's bring you home,'[cycling]" at priority 7;
 
 This is the
 journey_sharon_walk_after_waiting rule:
-	queue_report "[one of]'Hurry along, dear,' Sharon says, 'We have to get you home.'[or]'You know, your grandparents are worried sick about you,' Sharon says, 'Let's not dawdle, shall we?'[or]Sharon looks irritated about having to wait, but says nothing.[or]'Now I don't mind if we spend all day out here,' Sharon says, 'But I would think you'd have a little more respect and concern for your grandpa and grandma who are worries about you.'[or]Sharon looks mad at you for making her wait.[stopping]" at priority 3;
+	queue_report "[one of]'Hurry along, dear,' Sharon says, 'We have to get you home.'[or]'You know, your grandparents are worried sick about you,' Sharon says, 'Let's not dawdle, shall we?'[or]Sharon looks irritated about having to wait, but says nothing.[or]'Now I don't mind if we spend all day out here,' Sharon says, 'But I would think you'd have a little more respect and concern for your grandpa and grandma who are worries about you.'[or]Sharon looks mad at you for making her wait.[stopping]" at priority 7;
 
 This is the
 	journey_sharon_walk_catching_up rule:
-	queue_report "Sharon catches up to you[if Room_Crossing encloses the player], carefully crossing the river on the floating log[else if Room_Swimming_Hole encloses the player] at the swimming hole[else if Room_Railroad_Tracks] as you reach the railroad crossing[else if Room_Grassy_Field encloses the player] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 3;
+	queue_report "Sharon catches up to you[if Room_Crossing encloses the player], carefully crossing the river on the floating log[else if Room_Swimming_Hole encloses the player] at the swimming hole[else if Room_Railroad_Tracks] as you reach the railroad crossing[else if Room_Grassy_Field encloses the player] in the big grassy field[else if player is in Region_Dirt_Road] as you walk along the dirt road[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]I can barely keep up with you, [sharons_nickname],'[or]In a hurry to be going home, I see,'[or]So much vim and vigor!'[at random] Sharon says.[end if]" at priority 7;
 
 This is the journey_sharon_walk_end rule:
 	if time_here of journey_sharon_walk is 1:
@@ -4868,7 +4870,7 @@ This is the journey_sharon_walk_end rule:
 		Now Honey is in Room_B_Loop;
 		Now Grandpa is in Room_B_Loop;
 		Move player to Room_B_Loop, without printing a room description;
-		queue_report "[b][location][/em]" at priority 1;
+		queue_report "[b][location][/em]" at priority 9;
 		rule succeeds;
 
 [ Found by Lee
@@ -4920,7 +4922,7 @@ This is the journey_lee_walk_start rule:
 
 This is the
 journey_lee_walk_before_moving rule:
-	queue_report "[if a random chance of 1 in 2 succeeds][lee_urging] [run paragraph on][end if]Lee [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 1;
+	queue_report "[if a random chance of 1 in 2 succeeds][lee_urging] [run paragraph on][end if]Lee [if player is in Region_Blackberry_Area]heads off toward the old bridge[else if player is in Stone Bridge]crosses the bridge to the dirt road[else if Room_Railroad_Tracks encloses the player]crosses the tracks and heads to the grassy field[else if player is in Region_Dirt_Road]heads off toward the railroad tracks[else]is headed back to the trailer park[end if]." at priority 9;
 
 To say lee_urging:
 	say "'[one of]We gotta hoof it, soldier'[or]Let's hustle'[or]Movin' out,'[or]Okay, let's go,'[or]We gotta double time. Your family's gonna be worried,'[or]You okay? Just a little farther,'[or]Coming up on home,'[cycling]";
@@ -4931,7 +4933,7 @@ journey_lee_walk_after_waiting rule:
 
 This is the
 	journey_lee_walk_catching_up rule:
-	queue_report "Lee catches up to you[if player is in Stone Bridge] at the stone bridge[else if player is in Region_Blackberry_Area] along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if Room_Long_Stretch encloses the player] as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player] as you reach the railroad crossing[else if Room_Grassy_Field encloses the player] and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya, [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 3;
+	queue_report "Lee catches up to you[if player is in Stone Bridge] at the stone bridge[else if player is in Region_Blackberry_Area] along the trail[else if Room_Dirt_Road encloses the player]as you reach the dirt road[else if Room_Long_Stretch encloses the player] as you walk along the dirt road[else if Room_Railroad_Tracks encloses the player] as you reach the railroad crossing[else if Room_Grassy_Field encloses the player] and crosses the grassy field[end if]. [if a random chance of 1 in 3 succeeds or Room_Grassy_Clearing encloses the player] '[one of]You know how to hustle'[or]Great double time, soldier,'[or]You're doing great, I can barely keep up with you,'[or]I'm right behind ya, [lees_nickname],'[in random order] Lee says seriously.[end if]" at priority 7;
 
 This is the journey_lee_walk_end rule:
 	if time_here of journey_lee_walk is 1:
@@ -5021,7 +5023,7 @@ This is the seq_long_arm_of_the_law_handler rule:
 		now Sheriff is in sheriffs_car;
 		now sheriffs_car is in Room_B_Loop;
 		[Grandpa puts you down and Honey and Grandpa talk to you.]
-		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and Grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see you made it back home.'" at priority 2;
+		queue_report "Grandpa puts you down and looks serious. 'You know everyone was out looking for you all night.' Grandpa looks suddenly tired.[paragraph break]'What have we told you about wondering off by yourself?' Honey asks, looking angry. You feel tears start to well up. You think about telling Honey and Grandpa about the dog, about trying to find them and getting lost in the woods. But instead you sniff and choke back the tears.[paragraph break]The sheriff's car rolls through B Loop and stops beside your grandparents. The sheriff leans out his window, glancing at you. 'I see you made it back home.'" at priority 8;
 		[sheriff shows up]
 	else if index is 2:
 		now Lee is in Room_C_Loop;
@@ -5162,7 +5164,7 @@ This is the seq_parents_arrive_handler rule:
 		if going_home_decision of player is _decided_yes:
 			queue_report "As Mark starts the car and pulls out of B Loop, you look back at Honey and Grandpa and raise a hand goodbye." with priority 8;
 		else:
-			queue_report "Mark starts to walk around the car toward you. Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Jody,' your mom starts to say to you.[paragraph break]'Rach, it might be best for now.' Honey says glancing at you.[paragraph break]Mom glances warningly at Mark. 'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay, let's go.' She gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls angrily out of B Loop, you can see your mom look at Honey, Grandpa and you in turn and mouth, 'I love you.'" with priority 8;
+			queue_report "Mark starts to walk around the car toward you, and Grandpa quick as lightning lets you go, steps around you, and takes two steps toward the car. You can hear mom's sharp intake of breath. Mark stops.[paragraph break]'Dad,' your mom starts to say.[paragraph break]'Rachel.' Honey nods toward you. 'It might be the best thing, just for now.'[paragraph break]Mark takes another half step forward, and Grandpa squares his feet and shoulders, his hands loose at his side. 'Mark,' Mom says warningly. Grandpa was a sailor in the Navy in World War 2, short, stocky, and powerful. Though Grandpa's not a big man, for all Mark's shouting and bluster, you have no doubt that Grandpa would hurt Mark if he took another step.[paragraph break]'We better go, mom,' Rachel says to Honey. To Mark she says, 'Okay. Let's go. We're going now,' and, after a moment, he deflates and retreats to the car.[paragraph break]Mom says to you, 'I'm sorry,' and gives you a lingering hug that crushes your ribs and a quick kiss.[paragraph break]Mom and Mark get into the car without saying another word. As the car pulls angrily out of B Loop, you can see your mom look at Honey, Grandpa and you in turn and mouth, 'I love you.'" with priority 8;
 
 This is the seq_parents_arrive_interrupt_test rule:
 	[ Nothing stops this rule. ]
@@ -5219,7 +5221,7 @@ To decide_not_to_go_home:
 		increment index of seq_parents_arrive;
 		now player is courageous;
 		now going_home_decision of player is _decided_no;
-		say "You stand up straight and take a deep breath. 'No,' you say loudly and clearly. Mark's head swivels in the front seat. 'No, I'm not going. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [em]staying[/em] here,' you say firmly. You can feel Grandpa's arms tighten around you.".
+		say "You stand up straight and take a deep breath. 'No,' you say loudly and clearly. Mark's head jerks toward you. 'No, I don't want to go. I want to stay here.' Inside, you are trembling but the words have a momentum of their own. 'I'm [em]staying[/em] here with Grandpa and Honey,' you say firmly. You can feel Grandpa's arms tighten around you.".
 
 test parents with "test long-arm / z/z/z/yell/z"
 
@@ -5278,7 +5280,7 @@ When Scene_Fallout_Staying ends:
 Section - Actions and Sequences
 
 [ Prevent player from going anywhere during this imporant scene ]
-Instead of navigating or going during Scene_Parents_Arrive:
+Instead of navigating or going during Scene_Fallout_Staying:
 	say "There's no way you are leaving now that you are safe at home with Honey and Grandpa.";
 
 seq_staying_w_grandpa is a sequence.
@@ -5344,10 +5346,10 @@ After examining photos_from_home two times:
 	now photos_from_home is in special_box;
 
 Instead of going down during Scene_Epilogue:
-	if player is not photo_experienced:
-		say "It's been years since you looked at the stuff in your special box. You might want to take a moment.";
+	if player is not photo_experienced or (a special thing is visible and player is not special_experienced):
+		say "It's been years since you looked at the stuff in your special box. You might want to take a moment to look at this stuff.";
 	else:
-		say "You shut all your memories away in the box and return it to where you found it. You take a moment, close your eyes, and let out a long deep breath. Then you go back down and resume your life.";
+		say "You can hear two small voices in a pitched argument. Time to go prevent violence or at least pick up the pieces.[paragraph break]You shut all your memories away in the box and return it to where you found it. [paragraph break]You take a moment, close your eyes, and let out a long deep breath. Then you go back down and resume your life.";
 		end_the_story.
 
 
@@ -6659,7 +6661,7 @@ To say mika_description:
 		if player is mika_experienced:
 			say "This is the cat figurine that Sharon, the cat lady from Honey and Grandpa's trailer park, gave you. What a kind, kooky old lady. [no line break]";
 		else:
-			say "This is the cat figurine that you stole from Sharon, the cat lady from Honey and Grandpa's trailer park. What a kind, kinda kooky old lady. You feel bad about taking it and wonder if she knew you had it. [no line break]";
+			say "This is the cat figurine that you stole from Sharon, the cat lady from Honey and Grandpa's trailer park. What a kind,  kooky old lady. You feel bad about taking it and wonder if she knew you had it. [no line break]";
 		say "This little porcelain figurine looks just like your old cat Mika. It's white and black with all the spots in the right place. It even has Mika's one droopy ear";
 	else if player holds Mika_figurine and Sharon is visible and player is not mika_experienced:
 		say "Maybe you shouldn't take that out right now in front of the Cat Lady";
@@ -6897,7 +6899,7 @@ The purple_heart is an improper-named special thing in Limbo.
 
 To say purple_heart_description:
 	if Scene_Epilogue is happening:
-		say "This is Lee's Purple Heart for his service in Vietnam. You remember he told you that he wasn't wounded in battle, but was hurt in a jeep accident. You still can't believe he gave it to you. Lee saw something in you, even [em]before[/em] the night in the woods. He said, 'You're full of spirit.' You heard much later from Honey that he committed suicide. Lee always treated you decently like a grown up. You choke back a tear";
+		say "This is Lee's Purple Heart for his service in Vietnam. You remember he told you that he wasn't wounded in battle, but was hurt in a jeep accident. You still can't believe he gave it to you. Lee saw something in you, even [em]before[/em] the night in the woods. He said, 'You're full of spirit.' [paragraph break]You heard much later from Honey that he committed suicide. Lee always treated you decently like a grown up. You choke back a tear";
 	else:
 		say "This is a gold medal with a purple ribbon. It's shaped like a heart with a purple background with a guy in the middle. The guy looks like George Washington or someone. It's considerably heavier than it appears[first time].[paragraph break][if lee is visible]Lee watches you with evident enjoyment as you check out the gift. [no line break][end if]Suddenly you remember that you got in trouble for the ball bearing Lee gave you from his machine shop and your mom told you to give it back. And you didn't. Because you thought it would hurt Lee's feelings.[paragraph break][em]What will happen if your mom discovers this? You determine to hide the medal and not let her find out[/em][only]"
 
@@ -7497,9 +7499,9 @@ A pet_rock is a special _critter animal in Limbo.
 
 To say pet_rock_description:
 	if Scene_Epilogue is happening:
-		say "Here's your trusty pet rock George. At first you just kept him because he was a sweet rock you adopted, even making him a series of little pet rock houses. It wasn't until years later you thought that maybe you kept him because he was a keepsake from that one fateful day, your companion during a really difficult time. Well, whatever the reason, you are glad to have been able to share the years with this little guy.";
+		say "Here's your trusty pet rock George. At first you just kept him because he was a sweet rock you adopted, even making him a series of little pet rock houses. It wasn't until years later you thought that maybe you kept him because he was a keepsake from that one fateful day, your companion during a really difficult time. Well, whatever the reason, you are glad to have been able to share the years with this little guy";
 	else:
-		say "[if pet_rock is _critter]This round rock[else]George[end if] is fist-size, almost perfectly round, and a satisfying granite gray. [sub_pronoun_cap of pet_rock] looks smooth like [sub_pronoun of pet_rock] spent some time rolling around in a river.";
+		say "[if pet_rock is _critter]This round rock[else]George[end if] is fist-size, almost perfectly round, and a satisfying granite gray. [sub_pronoun_cap of pet_rock] looks smooth like [sub_pronoun of pet_rock] spent some time rolling around in a river";
 
 To say pet_rock_initial_appearance:
 	say "You shift around uncomfortably because the ground is far from soft. In fact, something is poking you in the side. Rummaging around in the leaves, you find a nearly perfectly round rock.[paragraph break]Aw, it slept here all night cuddled up against you. The poor thing was probably cold"
@@ -8087,7 +8089,7 @@ Every turn when Room_Dream_Grassy_Field encloses the player:
 		report_on_the_dance;
 
 To report_on_the_dance:
-		queue_report "[one of]As you watch the dancers, [or]As you watch, [or]Now, [stopping][one of]Lee spins the Cat Lady while her dress swishes around her, then lowers her into an elegant dip with her hand extended[or]they step together, first forward, then to the side, then back as if they are one person[or]Lee swishes the Cat Lady first right than left, their feet moving like magic in elegant slides beneath them, churning up puffs of dust[or]Lee and the Cat Lady step slow, slow, quick, quick, drag in a beautiful rhythm to the sheriff's accordion tango[or]the Cat Lady slowly lifts her knee and wraps her leg around Lee as he turns her quickly than slowly in an embrace[in random order]." at priority 1.
+		queue_report "[one of]As you watch the dancers, [or]As you watch, [or]Now, [stopping][one of]Lee spins the Cat Lady while her dress swishes around her, then lowers her into an elegant dip with her hand extended[or]they step together, first forward, then to the side, then back as if they are one person[or]Lee swishes the Cat Lady first right than left, their feet moving like magic in elegant slides beneath them, churning up puffs of dust[or]Lee and the Cat Lady step slow, slow, quick, quick, drag in a beautiful rhythm to the sheriff's accordion tango[or]the Cat Lady slowly lifts her knee and wraps her leg around Lee as he turns her quickly than slowly in an embrace[in random order]." at priority 9.
 
 Instead of doing anything to sharon when Room_Dream_Grassy_Field encloses the player:
 	if examining sharon:
@@ -8356,7 +8358,7 @@ The camaro_backdrop is backdrop in Room_In_Car_With_Parents.
 The road_backdrop is backdrop in Room_In_Car_With_Parents.
 
 
-Chapter - Room_In_Attic
+Chapter - Room_Attic
 
 Section - Description
 
@@ -8383,8 +8385,7 @@ The scent is "cigars still, even after all these years".
 
 Some photos_from_grampas is a thing.
 The printed name is "photos".
-The description is "[one of]These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you Honey hated that picture. They look like they are just about to crack up laughing.[paragraph break]Here's your Grandpa and you getting ready to hike part of the Pacific Crest Trail. You were maybe 15. This is just a few yeaars before he died. You both were woefully unprepared for late fall freezing temperatures. Though you were miserable at night, Grandpa toughed it out.[paragraph break]This is you and your best friend at your 6th grade graduation in your new school. You kind of lost touch when you both went into Middle School but became friends again in high school.[paragraph break]Here you pause for a second to linger on a memory. You can look again to examine the rest of the photos.[or]You look through the remainder of the photos:[paragraph break]Here's a photo your mom sent after she and Mark moved to Idaho. She's smiling, but it looks strained. Or maybe that's just your imagination. She's standing on the edge of a giant volcanic crater.[paragraph break]Here's a blurry photo of a lizard on a rock in Death Valley you took on a trip with Honey and Grandpa.[paragraph break]This is mom, Honey, and you at your high school graduation. Mark probably took this photo. You don't look happy to be there.[paragraph break]Oh and here's a memorial card from Honey's funeral. You said something at the service, but you have no idea what you said. By then you were in college.[paragraph break]
-There's a whole series of photos of pets that you had through the years, mostly cats, including some of Sharon's cats. There's even a photo of you with the dog down by Bear Creek who you eventually made friends with.[paragraph break]That's it. A young life in a dozen photos[cycling]".
+The description is "[one of]These are photos you've collected over the years when you were a kid. You thumb through them.[paragraph break]Here's your Honey and Grandpa smiling. It's rare to catch Honey smiling in a photo. You remember your mom told you Honey hated that picture. They look like they are just about to crack up laughing.[paragraph break]Here's your Grandpa and you getting ready to hike part of the Pacific Crest Trail. You were maybe 15. This is just a few years before he died. You both were woefully unprepared for late fall freezing temperatures. Though you were miserable at night, Grandpa toughed it out.[paragraph break]This is you and your best friend at your 6th grade graduation in your new school. You kind of lost touch when you both went into Middle School but became friends again in high school.[paragraph break]Here you pause for a second to linger on a memory. You can look again to examine the rest of the photos.[or]You look through the remainder of the photos:[paragraph break]Here's a photo your mom sent after she and Mark moved to Idaho. She's smiling, but it looks strained. Or maybe that's just your imagination. She's standing on the edge of a giant volcanic crater.[paragraph break]Here's a blurry photo of a lizard on a rock in Death Valley you took on a trip with Honey and Grandpa.[paragraph break]This is mom, Honey, and you at your high school graduation. Mark probably took this photo. You don't look happy to be there.[paragraph break]Oh and here's a memorial card from Honey's funeral. You said something at the service, but you have no idea what you said. By then you were in college.[paragraph break]There's a whole series of photos of pets that you had through the years, mostly cats, including some of Sharon's cats. There's even a photo of you with the dog down by Bear Creek who you eventually made friends with.[paragraph break]That's it. A young life in a dozen photos[cycling]".
 Understand "photos/photo/friend/lizard/cat/cats/dog" as photos_from_grampas.
 [ Understand "photos/photo/honey/grandpa/mom/friend/lizard/cat/cats/dog" as photos_from_grampas. ]
 
@@ -8397,12 +8398,13 @@ Understand "photos/photo/friend/dodo/dog" as photos_from_home.
 Your_keys is an improper-named thing.
 The printed name is "keys".
 The description is "A keyring containing your car keys, house keys, and who knows what these other ones are?".
+Understand "key/keys/keyring", "key ring", "car/house key/keys" as your_keys.
 The indefinite article is "your".
 
 Your_wallet is an improper-named thing.
 The printed name is "wallet".
-The description is "It's just your wallet".
-Understand "wallet/id/license" as your_wallet.
+The description is "It's just your wallet. ID, license, cards, a few bucks.".
+Understand "wallet/id/license/cards/money/bucks/dollar/dollars" as your_wallet.
 The indefinite article is "your".
 
 Section - Backdrops and Scenery
@@ -8410,7 +8412,7 @@ Section - Backdrops and Scenery
 Various_clutter is scenery in Room_Attic.
 The printed name is "attic clutter".
 Description is "A decade of random stuff has ended up here. Boxes, furniture, skis, snowshoes, tents and other camping gear, holiday decorations, storm windows, extra blankets, a sewing machine, luggage, a typewriter, and hundreds of other things.".
-Understand "clutter/boxes/furniture/skis/snowshoes/tents/luggage/blankets/typewriter/decorations", "storm windows", "extra blankets", "sewing machine", "camping gear", "holiday decorations" as various_clutter.
+Understand "attic/clutter/boxes/furniture/skis/snowshoes/tents/luggage/blankets/typewriter/decorations", "storm windows", "extra blankets", "sewing machine", "camping gear", "holiday decorations" as various_clutter.
 
 Keepsakes are scenery in special_box.
 
@@ -8425,6 +8427,10 @@ Instead of examining photos_from_home:
 
 Instead of examining photos_from_grampas:
 	now player is photo_experienced;
+	continue the action;
+
+Instead of examining special things during Scene_Epilogue:
+	now player is special_experienced;
 	continue the action;
 
 Book - People
@@ -8484,6 +8490,7 @@ Yourself can be found_by_lee.
 Yourself can be found_by_sharon.
 Yourself can be formerly_in_possession_of_lucky_penny.
 Yourself can be photo_experienced.
+Yourself can be special_experienced.
 
 The player has a number called persistence count. Persistence count is 0.
 The player has a number called pinetree_tries_count.
@@ -9290,11 +9297,11 @@ At the time when sharon_tends_garden:
 		sharon_tends_garden in 15 turns from now;
 	Otherwise:
 		if Sharon is touchable:
-			queue_report "The Cat Lady, glances [if Room_Sharons_Trailer encloses the player]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], I have to go water the garden.'" at priority 4;
+			queue_report "The Cat Lady, glances [if Room_Sharons_Trailer encloses the player]out the window[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], I have to go water the garden.'" at priority 8;
 		Move_sharon_out_of_her_trailer;
 		Now Sharon is tending-garden;
 		if Room_D_Loop encloses the player:
-			queue_report "She uncoils the hose and starts watering her little garden in front of her trailer." at priority 2;
+			queue_report "She uncoils the hose and starts watering her little garden in front of her trailer." at priority 8;
 
 At the time when sharon_resumes_gardening:
 	if sharon is not in Room_D_Loop:
@@ -9310,12 +9317,12 @@ At the time when sharon_watches_tv:
 		sharon_watches_tv in 15 turns from now;
 	Otherwise:
 		if Sharon is touchable:
-			queue_report "The Cat Lady glances [if Room_Sharons_Trailer encloses the player]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], my favorite show is on. You can join me if you want.'" at priority 4;
+			queue_report "The Cat Lady glances [if Room_Sharons_Trailer encloses the player]at the TV[otherwise]at her trailer[end if] and says, 'Well, [sharons_nickname], my favorite show is on. You can join me if you want.'" at priority 6;
 		move_sharon_into_her_trailer;
 		Now Sharon is watching-tv;
 		Now sharons_tv is switched on;
 		if Room_Sharons_Trailer encloses the player:
-			queue_report "She sits down in front of her TV and turns on a soap opera." at priority 2;
+			queue_report "She sits down in front of her TV and turns on a soap opera." at priority 8;
 
 At the time when sharon_feeds_cats:
 	if dramatic scene is happening:
@@ -9326,25 +9333,25 @@ At the time when sharon_feeds_cats:
 		sharon_feeds_cats in 15 turns from now;
 	Otherwise:
 		if Sharon is touchable:
-			queue_report "The Cat Lady [sharon_stuff] and says, 'Well, [sharons_nickname], I have to go feed the kitties.' [run paragraph on]" at priority 4;
+			queue_report "The Cat Lady [sharon_stuff] and says, 'Well, [sharons_nickname], I have to go feed the kitties.' [run paragraph on]" at priority 6;
 		move_sharon_into_her_trailer;
 		Now Sharon is feeding-cats;
 		if Room_Sharons_Trailer encloses the player:
-			queue_report "The Cat Lady moves into the kitchen and starts cooking up smelly fish for her cats." at priority 2;
+			queue_report "The Cat Lady moves into the kitchen and starts cooking up smelly fish for her cats." at priority 8;
 
 To move_sharon_out_of_her_trailer:
 	if Room_D_Loop encloses the player:
-		queue_report "The Cat Lady steps out of her trailer, going slowly down the steps. The tabby shoots out the door ahead of her, almost tripping her." at priority 3;
+		queue_report "The Cat Lady steps out of her trailer, going slowly down the steps. The tabby shoots out the door ahead of her, almost tripping her." at priority 7;
 	otherwise if player is contained by Room_Sharons_Trailer:
-		queue_report "The Cat Lady steps outside. The tabby shoots out the door soon as it is open." at priority 3;
+		queue_report "The Cat Lady steps outside. The tabby shoots out the door soon as it is open." at priority 7;
 	Now Sharon is in Room_D_Loop;
 	Now Tabby is in Room_D_Loop;
 
 To move_sharon_into_her_trailer:
 	if Room_D_Loop encloses the player:
-		queue_report "The Cat Lady goes into her trailer, going slowly up the steps. The tabby cat licks its paw and, after a bit, follows through the cat door." at priority 3;
+		queue_report "The Cat Lady goes into her trailer, going slowly up the steps. The tabby cat licks its paw and, after a bit, follows through the cat door." at priority 7;
 	otherwise if Room_Sharons_Trailer encloses the player:
-		queue_report "The Cat Lady comes into the trailer and sees you, 'Hi, [sharons_nickname].' The tabby cat follows through the cat door." at priority 3;
+		queue_report "The Cat Lady comes into the trailer and sees you, 'Hi, [sharons_nickname].' The tabby cat follows through the cat door." at priority 7;
 	Now Sharon is in Room_Sharons_Trailer;
 	Now yellow tabby is in Room_Sharons_Trailer;
 
@@ -9566,14 +9573,14 @@ At the time when lee_resumes_smoking:
 To move_lee_into_his_trailer:
 	now Lee is in Room_Lees_Trailer;
 	if Room_Lees_Trailer encloses the player:
-		queue_report "Lee comes in stubbing out his cigarette in an ashtray and says, 'Hey, Jody.'" at priority 3;
+		queue_report "Lee comes in stubbing out his cigarette in an ashtray and says, 'Hey, Jody.'" at priority 7;
 	else:
-		queue_report "Lee gives you a wave and heads inside his trailer." at priority 3;
+		queue_report "Lee gives you a wave and heads inside his trailer." at priority 7;
 
 To move_lee_out_of_his_trailer:
 	now Lee is in Room_C_Loop;
 	if player is contained by Room_Lees_Trailer:
-		queue_report "Lee gives you a wave and heads out the door, grabbing a pack of smokes on the way outside." at priority 3;
+		queue_report "Lee gives you a wave and heads out the door, grabbing a pack of smokes on the way outside." at priority 7;
 	else:
 		Report Lee saying "Lee comes out of his trailer, gives you a nod, sits down in his chair, and lights up a smoke.";
 
@@ -10588,9 +10595,9 @@ Every turn when angry timer of ants is greater than 0:
 	if angry timer of ants is less than 1:
 		now ants are not stirred up;
 		if Room_Picnic_Area encloses player:
-			queue_report "It looks like the red ants have calmed down." at priority 3;
+			queue_report "It looks like the red ants have calmed down." at priority 7;
 	else if Room_Picnic_Area encloses player:
-		queue_report "[ant stuff]." at priority 3.
+		queue_report "[ant stuff]." at priority 7.
 
 Instead of attacking ants:
 	now angry timer of ants is 5;
@@ -10672,11 +10679,6 @@ Instead of yelling during Scene_Defend_the_Fort:
 	say "You let out a low terrifying roar from somewhere deep in your belly, and for a moment everything is completely quiet.";
 
 test coons with "purloin brown paper bag / d / d / d / pick berries / pick berries / pick berries/teleport to other shore / go to willow trail / again / go to nav-landmark / again / again / go to meadow / z / z / z / z / go to hollow / pile leaves / sleep";
-
-Chapter - Responses
-
-Chapter - Rants
-
 
 
 Volume - Debugging
