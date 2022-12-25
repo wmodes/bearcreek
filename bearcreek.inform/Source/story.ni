@@ -505,14 +505,57 @@ Chapter - Pouring
 
 Understand the command "dump/pour" as something new.
 
-pouring_in is an action applying to two visible things.
+pouring_in_something is an action applying to two visible things.
 Understand
-	"dump [something] into/in [something]", "pour [something] into/in [something]"
-	as pouring_in.
+	"dump [something] into/in [something]", 
+	"pour [something] into/in [something]"
+	as pouring_in_something.
 
-Carry out pouring_in:
+Check pouring_in_something:
+	if noun is backdrop_berries:
+		now noun is berries_in_pail;
+	If noun is not schlepped:
+		say "You don't have that.";
+		stop the action;
+
+Carry out pouring_in_something:
 	try inserting the noun into the second noun.
 
+pouring_in_anything is an action applying to one visible thing.
+Understand
+	"dump [something]", 
+	"pour [something]"
+	as pouring_in_anything.
+
+Check pouring_in_anything:
+	if noun is backdrop_berries:
+		now noun is berries_in_pail;
+	[ say "The noun is [noun]."; ]
+	If noun is not schlepped:
+		say "You don't have that.";
+		stop the action;
+
+Definition: a thing is non-noun-containing if it does not contain the noun.
+
+Carry out pouring_in_anything:
+	let rando_container be random visible non-noun-containing non-portal not wearable container;
+	[ say "The noun is [noun].[line break]The container is [rando_container]."; ]
+	if rando_container is not nothing:
+		try inserting noun into rando_container;
+	else:
+		throw_berries_back;
+
+Does the player mean pouring_in_something something that is held by the player:
+	It is very likely.
+
+Does the player mean pouring_in_anything something that is held by the player:
+	It is very likely.
+
+Does the player mean pouring_in_something something that is not held by the player:
+	It is very unlikely.
+
+Does the player mean pouring_in_anything something that is not held by the player:
+	It is very unlikely.
 
 Chapter - Looking_ouside
 
@@ -2425,6 +2468,16 @@ Before saying hello to person (called the target):
 	If hail_number of target is at least 3 and the current interlocutor is target:
 		say "You are already talking to [target]. Perhaps you can try to ask or tell them something. Maybe [em]Ask [target] about something[/em], or [em]Tell [target] about something[/em]." instead;
 
+Understand "speak to [someone]" as saying hello.
+
+Understand
+	"talk to [someone] about [any known thing]",
+	"speak to [someone] about [any known thing]"
+	as quizzing it about.
+
+Instead of asking someone (called the person) to try informing yourself about something (called the subject):
+	try quizzing person about subject.
+
 Part - You Talking to Me?
 
 To decide if we are talking/speaking to/at (char1 - a person):
@@ -2647,7 +2700,8 @@ Definition: a supporter is empty if the number of things on it is zero.
 [Definition: a thing is empty if the number of things encased by it is zero.]
 Definition: a thing is non-empty if it is not empty.
 
-[ A thing can have a text called supporter_payoff. ]
+[These help with various actions]
+Definition: A thing is schlepped if it is enclosed by the player.
 
 Chapter - Surfaces
 
@@ -2681,6 +2735,8 @@ Chapter - Portals
 
 A portal is a kind of scenery enterable container.
 A portal has a room called destination. Destination is Limbo.
+
+Definition: A thing is non-portal if it is not a portal.
 
 Instead of entering a portal (called the target):
 	if destination of target is not Limbo:
@@ -2782,12 +2838,12 @@ Section - Berries in the pail
 
 [that is, the berries in the pail (or the big_bucket) ]
 
-A berries_in_pail is a nonfamiliar undescribed sinking edible thing.
-	The printed name is "bunch of ripe berries".
-	A berries_in_pail are in pail.
-	The description of berries_in_pail is "You've picked a big bunch of blackberries. [looking_closely_at_berries].".
-	The scent is "mmm, blackberry jam, blackberry pie, yum".
-	Understand "bunch/handful/lots/-- of/-- ripe/big/-- black/-- blackberries/blackberry/berries/berry", "blackberries/blackberry/berries/berry in pail" as berries_in_pail.
+Some berries_in_pail are a nonfamiliar undescribed sinking edible thing.
+The printed name is "bunch of ripe berries".
+Some berries_in_pail are in pail.
+The description of berries_in_pail is "You've picked a big bunch of blackberries. [looking_closely_at_berries].".
+The scent is "mmm, blackberry jam, blackberry pie, yum".
+Understand "bunch/handful/lots/-- of/-- ripe/big/-- black/-- blackberries/blackberry/berries/berry" as berries_in_pail.
 
 To say looking_closely_at_berries:
 	say "Looking at them, you notice that the color goes from deep red to deepest black. [one of]The sweetest ones are the ones that aren't shiny. You know that from experience[or]Your hands are stained red all the way to your wrist[or] You notice a tiny weeny white spider crawling on one of the berries[or] One of these berries is still green[or] A couple of these berries are kind of too ripe and look like little raisins[at random]".
@@ -2803,7 +2859,8 @@ Instead of drinking berries_in_pail:
 	try eating berries_in_pail;
 
 Instead of dropping berries_in_pail:
-	say "Now why would you want to drop all of those beautiful berries you picked? You can't bring yourself to do it.".
+	[ say "Now why would you want to drop all of those beautiful berries you picked? You can't bring yourself to do it.". ]
+	throw_berries_back;
 
 [this allows us to do things to the berries (dropping them, eating them, feeding them to dog, etc) without taking them out of pail]
 The carrying requirements rule does nothing if doing anything to the berries_in_pail.
@@ -2812,7 +2869,7 @@ The can't show what you haven't got rule does nothing if doing anything to the b
 
 The can't give what you haven't got rule does nothing if doing anything to the berries_in_pail.
 
-[What was this for??]
+[TODO: What was this for??]
 [ Instead of inserting berries_in_pail into something:
 	try inserting pail into second noun. ]
 
@@ -2960,6 +3017,8 @@ Instead of throwing berries_in_pail at something:
 		throw_berries_back.
 
 Instead of inserting berries_in_pail into something:
+	if second noun is pail:
+		say "Great, they're already there.";
  	if second noun is big_bucket:
 		continue the action;
 	else if second noun is waterbody:
@@ -2989,7 +3048,6 @@ Instead of putting backdrop_berries on something:
 To throw_berries_back:
 	say "You throw a few ripe berries which hit the ground and immediately turn to dirty mush.";
 	now dirty_mush is in location of player;
-	[have the parser notice dirty_mush;]
 
 To throw_berries_in_water:
 	say "The berries splash into the water and float for a bit. Then they slowly descend below the surface like a submarine and vanish."
