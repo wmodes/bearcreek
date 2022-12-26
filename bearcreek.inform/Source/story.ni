@@ -517,6 +517,9 @@ Check pouring_in_something:
 	If noun is not schlepped:
 		say "You don't have that.";
 		stop the action;
+	If second noun is not touchable:
+		say "Maybe you should go back to [the second noun].";
+		stop the action;
 
 Carry out pouring_in_something:
 	try inserting the noun into the second noun.
@@ -538,12 +541,11 @@ Check pouring_in_anything:
 Definition: a thing is non-noun-containing if it does not contain the noun.
 
 Carry out pouring_in_anything:
-	let rando_container be random visible non-noun-containing non-portal not wearable container;
-	[ say "The noun is [noun].[line break]The container is [rando_container]."; ]
-	if rando_container is not nothing:
-		try inserting noun into rando_container;
+	[ there is really only one thing in the story that can be poured into anything else, so there is no need for a generalized clever dumping routine ]
+	if noun is berries_in_pail and big_bucket is touchable:
+		try inserting noun into big_bucket;
 	else:
-		throw_berries_back;
+		try dropping noun;
 
 Does the player mean pouring_in_something something that is held by the player:
 	It is very likely.
@@ -556,6 +558,47 @@ Does the player mean pouring_in_something something that is not held by the play
 
 Does the player mean pouring_in_anything something that is not held by the player:
 	It is very unlikely.
+
+
+Chapter - Dropping
+
+Instead of dropping something (called the item):
+	now item is described;
+	now item is marked for listing;
+	if waterbody is visible:
+		let water be a random touchable waterbody;
+		try inserting item into water instead;
+	continue the action;
+
+Check inserting something into waterbody:
+	if noun is special:
+		say "Are you sure you wanna drop [the noun] in the water and possibly lose it forever? You change your mind at the last minute.";
+		stop the action;
+
+After inserting something into waterbody:
+	if noun is sinking:		
+		move noun to Limbo;
+	else:
+		make noun wet;
+	continue the action;
+
+The standard report inserting rule response (A) is "[The actor] [drop] [the noun] into [the second noun][insert_addendum]."
+
+To say insert_addendum:
+	if second noun is waterbody:
+		if noun is sinking:
+			say " where it sinks below the water without a trace";
+		else:
+			say " where it bobs up and down";
+
+test dropping with "test bridge;purloin newspaper, mika, purple heart, lucky coin, george;purloin loose_rock".
+
+Part - Dropping Things in Room_Dark_Woods
+
+After dropping something (called the item) when Room_Dark_Woods_South encloses the player:
+	add item to stuff_you_brought_here;
+	continue the action;
+
 
 Chapter - Looking_ouside
 
@@ -755,7 +798,11 @@ Understand
 	as get_up_on_anything.
 
 Carry out get_up_on_anything:
-	try going up.
+	if climbable thing is visible:
+		let the noun be a random touchable climbable thing;
+		try climbing noun;
+	else:
+		try going up.
 
 [ get_down_from_something ]
 
@@ -790,6 +837,14 @@ Carry out get_down_from_anything:
 Before navigating or person_navigating or going when player is in container or player is on supporter:
 	try standing_up;
 	continue the action;
+
+Chapter - Climbing
+
+The block climbing rule is not listed in any rulebook.
+
+Carry out climbing something:
+	say "You [one of]hang from [the noun] like a monkey before dropping down to the ground[or]shimmy up [the noun] and get to a point where you can't go any further, so you drop to the ground[or]struggle to get a purchase on [the noun] before going up a little way and then coming back down[at random].";
+
 
 Chapter - Dressing
 
@@ -1527,16 +1582,6 @@ To move_within_dark_woods:
 	try looking;
 
 The can't reach inside rooms rule does nothing if navigating a room.
-
-
-Part - Dropping Things in Room_Dark_Woods
-
-After dropping something (called the item) when Room_Dark_Woods_South encloses the player:
-	add item to stuff_you_brought_here;
-	continue the action;
-
-Instead of doing anything except examining or navigating to elusive_landmarks:
-	say "This is no time for that. [if Scene_Day_Two is not happening]You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.[end if]".
 
 
 Chapter - Compass Navigation and navigating
@@ -2455,7 +2500,7 @@ The new check what's being hailed rule substitutes for the check what's being ha
 This is the new check what's being hailed rule:
 	if the current interlocutor is a visible person:
 		try saying hello to current interlocutor instead;	
-	now the noun is a random visible person who is not the player;
+	now the noun is a random touchable person who is not the player;
 	if the noun is a person:
 		do nothing;
 	otherwise:
@@ -2573,19 +2618,19 @@ Grandpa, Honey, Aunt Mary, Sharon, Lee, Sheriff, stepdad, Mom, Joseph are famili
 
 Chapter - Places
 
-topic_forest is a subject.
+The topic_forest is a subject.
 	The printed name is "woods".
 	Understand "dark/-- forest/woods" as topic_forest.
 
-topic_swimming is a subject. 
+topic_swimming is a proper-named subject. 
 	The printed name is "swimming".
 	Understand "swim/swimming/diving", "swimming/deep/-- hole/pool" as topic_swimming.
 
-topic_trailer is a subject.
+The topic_trailer is a subject.
 	The printed name is "trailer".
 	Understand "trailer/house/home" as topic_trailer.
 
-topic_creek is a subject.
+topic_creek is a proper-named subject.
 	The printed name is "Bear Creek".
 	Understand "river/creek/crick/stream", "bear creek/crick" as topic_creek.
 
@@ -2596,11 +2641,11 @@ The topic_bridge is a subject.
 
 Grandpa's-Virtual-Trailer is familiar.
 
-topic_train is a subject.
+The topic_train is a subject.
 	The printed name is "train".
 	Understand "train/railroad/-- track/tracks", "rail/rails/traintracks", "train/railroad", "rail road" as topic_train.
 
-topic_tree is a subject.
+The topic_tree is a subject.
 	The printed name is "tall Doug fir".
 	Understand "big/tall/-- pine/doug/douglas/-- fir/ tree" as topic_tree.
 
@@ -2681,6 +2726,7 @@ A thing can be unmentioned.
 [ A property used for underwear, clothing, and shoes ]
 A thing can be unmentionable.
 
+[TODO: Write generalized floating/sinking routine]
 [ A property that determines what happens when you toss it in a waterbody ]
 A thing can be floating or sinking. Things are usually sinking.
 
@@ -2752,7 +2798,7 @@ Instead of inserting something into a portal (called the target):
 
 Chapter - Waterbodies
 
-A waterbody is a kind of fixed in place nonfamiliar enterable scenery container.
+A waterbody is a kind of fixed in place nonfamiliar transparent enterable scenery container.
 
 Chapter - Wet Things
 
@@ -2768,7 +2814,7 @@ Every turn when the number of wet things is greater than 0:
 		If dry count of item is less than one:
 			Now item is dry;
 			If item is visible and dry_time of item is greater than 1:
-				say "Finally, [the item] [if noun is singular-named]is[otherwise]are[end if] drying out."
+				say "Finally, [the item] [are] drying out."
 
 To make (item - a thing) wet:
 	now item is wet;
@@ -2780,16 +2826,20 @@ Chapter - Blackberries
 
 Test bb with "go to bridge/g/g/pick berries/g/g/eat berries/go to bridge/g/g".
 
-Understand "pick [a thing]" as picking.
-Picking is an action applying to one thing.
+Picking is an action applying to one visible thing.
+
+Understand 
+	"pick [something]",
+	"pluck [something]"
+	as picking.
 
 Check picking:
 	if player is not in Region_Blackberry_Area:
 		say "You'll have to go back to the berry brambles.";
 		stop the action;
 	else if noun is berries_in_pail:
-		try picking backdrop_berries;
-		stop the action;
+		now noun is backdrop_berries;
+		continue the action;
 	else if noun is backdrop_berries:
 		continue the action;
 	otherwise:
@@ -2838,7 +2888,7 @@ Section - Berries in the pail
 
 [that is, the berries in the pail (or the big_bucket) ]
 
-Some berries_in_pail are a nonfamiliar undescribed sinking edible thing.
+Some berries_in_pail are a nonfamiliar undescribed edible thing.
 The printed name is "bunch of ripe berries".
 Some berries_in_pail are in pail.
 The description of berries_in_pail is "You've picked a big bunch of blackberries. [looking_closely_at_berries].".
@@ -2860,7 +2910,10 @@ Instead of drinking berries_in_pail:
 
 Instead of dropping berries_in_pail:
 	[ say "Now why would you want to drop all of those beautiful berries you picked? You can't bring yourself to do it.". ]
-	throw_berries_back;
+	if waterbody is visible:
+		throw_berries_in_water;
+	else:
+		throw_berries_back;
 
 [this allows us to do things to the berries (dropping them, eating them, feeding them to dog, etc) without taking them out of pail]
 The carrying requirements rule does nothing if doing anything to the berries_in_pail.
@@ -2885,6 +2938,31 @@ To say eat_berries:
 
 
 Section - The Pail
+
+The pail is an described improper-named unopenable floating open container held by the player.
+The printed name is "pail which is [pail_quantity]".
+The description of the pail is "This is [one of]a purple pail with a yellow handle. You recognize this pail from your trip to the beach with mom. She had to run out and get it when the waves tried to steal it. You thought she'd be mad, but you both laughed and laughed. That was a long time ago[or]your purple beach pail[stopping][if pail is empty]. The pail is empty, but it is still stained from juice at the bottom[else if pail is quarter-full]. It has a good number of ripe berries in it and a puddle of purple juice[else if pail is half-full]. It is about half full of berries[else if pail is three-quarter-full]. It is getting pretty full of blackberries[otherwise]. ripe blackberries heap over the rim of the pail. You are careful not to spill them[end if]."
+Understand "purple/-- pail/juice" as pail.
+The indefinite article is "your".
+The dry_time of pail is 1.
+
+The pail can be empty, quarter-full, half-full, three-quarter-full, or full.
+	It is quarter-full.
+
+To say pail_quantity:
+	if pail is empty:
+		say "empty";
+	else if pail is quarter-full:
+		say "a quarter-full of berries";
+	else if pail is half-full:
+		say "half-full of berries";
+	else if pail is three-quarter-full:
+		say "nearly full of berries";
+	else if pail is full:
+		say "brimming with berries";
+
+Instead of searching pail:
+	try examining pail.
 
 Instead of inserting anything into pail:
 	if noun is backdrop_berries:
@@ -2943,15 +3021,10 @@ Instead of going when pail is full and pail is held by player:
 		Now pail is three-quarter-full;
 	continue the action;
 
-[Does the player mean inserting backdrop_berries into pail:
-	It is very likely.
-
-Does the player mean inserting berries_in_pail into pail:
-	It is very unlikely. ]
 
 Section - The Bucket
 
-Instead of taking or attacking or kissing the big_bucket,
+Instead of attacking the big_bucket:
 	say "A glance from Honey and you get the message that you better not.".
 
 Instead of searching big_bucket:
@@ -2983,8 +3056,6 @@ Instead of inserting something into big_bucket:
 
 To put_berries_in_bucket:
 	say "You drop the berries into the big bucket.";
-
-["Does the player mean" rules, ref: http://inform7.com/book/WI_18_32.html]
 
 Does the player mean inserting pail into big_bucket:
 	It is very likely.
@@ -3091,12 +3162,6 @@ Rule for implicitly taking the loose_rock:
 Instead of dropping loose_rock when Room_Railroad_Tracks encloses the player:
 	throw_rock_back.
 
-[ Instead of putting a loose_rock on train_track:
-	throw_rock_back. ]
-
-[ Instead of putting the loose_rock on mound_of_rock:
-	throw_rock_back. ]
-
 To throw_rock_back:
 	say "You throw the rock back into the mound of ballast.";
 	now the noun is in Room_Railroad_Tracks;
@@ -3106,6 +3171,9 @@ To throw_rock_back:
 Instead of dropping the loose_rock:
 	if player is in Region_Trailer_Indoors:
 		say "Maybe not such a good idea, indoors.";
+	if waterbody is visible:
+		let water be a random touchable waterbody;
+		try inserting noun into water instead;
 	else:
 		throw_rock_away;
 
@@ -4219,6 +4287,9 @@ Section - Actions
 
 Instead of navigating a room during Scene_Lost:
 	say cant_find_that;
+
+Instead of doing anything except examining or navigating to elusive_landmarks:
+	say "This is no time for that. [if Scene_Day_Two is not happening]You are feeling desperate to find your way back to your Honey and Grandpa. You fight back tears and push on.[end if]".
 
 
 Part - Scene_Night_In_The_Woods
@@ -5476,7 +5547,7 @@ To say sunshine_description:
 	else:
 		say "The sun has set and the trees loom darkly above";
 
-Backdrop_creek is a nonfamiliar backdrop in Region_Blackberry_Area.
+Backdrop_creek is a proper-named nonfamiliar backdrop in Region_Blackberry_Area.
 	The printed name is "Bear Creek".
 	The description is "You can't see the creek through the tall brambles, but you can hear it.".
 	Understand "river/creek/crick/stream/water", "bear creek/crick" as backdrop_creek.
@@ -5573,7 +5644,7 @@ The indefinite article is "Honey's".
 Instead of doing anything except examining or listening or smelling or quizzing or informing or implicit-quizzing or implicit-informing to honeys_radio:
 	say "[one of]Honey will kill you if you mess with her radio.[or]You better leave the radio alone.[or]Honey gives you a [em]look[/em], and you leave the radio alone.[cycling]".
 
-Grandpas_shirt is an undescribed thing in Room_Grassy_Clearing.
+Grandpas_shirt is a floating undescribed thing in Room_Grassy_Clearing.
 	The printed name is "Grandpa's shirt".
 	The description is "This is the warm green plaid shirt that Grandpa always wears[if grandpas_cigarettes are in location]. There is a pack of cigarettes in the pocket[end if]."
 	It is a wearable [floatable] thing.
@@ -5779,7 +5850,7 @@ Section - Navigation
 
 Room_Stone_Bridge is west from Room_Willow_Trail and down from Room_Willow_Trail.
 
-The available_exits of Room_Stone_Bridge are "On one side of the bridge, the path turns out into a dirt road that runs parallel to the creek. On the other side, the blackberry trail goes up the creek back toward the berry picking spot. You can also get in the creek or go to a grassy bank from here."
+The available_exits of Room_Stone_Bridge are "On one side of the bridge, the path turns out into a dirt road that runs parallel to the creek. On the other side, the blackberry trail goes up the creek, back toward the berry picking spot. You can also get in the creek or lie on the grassy bank from here."
 
 Section - Objects
 
@@ -5790,7 +5861,7 @@ The old stone bridge is scenery in Room_Stone_Bridge.
 	The description is "The trail goes over the old bridge that was probably part of some old road. The stones of the old bridge are covered with moss. Horsetails and ferns are growing at the shady base of the bridge.".
 	Understand "base/bridge/trail" as old stone bridge.
 
-Creek_at_bridge is a waterbody in Room_Stone_Bridge.
+Creek_at_bridge is a proper-named waterbody in Room_Stone_Bridge.
 The printed name is "Bear Creek".
 	The description is "In places, the creek seems like just a trickle, then other places it is as wide as a river. Here, it is broad and shallow as it [if Room_Stone_Bridge encloses the player]goes under the bridge[otherwise]flows over and around the rocky creek bed[end if]. There are bright stars twinkling on the water with pebbles and tiny minnows below. It smells like wet rocks.
 	[paragraph break][stuff_about_the_creek]."
@@ -6396,7 +6467,7 @@ Instead of throwing when Room_Halfway_Up encloses the player:
 	try dropping the noun.
 
 Instead of dropping when Room_Halfway_Up encloses the player:
-	say "You're not likely to find that again if you throw that from here. You change your mind."
+	say treetop_drop_refusal;
 
 Instead of doing_some_swinging in Room_Halfway_Up:
 	say "You swing like a monkey from the branches of the big Doug fir.";
@@ -6424,7 +6495,7 @@ Section - Backdrops & Scenery
 
 A Doug_Fir2 is backdrop in Room_Top_of_Pine_Tree.
 
-The distant_creek is scenery in Room_Top_of_Pine_Tree.
+distant_creek is proper-named scenery in Room_Top_of_Pine_Tree.
 		The printed name is "Bear Creek".
 		The description is "Except for near the stone bridge and the swimming hole, you can only see tiny snatches of Bear Creek. Mostly, it is a dense line of trees that crosses under you.".
 		Understand "creek/crick/stream", "bear creek/crick" as distant_creek.
@@ -6507,7 +6578,7 @@ Instead of throwing when Room_Top_of_Pine_Tree encloses the player:
 	try dropping the noun.
 
 Instead of dropping when Room_Top_of_Pine_Tree encloses the player:
-	say "You're not likely to find that again if you throw that from here. You change your mind."
+	say treetop_drop_refusal;
 
 Does the player mean examining distant_train when Room_Top_of_Pine_Tree encloses the player:
 	it is very likely.
@@ -6707,7 +6778,7 @@ North from Room_Sharons_Trailer is Room_D_Loop.
 
 Section - Objects
 
-The Mika_figurine is an undescribed sinking special thing in Room_Sharons_Trailer. 
+The Mika_figurine is an undescribed special thing in Room_Sharons_Trailer. 
 The printed name is "Mika figurine".
 The description is "[mika_description].".
 Understand "Mika/-- figurine/statue/sculpture/toy", "Mika" as Mika_figurine.
@@ -6925,14 +6996,22 @@ The lees_table is a scenery enterable sit-at-able supporter in Room_Lees_Trailer
 	The description is "Like the rest of Lee's trailer, the table is mostly empty[if there is something on lees_table]. On the table, there's [a list of things on lees_table][end if].".
 	Understand "table/chairs/chair" as lees_table.
 
-A newspaper is floating undescribed thing on lees_table.
-	The description is "[if newspaper is wet]The newspaper has gotten wet and is now unreadable[else if newspaper is stained]The newspaper is stained and is now unreadable[else]This is the local newspaper. Usually when Grandpa reads the newspaper or Honey does the crossword, you ask for the comics[one of]. An article on the front page catches your eye[or]. Among the usual disasters, bombings, and boring politics, there is an article about the Viking lander to Mars[stopping][end if]."
+A newspaper is singular-named floating undescribed thing on lees_table.
+	The description is "[newspaper_description]."
 	Understand "news/newspaper/paper/journal" as newspaper.
 	The dry_time is 20.
 	The newspaper can be stained.
 
+To say newspaper_description:
+	if newspaper is wet:
+		say "The newspaper has gotten wet and is now unreadable";
+	else:
+		if newspaper has been in waterbody:
+			say "The newspaper is stained and is barely unreadable. [no line break]";
+		say "This is the local newspaper. Usually when Grandpa reads the newspaper or Honey does the crossword, you ask for the comics[one of]. An article on the front page catches your eye[or]. Among the usual disasters, bombings, and boring politics, there is an article about the Viking lander to Mars[stopping]";
+
 An article is an undescribed part of the newspaper.
-	The description is "[if newspaper is wet]The soggy newspaper is pretty much unreadable until it dries out.[else]Among the articles about a disaster in China (some dam broke and killed a lot of people), bombings in England, some stuff about Vietnam, and lots and lots of boring politics, there is a cool article about the Viking space probe! The first space ship to the surface of Mars! Will they find water? Martian people? (Unlikely. The orbital probes didn't see any sign of a Martian civilization.) There is a photo and a diagram of the Viking lander on page 3 and you memorize all the parts.
+	The description is "[if newspaper is wet]The soggy newspaper is pretty much unreadable until it dries out.[else]Among the articles about a disaster in China (some dam broke and killed a lot of people), bombings in England, some stuff about Vietnam, and lots and lots of boring politics, there is a cool article about the Viking space probe! The first space ship to the surface of Mars! Will they find water? Martian people? (Unlikely. The orbital probes didn't see any sign of a Martian civilization.) There is a photo and a diagram of the Viking lander on page 2 and you memorize all the parts.
 	[paragraph break]You spend a few minutes thinking about being an explorer on the Martian surface, where you'd weigh less than half of what you do on Earth and would be able to jump high in the air like a superhero. If you could do that here, you would leap out of the trailer park, up into the top of the big pine tree.[end if]".
 	Understand "article/story/viking/lander/mars/comics/comic" as article.
 
@@ -7638,7 +7717,7 @@ THe printed name is "woods".
 The description is "The woods completely surround you, but rather than looking sinister like they did last night, now they look sunny and inviting.".
 Understand "woods/forest/trees" as distant_woods.
 
-The distant_creek2 is scenery in Room_Sentinel_Tree.
+distant_creek2 is proper-named scenery in Room_Sentinel_Tree.
 THe printed name is "Bear Creek".
 The description is "Bear Creek is off to the west and looks both different and familiar from this angle.".
 Understand "creek/crick/stream", "bear creek/crick" as distant_creek2.
@@ -7674,7 +7753,10 @@ Instead of throwing when Room_Sentinel_Tree encloses the player:
 	try dropping the noun.
 
 Instead of dropping when Room_Sentinel_Tree encloses the player:
-	say "You're not likely to find that again if you throw that from here. You change your mind."
+	say treetop_drop_refusal;
+
+To say treetop_drop_refusal:
+	say "You're not likely to find that again if you drop that from here. You change your mind."
 
 Instead of doing_some_swinging in Room_Sentinel_Tree:
 	say "You swing like a monkey from the branches of the sentinel tree.";
@@ -8582,7 +8664,7 @@ Some clothes are an improper-named undescribed unmentionable floating thing.
 	The dry_time of clothes is 10.
 	The indefinite article of clothes is "your".
 
-Some underwear are an improper-named undescribed unmentionable floating thing.
+Some underwear are an improper-named undescribed unmentionable thing.
 	Underwear is worn by the player.
 	The description of underwear is "Mom buys you plain white cotton underwear[if underwear is wet], now slightly damp[end if]."
 	Understand "panties", "drawers", "skivvies", "undies", "bra", "shorts", "jockeys", "boxers", "briefs" as underwear.
@@ -8609,19 +8691,7 @@ Instead of examining players_arm:
 	now player is viewed_arm_injury;
 	continue the action;
 
-The pail is an improper-named unopenable floating open container held by the player.
-The printed name is "pail".
-The description of the pail is "This is [one of]a purple pail with a yellow handle. You recognize this pail from your trip to the beach with mom. She had to run out and get it when the waves tried to steal it. You thought she'd be mad, but you both laughed and laughed. That was a long time ago[or]your purple beach pail[stopping][if pail is empty]. The pail is empty, but it is still stained from juice at the bottom[else if pail is quarter-full]. It has a good number of ripe berries in it and a puddle of purple juice[else if pail is half-full]. It is about half full of berries[else if pail is three-quarter-full]. It is getting pretty full of blackberries[otherwise]. ripe blackberries heap over the rim of the pail. You are careful not to spill them[end if]."
-Understand "purple/-- pail/juice" as pail.
-The indefinite article is "your".
-
-A pail can be empty, quarter-full, half-full, three-quarter-full, or full.
-	It is quarter-full.
-
-The dry_time of pail is 1.
-
-Instead of searching pail:
-	try examining pail.
+[Your berry picking pail is defined elsewhere.]
 
 Chapter - Rules and Actions
 
@@ -8702,8 +8772,11 @@ Instead of smelling player:
 	else:
 		say "You don't smell like much of anything."
 
-Instead of dropping pail during Scene_Picking_Berries:
-	say "You're going to need that for berry picking. You hold on to it for now.".
+
+Section - Managing your stuff
+
+[we keep a list of things dropped so we can pick them up later]
+stuff_you_brought_here is a list of objects that varies.
 
 To drop_all_your_stuff:
 	[say "stuff: [list of every held thing].";]
@@ -8714,9 +8787,6 @@ To drop_all_your_stuff:
 	move tennis_shoes to location;
 	if player holds grandpas_shirt:
 		move grandpas_shirt to location;
-
-[we keep a list of things dropped so we can pick them up later]
-stuff_you_brought_here is a list of objects that varies.
 
 Stuff_storage is a container in Limbo.
 	The printed name is "stuff storage".
@@ -8749,6 +8819,8 @@ Instead of taking off clothes, say "Better keep those on for now. If you were go
 Instead of taking off tennis_shoes, say "Better keep those on for now."
 Instead of taking off underwear, say "No way! You're not taking those off!"
 
+Instead of dropping pail during Scene_Picking_Berries:
+	say "You're going to need that for berry picking. You hold on to it for now.".
 
 Part - Honey
 
