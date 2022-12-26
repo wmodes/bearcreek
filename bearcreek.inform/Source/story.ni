@@ -587,11 +587,14 @@ The standard report inserting rule response (A) is "[The actor] [drop] [the noun
 To say insert_addendum:
 	if second noun is waterbody:
 		if noun is sinking:
-			say " where it sinks below the water without a trace";
+			say " where [if noun is singular-named]it sinks[else]they sink[end if] below the water without a trace";
 		else:
-			say " where it bobs up and down";
+			say " where [if noun is singular-named]it bobs[else]they bob[end if] up and down";
 
 test dropping with "test bridge;purloin newspaper, mika, purple heart, lucky coin, george;purloin loose_rock".
+
+[TODO: Make it so items in waterbodies are listed in room descriptions. ]
+
 
 Part - Dropping Things in Room_Dark_Woods
 
@@ -5729,10 +5732,8 @@ Section - Description
 Room_Willow_Trail is a room.
 The printed name is "Willow Trail".
 The casual_name is "on the willow trail".
-The description is "This is a trail running roughly parallel the creek with tall blackberry brambles on either side. In one place, there are [willows] hanging down over the trail that tickle the back of your neck as you duck under them.
-[paragraph break][available_exits]".
+The description is "This is a trail running roughly parallel the creek with tall blackberry brambles on either side. In one place, there are willows hanging down over the trail that tickle the back of your neck as you duck under them.[paragraph break][available_exits]".
 Understand "blackberry/willow/willows path/trail/--" as Room_Willow_Trail.
-
 
 Section - Navigation
 
@@ -5744,10 +5745,10 @@ Section - Objects
 
 Section - Backdrops and Scenery
 
-Willows are climbable scenery in Room_Willow_Trail.
-	The initial appearance is "[description of willows]".
-	The description is "Weeping willows dangle over the trail. These are smaller trees than the ones that line the banks of Bear Creek.".
-	Understand "tree/trees/willow/lush/green", "willow trees" as willows.
+Some willow trees are climbable scenery in Room_Willow_Trail.
+The initial appearance is "[description of willow trees]".
+The description is "Weeping willows dangle over the trail. These are smaller trees than the ones that line the banks of Bear Creek.".
+Understand "lush/green/-- willow/-- tree/trees/willows" as willow trees.
 
 Section - Rules and Actions
 
@@ -5856,17 +5857,17 @@ Section - Objects
 
 Section - Backdrops and Scenery
 
-The old stone bridge is scenery in Room_Stone_Bridge.
-	It is a enterable supporter.
-	The description is "The trail goes over the old bridge that was probably part of some old road. The stones of the old bridge are covered with moss. Horsetails and ferns are growing at the shady base of the bridge.".
-	Understand "base/bridge/trail" as old stone bridge.
+The old stone bridge is scenery surface in Room_Stone_Bridge.
+The description is "The trail goes over the old bridge that was probably part of some old road. The stones of the old bridge are covered with moss. Horsetails and ferns are growing at the shady base of the bridge.".
+Understand "base/bridge/trail" as old stone bridge.
+The experience is "You can feel the cool old stones beneath you as you look down into the swirling stream."
 
 Creek_at_bridge is a proper-named waterbody in Room_Stone_Bridge.
 The printed name is "Bear Creek".
-	The description is "In places, the creek seems like just a trickle, then other places it is as wide as a river. Here, it is broad and shallow as it [if Room_Stone_Bridge encloses the player]goes under the bridge[otherwise]flows over and around the rocky creek bed[end if]. There are bright stars twinkling on the water with pebbles and tiny minnows below. It smells like wet rocks.
-	[paragraph break][stuff_about_the_creek]."
-	Understand "river/creek/crick/stream/water", "bear creek/crick" as Creek_at_bridge.
-	The scent is "cool creek water. It tingles your nose sort of".
+The description is "In places, the creek seems like just a trickle, then other places it is as wide as a river. Here, it is broad and shallow as it [if Room_Stone_Bridge encloses the player]goes under the bridge[otherwise]flows over and around the rocky creek bed[end if]. There are bright stars twinkling on the water with pebbles and tiny minnows below. It smells like wet rocks.
+[paragraph break][stuff_about_the_creek]."
+Understand "river/creek/crick/stream/water", "bear creek/crick" as Creek_at_bridge.
+The scent is "cool creek water. It tingles your nose sort of".
 
 Some floating_stuff is scenery in Creek_at_bridge.
 	The printed name is "floating stuff".
@@ -8649,7 +8650,7 @@ Yourself has a decision called going_home_decision.
 
 Chapter - Possessions
 
-Some tennis_shoes are an improper-named undescribed unmentionable floating thing.
+Some tennis_shoes are a plural-named improper-named undescribed unmentionable floating thing.
 	The printed name is "tennis shoes".
 	Tennis_shoes are worn by the player.
 	The description of tennis_shoes is "Your white and black tennies[if tennis_shoes are wet], now soaking wet[end if].".
@@ -8664,12 +8665,15 @@ Some clothes are an improper-named undescribed unmentionable floating thing.
 	The dry_time of clothes is 10.
 	The indefinite article of clothes is "your".
 
-Some underwear are an improper-named undescribed unmentionable thing.
+Some underwear is an plural-named improper-named undescribed unmentionable thing.
 	Underwear is worn by the player.
 	The description of underwear is "Mom buys you plain white cotton underwear[if underwear is wet], now slightly damp[end if]."
-	Understand "panties", "drawers", "skivvies", "undies", "bra", "shorts", "jockeys", "boxers", "briefs" as underwear.
+	Understand "panties", "drawers", "skivvies", "undies", "bra", "shorts", "jockeys", "boxers", "briefs" as underwear.  
 	The dry_time of underwear is 8.
-	The indefinite article of underwear is "your".
+	The indefinite article is "your".
+
+[TODO: oops
+Finally, the underwear are drying out.]
 
 Players_hands are an improper-named undescribed unmentionable thing.
 	Players_hands are part of the player.
